@@ -18,15 +18,15 @@ export default function PublicPage() {
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
 
   const [formData, setFormData] = useState({ name: '', phone: '', message: '' });
+  const [agree, setAgree] = useState(false); // 개인정보 동의 상태
+  const [showModal, setShowModal] = useState(false); // 약관 모달창 상태
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  // 신청 폼으로 스크롤 이동하기 위한 ref
   const formRef = useRef<HTMLDivElement>(null);
 
   const scrollToForm = () => {
     formRef.current?.scrollIntoView({ behavior: 'smooth' });
-    // 첫 번째 입력창(이름)에 자동 포커스
     const firstInput = formRef.current?.querySelector('input');
     firstInput?.focus();
   };
@@ -57,6 +57,12 @@ export default function PublicPage() {
     e.preventDefault();
     if (!formData.name.trim() || !formData.phone.trim()) {
       alert('이름과 연락처를 모두 입력해 주세요.');
+      return;
+    }
+
+    // 법적 검증: 동의 체크 확인
+    if (!agree) {
+      alert('개인정보 수집 및 이용에 동의하셔야 신청이 가능합니다.');
       return;
     }
 
@@ -111,7 +117,7 @@ export default function PublicPage() {
 
   return (
     <main
-      className="min-h-screen flex items-center justify-center p-3 sm:p-6 md:p-8"
+      className="min-h-screen flex items-center justify-center p-3 sm:p-6 md:p-8 relative"
       style={{ backgroundColor: site.background_color }}
     >
       <div className="w-full max-w-md bg-white/40 backdrop-blur-md p-4 sm:p-6 rounded-3xl border border-white/50 shadow-xl space-y-6">
@@ -224,7 +230,7 @@ export default function PublicPage() {
           </div>
         )}
 
-        {/* 고객 연락처 수집 폼 (ref 연결로 스크롤 목적지 지정) */}
+        {/* 고객 연락처 수집 폼 (동의 체크박스 & 약관 모달 탑재) */}
         <div ref={formRef} className="p-4 bg-white rounded-2xl shadow-sm border border-slate-100 text-left space-y-3 scroll-mt-6">
           <div className="text-center">
             <h3 className="text-sm font-bold text-slate-900">상담 및 사전예약 신청</h3>
@@ -238,7 +244,7 @@ export default function PublicPage() {
               <p className="text-[10px] text-emerald-600">확인 후 빠르게 연락드리겠습니다.</p>
             </div>
           ) : (
-            <form onSubmit={handleSubmitLead} className="space-y-2">
+            <form onSubmit={handleSubmitLead} className="space-y-2.5">
               <input
                 type="text"
                 placeholder="성함"
@@ -262,11 +268,32 @@ export default function PublicPage() {
                 onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                 className="w-full p-2.5 text-xs border border-slate-200 rounded-lg outline-none bg-slate-50 focus:bg-white focus:ring-1 focus:ring-blue-500"
               />
+
+              {/* 법적 필수: 개인정보 수집 동의 체크박스 */}
+              <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1 px-0.5">
+                <label className="flex items-center gap-1.5 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={agree}
+                    onChange={(e) => setAgree(e.target.checked)}
+                    className="w-3.5 h-3.5 text-blue-600 rounded cursor-pointer"
+                  />
+                  <span>[필수] 개인정보 수집 및 이용 동의</span>
+                </label>
+                <button
+                  type="button"
+                  onClick={() => setShowModal(true)}
+                  className="text-slate-400 hover:text-slate-600 underline"
+                >
+                  약관보기
+                </button>
+              </div>
+
               <button
                 type="submit"
                 disabled={submitting}
                 style={{ backgroundColor: site.primary_color }}
-                className="w-full py-2.5 text-white font-bold rounded-lg text-xs shadow-md transition transform active:scale-95"
+                className="w-full py-3 text-white font-bold rounded-lg text-xs shadow-md transition transform active:scale-95"
               >
                 {submitting ? '접수 중...' : '신청 완료하기'}
               </button>
@@ -274,7 +301,7 @@ export default function PublicPage() {
           )}
         </div>
 
-        {/* CTA 버튼 (클릭 시 폼으로 스크롤 이동) */}
+        {/* CTA 버튼 */}
         <div className="pt-2">
           <button
             type="button"
@@ -290,6 +317,28 @@ export default function PublicPage() {
         </div>
 
       </div>
+
+      {/* 개인정보 처리 약관 팝업 모달 */}
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
+          <div className="bg-white rounded-2xl max-w-sm w-full p-5 space-y-4 shadow-2xl text-left font-sans">
+            <h4 className="text-sm font-bold text-slate-900 border-b pb-2">개인정보 수집 및 이용 안내</h4>
+            <div className="text-xs text-slate-600 space-y-2 leading-relaxed max-h-56 overflow-y-auto">
+              <p><b>1. 수집 목적:</b> 문의 응대 및 상담 진행, 서비스 안내</p>
+              <p><b>2. 수집 항목:</b> 성함, 연락처, 문의 내용</p>
+              <p><b>3. 보유 및 이용 기간:</b> 문의 접수 및 상담 완료 시점으로부터 3개월 보관 후 지체 없이 파기</p>
+              <p className="text-[11px] text-slate-400">※ 귀하는 동의를 거부할 권리가 있으며, 동의 거부 시 상담 신청이 제한될 수 있습니다.</p>
+            </div>
+            <button
+              onClick={() => setShowModal(false)}
+              className="w-full py-2.5 bg-slate-900 text-white font-bold text-xs rounded-xl"
+            >
+              확인
+            </button>
+          </div>
+        </div>
+      )}
+
     </main>
   );
 }
