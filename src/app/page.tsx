@@ -82,7 +82,7 @@ const TEMPLATES: Record<string, Partial<PageData>> = {
       }
     ],
     faq1Q: '식기세척기나 전자레인지 사용이 가능한가요?',
-    faq1A: '특수 코팅 보호를 위해 전자레인지 및 식기세척기 사용은 피해주시고 부드러운 스펀지 손세척을 권장합니다.',
+    faq1A: '특수 코팅 보호를 위해 전자레인지 및 식기세척기 사용은 피해주시고 부드러운 손세척을 권장합니다.',
     faq2Q: '배송은 언제 시작되나요?',
     faq2A: '공구 마감 익일부터 순차 출고되며 영업일 기준 2~3일 내 수령 가능합니다.',
     faq3Q: '',
@@ -212,8 +212,6 @@ export default function BuilderPage() {
     buttonSizePx: 14,
   });
 
-  // 모바일 전용 탭 전환 상태: 'editor' | 'preview'
-  const [mobileTab, setMobileTab] = useState<'editor' | 'preview'>('editor');
   const [isLoading, setIsLoading] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
@@ -339,41 +337,19 @@ export default function BuilderPage() {
   };
 
   return (
-    <div className="flex flex-col md:flex-row h-screen w-full bg-slate-100 overflow-hidden relative font-sans">
+    <div className="flex flex-col md:flex-row min-h-screen md:h-screen w-full bg-slate-100 font-sans">
       
-      {/* 모바일 전용 상단 탭 (화면 전환 바) */}
-      <header className="md:hidden flex items-center justify-between p-3 bg-white border-b border-slate-200 z-30 shrink-0">
-        <h1 className="text-sm font-extrabold text-slate-800">페이지 빌더</h1>
-        <div className="flex bg-slate-100 p-1 rounded-lg">
-          <button
-            onClick={() => setMobileTab('editor')}
-            className={`px-3 py-1 text-xs font-bold rounded-md transition ${
-              mobileTab === 'editor' ? 'bg-white shadow text-blue-600' : 'text-slate-500'
-            }`}
-          >
-            편집하기
-          </button>
-          <button
-            onClick={() => setMobileTab('preview')}
-            className={`px-3 py-1 text-xs font-bold rounded-md transition ${
-              mobileTab === 'preview' ? 'bg-white shadow text-blue-600' : 'text-slate-500'
-            }`}
-          >
-            미리보기
-          </button>
-        </div>
-      </header>
-
-      {/* 좌측 패널 (모바일에서는 editor 탭일 때만 표시) */}
-      <aside className={`w-full md:w-96 bg-white border-r border-slate-200 flex flex-col h-full shadow-lg z-10 ${
-        mobileTab === 'editor' ? 'flex' : 'hidden md:flex'
-      }`}>
-        <div className="hidden md:block p-4 border-b border-slate-100">
-          <h1 className="text-lg font-bold text-slate-800">페이지 에디터</h1>
-          <p className="text-xs text-slate-400">내용 수정 후 아래 발행 버튼을 누르세요.</p>
+      {/* 1. 편집기 영역 (모바일에서는 상단에 위치) */}
+      <aside className="w-full md:w-[420px] bg-white border-r border-slate-200 flex flex-col md:h-full shadow-lg z-10 shrink-0">
+        <div className="p-4 border-b border-slate-100 flex items-center justify-between">
+          <div>
+            <h1 className="text-base md:text-lg font-bold text-slate-800">페이지 에디터</h1>
+            <p className="text-[11px] text-slate-400">아래로 스크롤하면 실시간 미리보기가 나옵니다.</p>
+          </div>
         </div>
 
-        <div className="p-4 md:p-5 overflow-y-auto space-y-6 flex-1 pb-24 md:pb-6">
+        {/* 하단 패딩 pb-32 적용으로 발행 버튼에 절대 가려지지 않음 */}
+        <div className="p-4 md:p-5 overflow-y-auto space-y-6 flex-1 pb-32 md:pb-32">
           {/* 원클릭 템플릿 */}
           <div>
             <h3 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2">원클릭 템플릿 프리셋</h3>
@@ -413,7 +389,7 @@ export default function BuilderPage() {
                   type="text"
                   value={pageData.siteId}
                   onChange={(e) => handleChange('siteId', e.target.value)}
-                  className="w-full bg-transparent p-2 text-slate-800 font-medium outline-none text-sm"
+                  className="w-full bg-transparent p-2 text-slate-800 font-medium outline-none text-xs"
                 />
               </div>
             </div>
@@ -425,7 +401,7 @@ export default function BuilderPage() {
                 accept="image/*"
                 onChange={handleFileUpload}
                 disabled={uploadingImage}
-                className="block w-full text-xs text-slate-500 file:mr-2 file:py-2 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer mb-2"
+                className="block w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer mb-2"
               />
               <input
                 type="text"
@@ -443,7 +419,7 @@ export default function BuilderPage() {
                   type="color"
                   value={pageData.backgroundColor}
                   onChange={(e) => handleChange('backgroundColor', e.target.value)}
-                  className="w-9 h-9 rounded border cursor-pointer"
+                  className="w-8 h-8 rounded border cursor-pointer"
                 />
                 <span className="text-xs text-slate-500">{pageData.backgroundColor}</span>
               </div>
@@ -458,7 +434,7 @@ export default function BuilderPage() {
                 type="text"
                 value={pageData.title}
                 onChange={(e) => handleChange('title', e.target.value)}
-                className="w-full text-sm border border-slate-300 rounded p-2 outline-none bg-white font-medium"
+                className="w-full text-sm border border-slate-300 rounded p-1.5 outline-none bg-white font-medium"
               />
               <div className="grid grid-cols-2 gap-2 text-xs">
                 <div>
@@ -480,7 +456,7 @@ export default function BuilderPage() {
                       type="color"
                       value={pageData.titleColor}
                       onChange={(e) => handleChange('titleColor', e.target.value)}
-                      className="w-8 h-8 rounded border cursor-pointer"
+                      className="w-6 h-6 rounded border cursor-pointer"
                     />
                     <span className="text-[11px] text-slate-500">{pageData.titleColor}</span>
                   </div>
@@ -502,7 +478,7 @@ export default function BuilderPage() {
                   max="48"
                   value={pageData.titleSizePx}
                   onChange={(e) => handleChange('titleSizePx', Number(e.target.value))}
-                  className="w-full h-2 bg-slate-200 rounded cursor-pointer"
+                  className="w-full h-1.5 bg-slate-200 rounded cursor-pointer"
                 />
               </div>
             </div>
@@ -516,7 +492,7 @@ export default function BuilderPage() {
                 rows={2}
                 value={pageData.subtitle}
                 onChange={(e) => handleChange('subtitle', e.target.value)}
-                className="w-full text-xs border border-slate-300 rounded p-2 outline-none bg-white"
+                className="w-full text-xs border border-slate-300 rounded p-1.5 outline-none bg-white"
               />
               <div className="grid grid-cols-2 gap-2 text-xs">
                 <div>
@@ -538,7 +514,7 @@ export default function BuilderPage() {
                       type="color"
                       value={pageData.subtitleColor}
                       onChange={(e) => handleChange('subtitleColor', e.target.value)}
-                      className="w-8 h-8 rounded border cursor-pointer"
+                      className="w-6 h-6 rounded border cursor-pointer"
                     />
                     <span className="text-[11px] text-slate-500">{pageData.subtitleColor}</span>
                   </div>
@@ -560,7 +536,7 @@ export default function BuilderPage() {
                   max="24"
                   value={pageData.subtitleSizePx}
                   onChange={(e) => handleChange('subtitleSizePx', Number(e.target.value))}
-                  className="w-full h-2 bg-slate-200 rounded cursor-pointer"
+                  className="w-full h-1.5 bg-slate-200 rounded cursor-pointer"
                 />
               </div>
             </div>
@@ -575,7 +551,7 @@ export default function BuilderPage() {
                   <button
                     key={align}
                     onClick={() => handleChange('featureAlign', align)}
-                    className={`px-2.5 py-1 text-[11px] font-medium rounded ${
+                    className={`px-2 py-0.5 text-[11px] font-medium rounded ${
                       pageData.featureAlign === align ? 'bg-white shadow text-slate-800' : 'text-slate-400'
                     }`}
                   >
@@ -592,7 +568,7 @@ export default function BuilderPage() {
                   <select
                     value={pageData.featureFont}
                     onChange={(e) => handleChange('featureFont', e.target.value)}
-                    className="w-full border border-slate-300 rounded p-1.5 bg-white outline-none"
+                    className="w-full border border-slate-300 rounded p-1 bg-white outline-none"
                   >
                     <option value="sans">고딕 (Sans)</option>
                     <option value="serif">명조 (Serif)</option>
@@ -605,7 +581,7 @@ export default function BuilderPage() {
                     type="number"
                     value={pageData.featureTitleSizePx}
                     onChange={(e) => handleChange('featureTitleSizePx', Number(e.target.value))}
-                    className="w-full border border-slate-300 rounded p-1.5 text-xs text-center bg-white"
+                    className="w-full border border-slate-300 rounded p-1 text-xs text-center bg-white"
                   />
                 </div>
                 <div className="w-20">
@@ -614,28 +590,28 @@ export default function BuilderPage() {
                     type="number"
                     value={pageData.featureDescSizePx}
                     onChange={(e) => handleChange('featureDescSizePx', Number(e.target.value))}
-                    className="w-full border border-slate-300 rounded p-1.5 text-xs text-center bg-white"
+                    className="w-full border border-slate-300 rounded p-1 text-xs text-center bg-white"
                   />
                 </div>
               </div>
 
               <div className="space-y-1.5 pt-1">
                 {[1, 2, 3].map((num) => (
-                  <div key={num} className="space-y-1 border-t border-slate-200 pt-2">
+                  <div key={num} className="space-y-1 border-t border-slate-200 pt-1.5">
                     <span className="text-[10px] font-bold text-slate-400">항목 {num}</span>
                     <input
                       type="text"
                       value={(pageData as any)[`feature${num}Title`]}
                       onChange={(e) => handleChange(`feature${num}Title` as any, e.target.value)}
                       placeholder="제목"
-                      className="w-full text-xs border border-slate-300 rounded p-2 outline-none bg-white"
+                      className="w-full text-xs border border-slate-300 rounded p-1.5 outline-none bg-white"
                     />
                     <input
                       type="text"
                       value={(pageData as any)[`feature${num}Desc`]}
                       onChange={(e) => handleChange(`feature${num}Desc` as any, e.target.value)}
                       placeholder="설명"
-                      className="w-full text-xs border border-slate-300 rounded p-2 outline-none bg-white"
+                      className="w-full text-xs border border-slate-300 rounded p-1.5 outline-none bg-white"
                     />
                   </div>
                 ))}
@@ -643,7 +619,7 @@ export default function BuilderPage() {
             </div>
           </div>
 
-          {/* 상세 소개 (동적 추가/삭제) */}
+          {/* 상세 소개 */}
           <div className="space-y-3 pt-3 border-t border-slate-100">
             <div className="flex items-center justify-between">
               <h3 className="text-xs font-bold text-blue-600 uppercase tracking-wider">
@@ -652,7 +628,7 @@ export default function BuilderPage() {
               <button
                 type="button"
                 onClick={addStory}
-                className="text-xs px-2.5 py-1.5 bg-blue-50 text-blue-600 hover:bg-blue-100 font-bold rounded-md transition"
+                className="text-xs px-2.5 py-1 bg-blue-50 text-blue-600 hover:bg-blue-100 font-bold rounded-md transition"
               >
                 + 섹션 추가
               </button>
@@ -676,14 +652,14 @@ export default function BuilderPage() {
                     value={story.title}
                     onChange={(e) => updateStory(story.id, 'title', e.target.value)}
                     placeholder="소제목"
-                    className="w-full text-xs border border-slate-300 rounded p-2 outline-none bg-white font-medium"
+                    className="w-full text-xs border border-slate-300 rounded p-1.5 outline-none bg-white font-medium"
                   />
                   <textarea
                     rows={3}
                     value={story.content}
                     onChange={(e) => updateStory(story.id, 'content', e.target.value)}
                     placeholder="상세 내용을 적어주세요."
-                    className="w-full text-xs border border-slate-300 rounded p-2 outline-none bg-white leading-relaxed"
+                    className="w-full text-xs border border-slate-300 rounded p-1.5 outline-none bg-white leading-relaxed"
                   />
                 </div>
               ))}
@@ -702,21 +678,21 @@ export default function BuilderPage() {
                     value={(pageData as any)[`faq${num}Q`]}
                     onChange={(e) => handleChange(`faq${num}Q` as any, e.target.value)}
                     placeholder={`질문 ${num}`}
-                    className="w-full text-xs border border-slate-300 rounded p-2 outline-none bg-white font-medium"
+                    className="w-full text-xs border border-slate-300 rounded p-1.5 outline-none bg-white font-medium"
                   />
                   <textarea
                     rows={2}
                     value={(pageData as any)[`faq${num}A`]}
                     onChange={(e) => handleChange(`faq${num}A` as any, e.target.value)}
                     placeholder={`답변 ${num}`}
-                    className="w-full text-xs border border-slate-300 rounded p-2 outline-none bg-white text-slate-600"
+                    className="w-full text-xs border border-slate-300 rounded p-1.5 outline-none bg-white text-slate-600"
                   />
                 </div>
               ))}
             </div>
           </div>
 
-          {/* CTA 버튼 */}
+          {/* CTA 버튼 설정 (하단 여백 충분히 확보) */}
           <div className="space-y-3 pt-3 border-t border-slate-100">
             <h3 className="text-xs font-bold text-blue-600 uppercase tracking-wider">CTA 버튼 설정</h3>
             <div className="p-3 bg-slate-50 rounded-lg border border-slate-200 space-y-2.5">
@@ -725,14 +701,14 @@ export default function BuilderPage() {
                 value={pageData.buttonText}
                 onChange={(e) => handleChange('buttonText', e.target.value)}
                 placeholder="버튼 문구"
-                className="w-full text-sm border border-slate-300 rounded p-2 outline-none bg-white font-medium"
+                className="w-full text-sm border border-slate-300 rounded p-1.5 outline-none bg-white font-medium"
               />
               <input
                 type="text"
                 value={pageData.buttonLink}
                 onChange={(e) => handleChange('buttonLink', e.target.value)}
                 placeholder="연결 URL (https://...)"
-                className="w-full text-xs border border-slate-300 rounded p-2 outline-none bg-white"
+                className="w-full text-xs border border-slate-300 rounded p-1.5 outline-none bg-white"
               />
               <div className="grid grid-cols-2 gap-2 text-xs">
                 <div>
@@ -754,7 +730,7 @@ export default function BuilderPage() {
                       type="color"
                       value={pageData.primaryColor}
                       onChange={(e) => handleChange('primaryColor', e.target.value)}
-                      className="w-8 h-8 rounded border cursor-pointer"
+                      className="w-6 h-6 rounded border cursor-pointer"
                     />
                     <span className="text-[11px] text-slate-500">{pageData.primaryColor}</span>
                   </div>
@@ -776,15 +752,15 @@ export default function BuilderPage() {
                   max="24"
                   value={pageData.buttonSizePx}
                   onChange={(e) => handleChange('buttonSizePx', Number(e.target.value))}
-                  className="w-full h-2 bg-slate-200 rounded cursor-pointer"
+                  className="w-full h-1.5 bg-slate-200 rounded cursor-pointer"
                 />
               </div>
             </div>
           </div>
         </div>
 
-        {/* 하단 고정 발행 버튼 (모바일에서도 항상 하단에 고정) */}
-        <div className="p-3 md:p-4 border-t border-slate-100 bg-white md:bg-slate-50 fixed md:relative bottom-0 left-0 w-full z-20">
+        {/* 고정 발행 버튼 */}
+        <div className="p-3 md:p-4 border-t border-slate-100 bg-white md:bg-slate-50 fixed bottom-0 left-0 w-full md:w-[420px] z-30 shadow-lg">
           <button
             onClick={handlePublish}
             disabled={isLoading || uploadingImage}
@@ -795,123 +771,127 @@ export default function BuilderPage() {
         </div>
       </aside>
 
-      {/* 우측 미리보기 (모바일에서는 preview 탭일 때 꽉 차게 렌더링) */}
-      <main className={`flex-1 p-3 md:p-12 overflow-y-auto items-center justify-center relative ${
-        mobileTab === 'preview' ? 'flex' : 'hidden md:flex'
-      }`}>
-        <div 
-          className="w-full max-w-sm md:max-h-[720px] overflow-y-auto rounded-3xl md:rounded-[36px] shadow-2xl border-2 md:border-4 border-slate-800 flex flex-col justify-start p-4 md:p-6 transition-all duration-200 space-y-6"
-          style={{ backgroundColor: pageData.backgroundColor }}
-        >
-          {pageData.imageUrl && (
-            <div className="w-full h-40 md:h-44 rounded-2xl overflow-hidden bg-slate-100 shrink-0">
-              <img
-                src={pageData.imageUrl}
-                alt="Main"
-                className="w-full h-full object-cover"
-                onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }}
-              />
-            </div>
-          )}
-
-          {/* 메인 텍스트 */}
-          <div className="space-y-2 text-center">
-            <h2 
-              className={`font-extrabold leading-tight break-keep ${getFontFamilyClass(pageData.titleFont)}`}
-              style={{ color: pageData.titleColor, fontSize: `${pageData.titleSizePx}px` }}
-            >
-              {pageData.title || '제목을 입력하세요'}
-            </h2>
-            <p 
-              className={`break-keep leading-relaxed ${getFontFamilyClass(pageData.subtitleFont)}`}
-              style={{ color: pageData.subtitleColor, fontSize: `${pageData.subtitleSizePx}px` }}
-            >
-              {pageData.subtitle || '부제목을 입력하세요'}
-            </p>
+      {/* 2. 실시간 미리보기 영역 (모바일에서는 스크롤 내리면 바로 아래에 표시) */}
+      <main className="flex-1 p-4 md:p-12 overflow-y-auto flex items-center justify-center relative pb-32 md:pb-12">
+        <div className="w-full max-w-sm flex flex-col items-center">
+          <div className="w-full text-center mb-2 md:hidden">
+            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">▼ 실시간 미리보기 (Live Canvas)</span>
           </div>
 
-          {/* 특징 카드 3종 */}
-          <div className="space-y-2">
-            {[
-              { title: pageData.feature1Title, desc: pageData.feature1Desc },
-              { title: pageData.feature2Title, desc: pageData.feature2Desc },
-              { title: pageData.feature3Title, desc: pageData.feature3Desc },
-            ].map((f, i) => f.title && (
-              <div 
-                key={i} 
-                className={`p-3 bg-white/70 backdrop-blur border border-slate-200/60 rounded-xl shadow-xs ${getFontFamilyClass(pageData.featureFont)} ${
-                  pageData.featureAlign === 'center' ? 'text-center' : pageData.featureAlign === 'right' ? 'text-right' : 'text-left'
-                }`}
-              >
-                <div className="font-bold text-slate-800" style={{ fontSize: `${pageData.featureTitleSizePx}px` }}>
-                  {f.title}
-                </div>
-                <div className="text-slate-500 mt-0.5" style={{ fontSize: `${pageData.featureDescSizePx}px` }}>
-                  {f.desc}
-                </div>
+          <div 
+            className="w-full rounded-[36px] shadow-2xl border-4 border-slate-800 flex flex-col justify-start p-5 transition-all duration-200 space-y-6"
+            style={{ backgroundColor: pageData.backgroundColor }}
+          >
+            {pageData.imageUrl && (
+              <div className="w-full h-44 rounded-2xl overflow-hidden bg-slate-100 shrink-0">
+                <img
+                  src={pageData.imageUrl}
+                  alt="Main"
+                  className="w-full h-full object-cover"
+                  onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }}
+                />
               </div>
-            ))}
-          </div>
+            )}
 
-          {/* 다중 스토리 미리보기 */}
-          {pageData.stories.length > 0 && (
-            <div className="space-y-3">
-              {pageData.stories.map((story) => (
-                <div key={story.id} className="p-3.5 bg-white/50 backdrop-blur rounded-2xl border border-slate-200/50 text-left space-y-1.5">
-                  {story.title && (
-                    <div className="text-xs font-bold text-slate-900">{story.title}</div>
-                  )}
-                  <div className="text-[11px] text-slate-600 leading-relaxed whitespace-pre-wrap">
-                    {story.content}
+            {/* 메인 텍스트 */}
+            <div className="space-y-2 text-center">
+              <h2 
+                className={`font-extrabold leading-tight break-keep ${getFontFamilyClass(pageData.titleFont)}`}
+                style={{ color: pageData.titleColor, fontSize: `${pageData.titleSizePx}px` }}
+              >
+                {pageData.title || '제목을 입력하세요'}
+              </h2>
+              <p 
+                className={`break-keep leading-relaxed ${getFontFamilyClass(pageData.subtitleFont)}`}
+                style={{ color: pageData.subtitleColor, fontSize: `${pageData.subtitleSizePx}px` }}
+              >
+                {pageData.subtitle || '부제목을 입력하세요'}
+              </p>
+            </div>
+
+            {/* 특징 카드 3종 */}
+            <div className="space-y-2">
+              {[
+                { title: pageData.feature1Title, desc: pageData.feature1Desc },
+                { title: pageData.feature2Title, desc: pageData.feature2Desc },
+                { title: pageData.feature3Title, desc: pageData.feature3Desc },
+              ].map((f, i) => f.title && (
+                <div 
+                  key={i} 
+                  className={`p-2.5 bg-white/70 backdrop-blur border border-slate-200/60 rounded-xl shadow-xs ${getFontFamilyClass(pageData.featureFont)} ${
+                    pageData.featureAlign === 'center' ? 'text-center' : pageData.featureAlign === 'right' ? 'text-right' : 'text-left'
+                  }`}
+                >
+                  <div className="font-bold text-slate-800" style={{ fontSize: `${pageData.featureTitleSizePx}px` }}>
+                    {f.title}
+                  </div>
+                  <div className="text-slate-500 mt-0.5" style={{ fontSize: `${pageData.featureDescSizePx}px` }}>
+                    {f.desc}
                   </div>
                 </div>
               ))}
             </div>
-          )}
 
-          {/* FAQ 아코디언 미리보기 */}
-          {(pageData.faq1Q || pageData.faq2Q) && (
-            <div className="space-y-1.5 text-left">
-              <div className="text-xs font-bold text-slate-700 mb-1 px-1">자주 묻는 질문</div>
-              {[
-                { q: pageData.faq1Q, a: pageData.faq1A },
-                { q: pageData.faq2Q, a: pageData.faq2A },
-                { q: pageData.faq3Q, a: pageData.faq3A },
-              ].map((item, idx) => item.q && (
-                <div key={idx} className="bg-white/80 border border-slate-200/70 rounded-xl overflow-hidden shadow-xs">
-                  <button
-                    onClick={() => setOpenFaqIndex(openFaqIndex === idx ? null : idx)}
-                    className="w-full p-2.5 text-left flex justify-between items-center text-xs font-semibold text-slate-800"
-                  >
-                    <span>{item.q}</span>
-                    <span className="text-[10px] text-slate-400">{openFaqIndex === idx ? '▲' : '▼'}</span>
-                  </button>
-                  {openFaqIndex === idx && item.a && (
-                    <div className="px-2.5 pb-2.5 text-[11px] text-slate-500 border-t border-slate-100 pt-1.5">
-                      {item.a}
+            {/* 다중 스토리 미리보기 */}
+            {pageData.stories.length > 0 && (
+              <div className="space-y-3">
+                {pageData.stories.map((story) => (
+                  <div key={story.id} className="p-3.5 bg-white/50 backdrop-blur rounded-2xl border border-slate-200/50 text-left space-y-1.5">
+                    {story.title && (
+                      <div className="text-xs font-bold text-slate-900">{story.title}</div>
+                    )}
+                    <div className="text-[11px] text-slate-600 leading-relaxed whitespace-pre-wrap">
+                      {story.content}
                     </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
+                  </div>
+                ))}
+              </div>
+            )}
 
-          {/* CTA 버튼 */}
-          <div className="pt-2 sticky bottom-0 bg-transparent">
-            <a
-              href={pageData.buttonLink}
-              target="_blank"
-              rel="noreferrer"
-              style={{ backgroundColor: pageData.primaryColor, fontSize: `${pageData.buttonSizePx}px` }}
-              className={`inline-block w-full py-3 px-6 text-white font-bold rounded-xl shadow-md transition text-center ${getFontFamilyClass(pageData.buttonFont)}`}
-            >
-              {pageData.buttonText || '버튼 문구'}
-            </a>
+            {/* FAQ 아코디언 미리보기 */}
+            {(pageData.faq1Q || pageData.faq2Q) && (
+              <div className="space-y-1.5 text-left">
+                <div className="text-xs font-bold text-slate-700 mb-1 px-1">자주 묻는 질문</div>
+                {[
+                  { q: pageData.faq1Q, a: pageData.faq1A },
+                  { q: pageData.faq2Q, a: pageData.faq2A },
+                  { q: pageData.faq3Q, a: pageData.faq3A },
+                ].map((item, idx) => item.q && (
+                  <div key={idx} className="bg-white/80 border border-slate-200/70 rounded-xl overflow-hidden shadow-xs">
+                    <button
+                      onClick={() => setOpenFaqIndex(openFaqIndex === idx ? null : idx)}
+                      className="w-full p-2.5 text-left flex justify-between items-center text-xs font-semibold text-slate-800"
+                    >
+                      <span>{item.q}</span>
+                      <span className="text-[10px] text-slate-400">{openFaqIndex === idx ? '▲' : '▼'}</span>
+                    </button>
+                    {openFaqIndex === idx && item.a && (
+                      <div className="px-2.5 pb-2.5 text-[11px] text-slate-500 border-t border-slate-100 pt-1.5">
+                        {item.a}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* CTA 버튼 */}
+            <div className="pt-2">
+              <a
+                href={pageData.buttonLink}
+                target="_blank"
+                rel="noreferrer"
+                style={{ backgroundColor: pageData.primaryColor, fontSize: `${pageData.buttonSizePx}px` }}
+                className={`inline-block w-full py-3 px-6 text-white font-bold rounded-xl shadow-md transition text-center ${getFontFamilyClass(pageData.buttonFont)}`}
+              >
+                {pageData.buttonText || '버튼 문구'}
+              </a>
+            </div>
           </div>
         </div>
       </main>
 
-      {/* 우측 하단 플로팅 문의 버튼 (PC 화면에서만 표시) */}
+      {/* 우측 하단 플로팅 문의 버튼 */}
       <a
         href="mailto:contact@mybuilder.com"
         target="_blank"
