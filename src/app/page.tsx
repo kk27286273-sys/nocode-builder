@@ -391,13 +391,9 @@ export default function EditorPage() {
 
       {/* 포트원 결제 모달 유지 */}
       <PaymentModal
-        isOpen={isPaymentOpen}
-        onClose={() => setIsPaymentOpen(false)}
-        onSuccess={() => {
-          setIsPaymentOpen(false);
-          alert('결제가 완료되었습니다. 워터마크가 제거됩니다.');
-        }}
-      />
+  isOpen={isPaymentOpen}
+  onClose={() => setIsPaymentOpen(false)}
+/>
     </div>
   );
 }
