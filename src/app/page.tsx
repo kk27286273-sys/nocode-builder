@@ -2,172 +2,12 @@
 
 import React, { useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
+import { PageData, StoryItem, TEMPLATES } from '@/data/templates';
+import PaymentModal from '@/components/PaymentModal';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
-interface StoryItem {
-  id: string;
-  title: string;
-  content: string;
-}
-
-interface PageData {
-  siteId: string;
-  imageUrl: string;
-  backgroundColor: string;
-  title: string;
-  titleColor: string;
-  titleFont: 'sans' | 'serif' | 'mono';
-  titleSizePx: number;
-  subtitle: string;
-  subtitleColor: string;
-  subtitleFont: 'sans' | 'serif' | 'mono';
-  subtitleSizePx: number;
-  featureAlign: 'left' | 'center' | 'right';
-  featureFont: 'sans' | 'serif' | 'mono';
-  featureTitleSizePx: number;
-  featureDescSizePx: number;
-  feature1Title: string;
-  feature1Desc: string;
-  feature2Title: string;
-  feature2Desc: string;
-  feature3Title: string;
-  feature3Desc: string;
-  stories: StoryItem[];
-  faq1Q: string;
-  faq1A: string;
-  faq2Q: string;
-  faq2A: string;
-  faq3Q: string;
-  faq3A: string;
-  buttonText: string;
-  buttonLink: string;
-  primaryColor: string;
-  buttonFont: 'sans' | 'serif' | 'mono';
-  buttonSizePx: number;
-}
-
-const TEMPLATES: Record<string, Partial<PageData>> = {
-  market: {
-    title: '봄 시즌 한정 홈카페 오로라 글라스',
-    titleColor: '#4a3b32',
-    titleFont: 'serif',
-    titleSizePx: 22,
-    subtitle: '빛에 따라 영롱하게 빛나는 감성 테이블웨어. 단 3일간 30% 할인 공구 오픈!',
-    subtitleColor: '#8c7b70',
-    subtitleFont: 'serif',
-    subtitleSizePx: 13,
-    backgroundColor: '#faf7f2',
-    primaryColor: '#c2785c',
-    buttonText: '공구 특별가로 주문하기',
-    buttonFont: 'serif',
-    buttonSizePx: 14,
-    featureAlign: 'center',
-    featureFont: 'serif',
-    featureTitleSizePx: 13,
-    featureDescSizePx: 11,
-    feature1Title: '영롱한 오로라 코팅',
-    feature1Desc: '음료를 담는 순간 감성적인 분위기를 연출합니다.',
-    feature2Title: '내열 강화 유리',
-    feature2Desc: '뜨거운 커피부터 차가운 에이드까지 안전합니다.',
-    feature3Title: '무료 배송 & 선물 포장',
-    feature3Desc: '2세트 이상 구매 시 기프트 박스에 포장됩니다.',
-    stories: [
-      {
-        id: '1',
-        title: '일상에 작은 빛을 더하는 글라스웨어',
-        content: '매일 마시는 커피 한 잔도 특별해질 수 있도록 제작했습니다. 수작업 이온 코팅 공법으로 빛의 각도마다 영롱한 빛을 냅니다.',
-      }
-    ],
-    faq1Q: '식기세척기나 전자레인지 사용이 가능한가요?',
-    faq1A: '특수 코팅 보호를 위해 전자레인지 및 식기세척기 사용은 피해주시고 부드러운 손세척을 권장합니다.',
-    faq2Q: '배송은 언제 시작되나요?',
-    faq2A: '공구 마감 익일부터 순차 출고되며 영업일 기준 2~3일 내 수령 가능합니다.',
-    faq3Q: '',
-    faq3A: '',
-    imageUrl: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=800&auto=format&fit=crop&q=60',
-  },
-  consulting: {
-    title: '복잡한 세무·보험, 전문가가 1:1 맞춤 진단합니다',
-    titleColor: '#0f172a',
-    titleFont: 'sans',
-    titleSizePx: 21,
-    subtitle: '놓치고 있는 환급금과 과다 지출 보험료를 꼼꼼하게 찾아드립니다.',
-    subtitleColor: '#475569',
-    subtitleFont: 'sans',
-    subtitleSizePx: 13,
-    backgroundColor: '#ffffff',
-    primaryColor: '#2563eb',
-    buttonText: '무료 1:1 진단 신청하기',
-    buttonFont: 'sans',
-    buttonSizePx: 14,
-    featureAlign: 'left',
-    featureFont: 'sans',
-    featureTitleSizePx: 13,
-    featureDescSizePx: 11,
-    feature1Title: '빅데이터 기반 정밀 진단',
-    feature1Desc: '수만 건의 약관 데이터를 기반으로 분석합니다.',
-    feature2Title: '100% 무료 비대면 상담',
-    feature2Desc: '전화 또는 카카오톡으로 부담 없이 상담받으세요.',
-    feature3Title: '철저한 개인정보 보호',
-    feature3Desc: '상담 목적 외에는 정보를 일절 보관하지 않습니다.',
-    stories: [
-      {
-        id: '1',
-        title: '왜 지금 진단받아야 할까요?',
-        content: '대부분의 사람들은 본인이 가입한 약관의 80%를 알지 못한 채 매달 불필요한 비용을 지출합니다. 전문 플래너가 중복 보장을 덜어내 드립니다.',
-      }
-    ],
-    faq1Q: '정말 상담 비용이 전혀 없나요?',
-    faq1A: '네, 1차 종합 진단 리포트 발행 및 분석 상담은 100% 무료로 진행됩니다.',
-    faq2Q: '상담 신청 후 언제 연락이 오나요?',
-    faq2A: '신청서 접수 후 담당 전문 플래너가 영업시간 기준 2시간 내로 연락드립니다.',
-    faq3Q: '',
-    faq3A: '',
-    imageUrl: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&auto=format&fit=crop&q=60',
-  },
-  waitlist: {
-    title: '차세대 AI 생산성 툴, Horizon',
-    titleColor: '#f8fafc',
-    titleFont: 'mono',
-    titleSizePx: 23,
-    subtitle: '반복 업무는 이제 그만. 당신의 일상에 AI 비서를 도입하세요.',
-    subtitleColor: '#94a3b8',
-    subtitleFont: 'mono',
-    subtitleSizePx: 12,
-    backgroundColor: '#0f172a',
-    primaryColor: '#10b981',
-    buttonText: '얼리버드 사전예약 참여',
-    buttonFont: 'mono',
-    buttonSizePx: 13,
-    featureAlign: 'left',
-    featureFont: 'mono',
-    featureTitleSizePx: 13,
-    featureDescSizePx: 11,
-    feature1Title: 'LIGHTNING FAST',
-    feature1Desc: '단축키 하나로 워크플로우를 자동 실행합니다.',
-    feature2Title: 'SEAMLESS SYNC',
-    feature2Desc: '기기 간 실시간 무제한 동기화를 지원합니다.',
-    feature3Title: 'EARLY ACCESS ONLY',
-    feature3Desc: '사전예약자 한정 평생 50% 할인 혜택을 드립니다.',
-    stories: [
-      {
-        id: '1',
-        title: 'ABOUT HORIZON',
-        content: 'Horizon은 문서 작성, 데이터 정제, 스케줄링을 단 몇 초 만에 자율 에이전트에게 위임할 수 있도록 설계된 차세대 생산성 도구입니다.',
-      }
-    ],
-    faq1Q: '정식 출시는 언제인가요?',
-    faq1A: '2026년 4분기 중 클로즈드 베타를 시작으로 공식 런칭됩니다.',
-    faq2Q: '사전예약 혜택은 어떻게 받나요?',
-    faq2A: '사전예약 시 등록한 연락처로 베타 초대권 및 50% 할인 프로모션 코드가 전송됩니다.',
-    faq3Q: '',
-    faq3A: '',
-    imageUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&auto=format&fit=crop&q=60',
-  },
-};
 
 export default function BuilderPage() {
   const [pageData, setPageData] = useState<PageData>({
@@ -197,6 +37,7 @@ export default function BuilderPage() {
         id: '1',
         title: '우리 브랜드 이야기',
         content: '고객에게 전달하고 싶은 브랜드 철학과 제품/서비스에 대한 상세한 이야기를 적어보세요.',
+        images: [],
       }
     ],
     faq1Q: '주문 후 배송까지 얼마나 걸리나요?',
@@ -214,7 +55,9 @@ export default function BuilderPage() {
 
   const [isLoading, setIsLoading] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [uploadingStoryImageId, setUploadingStoryImageId] = useState<string | null>(null);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
+  const [showPayModal, setShowPayModal] = useState(false);
 
   const handleChange = (key: keyof PageData, value: any) => {
     setPageData((prev) => ({ ...prev, [key]: value }));
@@ -225,6 +68,7 @@ export default function BuilderPage() {
       id: Date.now().toString(),
       title: '새로운 소개 섹션',
       content: '내용을 입력하세요.',
+      images: [],
     };
     setPageData((prev) => ({ ...prev, stories: [...prev.stories, newStory] }));
   };
@@ -241,6 +85,60 @@ export default function BuilderPage() {
       ...prev,
       stories: prev.stories.map((item) =>
         item.id === id ? { ...item, [field]: value } : item
+      ),
+    }));
+  };
+
+  const handleStoryImageUpload = async (storyId: string, e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    const currentStory = pageData.stories.find((s) => s.id === storyId);
+    if (!currentStory) return;
+
+    if (currentStory.images.length + files.length > 5) {
+      alert('사진은 섹션당 최대 5장까지만 첨부할 수 있습니다.');
+      return;
+    }
+
+    try {
+      setUploadingStoryImageId(storyId);
+      const newUrls: string[] = [];
+
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 7)}.${fileExt}`;
+        const filePath = `uploads/${fileName}`;
+
+        const { error: uploadError } = await supabase.storage.from('images').upload(filePath, file);
+        if (uploadError) throw uploadError;
+
+        const { data } = supabase.storage.from('images').getPublicUrl(filePath);
+        newUrls.push(data.publicUrl);
+      }
+
+      setPageData((prev) => ({
+        ...prev,
+        stories: prev.stories.map((s) =>
+          s.id === storyId ? { ...s, images: [...s.images, ...newUrls] } : s
+        ),
+      }));
+    } catch (err: any) {
+      alert('스토리 사진 업로드 실패: ' + err.message);
+    } finally {
+      setUploadingStoryImageId(null);
+      e.target.value = '';
+    }
+  };
+
+  const removeStoryImage = (storyId: string, indexToRemove: number) => {
+    setPageData((prev) => ({
+      ...prev,
+      stories: prev.stories.map((s) =>
+        s.id === storyId
+          ? { ...s, images: s.images.filter((_, idx) => idx !== indexToRemove) }
+          : s
       ),
     }));
   };
@@ -323,10 +221,7 @@ export default function BuilderPage() {
     if (error) {
       alert('발행 실패: ' + error.message);
     } else {
-      const publicUrl = `${window.location.origin}/p/${pageData.siteId.trim().toLowerCase()}`;
-      if (confirm(`발행 성공!\n링크: ${publicUrl}\n\n새 창에서 열어보시겠습니까?`)) {
-        window.open(publicUrl, '_blank');
-      }
+      setShowPayModal(true);
     }
   };
 
@@ -337,40 +232,45 @@ export default function BuilderPage() {
   };
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen md:h-screen w-full bg-slate-100 font-sans">
+    <div className="flex flex-col md:flex-row min-h-screen md:h-screen w-full bg-slate-100 font-sans relative">
       
-      {/* 1. 편집기 영역 (모바일에서는 상단에 위치) */}
+      {/* 1. 편집기 영역 */}
       <aside className="w-full md:w-[420px] bg-white border-r border-slate-200 flex flex-col md:h-full shadow-lg z-10 shrink-0">
         <div className="p-4 border-b border-slate-100 flex items-center justify-between">
           <div>
             <h1 className="text-base md:text-lg font-bold text-slate-800">페이지 에디터</h1>
             <p className="text-[11px] text-slate-400">아래로 스크롤하면 실시간 미리보기가 나옵니다.</p>
           </div>
+          <button
+            onClick={() => setShowPayModal(true)}
+            className="px-2.5 py-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-extrabold text-[11px] rounded-full shadow-xs animate-pulse hover:opacity-90 transition cursor-pointer"
+          >
+            👑 첫 달 100원
+          </button>
         </div>
 
-        {/* 하단 패딩 pb-32 적용으로 발행 버튼에 절대 가려지지 않음 */}
-        <div className="p-4 md:p-5 overflow-y-auto space-y-6 flex-1 pb-32 md:pb-32">
+        <div className="p-4 md:p-5 overflow-y-auto space-y-6 flex-1 pb-36 md:pb-36">
           {/* 원클릭 템플릿 */}
           <div>
             <h3 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2">원클릭 템플릿 프리셋</h3>
             <div className="grid grid-cols-3 gap-1.5">
               <button
                 onClick={() => applyTemplate('market')}
-                className="p-2 border border-amber-200 bg-amber-50/50 hover:bg-amber-100/50 rounded-lg text-left transition"
+                className="p-2 border border-amber-200 bg-amber-50/50 hover:bg-amber-100/50 rounded-lg text-left transition cursor-pointer"
               >
                 <div className="text-xs font-bold text-amber-900">공구/마켓</div>
                 <div className="text-[10px] text-amber-700 mt-0.5">따뜻한 감성</div>
               </button>
               <button
                 onClick={() => applyTemplate('consulting')}
-                className="p-2 border border-blue-200 bg-blue-50/50 hover:bg-blue-100/50 rounded-lg text-left transition"
+                className="p-2 border border-blue-200 bg-blue-50/50 hover:bg-blue-100/50 rounded-lg text-left transition cursor-pointer"
               >
                 <div className="text-xs font-bold text-blue-900">전문가/상담</div>
                 <div className="text-[10px] text-blue-700 mt-0.5">신뢰감 고딕</div>
               </button>
               <button
                 onClick={() => applyTemplate('waitlist')}
-                className="p-2 border border-slate-700 bg-slate-900 hover:bg-slate-800 rounded-lg text-left transition"
+                className="p-2 border border-slate-700 bg-slate-900 hover:bg-slate-800 rounded-lg text-left transition cursor-pointer"
               >
                 <div className="text-xs font-bold text-white">사전예약</div>
                 <div className="text-[10px] text-emerald-400 mt-0.5">다크 모노</div>
@@ -551,7 +451,7 @@ export default function BuilderPage() {
                   <button
                     key={align}
                     onClick={() => handleChange('featureAlign', align)}
-                    className={`px-2 py-0.5 text-[11px] font-medium rounded ${
+                    className={`px-2 py-0.5 text-[11px] font-medium rounded cursor-pointer ${
                       pageData.featureAlign === align ? 'bg-white shadow text-slate-800' : 'text-slate-400'
                     }`}
                   >
@@ -568,7 +468,7 @@ export default function BuilderPage() {
                   <select
                     value={pageData.featureFont}
                     onChange={(e) => handleChange('featureFont', e.target.value)}
-                    className="w-full border border-slate-300 rounded p-1 bg-white outline-none"
+                    className="w-full border border-slate-300 rounded p-1.5 bg-white outline-none"
                   >
                     <option value="sans">고딕 (Sans)</option>
                     <option value="serif">명조 (Serif)</option>
@@ -581,7 +481,7 @@ export default function BuilderPage() {
                     type="number"
                     value={pageData.featureTitleSizePx}
                     onChange={(e) => handleChange('featureTitleSizePx', Number(e.target.value))}
-                    className="w-full border border-slate-300 rounded p-1 text-xs text-center bg-white"
+                    className="w-full border border-slate-300 rounded p-1.5 text-xs text-center bg-white"
                   />
                 </div>
                 <div className="w-20">
@@ -590,7 +490,7 @@ export default function BuilderPage() {
                     type="number"
                     value={pageData.featureDescSizePx}
                     onChange={(e) => handleChange('featureDescSizePx', Number(e.target.value))}
-                    className="w-full border border-slate-300 rounded p-1 text-xs text-center bg-white"
+                    className="w-full border border-slate-300 rounded p-1.5 text-xs text-center bg-white"
                   />
                 </div>
               </div>
@@ -619,7 +519,7 @@ export default function BuilderPage() {
             </div>
           </div>
 
-          {/* 상세 소개 */}
+          {/* 상세 소개 (사진 최대 5장 첨부 기능) */}
           <div className="space-y-3 pt-3 border-t border-slate-100">
             <div className="flex items-center justify-between">
               <h3 className="text-xs font-bold text-blue-600 uppercase tracking-wider">
@@ -628,7 +528,7 @@ export default function BuilderPage() {
               <button
                 type="button"
                 onClick={addStory}
-                className="text-xs px-2.5 py-1 bg-blue-50 text-blue-600 hover:bg-blue-100 font-bold rounded-md transition"
+                className="text-xs px-2.5 py-1 bg-blue-50 text-blue-600 hover:bg-blue-100 font-bold rounded-md transition cursor-pointer"
               >
                 + 섹션 추가
               </button>
@@ -636,13 +536,13 @@ export default function BuilderPage() {
 
             <div className="space-y-3">
               {pageData.stories.map((story, index) => (
-                <div key={story.id} className="p-3 bg-slate-50 rounded-lg border border-slate-200 space-y-2 relative">
+                <div key={story.id} className="p-3 bg-slate-50 rounded-lg border border-slate-200 space-y-2.5 relative">
                   <div className="flex justify-between items-center">
                     <span className="text-[11px] font-bold text-slate-500">섹션 {index + 1}</span>
                     <button
                       type="button"
                       onClick={() => removeStory(story.id)}
-                      className="text-[11px] text-red-500 hover:underline p-1"
+                      className="text-[11px] text-red-500 hover:underline p-1 cursor-pointer"
                     >
                       삭제
                     </button>
@@ -661,6 +561,45 @@ export default function BuilderPage() {
                     placeholder="상세 내용을 적어주세요."
                     className="w-full text-xs border border-slate-300 rounded p-1.5 outline-none bg-white leading-relaxed"
                   />
+
+                  {/* 사진 첨부 (최대 5장) */}
+                  <div className="space-y-1.5 pt-1 border-t border-slate-200">
+                    <div className="flex justify-between items-center">
+                      <label className="text-[11px] font-semibold text-slate-600">
+                        설명 사진 첨부 (최대 5장: {story.images?.length || 0}/5)
+                      </label>
+                      {uploadingStoryImageId === story.id && (
+                        <span className="text-[10px] text-blue-500 animate-pulse font-bold">업로드 중...</span>
+                      )}
+                    </div>
+
+                    <input
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      disabled={uploadingStoryImageId === story.id || (story.images?.length || 0) >= 5}
+                      onChange={(e) => handleStoryImageUpload(story.id, e)}
+                      className="block w-full text-xs text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded file:border-0 file:text-[11px] file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer disabled:opacity-40"
+                    />
+
+                    {/* 등록된 사진 썸네일 */}
+                    {story.images && story.images.length > 0 && (
+                      <div className="flex flex-wrap gap-2 pt-1">
+                        {story.images.map((imgUrl, imgIdx) => (
+                          <div key={imgIdx} className="relative w-14 h-14 rounded-lg overflow-hidden border border-slate-300 group shrink-0">
+                            <img src={imgUrl} alt="Thumbnail" className="w-full h-full object-cover" />
+                            <button
+                              type="button"
+                              onClick={() => removeStoryImage(story.id, imgIdx)}
+                              className="absolute inset-0 bg-black/60 text-white text-[10px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition cursor-pointer"
+                            >
+                              삭제
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>
@@ -678,21 +617,21 @@ export default function BuilderPage() {
                     value={(pageData as any)[`faq${num}Q`]}
                     onChange={(e) => handleChange(`faq${num}Q` as any, e.target.value)}
                     placeholder={`질문 ${num}`}
-                    className="w-full text-xs border border-slate-300 rounded p-1.5 outline-none bg-white font-medium"
+                    className="w-full text-xs border border-slate-300 rounded p-1 outline-none bg-white font-medium"
                   />
                   <textarea
                     rows={2}
                     value={(pageData as any)[`faq${num}A`]}
                     onChange={(e) => handleChange(`faq${num}A` as any, e.target.value)}
                     placeholder={`답변 ${num}`}
-                    className="w-full text-xs border border-slate-300 rounded p-1.5 outline-none bg-white text-slate-600"
+                    className="w-full text-xs border border-slate-300 rounded p-1 outline-none bg-white text-slate-600"
                   />
                 </div>
               ))}
             </div>
           </div>
 
-          {/* CTA 버튼 설정 (하단 여백 충분히 확보) */}
+          {/* CTA 버튼 설정 */}
           <div className="space-y-3 pt-3 border-t border-slate-100">
             <h3 className="text-xs font-bold text-blue-600 uppercase tracking-wider">CTA 버튼 설정</h3>
             <div className="p-3 bg-slate-50 rounded-lg border border-slate-200 space-y-2.5">
@@ -764,26 +703,26 @@ export default function BuilderPage() {
           <button
             onClick={handlePublish}
             disabled={isLoading || uploadingImage}
-            className="w-full py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-400 text-white font-bold rounded-xl text-sm shadow-md transition"
+            className="w-full py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-400 text-white font-bold rounded-xl text-sm shadow-md transition cursor-pointer"
           >
             {isLoading ? '저장 중...' : '사이트 발행하기 (Publish)'}
           </button>
         </div>
       </aside>
 
-      {/* 2. 실시간 미리보기 영역 (모바일에서는 스크롤 내리면 바로 아래에 표시) */}
-      <main className="flex-1 p-4 md:p-12 overflow-y-auto flex items-center justify-center relative pb-32 md:pb-12">
+      {/* 2. 실시간 미리보기 영역 */}
+      <main className="flex-1 p-4 md:p-12 overflow-y-auto flex items-center justify-center relative pb-36 md:pb-12">
         <div className="w-full max-w-sm flex flex-col items-center">
           <div className="w-full text-center mb-2 md:hidden">
             <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">▼ 실시간 미리보기 (Live Canvas)</span>
           </div>
 
           <div 
-            className="w-full rounded-[36px] shadow-2xl border-4 border-slate-800 flex flex-col justify-start p-5 transition-all duration-200 space-y-6"
+            className="w-full rounded-[36px] shadow-2xl border-4 border-slate-800 flex flex-col justify-start p-5 transition-all duration-300 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500"
             style={{ backgroundColor: pageData.backgroundColor }}
           >
             {pageData.imageUrl && (
-              <div className="w-full h-44 rounded-2xl overflow-hidden bg-slate-100 shrink-0">
+              <div className="w-full h-44 rounded-2xl overflow-hidden bg-slate-100 shrink-0 shadow-sm">
                 <img
                   src={pageData.imageUrl}
                   alt="Main"
@@ -832,14 +771,30 @@ export default function BuilderPage() {
               ))}
             </div>
 
-            {/* 다중 스토리 미리보기 */}
+            {/* 다중 스토리 미리보기 (수직 한 줄 세로 사진 리스트) */}
             {pageData.stories.length > 0 && (
               <div className="space-y-3">
                 {pageData.stories.map((story) => (
-                  <div key={story.id} className="p-3.5 bg-white/50 backdrop-blur rounded-2xl border border-slate-200/50 text-left space-y-1.5">
+                  <div key={story.id} className="p-3.5 bg-white/60 backdrop-blur rounded-2xl border border-slate-200/50 text-left space-y-2.5 shadow-xs">
                     {story.title && (
                       <div className="text-xs font-bold text-slate-900">{story.title}</div>
                     )}
+
+                    {story.images && story.images.length > 0 && (
+                      <div className="flex flex-col space-y-2 pt-1">
+                        {story.images.map((imgUrl, imgIdx) => (
+                          <div key={imgIdx} className="w-full rounded-xl overflow-hidden bg-slate-100 border border-slate-200/70 shadow-xs">
+                            <img
+                              src={imgUrl}
+                              alt={`Story visual ${imgIdx + 1}`}
+                              className="w-full h-auto object-cover max-h-56"
+                              onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
                     <div className="text-[11px] text-slate-600 leading-relaxed whitespace-pre-wrap">
                       {story.content}
                     </div>
@@ -860,7 +815,7 @@ export default function BuilderPage() {
                   <div key={idx} className="bg-white/80 border border-slate-200/70 rounded-xl overflow-hidden shadow-xs">
                     <button
                       onClick={() => setOpenFaqIndex(openFaqIndex === idx ? null : idx)}
-                      className="w-full p-2.5 text-left flex justify-between items-center text-xs font-semibold text-slate-800"
+                      className="w-full p-2.5 text-left flex justify-between items-center text-xs font-semibold text-slate-800 cursor-pointer"
                     >
                       <span>{item.q}</span>
                       <span className="text-[10px] text-slate-400">{openFaqIndex === idx ? '▲' : '▼'}</span>
@@ -891,7 +846,7 @@ export default function BuilderPage() {
         </div>
       </main>
 
-      {/* 우측 하단 플로팅 문의 버튼 */}
+      {/* 우측 하단 문의 플로팅 버튼 */}
       <a
         href="mailto:contact@mybuilder.com"
         target="_blank"
@@ -901,6 +856,12 @@ export default function BuilderPage() {
         <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
         개발자에게 문의하기
       </a>
+
+      {/* 포트원 결제 모달 팝업 컴포넌트 */}
+      <PaymentModal
+        isOpen={showPayModal}
+        onClose={() => setShowPayModal(false)}
+      />
 
     </div>
   );

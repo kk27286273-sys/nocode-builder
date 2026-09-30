@@ -18,8 +18,8 @@ export default function PublicPage() {
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
 
   const [formData, setFormData] = useState({ name: '', phone: '', message: '' });
-  const [agree, setAgree] = useState(false); // 개인정보 동의 상태
-  const [showModal, setShowModal] = useState(false); // 약관 모달창 상태
+  const [agree, setAgree] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
@@ -60,7 +60,6 @@ export default function PublicPage() {
       return;
     }
 
-    // 법적 검증: 동의 체크 확인
     if (!agree) {
       alert('개인정보 수집 및 이용에 동의하셔야 신청이 가능합니다.');
       return;
@@ -112,7 +111,7 @@ export default function PublicPage() {
     site.feature_align === 'center' ? 'text-center' : 
     site.feature_align === 'right' ? 'text-right' : 'text-left';
 
-  const stories: Array<{ id: string; title: string; content: string }> = 
+  const stories: Array<{ id: string; title: string; content: string; images?: string[] }> = 
     Array.isArray(site.stories) ? site.stories : [];
 
   return (
@@ -120,7 +119,7 @@ export default function PublicPage() {
       className="min-h-screen flex items-center justify-center p-3 sm:p-6 md:p-8 relative"
       style={{ backgroundColor: site.background_color }}
     >
-      <div className="w-full max-w-md bg-white/40 backdrop-blur-md p-4 sm:p-6 rounded-3xl border border-white/50 shadow-xl space-y-6">
+      <div className="w-full max-w-md bg-white/40 backdrop-blur-md p-4 sm:p-6 rounded-3xl border border-white/50 shadow-xl space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
         
         {/* 대표 이미지 */}
         {site.image_url && (
@@ -187,14 +186,31 @@ export default function PublicPage() {
           ))}
         </div>
 
-        {/* 다중 스토리 블록 */}
+        {/* 다중 스토리 블록 (수직 세로 사진 리스트) */}
         {stories.length > 0 && (
           <div className="space-y-3">
             {stories.map((story) => (
-              <div key={story.id} className="p-4 bg-white/70 backdrop-blur rounded-2xl border border-slate-100 text-left space-y-2">
+              <div key={story.id} className="p-4 bg-white/70 backdrop-blur rounded-2xl border border-slate-100 text-left space-y-2.5 shadow-xs">
                 {story.title && (
                   <h3 className="text-sm font-bold text-slate-900">{story.title}</h3>
                 )}
+
+                {/* 첨부된 사진 수직 한 줄 나열 */}
+                {story.images && story.images.length > 0 && (
+                  <div className="flex flex-col space-y-2 pt-1">
+                    {story.images.map((imgUrl, imgIdx) => (
+                      <div key={imgIdx} className="w-full rounded-xl overflow-hidden bg-slate-100 border border-slate-100 shadow-xs">
+                        <img
+                          src={imgUrl}
+                          alt={`${story.title} image ${imgIdx + 1}`}
+                          className="w-full h-auto object-cover max-h-64"
+                          onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                )}
+
                 <p className="text-xs text-slate-600 leading-relaxed whitespace-pre-wrap">
                   {story.content}
                 </p>
@@ -230,7 +246,7 @@ export default function PublicPage() {
           </div>
         )}
 
-        {/* 고객 연락처 수집 폼 (동의 체크박스 & 약관 모달 탑재) */}
+        {/* 고객 연락처 수집 폼 */}
         <div ref={formRef} className="p-4 bg-white rounded-2xl shadow-sm border border-slate-100 text-left space-y-3 scroll-mt-6">
           <div className="text-center">
             <h3 className="text-sm font-bold text-slate-900">상담 및 사전예약 신청</h3>
@@ -269,7 +285,7 @@ export default function PublicPage() {
                 className="w-full p-2.5 text-xs border border-slate-200 rounded-lg outline-none bg-slate-50 focus:bg-white focus:ring-1 focus:ring-blue-500"
               />
 
-              {/* 법적 필수: 개인정보 수집 동의 체크박스 */}
+              {/* 개인정보 수집 동의 체크박스 */}
               <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1 px-0.5">
                 <label className="flex items-center gap-1.5 cursor-pointer">
                   <input
@@ -318,7 +334,7 @@ export default function PublicPage() {
 
       </div>
 
-      {/* 개인정보 처리 약관 팝업 모달 */}
+      {/* 개인정보 약관 모달 */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
           <div className="bg-white rounded-2xl max-w-sm w-full p-5 space-y-4 shadow-2xl text-left font-sans">
