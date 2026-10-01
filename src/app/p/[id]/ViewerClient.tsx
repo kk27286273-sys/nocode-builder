@@ -145,7 +145,7 @@ export default function ViewerClient({ siteId }: { siteId: string }) {
           <button
             onClick={(e) => scrollToSection(e, 'contact')}
             style={{ backgroundColor: themeColor }}
-            className="px-5 py-2.5 text-white rounded-xl text-xs md:text-sm font-bold transition-all shadow-md shadow-blue-500/10 hover:opacity-95 hover:shadow-lg cursor-pointer"
+            className="px-5 py-2.5 text-white rounded-xl text-xs md:text-sm font-bold transition-all shadow-md shadow-blue-500/20 hover:opacity-95 hover:shadow-lg cursor-pointer"
           >
             상담 신청
           </button>
@@ -203,8 +203,14 @@ export default function ViewerClient({ siteId }: { siteId: string }) {
         </div>
       )}
 
-      {/* 메인 히어로 */}
+      {/* 메인 히어로 영역 */}
       <section className="relative py-24 md:py-36 bg-gradient-to-b from-slate-50 via-white to-slate-50 text-center px-6 overflow-hidden">
+        {/* 애니메이션 1: 배경 앰비언트 글로우 오브 */}
+        <div
+          style={{ backgroundColor: themeColor }}
+          className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 md:w-96 h-80 md:h-96 rounded-full blur-[120px] opacity-15 pointer-events-none animate-pulse"
+        />
+
         {/* 은은한 격자 배경 */}
         <div
           className="absolute inset-0 opacity-[0.35]"
@@ -215,13 +221,15 @@ export default function ViewerClient({ siteId }: { siteId: string }) {
         />
 
         <div className="relative z-10 max-w-4xl mx-auto">
+          {/* 애니메이션 2: 펄싱 배지 캡슐 */}
           <span
             style={{ color: themeColor, borderColor: `${themeColor}33`, backgroundColor: `${themeColor}10` }}
-            className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs md:text-sm font-bold uppercase tracking-wider mb-6 border"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs md:text-sm font-bold uppercase tracking-wider mb-6 border shadow-sm transition-transform hover:scale-105 duration-300"
           >
-            <span className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: themeColor }} />
+            <span className="w-2 h-2 rounded-full animate-ping" style={{ backgroundColor: themeColor }} />
             {data.hero?.badge || 'Enterprise Solution'}
           </span>
+
           <h1 className="text-3xl md:text-6xl font-black text-slate-900 mb-6 whitespace-pre-line tracking-tight leading-[1.15]">
             {data.hero?.title}
           </h1>
@@ -229,24 +237,32 @@ export default function ViewerClient({ siteId }: { siteId: string }) {
             {data.hero?.subtitle}
           </p>
 
+          {/* [2번 개선] 엠보싱 쉐도우 & 호버 인터랙션 CTA 버튼 */}
           <div className="flex flex-wrap justify-center gap-4 mb-14">
             <button
               onClick={(e) => scrollToSection(e, 'contact')}
-              style={{ backgroundColor: themeColor }}
-              className="px-8 py-4 text-white font-bold rounded-xl text-sm md:text-base shadow-lg shadow-blue-500/20 hover:opacity-95 hover:shadow-xl transition-all cursor-pointer"
+              style={{
+                backgroundColor: themeColor,
+                boxShadow: `0 10px 25px -5px ${themeColor}55, 0 8px 10px -6px ${themeColor}33`,
+              }}
+              className="px-8 py-4 text-white font-extrabold rounded-xl text-sm md:text-base transition-all duration-200 hover:-translate-y-1 hover:shadow-2xl active:translate-y-0 cursor-pointer inline-flex items-center gap-2"
             >
               무료 컨설팅 신청하기
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
             </button>
             <button
               onClick={(e) => scrollToSection(e, 'solutions')}
-              className="px-8 py-4 bg-white border border-slate-200 text-slate-700 font-bold rounded-xl text-sm md:text-base hover:bg-slate-50 hover:border-slate-300 shadow-sm transition-all cursor-pointer"
+              className="px-8 py-4 bg-white/90 backdrop-blur border border-slate-300 text-slate-800 font-extrabold rounded-xl text-sm md:text-base hover:bg-slate-50 hover:border-slate-400 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md active:translate-y-0 cursor-pointer"
             >
               솔루션 살펴보기
             </button>
           </div>
 
+          {/* 애니메이션 4: 부유하는 그래픽 배너 */}
           {data.hero?.mediaUrl && (
-            <div className="max-w-4xl mx-auto rounded-2xl overflow-hidden shadow-2xl border border-slate-200/80 bg-slate-100">
+            <div className="max-w-4xl mx-auto rounded-2xl overflow-hidden shadow-2xl border border-slate-200/80 bg-slate-100 transition-all duration-500 hover:shadow-3xl hover:-translate-y-1">
               <img src={data.hero.mediaUrl} alt="Hero Banner" className="w-full h-auto max-h-[500px] object-cover" />
             </div>
           )}
@@ -261,7 +277,7 @@ export default function ViewerClient({ siteId }: { siteId: string }) {
           </p>
           <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12 text-slate-500 font-bold text-sm tracking-tight">
             {data.partnersSection.partners.map((partner, i) => (
-              <span key={i} className="px-3.5 py-1.5 rounded-lg bg-slate-50 border border-slate-100">
+              <span key={i} className="px-3.5 py-1.5 rounded-lg bg-slate-50 border border-slate-100 hover:border-slate-300 transition-colors">
                 {partner}
               </span>
             ))}
@@ -274,7 +290,7 @@ export default function ViewerClient({ siteId }: { siteId: string }) {
         <section id="stats" className="py-20 bg-slate-50/60 border-b border-slate-100 px-6">
           <div className="flex flex-wrap justify-center items-center gap-6 md:gap-8 text-center max-w-5xl mx-auto">
             {data.stats.map((st, i) => (
-              <div key={i} className="flex-1 min-w-[220px] p-8 bg-white rounded-2xl border border-slate-200/70 shadow-sm">
+              <div key={i} className="flex-1 min-w-[220px] p-8 bg-white rounded-2xl border border-slate-200/70 shadow-sm hover:shadow-md transition-shadow">
                 <div style={{ color: themeColor }} className="text-4xl md:text-5xl font-black mb-2 tracking-tight">
                   {st.value}
                 </div>
@@ -285,7 +301,7 @@ export default function ViewerClient({ siteId }: { siteId: string }) {
         </section>
       )}
 
-      {/* 솔루션 섹션 (인터랙티브 카드) */}
+      {/* 솔루션 섹션 */}
       {data.solutions && data.solutions.length > 0 && (
         <section id="solutions" className="py-28 px-6 bg-white border-b border-slate-100">
           <div className="text-center mb-16">
@@ -325,7 +341,7 @@ export default function ViewerClient({ siteId }: { siteId: string }) {
         </section>
       )}
 
-      {/* 고객 후기 섹션 */}
+      {/* 후기 */}
       {data.reviews && data.reviews.length > 0 && (
         <section id="reviews" className="py-28 px-6 bg-slate-50/60 border-b border-slate-100">
           <div className="text-center mb-16">
@@ -416,8 +432,11 @@ export default function ViewerClient({ siteId }: { siteId: string }) {
             <button
               type="submit"
               disabled={submitting}
-              style={{ backgroundColor: themeColor }}
-              className="w-full py-4 text-white font-bold rounded-xl text-sm md:text-base transition-all shadow-lg shadow-blue-500/20 hover:opacity-95 hover:shadow-xl disabled:opacity-50 cursor-pointer"
+              style={{
+                backgroundColor: themeColor,
+                boxShadow: `0 10px 25px -5px ${themeColor}55, 0 8px 10px -6px ${themeColor}33`,
+              }}
+              className="w-full py-4 text-white font-extrabold rounded-xl text-sm md:text-base transition-all duration-200 hover:-translate-y-0.5 hover:shadow-2xl active:translate-y-0 disabled:opacity-50 cursor-pointer"
             >
               {submitting ? '신청 접수 중...' : '상담 신청 완료하기'}
             </button>
