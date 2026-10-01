@@ -64,16 +64,25 @@ export default function AdminPage() {
     }
 
     try {
-      const { error } = await supabase
+      const { error, count } = await supabase
         .from('leads')
-        .delete()
+        .delete({ count: 'exact' }) // 실제 삭제된 행 개수 체크
         .eq('id', id);
 
-      if (error) throw error;
+      if (error) {
+        throw new Error(error.message);
+      }
 
+      if (count === 0) {
+        alert('DB에서 행을 삭제하지 못했습니다. (권한 또는 ID 불일치)');
+        return;
+      }
+
+      // DB 삭제가 성공했을 때만 화면 목록에서 제거
       setLeads((prev) => prev.filter((lead) => lead.id !== id));
-      alert('문의 내역이 삭제되었습니다.');
+      alert('문의 내역이 영구 삭제되었습니다.');
     } catch (err: any) {
+      console.error('삭제 에러:', err);
       alert('삭제 실패: ' + err.message);
     }
   };
