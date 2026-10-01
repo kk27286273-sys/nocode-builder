@@ -107,26 +107,38 @@ export default function BuilderPage() {
   };
 
   const handlePublish = async () => {
-    try {
-      setSaving(true);
-      const res = await publishSite(data, siteId);
+    // 1. 버튼을 클릭하자마자 브라우저 차단 없이 빈 새 탭을 먼저 엽니다.
+    const newWindow = window.open('about:blank', '_blank');
+    if (newWindow) {
+      newWindow.document.write('<div style="display:flex;justify-content:center;align-items:center;height:100vh;font-family:sans-serif;color:#475569;"><h2>사이트를 배포하고 있습니다. 잠시만 기다려주세요...</h2></div>');
+    }
 
-      if (res.success && res.siteId) {
-        setSiteId(res.siteId);
-        setPublishedUrl(`${window.location.origin}/p/${res.siteId}`);
-        clearDraft();
-        alert(siteId ? '수정 사항이 성공적으로 반영되었습니다!' : '웹사이트가 성공적으로 발행되었습니다!');
+    setSaving(true);
+    try {
+      // 2. 서버에 데이터 저장 및 배포 수행
+      const result = await publishSite(data, siteId);
+      const targetId = result?.id || siteId;
+
+      if (targetId) {
+        const viewUrl = `${window.location.origin}/p/${targetId}`;
+        setPublishedUrl(viewUrl);
+
+        // 3. 배포가 완료되면 미리 열어둔 새 탭의 주소를 완성된 페이지로 변경합니다.
+        if (newWindow) {
+          newWindow.location.href = viewUrl;
+        }
       } else {
-        throw new Error(res.error || '발행 처리에 실패했습니다.');
+        if (newWindow) newWindow.close();
+        alert('사이트 발행 중 식별자(ID)를 찾을 수 없습니다.');
       }
-    } catch (err: any) {
-      console.error('Publish error:', err);
-      alert('발행 중 오류가 발생했습니다: ' + err.message);
+    } catch (err) {
+      console.error(err);
+      if (newWindow) newWindow.close();
+      alert('사이트 발행 중 오류가 발생했습니다.');
     } finally {
       setSaving(false);
     }
   };
-
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-gray-100 font-sans text-gray-900">
       <EditorSidebar
