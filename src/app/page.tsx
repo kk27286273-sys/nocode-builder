@@ -3,8 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase/client';
 import { publishSite } from '@/utils/publishSite';
-import { useAutoSave } from '@/hooks/useAutoSave';
-import { compressImage } from '@/utils/compressImage';
 import { defaultB2BTemplate, B2BTemplateData } from '@/data/templates';
 import EditorSidebar from '@/components/builder/EditorSidebar';
 import LivePreview from '@/components/builder/LivePreview';
@@ -14,9 +12,20 @@ export default function BuilderPage() {
   const [data, setData] = useState<B2BTemplateData>(() => ({
     ...defaultB2BTemplate,
     navigation: defaultB2BTemplate.navigation || { navLinks: [] },
-    hero: defaultB2BTemplate.hero || { badge: '', title: '', subtitle: '', mediaUrl: '' },
-    solutionsSection: defaultB2BTemplate.solutionsSection || { title: '', subtitle: '' },
-    reviewsSection: defaultB2BTemplate.reviewsSection || { title: '', subtitle: '' },
+    hero: defaultB2BTemplate.hero || {
+      badge: '',
+      title: '',
+      subtitle: '',
+      mediaUrl: '',
+    },
+    solutionsSection: defaultB2BTemplate.solutionsSection || {
+      title: '',
+      subtitle: '',
+    },
+    reviewsSection: defaultB2BTemplate.reviewsSection || {
+      title: '',
+      subtitle: '',
+    },
     stats: defaultB2BTemplate?.stats || [],
     solutions: defaultB2BTemplate?.solutions || [],
     reviews: defaultB2BTemplate?.reviews || [],
@@ -38,92 +47,35 @@ export default function BuilderPage() {
       setPublishedUrl(`${window.location.origin}/p/${id}`);
       supabase
         .from('sites')
-        .select('content')
+        .select('data')
         .eq('id', id)
         .single()
-        .then(({ data: record, error }) => {
-          if (!error && record?.content) {
-            setData((prev) => ({ ...prev, ...record.content }));
+        .then(({ data: siteRecord, error }) => {
+          if (!error && siteRecord?.data) {
+            setData(siteRecord.data);
           }
         });
     }
   }, []);
 
-  const { clearDraft, lastSavedTime } = useAutoSave(
-    siteId,
-    data,
-    (restoredData) => setData(restoredData)
-  );
-
-  const handleImageUpload = async (
-    e: React.ChangeEvent<HTMLInputElement>,
-    targetKey: 'solution' | 'logo' | 'hero',
-    index?: number
-  ) => {
-    const rawFile = e.target.files?.[0];
-    if (!rawFile) return;
-
-    try {
-      setUploadingImage(true);
-      const file = await compressImage(rawFile);
-      const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.webp`;
-      const filePath = `uploads/${fileName}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from('images')
-        .upload(filePath, file, { contentType: 'image/webp', upsert: true });
-
-      if (uploadError) throw uploadError;
-
-      const { data: publicUrlData } = supabase.storage
-        .from('images')
-        .getPublicUrl(filePath);
-
-      const publicUrl = publicUrlData.publicUrl;
-
-      if (targetKey === 'solution' && typeof index === 'number') {
-        setData((prev) => {
-          const nextSolutions = [...(prev.solutions || [])];
-          nextSolutions[index] = { ...nextSolutions[index], image: publicUrl };
-          return { ...prev, solutions: nextSolutions };
-        });
-      } else if (targetKey === 'logo') {
-        setData((prev) => ({
-          ...prev,
-          company: { ...prev.company, logoUrl: publicUrl },
-        }));
-      } else if (targetKey === 'hero') {
-        setData((prev) => ({
-          ...prev,
-          hero: { ...prev.hero, mediaType: 'image', mediaUrl: publicUrl },
-        }));
-      }
-    } catch (err: any) {
-      console.error('Image upload failed:', err);
-      alert('이미지 업로드에 실패했습니다. Storage 설정을 확인하세요.');
-    } finally {
-      setUploadingImage(false);
-    }
-  };
-
   const handlePublish = async () => {
-    // 1. 버튼을 클릭하자마자 브라우저 차단 없이 빈 새 탭을 먼저 엽니다.
     const newWindow = window.open('about:blank', '_blank');
     if (newWindow) {
-      newWindow.document.write('<div style="display:flex;justify-content:center;align-items:center;height:100vh;font-family:sans-serif;color:#475569;"><h2>사이트를 배포하고 있습니다. 잠시만 기다려주세요...</h2></div>');
+      newWindow.document.write(
+        '<div style="display:flex;justify-content:center;align-items:center;height:100vh;font-family:sans-serif;color:#475569;"><h2>사이트를 배포하고 있습니다. 잠시만 기다려주세요...</h2></div>'
+      );
     }
 
     setSaving(true);
     try {
-      // 2. 서버에 데이터 저장 및 배포 수행
       const result = await publishSite(data, siteId);
-      const targetId = result?.id || siteId;
+      const targetId =
+        (result as any)?.id || (result as any)?.siteId || siteId;
 
       if (targetId) {
         const viewUrl = `${window.location.origin}/p/${targetId}`;
         setPublishedUrl(viewUrl);
 
-        // 3. 배포가 완료되면 미리 열어둔 새 탭의 주소를 완성된 페이지로 변경합니다.
         if (newWindow) {
           newWindow.location.href = viewUrl;
         }
@@ -139,47 +91,100 @@ export default function BuilderPage() {
       setSaving(false);
     }
   };
+
+  const handleImageUpload = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    targetKey: 'hero' | 'logo' | 'solution',
+    index?: number
+  ) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      setUploadingImage(true);
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+      const filePath = `uploads/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('site-assets')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: publicUrlData } = supabase.storage
+        .from('site-assets')
+        .getPublicUrl(filePath);
+
+      const uploadedUrl = publicUrlData.publicUrl;
+
+      if (targetKey === 'hero') {
+        setData((prev) => ({
+          ...prev,
+          hero: { ...prev.hero, mediaUrl: uploadedUrl, mediaType: 'image' },
+        }));
+      } else if (targetKey === 'logo') {
+        setData((prev) => ({
+          ...prev,
+          company: { ...prev.company, logoUrl: uploadedUrl },
+        }));
+      } else if (targetKey === 'solution' && typeof index === 'number') {
+        const newSolutions = [...data.solutions];
+        newSolutions[index].image = uploadedUrl;
+        setData((prev) => ({ ...prev, solutions: newSolutions }));
+      }
+    } catch (error) {
+      console.error('이미지 업로드 실패:', error);
+      alert('이미지 업로드 중 오류가 발생했습니다.');
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-gray-100 font-sans text-gray-900">
+    <div className="flex h-screen w-full overflow-hidden bg-slate-100 font-sans">
       <EditorSidebar
         data={data}
         setData={setData}
+        onPublish={handlePublish}
+        saving={saving}
+        setIsPaymentOpen={setIsPaymentOpen}
         uploadingImage={uploadingImage}
         handleImageUpload={handleImageUpload}
-        publishedUrl={publishedUrl}
-        lastSavedTime={lastSavedTime}
-        saving={saving}
-        siteId={siteId}
-        onPublish={handlePublish}
         onOpenPayment={() => setIsPaymentOpen(true)}
       />
 
       <LivePreview data={data} zoom={zoom} setZoom={setZoom} />
 
-      {/* 포트원 구독 결제 모달 */}
+      {/* 결제 모달 (선택 사항) */}
       {isPaymentOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="bg-white rounded-xl max-w-sm w-full p-6 text-center space-y-4">
-            <h3 className="text-lg font-bold text-gray-900">웹사이트 관리 대행 구독</h3>
-            <p className="text-xs text-gray-600 leading-relaxed">
-              월 99,000원으로 고속 호스팅, 도메인 연결, 실시간 상담 알림 및 정기 유지보수를 지원합니다.
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="bg-white rounded-2xl p-6 max-w-md w-full shadow-2xl space-y-4">
+            <h3 className="text-lg font-bold text-slate-900">
+              제작 대행 및 정기 관리 신청
+            </h3>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              스탠다드(원페이지): 제작비 50만 원 / 월 관리비 49,900원
+              <br />
+              프로(멀티페이지): 제작비 80만 원 / 월 관리비 79,900원
             </p>
-            <div className="border-y py-3 text-xl font-extrabold text-blue-600">월 99,000원</div>
-            <div className="flex gap-2">
+            <div className="pt-2 flex justify-end gap-2">
               <button
                 onClick={() => setIsPaymentOpen(false)}
-                className="flex-1 py-2 text-xs font-semibold text-gray-700 bg-gray-100 rounded hover:bg-gray-200"
+                className="px-4 py-2 text-xs font-semibold text-slate-600 bg-slate-100 rounded-lg hover:bg-slate-200"
               >
                 닫기
               </button>
               <button
                 onClick={() => {
-                  alert('포트원 정기 결제창을 호출합니다.');
+                  alert(
+                    '결제 및 전자세금계산서 발행은 고객센터(010-0000-0000)로 문의하시면 즉시 처리해 드립니다.'
+                  );
                   setIsPaymentOpen(false);
                 }}
-                className="flex-1 py-2 text-xs font-semibold text-white bg-blue-600 rounded hover:bg-blue-700"
+                className="px-4 py-2 text-xs font-bold text-white bg-sky-600 rounded-lg hover:bg-sky-700"
               >
-                구독 결제하기
+                상담 진행
               </button>
             </div>
           </div>

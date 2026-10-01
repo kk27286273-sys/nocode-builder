@@ -1,14 +1,23 @@
 'use client';
 
-import React, { useState } from 'react';
-import { B2BTemplateData } from '@/data/templates';
+import React, { useState, useEffect } from 'react';
+import { B2BTemplateData, defaultB2BTemplate } from '@/data/templates';
+import { supabase } from '@/lib/supabase/client';
 
-interface ViewerClientProps {
-  data: B2BTemplateData;
+export interface ViewerClientProps {
+  data?: B2BTemplateData;
+  siteId?: string;
+  [key: string]: any;
 }
 
-export default function ViewerClient({ data }: ViewerClientProps) {
-  const fs = data?.fontSizes || {};
+export default function ViewerClient({
+  data: initialData,
+  siteId,
+}: ViewerClientProps) {
+  const [data, setData] = useState<B2BTemplateData>(
+    initialData || defaultB2BTemplate
+  );
+  const [loading, setLoading] = useState<boolean>(!initialData && !!siteId);
   const [privacyAgreed, setPrivacyAgreed] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -17,6 +26,31 @@ export default function ViewerClient({ data }: ViewerClientProps) {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  useEffect(() => {
+    if (initialData) {
+      setData(initialData);
+      setLoading(false);
+      return;
+    }
+
+    if (siteId) {
+      setLoading(true);
+      supabase
+        .from('sites')
+        .select('data')
+        .eq('id', siteId)
+        .single()
+        .then(({ data: siteRecord, error }) => {
+          if (!error && siteRecord?.data) {
+            setData(siteRecord.data);
+          }
+          setLoading(false);
+        });
+    }
+  }, [initialData, siteId]);
+
+  const fs = data?.fontSizes || {};
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!privacyAgreed) {
@@ -24,14 +58,25 @@ export default function ViewerClient({ data }: ViewerClientProps) {
       return;
     }
     setIsSubmitting(true);
-    // 상담 신청 완료 처리
     setTimeout(() => {
-      alert('상담 및 견적 문의가 정상적으로 접수되었습니다. 빠른 시일 내에 연락드리겠습니다.');
+      alert(
+        '상담 및 견적 문의가 정상적으로 접수되었습니다. 빠른 시일 내에 연락드리겠습니다.'
+      );
       setFormData({ name: '', phone: '', message: '' });
       setPrivacyAgreed(false);
       setIsSubmitting(false);
     }, 500);
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="text-slate-500 text-sm font-semibold">
+          페이지를 불러오는 중입니다...
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white text-slate-900 flex flex-col font-sans">
@@ -142,7 +187,10 @@ export default function ViewerClient({ data }: ViewerClientProps) {
       <section id="stats" className="py-20 px-6 bg-white border-b border-slate-100">
         <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
           {data?.stats?.map((stat, idx) => (
-            <div key={idx} className="p-8 rounded-2xl bg-slate-50 border border-slate-100">
+            <div
+              key={idx}
+              className="p-8 rounded-2xl bg-slate-50 border border-slate-100"
+            >
               <div
                 style={{
                   fontSize: `${fs.statsValue || 32}px`,
@@ -186,13 +234,19 @@ export default function ViewerClient({ data }: ViewerClientProps) {
               className="bg-white p-8 rounded-2xl border border-slate-200/70 shadow-sm hover:shadow-md transition"
             >
               <div
-                style={{ backgroundColor: `${data?.themeColor || '#0284C7'}20` }}
+                style={{
+                  backgroundColor: `${data?.themeColor || '#0284C7'}20`,
+                }}
                 className="w-12 h-12 rounded-xl flex items-center justify-center mb-6 font-bold text-lg"
               >
                 0{idx + 1}
               </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">{sol.title}</h3>
-              <p className="text-sm text-slate-600 leading-relaxed">{sol.description}</p>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">
+                {sol.title}
+              </h3>
+              <p className="text-sm text-slate-600 leading-relaxed">
+                {sol.description}
+              </p>
             </div>
           ))}
         </div>
@@ -220,7 +274,9 @@ export default function ViewerClient({ data }: ViewerClientProps) {
               key={idx}
               className="p-8 rounded-2xl bg-slate-50 border border-slate-200/70 flex flex-col justify-between"
             >
-              <p className="text-slate-700 leading-relaxed mb-6 italic">"{rev.content}"</p>
+              <p className="text-slate-700 leading-relaxed mb-6 italic">
+                "{rev.content}"
+              </p>
               <div>
                 <div className="font-bold text-slate-900">{rev.author}</div>
                 <div className="text-xs text-slate-500">{rev.role}</div>
@@ -264,7 +320,7 @@ export default function ViewerClient({ data }: ViewerClientProps) {
         </div>
       </section>
 
-      {/* 빠른 견적 상담 신청 폼 (개인정보 수집 동의 포함) */}
+      {/* 빠른 견적 상담 신청 폼 */}
       <section id="contact-form" className="py-20 px-6 bg-white border-t border-slate-100">
         <div className="max-w-2xl mx-auto bg-slate-50 border border-slate-200 rounded-2xl p-8 md:p-10 shadow-sm">
           <div className="text-center mb-8">
@@ -291,7 +347,9 @@ export default function ViewerClient({ data }: ViewerClientProps) {
                 type="text"
                 required
                 value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
                 placeholder="홍길동"
                 className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
               />
@@ -305,7 +363,9 @@ export default function ViewerClient({ data }: ViewerClientProps) {
                 type="tel"
                 required
                 value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, phone: e.target.value })
+                }
                 placeholder="010-1234-5678"
                 className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
               />
@@ -319,7 +379,9 @@ export default function ViewerClient({ data }: ViewerClientProps) {
                 rows={4}
                 required
                 value={formData.message}
-                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, message: e.target.value })
+                }
                 placeholder="시공 장소(지역), 평수, 희망 일정 등 상세 내용을 적어주세요."
                 className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 resize-none"
               />
@@ -328,9 +390,12 @@ export default function ViewerClient({ data }: ViewerClientProps) {
             {/* 필수 개인정보 수집 및 이용 동의 */}
             <div className="pt-2 pb-1">
               <div className="p-3 bg-white border border-slate-200 rounded-lg text-xs text-slate-500 leading-relaxed mb-2.5 max-h-24 overflow-y-auto">
-                <strong>[개인정보 수집 및 이용 안내]</strong><br />
-                1. 수집 항목: 성함, 연락처, 문의 내용<br />
-                2. 수집 목적: 견적 상담 응대 및 현장 방문 일정 안내<br />
+                <strong>[개인정보 수집 및 이용 안내]</strong>
+                <br />
+                1. 수집 항목: 성함, 연락처, 문의 내용
+                <br />
+                2. 수집 목적: 견적 상담 응대 및 현장 방문 일정 안내
+                <br />
                 3. 보유 기간: 문의 처리 완료 후 1년간 보관 후 파기
               </div>
               <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-slate-700">
@@ -342,7 +407,8 @@ export default function ViewerClient({ data }: ViewerClientProps) {
                   className="w-4 h-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500 cursor-pointer"
                 />
                 <span>
-                  <span className="text-red-500">[필수]</span> 개인정보 수집 및 이용에 동의합니다.
+                  <span className="text-red-500">[필수]</span> 개인정보 수집 및
+                  이용에 동의합니다.
                 </span>
               </label>
             </div>
@@ -360,14 +426,18 @@ export default function ViewerClient({ data }: ViewerClientProps) {
       </section>
 
       {/* 푸터 영역 */}
-      <footer id="contact" className="py-12 px-6 md:px-12 bg-slate-900 text-slate-400 text-xs border-t border-slate-800">
+      <footer
+        id="contact"
+        className="py-12 px-6 md:px-12 bg-slate-900 text-slate-400 text-xs border-t border-slate-800"
+      >
         <div className="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-start gap-8">
           <div>
             <div className="text-base font-bold text-white mb-2">
               {data?.footer?.companyName || data?.company?.name}
             </div>
             <p className="leading-relaxed">
-              대표자: {data?.footer?.ownerName} | 사업자등록번호: {data?.footer?.businessNumber}
+              대표자: {data?.footer?.ownerName} | 사업자등록번호:{' '}
+              {data?.footer?.businessNumber}
               <br />
               주소: {data?.footer?.address}
               <br />
@@ -375,14 +445,19 @@ export default function ViewerClient({ data }: ViewerClientProps) {
             </p>
           </div>
           <div className="text-left md:text-right">
-            <div className="text-sm font-semibold text-white mb-1">상담 및 문의</div>
+            <div className="text-sm font-semibold text-white mb-1">
+              상담 및 문의
+            </div>
             <div
               style={{ color: data?.themeColor || '#38BDF8' }}
               className="text-xl font-black mb-2"
             >
               {data?.supportPhone}
             </div>
-            <p className="text-slate-500">© {data?.footer?.companyName || data?.company?.name}. All rights reserved.</p>
+            <p className="text-slate-500">
+              © {data?.footer?.companyName || data?.company?.name}. All rights
+              reserved.
+            </p>
           </div>
         </div>
       </footer>
