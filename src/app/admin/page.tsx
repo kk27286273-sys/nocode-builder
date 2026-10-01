@@ -83,8 +83,12 @@ export default function AdminPage() {
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-6">
           <div>
-            <h1 className="text-2xl font-black text-slate-900">B2B 상담 접수 관리 대시보드</h1>
-            <p className="text-xs text-slate-500 mt-1">인바운드로 유입된 잠재 고객 리드 및 견적 신청 목록입니다.</p>
+           <h1 className="text-2xl font-black text-slate-900">
+  실시간 견적 및 상담 접수 현황
+</h1>
+<p className="text-xs text-slate-500 mt-1">
+  웹사이트를 통해 접수된 고객 문의 및 상담 신청 내역입니다.
+</p>
           </div>
           <button
             onClick={fetchLeads}
