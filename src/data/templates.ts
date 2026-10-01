@@ -139,7 +139,7 @@ export const defaultB2BTemplate: B2BTemplateData = {
       content: "하청 안 주고 사장님이 현장에 매일 나와서 마감 하나하나 챙겨주시는 모습에 신뢰가 갔습니다. A/S 대응도 칼같습니다."
     }
   ],
-  faqs: [
+   faqs: [
     {
       question: "견적 상담과 현장 방문은 무료인가요?",
       answer: "네, 구미 및 인근 지역은 방문 실측과 현장 견적 상담을 100% 무료로 진행해 드립니다."
@@ -148,5 +148,12 @@ export const defaultB2BTemplate: B2BTemplateData = {
       question: "공사 후 A/S 보증 기간은 어떻게 되나요?",
       answer: "시공 완료 후 자체 보증서를 발행해 드리며, 시공 하자에 대해 2년간 철저하게 무상 A/S를 보장합니다."
     }
-  ]
+  ],
+  footer: {
+    companyName: "한결 인테리어 설비",
+    ownerName: "김대표",
+    businessNumber: "123-45-67890",
+    address: "경상북도 구미시 산책길 12, 1층",
+    contactEmail: "contact@hangyul.co.kr"
+  }
 };
