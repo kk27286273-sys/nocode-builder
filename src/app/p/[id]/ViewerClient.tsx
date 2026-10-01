@@ -581,8 +581,8 @@ export default function ViewerClient({
               <div>
                 <h4 className="font-bold text-slate-900 mb-1">4. 개인정보 보호책임자</h4>
                 <p>
-                  - 성명: {data?.footer?.김태헌 || '대표자'}<br />
-                  - 문의: {data?.footer?.kk272862@naver.com || data?.supportPhone}
+                  - 성명: 김태헌 (대표자)<br />
+                  - 문의: kk272862@naver.com
                 </p>
               </div>
             </div>
