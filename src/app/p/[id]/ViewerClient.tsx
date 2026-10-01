@@ -54,21 +54,37 @@ export default function ViewerClient({
 
   const fs = data?.fontSizes || {};
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!privacyAgreed) {
       alert('개인정보 수집 및 이용에 동의해주세요.');
       return;
     }
+
     setIsSubmitting(true);
-    setTimeout(() => {
-      alert(
-        '상담 및 견적 문의가 정상적으로 접수되었습니다. 담당자가 신속히 연락드리겠습니다.'
-      );
+
+    try {
+      // 1. Supabase leads 테이블에 실제 데이터 인서트
+      const { error } = await supabase.from('leads').insert([
+        {
+          name: formData.name,
+          phone: formData.phone,
+          memo: formData.message,
+          status: '대기중',
+        },
+      ]);
+
+      if (error) throw error;
+
+      alert('상담 및 견적 문의가 정상적으로 접수되었습니다.\n확인 후 빠르게 연락드리겠습니다.');
       setFormData({ name: '', phone: '', message: '' });
       setPrivacyAgreed(false);
+    } catch (err: any) {
+      console.error('리드 저장 에러:', err);
+      alert('접수 처리 중 오류가 발생했습니다. 대표번호로 직접 전화 문의 부탁드립니다.');
+    } finally {
       setIsSubmitting(false);
-    }, 500);
+    }
   };
 
   if (loading) {
