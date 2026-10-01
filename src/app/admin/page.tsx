@@ -57,13 +57,34 @@ export default function AdminPage() {
     }
   };
 
+  // 리드 삭제 함수
+  const handleDeleteLead = async (id: string, name: string) => {
+    if (!confirm(`정말 '${name}' 님의 문의 내역을 삭제하시겠습니까?\n삭제 후에는 복구할 수 없습니다.`)) {
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('leads')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+
+      setLeads((prev) => prev.filter((lead) => lead.id !== id));
+      alert('문의 내역이 삭제되었습니다.');
+    } catch (err: any) {
+      alert('삭제 실패: ' + err.message);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-slate-100 p-6 md:p-10 font-sans">
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-6">
           <div>
-            <h1 className="text-2xl font-black text-slate-900">B2B 도입 상담 접수 대시보드</h1>
-            <p className="text-xs text-slate-500 mt-1">인바운드로 인입된 잠재 고객 리드 목록입니다.</p>
+            <h1 className="text-2xl font-black text-slate-900">B2B 상담 접수 관리 대시보드</h1>
+            <p className="text-xs text-slate-500 mt-1">인바운드로 유입된 잠재 고객 리드 및 견적 신청 목록입니다.</p>
           </div>
           <button
             onClick={fetchLeads}
@@ -86,7 +107,7 @@ export default function AdminPage() {
         ) : leads.length === 0 ? (
           <div className="p-12 text-center bg-white rounded-xl border border-slate-200">
             <p className="text-slate-600 font-medium">아직 접수된 상담 내역이 없습니다.</p>
-            <p className="text-xs text-slate-400 mt-1">발행된 상세 페이지에서 폼을 제출해 보세요.</p>
+            <p className="text-xs text-slate-400 mt-1">발행된 웹사이트 견적 폼에서 테스트로 제출해 보세요.</p>
           </div>
         ) : (
           <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
@@ -94,15 +115,16 @@ export default function AdminPage() {
               <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 text-xs">
                 <tr>
                   <th className="py-3 px-4">접수 일시</th>
-                  <th className="py-3 px-4">기업명 / 담당자</th>
+                  <th className="py-3 px-4">성함 / 담당자</th>
                   <th className="py-3 px-4">연락처</th>
                   <th className="py-3 px-4">문의 내용</th>
-                  <th className="py-3 px-4 text-center">상태</th>
+                  <th className="py-3 px-4 text-center">처리 상태</th>
+                  <th className="py-3 px-4 text-center">관리</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {leads.map((lead) => (
-                  <tr key={lead.id} className="hover:bg-slate-50">
+                  <tr key={lead.id} className="hover:bg-slate-50 transition-colors">
                     <td className="py-3 px-4 text-xs text-slate-400 whitespace-nowrap">
                       {new Date(lead.created_at).toLocaleString()}
                     </td>
@@ -113,6 +135,7 @@ export default function AdminPage() {
                           navigator.clipboard.writeText(lead.phone);
                           alert('연락처가 복사되었습니다: ' + lead.phone);
                         }}
+                        title="클릭하여 복사"
                         className="text-blue-600 font-mono text-xs hover:underline"
                       >
                         {lead.phone}
@@ -124,13 +147,21 @@ export default function AdminPage() {
                     <td className="py-3 px-4 text-center">
                       <button
                         onClick={() => handleStatusToggle(lead.id, lead.status)}
-                        className={`text-xs px-2.5 py-1 rounded-full font-bold ${
+                        className={`text-xs px-2.5 py-1 rounded-full font-bold transition ${
                           lead.status === '완료'
-                            ? 'bg-slate-200 text-slate-700'
-                            : 'bg-emerald-100 text-emerald-700'
+                            ? 'bg-slate-200 text-slate-700 hover:bg-slate-300'
+                            : 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200'
                         }`}
                       >
                         {lead.status || '대기중'}
+                      </button>
+                    </td>
+                    <td className="py-3 px-4 text-center">
+                      <button
+                        onClick={() => handleDeleteLead(lead.id, lead.name)}
+                        className="text-xs text-red-600 hover:text-red-800 font-semibold px-2 py-1 rounded border border-red-200 hover:bg-red-50 transition"
+                      >
+                        삭제
                       </button>
                     </td>
                   </tr>
