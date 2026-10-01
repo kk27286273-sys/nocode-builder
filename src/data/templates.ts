@@ -25,9 +25,24 @@ export interface FaqItem {
   answer: string;
 }
 
+export interface FontSizesConfig {
+  companyName?: number;
+  heroBadge?: number;
+  heroTitle?: number;
+  heroSubtitle?: number;
+  partnersTitle?: number;
+  statsValue?: number;
+  statsLabel?: number;
+  sectionTitle?: number;
+  sectionSubtitle?: number;
+  faqQuestion?: number;
+  faqAnswer?: number;
+}
+
 export interface B2BTemplateData {
   themeColor: string;
   supportPhone: string;
+  fontSizes?: FontSizesConfig;
   company: {
     name: string;
     logoUrl?: string;
@@ -48,12 +63,12 @@ export interface B2BTemplateData {
     partners: string[];
   };
   stats: StatItem[];
-  solutionsSection: {
+  solutionsSection?: {
     title: string;
     subtitle: string;
   };
   solutions: SolutionItem[];
-  reviewsSection: {
+  reviewsSection?: {
     title: string;
     subtitle: string;
   };
@@ -65,12 +80,26 @@ export interface B2BTemplateData {
     businessNumber: string;
     address: string;
     contactEmail: string;
+    tel?: string;
   };
 }
 
 export const defaultB2BTemplate: B2BTemplateData = {
   themeColor: "#0284C7",
   supportPhone: "010-0000-0000",
+  fontSizes: {
+    companyName: 20,
+    heroBadge: 14,
+    heroTitle: 36,
+    heroSubtitle: 18,
+    partnersTitle: 16,
+    statsValue: 32,
+    statsLabel: 14,
+    sectionTitle: 28,
+    sectionSubtitle: 16,
+    faqQuestion: 18,
+    faqAnswer: 15,
+  },
   company: {
     name: "한결 인테리어 설비",
     logoUrl: ""
@@ -139,7 +168,7 @@ export const defaultB2BTemplate: B2BTemplateData = {
       content: "하청 안 주고 사장님이 현장에 매일 나와서 마감 하나하나 챙겨주시는 모습에 신뢰가 갔습니다. A/S 대응도 칼같습니다."
     }
   ],
-   faqs: [
+  faqs: [
     {
       question: "견적 상담과 현장 방문은 무료인가요?",
       answer: "네, 구미 및 인근 지역은 방문 실측과 현장 견적 상담을 100% 무료로 진행해 드립니다."

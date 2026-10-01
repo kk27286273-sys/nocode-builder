@@ -10,264 +10,387 @@ interface LivePreviewProps {
 }
 
 export default function LivePreview({ data, zoom, setZoom }: LivePreviewProps) {
-  const themeColor = data?.themeColor || '#2563EB';
+  const fs = data.fontSizes || {};
 
   return (
-    <main className="flex-1 flex flex-col h-full overflow-hidden bg-slate-900/10">
-      {/* 줌 컨트롤 바 */}
+    <main className="flex-1 flex flex-col h-full bg-slate-100 overflow-hidden relative">
+      {/* 상단 줌 컨트롤 바 */}
       <div className="h-12 bg-white/80 backdrop-blur border-b border-slate-200 flex items-center justify-between px-6 z-10 shrink-0">
         <span className="text-xs font-semibold text-slate-500 tracking-wider">
-          1200px Desktop Workspace Canvas (Live Preview)
+          미리보기 캔버스 ({zoom}%)
         </span>
         <div className="flex items-center gap-2">
           <button
-            onClick={() => setZoom((z) => Math.max(50, z - 10))}
-            className="w-7 h-7 flex items-center justify-center bg-slate-100 hover:bg-slate-200 text-xs font-bold rounded text-slate-700 transition"
+            onClick={() => setZoom((prev) => Math.max(prev - 10, 50))}
+            className="p-1 px-2.5 text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded border border-slate-300"
           >
             -
           </button>
-          <span className="text-xs font-semibold text-slate-700 w-12 text-center">{zoom}%</span>
+          <span className="text-xs font-medium text-slate-600 w-12 text-center">
+            {zoom}%
+          </span>
           <button
-            onClick={() => setZoom((z) => Math.min(120, z + 10))}
-            className="w-7 h-7 flex items-center justify-center bg-slate-100 hover:bg-slate-200 text-xs font-bold rounded text-slate-700 transition"
+            onClick={() => setZoom((prev) => Math.min(prev + 10, 150))}
+            className="p-1 px-2.5 text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded border border-slate-300"
           >
             +
           </button>
           <button
             onClick={() => setZoom(100)}
-            className="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-xs font-medium rounded text-slate-700 transition ml-1"
+            className="ml-2 text-xs text-slate-500 hover:text-slate-800 underline"
           >
-            100%
+            초기화
           </button>
         </div>
       </div>
 
-      <div className="flex-1 overflow-auto p-8 flex justify-center items-start">
+      {/* 실시간 프리뷰 영역 (잘림 및 쏠림 방지) */}
+      <div className="flex-1 overflow-x-auto overflow-y-auto p-4 md:p-8 flex justify-center items-start">
         <div
           style={{
             width: '1200px',
+            maxWidth: '100%',
             transform: `scale(${zoom / 100})`,
             transformOrigin: 'top center',
+            marginBottom: `${(1200 * (zoom / 100) - 1200) / 2}px`,
           }}
-          className="bg-white rounded-2xl shadow-2xl border border-slate-200/80 overflow-hidden shrink-0 transition-transform duration-75 text-slate-900"
+          className="bg-white rounded-2xl shadow-2xl border border-slate-200/80 overflow-hidden shrink-0 transition-transform duration-75 text-slate-900 mx-auto"
         >
-          {/* 프리뷰 GNB */}
-          <div className="h-20 border-b border-slate-100 flex items-center justify-between px-10 bg-white/95 sticky top-0 z-20">
+          {/* GNB 네비게이션 헤더 */}
+          <header className="h-20 border-b border-slate-100 px-8 flex items-center justify-between bg-white/90 backdrop-blur sticky top-0 z-20">
             <div className="flex items-center gap-3">
-              {data.company?.logoUrl && (
-                <img src={data.company.logoUrl} alt="Logo" className="h-8 max-w-[120px] object-contain" />
+              {data.company.logoUrl && (
+                <img
+                  src={data.company.logoUrl}
+                  alt="Logo"
+                  className="h-10 w-auto object-contain"
+                />
               )}
-              <span className="text-xl font-extrabold tracking-tight text-slate-900">
+              <span
+                style={{ fontSize: `${fs.companyName || 20}px` }}
+                className="font-extrabold tracking-tight text-slate-900"
+              >
                 {data?.company?.name || '기업명'}
               </span>
             </div>
-            <div className="flex items-center gap-8 text-sm font-semibold text-slate-600">
-              {(data?.navigation?.navLinks || []).map((link, idx) => (
-                <span key={idx} className="hover:text-slate-900 transition-colors cursor-default">
-                  {link.label}
-                </span>
-              ))}
-              <span
-                style={{ backgroundColor: themeColor }}
-                className="px-5 py-2.5 text-white rounded-xl text-sm font-bold shadow-md shadow-blue-500/20 cursor-default"
-              >
-                상담 신청
-              </span>
-            </div>
-          </div>
 
-          {/* [1번 개선: 히어로 5대 모던 애니메이션 & 2번 개선: 입체 쉐도우 버튼] */}
-          <div className="relative py-28 bg-gradient-to-b from-slate-50 via-white to-slate-50 text-center px-8 border-b border-slate-100 overflow-hidden">
-            {/* 애니메이션 1: 배경 앰비언트 글로우 오브 */}
-            <div
-              style={{ backgroundColor: themeColor }}
-              className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full blur-[130px] opacity-15 pointer-events-none animate-pulse"
-            />
-
-            {/* 격자 무늬 배경 */}
-            <div
-              className="absolute inset-0 opacity-[0.35]"
-              style={{
-                backgroundImage: 'radial-gradient(#cbd5e1 1px, transparent 1px)',
-                backgroundSize: '24px 24px',
-              }}
-            />
-
-            <div className="relative z-10 max-w-4xl mx-auto">
-              {/* 애니메이션 2: 펄싱 배지 캡슐 */}
-              <span
-                style={{ color: themeColor, borderColor: `${themeColor}33`, backgroundColor: `${themeColor}10` }}
-                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-6 border shadow-sm transition-transform hover:scale-105 duration-300"
-              >
-                <span className="w-2 h-2 rounded-full animate-ping" style={{ backgroundColor: themeColor }} />
-                {data?.hero?.badge || 'Enterprise Professional Service'}
-              </span>
-
-              {/* 애니메이션 3: 선명하고 중후한 타이틀 */}
-              <h2 className="text-5xl font-black text-slate-900 mb-6 whitespace-pre-line tracking-tight leading-[1.2]">
-                {data?.hero?.title}
-              </h2>
-
-              <p className="text-lg text-slate-600 mb-10 whitespace-pre-line max-w-2xl mx-auto leading-relaxed font-normal">
-                {data?.hero?.subtitle}
-              </p>
-
-              {/* [2번 개선] 입체 쉐도우 & 호버 인터랙티브 CTA 버튼 세트 */}
-              <div className="flex justify-center gap-5 mb-12">
-                <span
-                  style={{
-                    backgroundColor: themeColor,
-                    boxShadow: `0 10px 25px -5px ${themeColor}55, 0 8px 10px -6px ${themeColor}33`,
-                  }}
-                  className="px-8 py-4 text-white font-extrabold rounded-xl text-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-xl active:translate-y-0 cursor-pointer inline-flex items-center gap-2"
+            <nav className="flex items-center gap-6">
+              {data?.navigation?.navLinks?.map((nav, idx) => (
+                <a
+                  key={idx}
+                  href={`#${nav.targetId}`}
+                  className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors"
                 >
-                  무료 컨설팅 신청하기
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                  </svg>
-                </span>
-                <span className="px-8 py-4 bg-white/90 backdrop-blur border border-slate-300 text-slate-800 font-extrabold rounded-xl text-sm shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-slate-400 hover:shadow-md active:translate-y-0 cursor-pointer">
-                  솔루션 살펴보기
-                </span>
-              </div>
+                  {nav.label}
+                </a>
+              ))}
+              <a
+                href={`tel:${data.supportPhone}`}
+                style={{ backgroundColor: data.themeColor || '#0284C7' }}
+                className="text-white text-sm font-bold px-5 py-2.5 rounded-full shadow hover:opacity-95 transition"
+              >
+                상담 문의
+              </a>
+            </nav>
+          </header>
 
-              {/* 애니메이션 4: 부유하는 그래픽 배너 */}
-              {data.hero?.mediaUrl && (
-                <div className="rounded-2xl overflow-hidden shadow-2xl border border-slate-200/80 bg-slate-100 transition-all duration-500 hover:shadow-3xl hover:-translate-y-1">
-                  <img src={data.hero.mediaUrl} alt="Hero Banner" className="w-full h-84 object-cover" />
-                </div>
-              )}
+          {/* 메인 히어로 섹션 */}
+          <section className="py-20 px-8 text-center bg-gradient-to-b from-slate-50/80 to-white flex flex-col items-center">
+            {data.hero.badge && (
+              <span
+                style={{
+                  fontSize: `${fs.heroBadge || 14}px`,
+                  color: data.themeColor || '#0284C7',
+                  backgroundColor: `${data.themeColor || '#0284C7'}15`,
+                }}
+                className="font-bold px-4 py-1.5 rounded-full mb-6 inline-block"
+              >
+                {data.hero.badge}
+              </span>
+            )}
+            <h1
+              style={{ fontSize: `${fs.heroTitle || 36}px` }}
+              className="font-extrabold text-slate-900 leading-tight mb-6 whitespace-pre-line tracking-tight max-w-4xl"
+            >
+              {data.hero.title}
+            </h1>
+            <p
+              style={{ fontSize: `${fs.heroSubtitle || 18}px` }}
+              className="text-slate-600 max-w-2xl leading-relaxed mb-10"
+            >
+              {data.hero.subtitle}
+            </p>
+            <div className="flex items-center gap-4">
+              <a
+                href={`tel:${data.supportPhone}`}
+                style={{ backgroundColor: data.themeColor || '#0284C7' }}
+                className="text-white font-bold px-8 py-3.5 rounded-xl shadow-lg hover:opacity-95 transition text-base"
+              >
+                빠른 견적 상담 신청
+              </a>
             </div>
-          </div>
+          </section>
 
-          {/* 파트너사 */}
-          {data?.partnersSection?.enabled && (data?.partnersSection?.partners || []).length > 0 && (
-            <div className="py-10 bg-white border-b border-slate-100 text-center">
-              <p className="text-xs text-slate-400 font-semibold tracking-wider uppercase mb-6">
-                {data?.partnersSection?.title}
-              </p>
-              <div className="flex flex-wrap justify-center items-center gap-8 text-slate-500 font-bold text-sm tracking-tight">
-                {(data?.partnersSection?.partners || []).map((partner, i) => (
-                  <span key={i} className="px-3.5 py-1.5 rounded-lg bg-slate-50 border border-slate-100 hover:border-slate-300 transition-colors">
+          {/* 파트너사 / 인증 보증 섹션 */}
+          {data.partnersSection?.enabled && (
+            <section className="py-10 border-y border-slate-100 bg-slate-50/50 px-8 text-center">
+              <h2
+                style={{ fontSize: `${fs.partnersTitle || 16}px` }}
+                className="font-semibold text-slate-500 mb-6"
+              >
+                {data.partnersSection.title}
+              </h2>
+              <div className="flex flex-wrap justify-center items-center gap-6 md:gap-10">
+                {data.partnersSection.partners.map((partner, idx) => (
+                  <span
+                    key={idx}
+                    className="px-4 py-2 bg-white rounded-lg border border-slate-200 text-sm font-semibold text-slate-700 shadow-sm"
+                  >
                     {partner}
                   </span>
                 ))}
               </div>
-            </div>
+            </section>
           )}
 
-          {/* 실적 지표 */}
-          {data?.stats && data.stats.length > 0 && (
-            <div className="py-16 bg-slate-50/50 border-b border-slate-100 px-10">
-              <div className="flex flex-wrap justify-center items-center gap-8 text-center max-w-5xl mx-auto">
-                {data.stats.map((st, i) => (
-                  <div key={i} className="flex-1 min-w-[200px] p-6 bg-white rounded-2xl border border-slate-200/60 shadow-sm hover:shadow-md transition-shadow">
-                    <div style={{ color: themeColor }} className="text-4xl font-black mb-1 tracking-tight">
-                      {st?.value}
-                    </div>
-                    <div className="text-xs text-slate-500 font-semibold">{st?.label}</div>
+          {/* 주요 실적 지표 섹션 */}
+          <section id="stats" className="py-16 px-8 bg-white border-b border-slate-100">
+            <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+              {data.stats.map((stat, idx) => (
+                <div key={idx} className="p-6 rounded-2xl bg-slate-50 border border-slate-100">
+                  <div
+                    style={{
+                      fontSize: `${fs.statsValue || 32}px`,
+                      color: data.themeColor || '#0284C7',
+                    }}
+                    className="font-black mb-2"
+                  >
+                    {stat.value}
                   </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* 솔루션 */}
-          {data?.solutions && data.solutions.length > 0 && (
-            <div className="py-24 px-10 bg-white border-b border-slate-100">
-              <div className="text-center mb-16">
-                <h3 className="text-3xl font-extrabold text-slate-900 mb-3 tracking-tight">
-                  {data?.solutionsSection?.title || '신뢰할 수 있는 전용 솔루션 라인업'}
-                </h3>
-                <p className="text-sm text-slate-500 font-normal">
-                  {data?.solutionsSection?.subtitle || '기업 비즈니스 성장에 특화된 모듈'}
-                </p>
-              </div>
-              <div className="flex flex-wrap justify-center gap-8">
-                {data.solutions.map((item, idx) => (
-                  <div key={idx} className="w-84 bg-white border border-slate-200 rounded-2xl overflow-hidden flex flex-col shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300">
-                    {item?.image ? (
-                      <div className="h-48 bg-slate-100 overflow-hidden">
-                        <img src={item.image} alt={item.title} className="w-full h-full object-cover transition-transform duration-300 hover:scale-105" />
-                      </div>
-                    ) : (
-                      <div className="h-32 bg-gradient-to-br from-slate-100 to-slate-50 flex items-center justify-center text-slate-300">
-                        <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                        </svg>
-                      </div>
-                    )}
-                    <div className="p-6 flex-1 flex flex-col justify-between">
-                      <div>
-                        <h4 className="font-bold text-lg text-slate-900 mb-2">{item?.title}</h4>
-                        <p className="text-xs text-slate-600 leading-relaxed">{item?.description}</p>
-                      </div>
-                    </div>
+                  <div
+                    style={{ fontSize: `${fs.statsLabel || 14}px` }}
+                    className="font-medium text-slate-600"
+                  >
+                    {stat.label}
                   </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* 후기 */}
-          {data?.reviews && data.reviews.length > 0 && (
-            <div className="py-24 px-10 bg-slate-50/60 border-b border-slate-100">
-              <div className="text-center mb-16">
-                <h3 className="text-3xl font-extrabold text-slate-900 mb-3 tracking-tight">
-                  {data?.reviewsSection?.title || '함께한 고객사 평가'}
-                </h3>
-                <p className="text-sm text-slate-500 font-normal">
-                  {data?.reviewsSection?.subtitle || '실제 서비스를 도입한 기업들의 반응입니다.'}
-                </p>
-              </div>
-              <div className="flex flex-wrap justify-center gap-8">
-                {data.reviews.map((rev, idx) => (
-                  <div key={idx} className="w-84 bg-white p-7 rounded-2xl border border-slate-200/80 flex flex-col justify-between shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-                    <p className="text-sm text-slate-700 italic mb-6 leading-relaxed">
-                      "{rev?.content}"
-                    </p>
-                    <div className="pt-4 border-t border-slate-100">
-                      <p className="font-bold text-slate-900 text-sm">{rev?.author}</p>
-                      <p className="text-xs text-slate-400 font-medium">{rev?.role}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* FAQ */}
-          {data?.faqs && data.faqs.length > 0 && (
-            <div className="py-24 px-10 bg-white border-b border-slate-100">
-              <div className="max-w-2xl mx-auto">
-                <div className="text-center mb-12">
-                  <h3 className="text-3xl font-extrabold text-slate-900 mb-3 tracking-tight">자주 묻는 질문</h3>
-                  <p className="text-sm text-slate-500">도입 전 가장 문의가 많은 내용입니다.</p>
                 </div>
-                <div className="space-y-4">
-                  {data.faqs.map((faq, idx) => (
-                    <div key={idx} className="bg-slate-50 p-6 rounded-2xl border border-slate-200/70">
-                      <h4 className="font-bold text-sm text-slate-900 mb-2">{faq?.question}</h4>
-                      <p className="text-xs text-slate-600 leading-relaxed">{faq?.answer}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              ))}
             </div>
-          )}
+          </section>
 
-          {/* 푸터 */}
-          <div className="bg-slate-950 text-slate-400 py-16 px-10 text-xs">
-            <span className="text-white font-bold text-base block mb-4 tracking-tight">{data?.footer?.companyName}</span>
-            <div className="border-t border-slate-800/80 pt-6 space-y-2 text-slate-400 leading-relaxed font-normal">
-              <p>대표자: {data?.footer?.ownerName} | 사업자등록번호: {data?.footer?.businessNumber}</p>
-              <p>주소: {data?.footer?.address}</p>
-              <p>이메일: {data?.footer?.contactEmail} | 고객지원: {data?.supportPhone}</p>
-              <p className="pt-4 text-slate-500">
-                © {new Date().getFullYear()} {data?.footer?.companyName}. All rights reserved.
+          {/* 솔루션 / 전문 시공 분야 섹션 */}
+          <section id="solutions" className="py-20 px-8 bg-slate-50/30">
+            <div className="max-w-5xl mx-auto text-center mb-16">
+              <h2
+                style={{ fontSize: `${fs.sectionTitle || 28}px` }}
+                className="font-bold text-slate-900 mb-4"
+              >
+                {data.solutionsSection?.title || '핵심 시공 분야'}
+              </h2>
+              <p
+                style={{ fontSize: `${fs.sectionSubtitle || 16}px` }}
+                className="text-slate-600"
+              >
+                {data.solutionsSection?.subtitle}
               </p>
             </div>
-          </div>
+            <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+              {data.solutions.map((sol, idx) => (
+                <div
+                  key={idx}
+                  className="bg-white p-8 rounded-2xl border border-slate-200/70 shadow-sm hover:shadow-md transition"
+                >
+                  <div
+                    style={{ backgroundColor: `${data.themeColor || '#0284C7'}20` }}
+                    className="w-12 h-12 rounded-xl flex items-center justify-center mb-6 font-bold text-lg"
+                  >
+                    0{idx + 1}
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-900 mb-3">{sol.title}</h3>
+                  <p className="text-sm text-slate-600 leading-relaxed">{sol.description}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* 고객 후기 섹션 */}
+          <section id="reviews" className="py-20 px-8 bg-white border-t border-slate-100">
+            <div className="max-w-5xl mx-auto text-center mb-16">
+              <h2
+                style={{ fontSize: `${fs.sectionTitle || 28}px` }}
+                className="font-bold text-slate-900 mb-4"
+              >
+                {data.reviewsSection?.title || '고객 만족 후기'}
+              </h2>
+              <p
+                style={{ fontSize: `${fs.sectionSubtitle || 16}px` }}
+                className="text-slate-600"
+              >
+                {data.reviewsSection?.subtitle}
+              </p>
+            </div>
+            <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+              {data.reviews.map((rev, idx) => (
+                <div
+                  key={idx}
+                  className="p-8 rounded-2xl bg-slate-50 border border-slate-200/60 flex flex-col justify-between"
+                >
+                  <p className="text-slate-700 leading-relaxed mb-6 italic">"{rev.content}"</p>
+                  <div>
+                    <div className="font-bold text-slate-900">{rev.author}</div>
+                    <div className="text-xs text-slate-500">{rev.role}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* 자주 묻는 질문(FAQ) 섹션 */}
+          <section className="py-20 px-8 bg-slate-50/50 border-t border-slate-100">
+            <div className="max-w-3xl mx-auto">
+              <h2
+                style={{ fontSize: `${fs.sectionTitle || 28}px` }}
+                className="font-bold text-slate-900 text-center mb-12"
+              >
+                자주 묻는 질문 (FAQ)
+              </h2>
+              <div className="space-y-4">
+                {data.faqs.map((faq, idx) => (
+                  <div
+                    key={idx}
+                    className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm"
+                  >
+                    <h3
+                      style={{ fontSize: `${fs.faqQuestion || 18}px` }}
+                      className="font-bold text-slate-900 mb-2 flex items-center gap-2"
+                    >
+                      <span style={{ color: data.themeColor || '#0284C7' }}>Q.</span>
+                      {faq.question}
+                    </h3>
+                    <p
+                      style={{ fontSize: `${fs.faqAnswer || 15}px` }}
+                      className="text-slate-600 leading-relaxed pl-6"
+                    >
+                      {faq.answer}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+          {/* 견적 상담 신청 폼 섹션 (개인정보 수집 동의 포함) */}
+          <section id="contact-form" className="py-20 px-8 bg-white border-t border-slate-100">
+            <div className="max-w-2xl mx-auto bg-slate-50 border border-slate-200/80 rounded-2xl p-8 md:p-10 shadow-sm">
+              <div className="text-center mb-8">
+                <span
+                  style={{ color: data.themeColor || '#0284C7' }}
+                  className="text-xs font-bold tracking-wider uppercase mb-2 block"
+                >
+                  Online Inquiry
+                </span>
+                <h2 className="text-2xl font-extrabold text-slate-900 mb-2">
+                  빠른 견적 및 현장 실측 신청
+                </h2>
+                <p className="text-sm text-slate-600">
+                  문의 내용을 남겨주시면 확인 후 담당자가 신속히 연락드립니다.
+                </p>
+              </div>
+
+              <form onSubmit={(e) => { e.preventDefault(); alert('견적 문의가 정상적으로 접수되었습니다.'); }} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                    성함 / 담당자명 <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="홍길동"
+                    className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                    연락처 <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="tel"
+                    required
+                    placeholder="010-1234-5678"
+                    className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                    시공 및 견적 문의 내용 <span className="text-red-500">*</span>
+                  </label>
+                  <textarea
+                    rows={4}
+                    required
+                    placeholder="시공 장소(지역), 평수, 희망 일정 등 상세 내용을 적어주세요."
+                    className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 resize-none"
+                  />
+                </div>
+
+                {/* 필수 개인정보 수집 및 이용 동의 체크박스 */}
+                <div className="pt-2 pb-1">
+                  <div className="p-3 bg-white border border-slate-200 rounded-lg text-xs text-slate-500 leading-relaxed mb-2.5 max-h-24 overflow-y-auto">
+                    <strong>[개인정보 수집 및 이용 안내]</strong><br />
+                    1. 수집 항목: 성함, 연락처, 문의 내용<br />
+                    2. 수집 목적: 견적 상담 응대 및 현장 방문 일정 안내<br />
+                    3. 보유 기간: 문의 처리 완료 후 1년간 보관 후 파기
+                  </div>
+                  <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-slate-700">
+                    <input
+                      type="checkbox"
+                      required
+                      className="w-4 h-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500 cursor-pointer"
+                    />
+                    <span>
+                      <span className="text-red-500">[필수]</span> 개인정보 수집 및 이용에 동의합니다.
+                    </span>
+                  </label>
+                </div>
+
+                <button
+                  type="submit"
+                  style={{ backgroundColor: data.themeColor || '#0284C7' }}
+                  className="w-full py-3.5 text-white font-bold text-sm rounded-xl shadow-md hover:opacity-95 transition mt-2 cursor-pointer"
+                >
+                  무료 견적 상담 신청하기
+                </button>
+              </form>
+            </div>
+          </section>
+
+          {/* 푸터 영역 */}
+          <footer id="contact" className="py-12 px-8 bg-slate-900 text-slate-400 text-xs border-t border-slate-800">
+            <div className="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-start gap-8">
+              <div>
+                <div className="text-base font-bold text-white mb-2">
+                  {data.footer.companyName}
+                </div>
+                <p className="leading-relaxed">
+                  대표자: {data.footer.ownerName} | 사업자등록번호: {data.footer.businessNumber}
+                  <br />
+                  주소: {data.footer.address}
+                  <br />
+                  이메일: {data.footer.contactEmail}
+                </p>
+              </div>
+              <div className="text-left md:text-right">
+                <div className="text-sm font-semibold text-white mb-1">상담 및 문의</div>
+                <div
+                  style={{ color: data.themeColor || '#38BDF8' }}
+                  className="text-xl font-black mb-2"
+                >
+                  {data.supportPhone}
+                </div>
+                <p className="text-slate-500">© {data.footer.companyName}. All rights reserved.</p>
+              </div>
+            </div>
+          </footer>
         </div>
       </div>
     </main>

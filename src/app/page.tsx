@@ -23,7 +23,7 @@ export default function BuilderPage() {
     faqs: defaultB2BTemplate?.faqs || [],
   }));
 
-  const [zoom, setZoom] = useState<number>(100);
+  const [zoom, setZoom] = useState<number>(80);
   const [saving, setSaving] = useState(false);
   const [publishedUrl, setPublishedUrl] = useState<string | null>(null);
   const [uploadingImage, setUploadingImage] = useState(false);
