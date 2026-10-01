@@ -17,8 +17,12 @@ interface EditorSidebarProps {
   onPublish: () => void;
   saving?: boolean;
   setIsPaymentOpen?: (open: boolean) => void;
+  // 부모(page.tsx)에서 넘겨주는 속성들 추가
+  uploadingImage?: boolean;
+  handleImageUpload?: any;
+  onOpenPayment?: () => void;
+  [key: string]: any; // 기타 추가 prop 허용
 }
-
 function FontSizeSlider({
   label,
   value,
