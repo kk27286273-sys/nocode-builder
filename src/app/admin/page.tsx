@@ -1,3 +1,4 @@
+@'
 'use client';
 
 import React, { useEffect, useState } from 'react';
@@ -57,7 +58,6 @@ export default function AdminPage() {
     }
   };
 
-  // 리드 삭제 함수
   const handleDeleteLead = async (id: string, name: string) => {
     if (!confirm(`정말 '${name}' 님의 문의 내역을 삭제하시겠습니까?\n삭제 후에는 복구할 수 없습니다.`)) {
       return;
@@ -66,19 +66,16 @@ export default function AdminPage() {
     try {
       const { error, count } = await supabase
         .from('leads')
-        .delete({ count: 'exact' }) // 실제 삭제된 행 개수 체크
+        .delete({ count: 'exact' })
         .eq('id', id);
 
-      if (error) {
-        throw new Error(error.message);
-      }
+      if (error) throw new Error(error.message);
 
       if (count === 0) {
         alert('DB에서 행을 삭제하지 못했습니다. (권한 또는 ID 불일치)');
         return;
       }
 
-      // DB 삭제가 성공했을 때만 화면 목록에서 제거
       setLeads((prev) => prev.filter((lead) => lead.id !== id));
       alert('문의 내역이 영구 삭제되었습니다.');
     } catch (err: any) {
@@ -92,12 +89,12 @@ export default function AdminPage() {
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-6">
           <div>
-           <h1 className="text-2xl font-black text-slate-900">
-  실시간 견적 및 상담 접수 현황
-</h1>
-<p className="text-xs text-slate-500 mt-1">
-  웹사이트를 통해 접수된 고객 문의 및 상담 신청 내역입니다.
-</p>
+            <h1 className="text-2xl font-black text-slate-900">
+              실시간 견적 및 상담 접수 현황
+            </h1>
+            <p className="text-xs text-slate-500 mt-1">
+              웹사이트를 통해 접수된 고객 문의 및 상담 신청 내역입니다.
+            </p>
           </div>
           <button
             onClick={fetchLeads}
@@ -187,3 +184,4 @@ export default function AdminPage() {
     </div>
   );
 }
+'@ | Set-Content -Path "app\admin\page.tsx" -Encoding UTF8
