@@ -56,42 +56,40 @@ export default function LivePreview({ data, zoom, setZoom }: LivePreviewProps) {
           }}
           className="bg-white rounded-2xl shadow-2xl border border-slate-200/80 overflow-hidden shrink-0 transition-transform duration-75 text-slate-900 mx-auto"
         >
-          {/* GNB 네비게이션 헤더 (모바일에서도 상단바 유지 및 정상 노출) */}
-          <header className="h-16 sm:h-20 border-b border-slate-100 px-4 sm:px-8 flex flex-row items-center justify-between bg-white/95 backdrop-blur sticky top-0 z-20 gap-3">
-            {/* 좌측: 로고 및 업체명 */}
-            <div className="flex items-center gap-2 sm:gap-3 min-w-0 shrink">
+          {/* GNB 네비게이션 헤더 (모바일: 업체명 단독 중앙 배치 / PC: 전체 메뉴 노출) */}
+          <header className="h-16 sm:h-20 border-b border-slate-100 px-4 sm:px-8 flex items-center justify-center md:justify-between bg-white/95 backdrop-blur sticky top-0 z-20">
+            {/* 로고 및 업체명 (모바일에서는 중앙 정렬) */}
+            <div className="flex items-center justify-center md:justify-start gap-2.5 min-w-0">
               {data.company.logoUrl && (
                 <img
                   src={data.company.logoUrl}
                   alt="Logo"
-                  className="h-7 sm:h-10 w-auto object-contain shrink-0"
+                  className="h-8 sm:h-10 w-auto object-contain shrink-0"
                 />
               )}
               <span
-                style={{ fontSize: `${Math.min(fs.companyName || 20, 18)}px` }}
+                style={{ fontSize: `${fs.companyName || 20}px` }}
                 className="font-extrabold tracking-tight text-slate-900 truncate"
               >
                 {data?.company?.name || '기업명'}
               </span>
             </div>
 
-            {/* 우측: 상단바 메뉴 링크 + 상담 문의 버튼 (모바일에서도 유지) */}
-            <nav className="flex items-center gap-2 sm:gap-6 shrink-0">
-              <div className="flex items-center gap-2 sm:gap-6 overflow-x-auto no-scrollbar">
-                {data?.navigation?.navLinks?.map((nav, idx) => (
-                  <a
-                    key={idx}
-                    href={`#${nav.targetId}`}
-                    className="text-xs sm:text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors whitespace-nowrap px-1"
-                  >
-                    {nav.label}
-                  </a>
-                ))}
-              </div>
+            {/* PC 전용 네비게이션 메뉴 및 문의 버튼 (모바일에서는 숨김) */}
+            <nav className="hidden md:flex items-center gap-6 shrink-0">
+              {data?.navigation?.navLinks?.map((nav, idx) => (
+                <a
+                  key={idx}
+                  href={`#${nav.targetId}`}
+                  className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors whitespace-nowrap"
+                >
+                  {nav.label}
+                </a>
+              ))}
               <a
                 href={`tel:${data.supportPhone}`}
                 style={{ backgroundColor: data.themeColor || '#0284C7' }}
-                className="text-white text-xs sm:text-sm font-bold px-3 sm:px-5 py-2 sm:py-2.5 rounded-full shadow hover:opacity-95 transition whitespace-nowrap shrink-0"
+                className="text-white text-sm font-bold px-5 py-2.5 rounded-full shadow hover:opacity-95 transition whitespace-nowrap"
               >
                 상담 문의
               </a>
