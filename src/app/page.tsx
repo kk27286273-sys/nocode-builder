@@ -3,17 +3,30 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 
+// ★ 대표님의 카카오톡 오픈채팅방 링크를 따옴표 안에 넣어주세요.
+const KAKAO_OPEN_CHAT_URL = 'http://pf.kakao.com/_qxmixiX/chat';
+
 export default function HomePage() {
-  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    message: '',
+  });
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setFormSubmitted(true);
-    alert('견적 상담 신청이 접수되었습니다. 담당자가 신속히 연락드리겠습니다.');
+
+    // 고객이 입력한 내용으로 안내 문구 생성
+    alert(
+      `상담 신청이 접수되었습니다!\n카카오톡 1:1 오픈채팅으로 자동 연결됩니다.`
+    );
+
+    // 대표님의 카카오톡 오픈채팅방으로 이동
+    window.open(KAKAO_OPEN_CHAT_URL, '_blank');
   };
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 flex flex-col selection:bg-sky-500 selection:text-white">
+    <div className="min-h-screen bg-white text-slate-900 flex flex-col selection:bg-sky-500 selection:text-white relative">
       {/* 1. 상단 GNB 네비게이션 */}
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-slate-100">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
@@ -40,10 +53,12 @@ export default function HomePage() {
 
           <div className="flex items-center gap-2">
             <a
-              href="#contact"
-              className="bg-sky-600 hover:bg-sky-700 text-white text-xs sm:text-sm font-bold px-4 py-2 sm:px-5 sm:py-2.5 rounded-full transition shadow-sm"
+              href={KAKAO_OPEN_CHAT_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-amber-300 hover:bg-amber-400 text-amber-950 text-xs sm:text-sm font-bold px-4 py-2 sm:px-5 sm:py-2.5 rounded-full transition shadow-sm flex items-center gap-1.5"
             >
-              상담 신청
+              <span>💬 카톡 상담</span>
             </a>
           </div>
         </div>
@@ -72,12 +87,14 @@ export default function HomePage() {
           >
             1:1 맞춤 견적 문의하기
           </a>
-          <Link
-            href="/builder"
-            className="w-full sm:w-auto bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold px-6 py-4 rounded-xl text-base transition"
+          <a
+            href={KAKAO_OPEN_CHAT_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full sm:w-auto bg-amber-300 hover:bg-amber-400 text-amber-950 font-extrabold px-6 py-4 rounded-xl text-base transition flex items-center justify-center gap-2 shadow"
           >
-            솔루션 체험하기
-          </Link>
+            카톡으로 빠른 상담
+          </a>
         </div>
       </section>
 
@@ -239,7 +256,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 상담 신청 폼 영역 */}
+      {/* 상담 신청 폼 영역 (완료 시 오픈채팅 자동 연결) */}
       <section id="contact" className="py-20 px-4 sm:px-6 bg-white border-t border-slate-100">
         <div className="max-w-xl mx-auto">
           <div className="text-center mb-10">
@@ -250,7 +267,7 @@ export default function HomePage() {
               1:1 맞춤 상담 신청
             </h2>
             <p className="text-xs sm:text-sm text-slate-600 mt-2">
-              원하시는 사이트 유형과 연락처를 남겨주시면 담당자가 바로 연락드립니다.
+              신청을 완료하시면 즉시 카카오톡 1:1 오픈채팅으로 연결됩니다.
             </p>
           </div>
 
@@ -262,6 +279,8 @@ export default function HomePage() {
               <input
                 type="text"
                 required
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 placeholder="예: TH기업 / 홍길동 대표"
                 className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
               />
@@ -274,6 +293,8 @@ export default function HomePage() {
               <input
                 type="tel"
                 required
+                value={formData.phone}
+                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                 placeholder="010-0000-0000"
                 className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
               />
@@ -285,6 +306,8 @@ export default function HomePage() {
               </label>
               <textarea
                 rows={3}
+                value={formData.message}
+                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                 placeholder="희망하시는 업종, 참고 사이트 등을 자유롭게 적어주세요."
                 className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 resize-none"
               ></textarea>
@@ -292,13 +315,24 @@ export default function HomePage() {
 
             <button
               type="submit"
-              className="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-3.5 rounded-xl transition shadow text-sm"
+              className="w-full bg-amber-400 hover:bg-amber-500 text-amber-950 font-extrabold py-3.5 rounded-xl transition shadow text-sm flex items-center justify-center gap-2"
             >
-              상담 신청 완료하기
+              <span>💬 카카오톡 오픈채팅으로 상담 시작하기</span>
             </button>
           </form>
         </div>
       </section>
+
+      {/* 우측 하단 카카오톡 플로팅 상담 버튼 */}
+      <a
+        href={KAKAO_OPEN_CHAT_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-6 right-6 z-50 bg-[#FEE500] hover:bg-[#FDD800] text-[#191919] font-bold p-3.5 sm:px-5 sm:py-3.5 rounded-full shadow-2xl flex items-center gap-2 border border-black/5 transition transform hover:scale-105 active:scale-95"
+      >
+        <span className="text-lg">💬</span>
+        <span className="text-xs sm:text-sm">카톡 상담</span>
+      </a>
 
       {/* 푸터 영역 */}
       <footer className="py-12 px-4 sm:px-6 bg-slate-900 text-slate-400 text-xs border-t border-slate-800">
