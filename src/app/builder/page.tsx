@@ -1,6 +1,7 @@
 ﻿'use client';
 
 import React, { useState, useEffect } from 'react';
+import '../globals.css'; //
 import { supabase } from '@/lib/supabase/client';
 import { publishSite } from '@/utils/publishSite';
 import { defaultB2BTemplate, B2BTemplateData } from '@/data/templates';
