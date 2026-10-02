@@ -16,8 +16,22 @@ export default function BuilderPage() {
   const [uploadingImage, setUploadingImage] = useState(false);
   const [isPaymentOpen, setIsPaymentOpen] = useState(false);
 
+  // 로컬 스토리지에 임시 저장된 작업물이 있다면 자동 복원
   useEffect(() => {
     if (typeof window === 'undefined') return;
+
+    const savedDraft = localStorage.getItem('thsoft_builder_draft');
+    if (savedDraft) {
+      try {
+        const parsed = JSON.parse(savedDraft);
+        if (parsed && typeof parsed === 'object') {
+          setData(parsed);
+        }
+      } catch (e) {
+        console.error('Draft load error:', e);
+      }
+    }
+
     const params = new URLSearchParams(window.location.search);
     const id = params.get('siteId');
     if (id) {
@@ -35,6 +49,17 @@ export default function BuilderPage() {
         });
     }
   }, []);
+
+  // 내용 변경 시 브라우저에 자동 백업
+  const handleDataChange = (updater: any) => {
+    setData((prev) => {
+      const nextData = typeof updater === 'function' ? updater(prev) : updater;
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('thsoft_builder_draft', JSON.stringify(nextData));
+      }
+      return nextData;
+    });
+  };
 
   const handlePublish = async () => {
     setSaving(true);
@@ -80,21 +105,24 @@ export default function BuilderPage() {
 
       const uploadedUrl = publicUrlData.publicUrl;
 
-      if (targetKey === 'hero') {
-        setData((prev) => ({
-          ...prev,
-          hero: { ...prev.hero, mediaUrl: uploadedUrl, mediaType: 'image' },
-        }));
-      } else if (targetKey === 'logo') {
-        setData((prev) => ({
-          ...prev,
-          company: { ...prev.company, logoUrl: uploadedUrl },
-        }));
-      } else if (targetKey === 'solution' && typeof index === 'number') {
-        const newSolutions = [...data.solutions];
-        newSolutions[index].image = uploadedUrl;
-        setData((prev) => ({ ...prev, solutions: newSolutions }));
-      }
+      handleDataChange((prev: B2BTemplateData) => {
+        if (targetKey === 'hero') {
+          return {
+            ...prev,
+            hero: { ...prev.hero, mediaUrl: uploadedUrl, mediaType: 'image' },
+          };
+        } else if (targetKey === 'logo') {
+          return {
+            ...prev,
+            company: { ...prev.company, logoUrl: uploadedUrl },
+          };
+        } else if (targetKey === 'solution' && typeof index === 'number') {
+          const newSolutions = [...prev.solutions];
+          newSolutions[index] = { ...newSolutions[index], image: uploadedUrl };
+          return { ...prev, solutions: newSolutions };
+        }
+        return prev;
+      });
     } catch (error) {
       console.error('이미지 업로드 실패:', error);
       alert('이미지 업로드 중 오류가 발생했습니다.');
@@ -104,20 +132,26 @@ export default function BuilderPage() {
   };
 
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-slate-100 font-sans">
-      <EditorSidebar
-        data={data}
-        setData={setData}
-        onPublish={handlePublish}
-        saving={saving}
-        setIsPaymentOpen={setIsPaymentOpen}
-        uploadingImage={uploadingImage}
-        handleImageUpload={handleImageUpload}
-        onOpenPayment={() => setIsPaymentOpen(true)}
-      />
+    <div className="flex h-screen w-full overflow-hidden bg-slate-900 font-sans">
+      {/* 좌측 사이드바: 고정 너비와 자체 스크롤 확보 */}
+      <div className="w-[380px] h-full flex-shrink-0 border-r border-slate-800 bg-slate-950 overflow-y-auto">
+        <EditorSidebar
+          data={data}
+          setData={handleDataChange}
+          onPublish={handlePublish}
+          saving={saving}
+          setIsPaymentOpen={setIsPaymentOpen}
+          uploadingImage={uploadingImage}
+          handleImageUpload={handleImageUpload}
+          onOpenPayment={() => setIsPaymentOpen(true)}
+        />
+      </div>
 
-      <div className="flex-1 h-full overflow-y-auto">
-        <LivePreview data={data} zoom={zoom} setZoom={setZoom} />
+      {/* 우측 실시간 미리보기: 전체 남은 너비 차지 및 배경 분리 */}
+      <div className="flex-1 h-full overflow-y-auto bg-slate-800 flex justify-center items-start p-4 md:p-8">
+        <div className="w-full max-w-5xl bg-white rounded-xl shadow-2xl overflow-hidden min-h-[800px]">
+          <LivePreview data={data} zoom={zoom} setZoom={setZoom} />
+        </div>
       </div>
     </div>
   );
