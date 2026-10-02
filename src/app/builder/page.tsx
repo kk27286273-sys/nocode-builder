@@ -130,8 +130,9 @@ export default function BuilderPage() {
   };
 
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-slate-900 font-sans">
-      <div className="w-[380px] h-full flex-shrink-0 border-r border-slate-800 bg-slate-950 overflow-y-auto">
+    <div className="relative flex h-screen w-full overflow-hidden bg-slate-900 font-sans">
+      {/* 좌측 편집기 사이드바: 고정 너비, 높은 우선순위(z-30), 독립 스크롤 */}
+      <aside className="relative z-30 w-[420px] min-w-[420px] max-w-[420px] h-full border-r border-slate-800 bg-slate-950 shadow-2xl overflow-y-auto">
         <EditorSidebar
           data={data}
           setData={handleDataChange}
@@ -142,13 +143,14 @@ export default function BuilderPage() {
           handleImageUpload={handleImageUpload}
           onOpenPayment={() => setIsPaymentOpen(true)}
         />
-      </div>
+      </aside>
 
-      <div className="flex-1 h-full overflow-y-auto bg-slate-800 flex justify-center items-start p-4 md:p-8">
-        <div className="w-full max-w-5xl bg-white rounded-xl shadow-2xl overflow-hidden min-h-[800px]">
+      {/* 우측 실시간 미리보기: 사이드바 영역을 침범하지 않도록 flex-1 및 격리 */}
+      <main className="relative z-10 flex-1 h-full overflow-y-auto overflow-x-hidden bg-slate-800 flex justify-center items-start p-4 md:p-8">
+        <div className="w-full max-w-5xl bg-white rounded-xl shadow-2xl overflow-hidden min-h-[900px]">
           <LivePreview data={data} zoom={zoom} setZoom={setZoom} />
         </div>
-      </div>
+      </main>
     </div>
   );
 }
