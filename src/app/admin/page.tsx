@@ -1,4 +1,3 @@
-@'
 'use client';
 
 import React, { useEffect, useState } from 'react';
@@ -184,4 +183,3 @@ export default function AdminPage() {
     </div>
   );
 }
-'@ | Set-Content -Path "app\admin\page.tsx" -Encoding UTF8
