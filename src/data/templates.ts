@@ -158,7 +158,7 @@ export const defaultTemplateData: B2BTemplateData = {
   ],
   footer: {
     companyName: 'TH소프트 (TH SOFT)',
-    ownerName: '태현',
+    ownerName: '김태헌',
     businessNumber: '000-00-00000',
     address: '서울특별시 강남구 테헤란로',
     contactEmail: 'contact@thsoft.co.kr',
@@ -177,3 +177,6 @@ export const defaultTemplateData: B2BTemplateData = {
     faqAnswer: 15,
   },
 };
+
+// 기존 컴포넌트들의 호환성을 위해 두 이름 모두 export
+export const defaultB2BTemplate = defaultTemplateData;
