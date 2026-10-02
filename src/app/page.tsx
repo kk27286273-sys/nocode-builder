@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 
-// 실제 카카오톡 1:1 채팅 및 채널 URL 연동
 const KAKAO_CHAT_URL = 'http://pf.kakao.com/_qxmixiX/chat';
 
 export default function HomePage() {
@@ -70,7 +69,8 @@ export default function HomePage() {
           <span className="text-sky-600"> 모바일 최적화 실속형 홈페이지</span> 제작
         </h1>
 
-        <p className="text-slate-600 text-sm sm:text-lg max-w-2xl leading-relaxed mb-10 px-2">
+        {/* 1px 축소(text-[15px]) 및 줄바꿈 최적화 처리 */}
+        <p className="text-slate-600 text-[13px] sm:text-[15px] sm:leading-relaxed max-w-2xl mb-10 px-2 tracking-tight break-keep">
           기업 회사소개부터 매장 홍보, 시공 포트폴리오까지. 불필요한 기능은 빼고 고객의 전화와 견적 문의로 직결되는 실속형 사이트를 3~4일 만에 합리적인 정찰제로 구축해 드립니다.
         </p>
 
@@ -174,7 +174,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 정찰 단가 안내 섹션 */}
+      {/* 1번 수정: 투명한 실속형 정찰 단가 안내 섹션 (700,000 -> 490,000원 30% 할인) */}
       <section id="pricing" className="py-20 px-4 sm:px-6 bg-white border-t border-slate-100">
         <div className="max-w-4xl mx-auto text-center mb-12">
           <span className="text-xs font-bold text-sky-600 tracking-wider uppercase mb-2 block">
@@ -190,14 +190,14 @@ export default function HomePage() {
 
         <div className="max-w-xl mx-auto bg-slate-50 border-2 border-sky-600 rounded-3xl p-8 sm:p-10 shadow-lg text-center relative overflow-hidden">
           <div className="absolute top-0 right-0 bg-sky-600 text-white text-[11px] font-bold px-4 py-1.5 rounded-bl-xl">
-            선착순 5개 업체 한정 프로모션
+            선착순 5개 업체 한정 (30% 할인)
           </div>
           <h3 className="text-xl font-bold text-slate-900 mb-2">모바일 반응형 B2B 원페이지 패키지</h3>
           <p className="text-xs text-slate-500 mb-6">기획 + 모바일 최적화 디자인 + 문의 CRM 연동 일체</p>
-          <div className="mb-6">
-            <span className="text-sm line-through text-slate-400 mr-2">정상가 550,000원</span>
-            <span className="text-3xl sm:text-4xl font-black text-sky-600">385,000원</span>
-            <span className="text-xs font-medium text-slate-600 ml-1">(부가세 별도)</span>
+          <div className="mb-6 flex items-center justify-center gap-2">
+            <span className="text-sm line-through text-slate-400">정상가 700,000원</span>
+            <span className="text-3xl sm:text-4xl font-black text-sky-600">490,000원</span>
+            <span className="text-xs font-medium text-slate-600">(부가세 별도)</span>
           </div>
           <ul className="text-xs sm:text-sm text-slate-600 space-y-2.5 text-left mb-8 max-w-sm mx-auto">
             <li className="flex items-center gap-2">✔ 스마트폰 터치 중심 모바일 반응형 캔버스</li>
@@ -250,7 +250,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 상담 신청 폼 영역 (제출 시 1:1 채팅방 다이렉트 연결) */}
+      {/* 상담 신청 폼 영역 */}
       <section id="contact" className="py-20 px-4 sm:px-6 bg-white border-t border-slate-100">
         <div className="max-w-xl mx-auto">
           <div className="text-center mb-10">
@@ -317,7 +317,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 우측 하단 카카오톡 플로팅 상담 버튼 (채팅방 직통) */}
+      {/* 우측 하단 카카오톡 플로팅 상담 버튼 */}
       <a
         href={KAKAO_CHAT_URL}
         target="_blank"
@@ -328,7 +328,7 @@ export default function HomePage() {
         <span className="text-xs sm:text-sm">카톡 상담</span>
       </a>
 
-      {/* 푸터 영역 */}
+      {/* 3번 수정: 상담 및 기술 지원 전화번호 010-0000-0000 반영 */}
       <footer className="py-12 px-4 sm:px-6 bg-slate-900 text-slate-400 text-xs border-t border-slate-800">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-start gap-8">
           <div>
@@ -340,13 +340,13 @@ export default function HomePage() {
               <br />
               이메일: contact@thsoft.co.kr
               <br />
-              고객센터: 010-9195-2728
+              고객센터: 010-0000-0000
             </p>
           </div>
           <div className="text-left md:text-right">
             <div className="text-sm font-semibold text-white mb-1">상담 및 기술 지원</div>
             <div className="text-xl font-black text-sky-400 mb-2">
-              010-9195-2728
+              010-0000-0000
             </div>
             <p className="text-slate-500">© TH소프트 (TH SOFT). All rights reserved.</p>
           </div>

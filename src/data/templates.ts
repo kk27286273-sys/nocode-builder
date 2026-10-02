@@ -25,36 +25,21 @@ export interface FaqItem {
   answer: string;
 }
 
-export interface FontSizesConfig {
-  companyName?: number;
-  heroBadge?: number;
-  heroTitle?: number;
-  heroSubtitle?: number;
-  partnersTitle?: number;
-  statsValue?: number;
-  statsLabel?: number;
-  sectionTitle?: number;
-  sectionSubtitle?: number;
-  faqQuestion?: number;
-  faqAnswer?: number;
-}
-
 export interface B2BTemplateData {
   themeColor: string;
   supportPhone: string;
-  fontSizes?: FontSizesConfig;
   company: {
     name: string;
     logoUrl?: string;
   };
-  navigation: {
+  navigation?: {
     navLinks: NavItem[];
   };
   hero: {
-    badge: string;
+    badge?: string;
     title: string;
     subtitle: string;
-    mediaType?: 'image' | 'video' | 'none';
+    mediaType?: 'image' | 'video';
     mediaUrl?: string;
   };
   partnersSection?: {
@@ -65,12 +50,12 @@ export interface B2BTemplateData {
   stats: StatItem[];
   solutionsSection?: {
     title: string;
-    subtitle: string;
+    subtitle?: string;
   };
   solutions: SolutionItem[];
   reviewsSection?: {
     title: string;
-    subtitle: string;
+    subtitle?: string;
   };
   reviews: ReviewItem[];
   faqs: FaqItem[];
@@ -80,18 +65,109 @@ export interface B2BTemplateData {
     businessNumber: string;
     address: string;
     contactEmail: string;
-    tel?: string;
+  };
+  fontSizes?: {
+    companyName?: number;
+    heroBadge?: number;
+    heroTitle?: number;
+    heroSubtitle?: number;
+    partnersTitle?: number;
+    statsValue?: number;
+    statsLabel?: number;
+    sectionTitle?: number;
+    sectionSubtitle?: number;
+    faqQuestion?: number;
+    faqAnswer?: number;
   };
 }
 
-export const defaultB2BTemplate: B2BTemplateData = {
-  themeColor: "#0284C7",
-  supportPhone: "010-0000-0000",
+export const defaultTemplateData: B2BTemplateData = {
+  themeColor: '#0284C7',
+  supportPhone: '010-0000-0000',
+  company: {
+    name: 'TH소프트',
+    logoUrl: '',
+  },
+  navigation: {
+    navLinks: [
+      { label: '핵심 강점', targetId: 'stats' },
+      { label: '제작 사례', targetId: 'solutions' },
+      { label: '상담 후기', targetId: 'reviews' },
+      { label: '상담 신청', targetId: 'contact-form' },
+    ],
+  },
+  hero: {
+    badge: '모바일 100% 최적화 · 3~4일 신속 구축 전문',
+    title: '명함 대신 링크 하나로 계약 따는\n모바일 최적화 실속형 홈페이지',
+    subtitle:
+      '기업 회사소개부터 매장 홍보, 시공 포트폴리오까지. 불필요한 기능은 빼고 고객의 전화와 견적 문의로 직결되는 실속형 사이트를 구축해 드립니다.',
+  },
+  partnersSection: {
+    enabled: true,
+    title: '제작 및 기술 파트너십 보증',
+    partners: ['모바일 반응형 보증', 'SSL 보안서버 구축', '정찰 단가 준수', '도메인 셋업 지원'],
+  },
+  stats: [
+    { value: '100%', label: '모바일 반응형 최적화' },
+    { value: '3~4일', label: '자료 전달 후 초안 완성' },
+    { value: '0원', label: '숨겨진 추가 비용 없음' },
+  ],
+  solutionsSection: {
+    title: '핵심 솔루션 & 제작 분야',
+    subtitle: '업종의 목적에 맞춰 견적 전환율을 극대화하는 3대 대표 구성',
+  },
+  solutions: [
+    {
+      title: 'B2B 기업·제조업 전용 웹',
+      description: '거래처 미팅 전 회사소개서 대신 전달하는 신뢰도 높은 모바일 반응형 웹사이트.',
+    },
+    {
+      title: '매장 홍보 & 시공 포트폴리오 웹',
+      description: '인테리어, 설비, 학원 등 고객이 시공 실적과 후기를 보고 바로 견적을 요청하는 구조.',
+    },
+    {
+      title: '전문직 & 1인 기업 랜딩페이지',
+      description: '복잡한 메뉴 없이 스크롤 한 번으로 프로필 확인부터 상담 예약까지 1분 컷 연결.',
+    },
+  ],
+  reviewsSection: {
+    title: '실제 제작 고객 후기',
+    subtitle: 'TH소프트를 통해 문의 유입률을 높인 고객들의 생생한 리뷰',
+  },
+  reviews: [
+    {
+      author: '김대표',
+      role: '제조업 B2B 대표',
+      content: '거래처 미팅 때 링크 하나 보내줬더니 훨씬 전문적으로 보인다고 칭찬받았습니다.',
+    },
+    {
+      author: '박원장',
+      role: '전문 교육기관 운영',
+      content: '쓸데없는 복잡한 기능 없이 모바일에서 바로 상담으로 연결되니 문의가 확실히 늘었습니다.',
+    },
+  ],
+  faqs: [
+    {
+      question: '컴맹이고 웹을 전혀 모르는데 제작이 가능한가요?',
+      answer: '네, 대표님은 업체 소개와 사진 몇 장만 편하게 던져주시면 됩니다. 기획, 모바일 최적화, 도메인 연결까지 알아서 세팅해 드립니다.',
+    },
+    {
+      question: '오픈 기념 30% 할인은 언제까지인가요?',
+      answer: '완성도 높은 1:1 맞춤 퀄리티 유지를 위해 선착순 5개 업체 한정으로 진행되며, 마감 즉시 정상가로 전환됩니다.',
+    },
+  ],
+  footer: {
+    companyName: 'TH소프트 (TH SOFT)',
+    ownerName: '태현',
+    businessNumber: '000-00-00000',
+    address: '서울특별시 강남구 테헤란로',
+    contactEmail: 'contact@thsoft.co.kr',
+  },
   fontSizes: {
     companyName: 20,
     heroBadge: 14,
     heroTitle: 36,
-    heroSubtitle: 18,
+    heroSubtitle: 16,
     partnersTitle: 16,
     statsValue: 32,
     statsLabel: 14,
@@ -100,89 +176,4 @@ export const defaultB2BTemplate: B2BTemplateData = {
     faqQuestion: 18,
     faqAnswer: 15,
   },
-  company: {
-    name: "한결 인테리어 설비",
-    logoUrl: ""
-  },
-  navigation: {
-    navLinks: [
-      { label: "시공 강점", targetId: "stats" },
-      { label: "전문 분야", targetId: "solutions" },
-      { label: "고객 후기", targetId: "reviews" },
-      { label: "시공 문의", targetId: "contact" }
-    ]
-  },
-  hero: {
-    badge: "구미·경북 전지역 출장 시공 전문",
-    title: "누수 탐지부터 상가·주거 인테리어까지\n30년 베테랑이 직접 책임 시공합니다",
-    subtitle: "하청 없는 100% 직영 시공 및 국가공인 자격 보유. 정찰제 견적과 철저한 2년 무상 A/S로 정직하게 시공합니다.",
-    mediaType: "none",
-    mediaUrl: ""
-  },
-  partnersSection: {
-    enabled: true,
-    title: "공식 면허 및 신뢰 보증",
-    partners: [
-      "전문건설업 면허",
-      "배상책임보험 1억원 가입",
-      "친환경 자재 인증",
-      "2년 하자보수 보증"
-    ]
-  },
-  stats: [
-    { value: "1,500+", label: "누적 시공 및 누수 해결" },
-    { value: "100%", label: "직영 시공 및 정찰 견적" },
-    { value: "2년", label: "철저한 사후 무상 A/S" }
-  ],
-  solutionsSection: {
-    title: "한결 인테리어 핵심 시공 분야",
-    subtitle: "현장 상황에 맞는 가장 확실하고 경제적인 솔루션을 제시합니다."
-  },
-  solutions: [
-    {
-      title: "최첨단 누수 탐지 및 배관 공사",
-      description: "청음식·가스식 정밀 탐지기로 미세 누수까지 100% 탐지. 실패 시 탐지 비용을 받지 않습니다."
-    },
-    {
-      title: "주거·상가 맞춤 인테리어 리모델링",
-      description: "아파트, 상가, 식당, 카페 등 공간 특성에 맞춘 최적 동선 설계 및 투명한 자재 내역서 제공."
-    },
-    {
-      title: "욕실 리모델링 및 타일 방수 시공",
-      description: "노후 배관 전면 교체부터 고급 타일 시공, 특수 방수 공법으로 누수 원인을 원천 차단합니다."
-    }
-  ],
-  reviewsSection: {
-    title: "실제 고객 만족 후기",
-    subtitle: "한결과 함께 공사를 마친 고객님들의 솔직한 평가입니다."
-  },
-  reviews: [
-    {
-      author: "김민석 님",
-      role: "구미 봉곡동 상가 식당 대표",
-      content: "주방 바닥 누수 때문에 영업도 못 하고 골치 아팠는데, 반나절 만에 포인트 정확히 짚어서 잡아주셨습니다. 정직한 시공에 감사드립니다."
-    },
-    {
-      author: "이수진 님",
-      role: "옥계동 아파트 올리모델링",
-      content: "하청 안 주고 사장님이 현장에 매일 나와서 마감 하나하나 챙겨주시는 모습에 신뢰가 갔습니다. A/S 대응도 칼같습니다."
-    }
-  ],
-  faqs: [
-    {
-      question: "견적 상담과 현장 방문은 무료인가요?",
-      answer: "네, 구미 및 인근 지역은 방문 실측과 현장 견적 상담을 100% 무료로 진행해 드립니다."
-    },
-    {
-      question: "공사 후 A/S 보증 기간은 어떻게 되나요?",
-      answer: "시공 완료 후 자체 보증서를 발행해 드리며, 시공 하자에 대해 2년간 철저하게 무상 A/S를 보장합니다."
-    }
-  ],
-  footer: {
-    companyName: "한결 인테리어 설비",
-    ownerName: "김대표",
-    businessNumber: "123-45-67890",
-    address: "경상북도 구미시 산책길 12, 1층",
-    contactEmail: "contact@hangyul.co.kr"
-  }
 };
