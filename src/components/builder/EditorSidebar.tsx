@@ -1,630 +1,828 @@
 'use client';
 
-import React from 'react';
-import { B2BTemplateData } from '@/data/templates';
+import React, { useState } from 'react';
+import {
+  B2BTemplateData,
+  NavItem,
+  SolutionItem,
+  ReviewItem,
+  FaqItem,
+} from '@/data/templates';
+import { supabase } from '@/lib/supabase/client';
+import { compressImage } from '@/utils/compressImage';
 
 interface EditorSidebarProps {
   data: B2BTemplateData;
   setData: React.Dispatch<React.SetStateAction<B2BTemplateData>>;
+  onPublish: () => void;
+  saving?: boolean;
+  setIsPaymentOpen?: (open: boolean) => void;
+  uploadingImage?: boolean;
+  handleImageUpload?: any;
+  onOpenPayment?: () => void;
+  [key: string]: any;
 }
 
-export default function EditorSidebar({ data, setData }: EditorSidebarProps) {
-  const fs = data.fontSizes || {};
+function FontSizeSlider({
+  label,
+  value,
+  min = 12,
+  max = 60,
+  onChange,
+}: {
+  label: string;
+  value?: number;
+  min?: number;
+  max?: number;
+  onChange: (val: number) => void;
+}) {
+  const currentVal = value || min;
+  return (
+    <div className="flex items-center justify-between gap-2 mt-2 mb-3 bg-slate-50 p-2.5 rounded-lg border border-slate-200/70">
+      <span className="text-xs text-slate-600 font-medium">{label} 크기</span>
+      <div className="flex items-center gap-2">
+        <input
+          type="range"
+          min={min}
+          max={max}
+          value={currentVal}
+          onChange={(e) => onChange(Number(e.target.value))}
+          className="w-24 h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-sky-600"
+        />
+        <span className="text-xs font-bold text-slate-800 w-9 text-right font-mono">
+          {currentVal}px
+        </span>
+      </div>
+    </div>
+  );
+}
 
-  // 기본 정보 수정
-  const handleCompanyChange = (field: string, value: string) => {
-    setData((prev) => ({
-      ...prev,
-      company: { ...prev.company, [field]: value },
-    }));
-  };
+export default function EditorSidebar({
+  data,
+  setData,
+  onPublish,
+  saving = false,
+  setIsPaymentOpen,
+}: EditorSidebarProps) {
+  const [uploading, setUploading] = useState<{ [key: string]: boolean }>({});
 
-  // 폰트 크기 수정
-  const handleFontSizeChange = (key: string, value: number) => {
+  const updateFont = (
+    key: keyof NonNullable<B2BTemplateData['fontSizes']>,
+    val: number
+  ) => {
     setData((prev) => ({
       ...prev,
       fontSizes: {
         ...prev.fontSizes,
-        [key]: value,
+        [key]: val,
       },
     }));
   };
 
-  // 히어로 섹션 수정
-  const handleHeroChange = (field: string, value: string) => {
-    setData((prev) => ({
-      ...prev,
-      hero: { ...prev.hero, [field]: value },
-    }));
+  const handleImageUpload = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    callback: (url: string) => void,
+    key: string
+  ) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      setUploading((prev) => ({ ...prev, [key]: true }));
+      const compressed = await compressImage(file);
+      const fileExt = compressed.name.split('.').pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+      const filePath = `uploads/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('site-assets')
+        .upload(filePath, compressed);
+
+      if (uploadError) throw uploadError;
+
+      const { data: publicUrlData } = supabase.storage
+        .from('site-assets')
+        .getPublicUrl(filePath);
+
+      callback(publicUrlData.publicUrl);
+    } catch (error) {
+      console.error('이미지 업로드 실패:', error);
+      alert('이미지 업로드 중 오류가 발생했습니다.');
+    } finally {
+      setUploading((prev) => ({ ...prev, [key]: false }));
+    }
   };
 
-  // 파트너스 섹션 수정
-  const handlePartnerChange = (index: number, value: string) => {
-    const updated = [...(data.partnersSection?.partners || [])];
-    updated[index] = value;
-    setData((prev) => ({
-      ...prev,
-      partnersSection: {
-        ...prev.partnersSection,
-        title: prev.partnersSection?.title || '',
-        enabled: prev.partnersSection?.enabled ?? true,
-        partners: updated,
-      },
-    }));
+  // 1. 네비게이션 제어
+  const addNavLink = () => {
+    const newLinks = [...(data.navigation?.navLinks || []), { label: '새 메뉴', targetId: 'stats' }];
+    setData({ ...data, navigation: { navLinks: newLinks } });
   };
 
-  const addPartner = () => {
-    setData((prev) => ({
-      ...prev,
-      partnersSection: {
-        ...prev.partnersSection,
-        title: prev.partnersSection?.title || '',
-        enabled: prev.partnersSection?.enabled ?? true,
-        partners: [...(prev.partnersSection?.partners || []), '새 협력사'],
-      },
-    }));
+  const updateNavLink = (index: number, field: keyof NavItem, value: string) => {
+    const newLinks = [...(data.navigation?.navLinks || [])];
+    newLinks[index] = { ...newLinks[index], [field]: value };
+    setData({ ...data, navigation: { navLinks: newLinks } });
   };
 
-  const removePartner = (index: number) => {
-    setData((prev) => ({
-      ...prev,
-      partnersSection: {
-        ...prev.partnersSection,
-        title: prev.partnersSection?.title || '',
-        enabled: prev.partnersSection?.enabled ?? true,
-        partners: (prev.partnersSection?.partners || []).filter((_, i) => i !== index),
-      },
-    }));
+  const removeNavLink = (index: number) => {
+    const newLinks = (data.navigation?.navLinks || []).filter((_, idx) => idx !== index);
+    setData({ ...data, navigation: { navLinks: newLinks } });
   };
 
-  // 실적 지표 수정
-  const handleStatChange = (index: number, field: 'value' | 'label', value: string) => {
-    const updated = [...data.stats];
-    updated[index] = { ...updated[index], [field]: value };
-    setData((prev) => ({ ...prev, stats: updated }));
-  };
-
-  const addStat = () => {
-    setData((prev) => ({
-      ...prev,
-      stats: [...prev.stats, { value: '100+', label: '새 지표 항목' }],
-    }));
-  };
-
-  const removeStat = (index: number) => {
-    setData((prev) => ({
-      ...prev,
-      stats: prev.stats.filter((_, i) => i !== index),
-    }));
-  };
-
-  // 솔루션 / 시공 분야 수정
-  const handleSolutionChange = (index: number, field: 'title' | 'description', value: string) => {
-    const updated = [...data.solutions];
-    updated[index] = { ...updated[index], [field]: value };
-    setData((prev) => ({ ...prev, solutions: updated }));
-  };
-
+  // 2. 솔루션 제어
   const addSolution = () => {
-    setData((prev) => ({
-      ...prev,
-      solutions: [
-        ...prev.solutions,
-        { title: '새 시공 솔루션', description: '솔루션에 대한 상세 설명을 입력하세요.' },
-      ],
-    }));
+    const newSol: SolutionItem = {
+      title: '새 전문 서비스',
+      description: '제공하는 핵심 서비스 상세 내용을 입력하세요.',
+      image: '',
+    };
+    setData({ ...data, solutions: [...data.solutions, newSol] });
+  };
+
+  const updateSolution = (index: number, field: keyof SolutionItem, value: string) => {
+    const newSol = [...data.solutions];
+    newSol[index] = { ...newSol[index], [field]: value };
+    setData({ ...data, solutions: newSol });
   };
 
   const removeSolution = (index: number) => {
-    setData((prev) => ({
-      ...prev,
-      solutions: prev.solutions.filter((_, i) => i !== index),
-    }));
+    setData({ ...data, solutions: data.solutions.filter((_, idx) => idx !== index) });
   };
 
-  // 고객 후기 수정
-  const handleReviewChange = (
-    index: number,
-    field: 'author' | 'role' | 'content',
-    value: string
-  ) => {
-    const updated = [...data.reviews];
-    updated[index] = { ...updated[index], [field]: value };
-    setData((prev) => ({ ...prev, reviews: updated }));
-  };
-
+  // 3. 후기 제어
   const addReview = () => {
-    setData((prev) => ({
-      ...prev,
-      reviews: [
-        ...prev.reviews,
-        { author: '고객명', role: '대표 / 직책', content: '서비스 만족 후기를 입력하세요.' },
-      ],
-    }));
+    const newRev: ReviewItem = {
+      author: '고객명/기업명',
+      role: '직책 또는 지역',
+      content: '서비스 시공 및 도입에 대한 만족스러운 평가 내용을 입력하세요.',
+    };
+    setData({ ...data, reviews: [...data.reviews, newRev] });
+  };
+
+  const updateReview = (index: number, field: keyof ReviewItem, value: string) => {
+    const newRev = [...data.reviews];
+    newRev[index] = { ...newRev[index], [field]: value };
+    setData({ ...data, reviews: newRev });
   };
 
   const removeReview = (index: number) => {
-    setData((prev) => ({
-      ...prev,
-      reviews: prev.reviews.filter((_, i) => i !== index),
-    }));
+    setData({ ...data, reviews: data.reviews.filter((_, idx) => idx !== index) });
   };
 
-  // FAQ 수정
-  const handleFaqChange = (index: number, field: 'question' | 'answer', value: string) => {
-    const updated = [...data.faqs];
-    updated[index] = { ...updated[index], [field]: value };
-    setData((prev) => ({ ...prev, faqs: updated }));
-  };
-
+  // 4. FAQ 제어
   const addFaq = () => {
-    setData((prev) => ({
-      ...prev,
-      faqs: [
-        ...prev.faqs,
-        { question: '새로운 질문을 입력하세요', answer: '해당 질문에 대한 상세 답변입니다.' },
-      ],
-    }));
+    const newFaq: FaqItem = {
+      question: '자주 묻는 질문을 입력하세요',
+      answer: '질문에 대한 명확하고 친절한 답변을 작성하세요.',
+    };
+    setData({ ...data, faqs: [...data.faqs, newFaq] });
+  };
+
+  const updateFaq = (index: number, field: keyof FaqItem, value: string) => {
+    const newFaqs = [...data.faqs];
+    newFaqs[index] = { ...newFaqs[index], [field]: value };
+    setData({ ...data, faqs: newFaqs });
   };
 
   const removeFaq = (index: number) => {
-    setData((prev) => ({
-      ...prev,
-      faqs: prev.faqs.filter((_, i) => i !== index),
-    }));
+    setData({ ...data, faqs: data.faqs.filter((_, idx) => idx !== index) });
   };
 
-  // 푸터 정보 수정
-  const handleFooterChange = (field: string, value: string) => {
+  // 5. 푸터 정보 수정
+  const updateFooter = (field: string, value: string) => {
     setData((prev) => ({
       ...prev,
-      footer: { ...prev.footer, [field]: value },
+      footer: {
+        ...prev.footer,
+        [field]: value,
+      },
     }));
   };
 
   return (
-    <aside className="w-80 md:w-96 h-full bg-white border-r border-slate-200 flex flex-col shrink-0 z-30 shadow-sm select-none">
-      <div className="p-4 border-b border-slate-200">
-        <h2 className="font-bold text-slate-900 text-lg">페이지 설정</h2>
-        <p className="text-xs text-slate-500 mt-0.5">실시간으로 사이트 콘텐츠를 수정합니다.</p>
+    <aside className="w-[430px] h-full bg-white border-r border-slate-200 flex flex-col shrink-0 z-20 shadow-xl">
+      {/* 헤더 액션 바 */}
+      <div className="p-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+        <div>
+          <h2 className="text-sm font-extrabold text-slate-900 tracking-tight">
+            B2B 웹 빌더 에디터
+          </h2>
+          <span className="text-xs text-slate-500 font-medium">실시간 통합 디자인 스튜디오</span>
+        </div>
+        <div className="flex items-center gap-2">
+          {setIsPaymentOpen && (
+            <button
+              onClick={() => setIsPaymentOpen(true)}
+              className="px-3 py-2 text-xs font-bold text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition"
+            >
+              대행 결제
+            </button>
+          )}
+          <button
+            onClick={onPublish}
+            disabled={saving}
+            style={{ backgroundColor: data.themeColor || '#0284C7' }}
+            className="px-4 py-2 text-xs font-bold text-white rounded-lg shadow hover:opacity-90 disabled:opacity-50 transition"
+          >
+            {saving ? '발행 중...' : '사이트 발행'}
+          </button>
+        </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-6">
-        {/* 1. 기본 브랜드 및 색상 설정 */}
-        <div className="space-y-3">
-          <h3 className="text-sm font-bold text-slate-800 border-b pb-2">기본 브랜드 설정</h3>
+      {/* 설정 폼 스크롤 바디 */}
+      <div className="flex-1 overflow-y-auto p-5 space-y-7 text-sm text-slate-800">
+        {/* 테마 컬러 팔레트 */}
+        <section className="space-y-3 pb-4 border-b border-slate-100">
+          <label className="text-xs font-bold text-slate-500 uppercase tracking-wider block">
+            브랜드 테마 컬러
+          </label>
+          <div className="flex items-center gap-3">
+            <input
+              type="color"
+              value={data.themeColor || '#0284C7'}
+              onChange={(e) => setData({ ...data, themeColor: e.target.value })}
+              className="w-10 h-10 rounded border border-slate-300 cursor-pointer p-0.5"
+            />
+            <input
+              type="text"
+              value={data.themeColor || '#0284C7'}
+              onChange={(e) => setData({ ...data, themeColor: e.target.value })}
+              className="flex-1 px-3 py-2 border border-slate-200 rounded-lg text-xs font-mono"
+            />
+          </div>
+        </section>
+
+        {/* 1. 기업 기본 정보 */}
+        <section className="space-y-3 pb-4 border-b border-slate-100">
+          <h3 className="font-bold text-slate-900 text-sm">1. 기업 기본 정보</h3>
           <div>
-            <label className="block text-xs font-semibold text-slate-600 mb-1">업체명 (상호)</label>
+            <label className="text-xs text-slate-500 block mb-1">회사명 / 상호명</label>
             <input
               type="text"
               value={data.company.name}
-              onChange={(e) => handleCompanyChange('name', e.target.value)}
-              className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
+              onChange={(e) =>
+                setData({ ...data, company: { ...data.company, name: e.target.value } })
+              }
+              className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs"
             />
           </div>
+          <FontSizeSlider
+            label="회사명 글자"
+            value={data.fontSizes?.companyName}
+            min={14}
+            max={32}
+            onChange={(val) => updateFont('companyName', val)}
+          />
           <div>
-            <label className="block text-xs font-semibold text-slate-600 mb-1">로고 이미지 URL</label>
-            <input
-              type="text"
-              value={data.company.logoUrl || ''}
-              onChange={(e) => handleCompanyChange('logoUrl', e.target.value)}
-              placeholder="https://example.com/logo.png"
-              className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
-            />
-          </div>
-          <div>
-            <label className="block text-xs font-semibold text-slate-600 mb-1">대표 문의 전화번호</label>
+            <label className="text-xs text-slate-500 block mb-1">고객센터 대표번호</label>
             <input
               type="text"
               value={data.supportPhone}
-              onChange={(e) => setData((prev) => ({ ...prev, supportPhone: e.target.value }))}
-              className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
+              onChange={(e) => setData({ ...data, supportPhone: e.target.value })}
+              className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs"
             />
           </div>
           <div>
-            <label className="block text-xs font-semibold text-slate-600 mb-1">브랜드 테마 색상</label>
-            <div className="flex items-center gap-2">
-              <input
-                type="color"
-                value={data.themeColor || '#0284C7'}
-                onChange={(e) => setData((prev) => ({ ...prev, themeColor: e.target.value }))}
-                className="w-9 h-9 p-0.5 border border-slate-200 rounded cursor-pointer"
-              />
-              <span className="text-xs text-slate-600 font-mono">{data.themeColor || '#0284C7'}</span>
-            </div>
+            <label className="text-xs text-slate-500 block mb-1">상단 기업 로고 이미지</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) =>
+                handleImageUpload(
+                  e,
+                  (url) => setData({ ...data, company: { ...data.company, logoUrl: url } }),
+                  'logo'
+                )
+              }
+              className="text-xs text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200 cursor-pointer"
+            />
+            {uploading['logo'] && <span className="text-xs text-sky-600 block mt-1">업로드 중...</span>}
           </div>
-        </div>
+        </section>
 
-        {/* 2. 글자 크기 미세 조절 섹션 */}
-        <div className="space-y-3">
-          <h3 className="text-sm font-bold text-slate-800 border-b pb-2">글자 크기 (Font Size)</h3>
-          <div>
-            <div className="flex justify-between text-xs text-slate-600 mb-1">
-              <span>상단 상호명 크기</span>
-              <span>{fs.companyName || 20}px</span>
-            </div>
-            <input
-              type="range"
-              min="14"
-              max="32"
-              value={fs.companyName || 20}
-              onChange={(e) => handleFontSizeChange('companyName', Number(e.target.value))}
-              className="w-full accent-sky-600 cursor-pointer"
-            />
+        {/* 2. 상단 네비게이션 메뉴 (GNB) */}
+        <section className="space-y-3 pb-4 border-b border-slate-100">
+          <div className="flex items-center justify-between">
+            <h3 className="font-bold text-slate-900 text-sm">2. GNB 네비게이션 메뉴</h3>
+            <button
+              onClick={addNavLink}
+              className="text-xs font-semibold text-sky-600 hover:text-sky-700"
+            >
+              + 메뉴 추가
+            </button>
           </div>
-          <div>
-            <div className="flex justify-between text-xs text-slate-600 mb-1">
-              <span>메인 타이틀 크기</span>
-              <span>{fs.heroTitle || 36}px</span>
-            </div>
-            <input
-              type="range"
-              min="24"
-              max="60"
-              value={fs.heroTitle || 36}
-              onChange={(e) => handleFontSizeChange('heroTitle', Number(e.target.value))}
-              className="w-full accent-sky-600 cursor-pointer"
-            />
+          <div className="space-y-2">
+            {data.navigation?.navLinks?.map((nav, idx) => (
+              <div key={idx} className="flex items-center gap-2">
+                <input
+                  type="text"
+                  value={nav.label}
+                  placeholder="메뉴명"
+                  onChange={(e) => updateNavLink(idx, 'label', e.target.value)}
+                  className="w-1/2 px-3 py-1.5 border border-slate-200 rounded-lg text-xs"
+                />
+                <input
+                  type="text"
+                  value={nav.targetId}
+                  placeholder="이동 ID (예: stats)"
+                  onChange={(e) => updateNavLink(idx, 'targetId', e.target.value)}
+                  className="w-1/2 px-3 py-1.5 border border-slate-200 rounded-lg text-xs font-mono"
+                />
+                <button
+                  onClick={() => removeNavLink(idx)}
+                  className="text-slate-400 hover:text-red-500 p-1 text-sm font-bold"
+                >
+                  ✕
+                </button>
+              </div>
+            ))}
           </div>
-          <div>
-            <div className="flex justify-between text-xs text-slate-600 mb-1">
-              <span>메인 서브문구 크기</span>
-              <span>{fs.heroSubtitle || 18}px</span>
-            </div>
-            <input
-              type="range"
-              min="13"
-              max="24"
-              value={fs.heroSubtitle || 18}
-              onChange={(e) => handleFontSizeChange('heroSubtitle', Number(e.target.value))}
-              className="w-full accent-sky-600 cursor-pointer"
-            />
-          </div>
-          <div>
-            <div className="flex justify-between text-xs text-slate-600 mb-1">
-              <span>섹션 대표 타이틀 크기</span>
-              <span>{fs.sectionTitle || 28}px</span>
-            </div>
-            <input
-              type="range"
-              min="20"
-              max="40"
-              value={fs.sectionTitle || 28}
-              onChange={(e) => handleFontSizeChange('sectionTitle', Number(e.target.value))}
-              className="w-full accent-sky-600 cursor-pointer"
-            />
-          </div>
-        </div>
+        </section>
 
-        {/* 3. 메인 히어로 섹션 */}
-        <div className="space-y-3">
-          <h3 className="text-sm font-bold text-slate-800 border-b pb-2">메인 히어로 배너</h3>
+        {/* 3. 메인 히어로 영역 */}
+        <section className="space-y-3 pb-4 border-b border-slate-100">
+          <h3 className="font-bold text-slate-900 text-sm">3. 메인 히어로 영역</h3>
           <div>
-            <label className="block text-xs font-semibold text-slate-600 mb-1">뱃지 문구</label>
+            <label className="text-xs text-slate-500 block mb-1">상단 슬로건 배지</label>
             <input
               type="text"
-              value={data.hero.badge || ''}
-              onChange={(e) => handleHeroChange('badge', e.target.value)}
-              className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
+              value={data.hero.badge}
+              onChange={(e) =>
+                setData({ ...data, hero: { ...data.hero, badge: e.target.value } })
+              }
+              className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs"
             />
           </div>
+          <FontSizeSlider
+            label="배지 문구"
+            value={data.fontSizes?.heroBadge}
+            min={12}
+            max={20}
+            onChange={(val) => updateFont('heroBadge', val)}
+          />
+
           <div>
-            <label className="block text-xs font-semibold text-slate-600 mb-1">메인 타이틀</label>
+            <label className="text-xs text-slate-500 block mb-1">메인 헤드라인 타이틀</label>
             <textarea
-              rows={3}
+              rows={2}
               value={data.hero.title}
-              onChange={(e) => handleHeroChange('title', e.target.value)}
-              className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
+              onChange={(e) =>
+                setData({ ...data, hero: { ...data.hero, title: e.target.value } })
+              }
+              className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs"
             />
           </div>
+          <FontSizeSlider
+            label="헤드라인 제목"
+            value={data.fontSizes?.heroTitle}
+            min={24}
+            max={64}
+            onChange={(val) => updateFont('heroTitle', val)}
+          />
+
           <div>
-            <label className="block text-xs font-semibold text-slate-600 mb-1">서브 설명</label>
+            <label className="text-xs text-slate-500 block mb-1">서브 설명 문구</label>
             <textarea
               rows={3}
               value={data.hero.subtitle}
-              onChange={(e) => handleHeroChange('subtitle', e.target.value)}
-              className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
+              onChange={(e) =>
+                setData({ ...data, hero: { ...data.hero, subtitle: e.target.value } })
+              }
+              className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs"
             />
           </div>
-        </div>
+          <FontSizeSlider
+            label="서브 설명 문구"
+            value={data.fontSizes?.heroSubtitle}
+            min={12}
+            max={24}
+            onChange={(val) => updateFont('heroSubtitle', val)}
+          />
 
-        {/* 4. 협력사 / 인증 배너 섹션 */}
+          <div>
+            <label className="text-xs text-slate-500 block mb-1">히어로 대표 사진/배너</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) =>
+                handleImageUpload(
+                  e,
+                  (url) =>
+                    setData({
+                      ...data,
+                      hero: { ...data.hero, mediaUrl: url, mediaType: 'image' },
+                    }),
+                  'hero'
+                )
+              }
+              className="text-xs text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200 cursor-pointer"
+            />
+            {uploading['hero'] && <span className="text-xs text-sky-600 block mt-1">업로드 중...</span>}
+          </div>
+        </section>
+
+        {/* 4. 파트너사 및 인증 보증 */}
         {data.partnersSection && (
-          <div className="space-y-3">
-            <div className="flex items-center justify-between border-b pb-2">
-              <h3 className="text-sm font-bold text-slate-800">협력사 / 인증 로고</h3>
-              <button
-                onClick={addPartner}
-                className="text-xs text-sky-600 hover:text-sky-700 font-bold"
-              >
-                + 추가
-              </button>
+          <section className="space-y-3 pb-4 border-b border-slate-100">
+            <div className="flex items-center justify-between">
+              <h3 className="font-bold text-slate-900 text-sm">4. 파트너사 / 보증 섹션</h3>
+              <label className="text-xs flex items-center gap-1.5 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={data.partnersSection.enabled}
+                  onChange={(e) =>
+                    setData({
+                      ...data,
+                      partnersSection: {
+                        ...data.partnersSection!,
+                        enabled: e.target.checked,
+                      },
+                    })
+                  }
+                  className="rounded text-sky-600"
+                />
+                영역 활성화
+              </label>
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-1">섹션 제목</label>
+              <label className="text-xs text-slate-500 block mb-1">섹션 안내 문구</label>
               <input
                 type="text"
                 value={data.partnersSection.title}
                 onChange={(e) =>
-                  setData((prev) => ({
-                    ...prev,
+                  setData({
+                    ...data,
                     partnersSection: {
-                      ...prev.partnersSection!,
+                      ...data.partnersSection!,
                       title: e.target.value,
                     },
-                  }))
+                  })
                 }
-                className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
+                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs"
               />
             </div>
-            <div className="space-y-2">
-              {data.partnersSection.partners.map((partner, idx) => (
-                <div key={idx} className="flex items-center gap-2">
-                  <input
-                    type="text"
-                    value={partner}
-                    onChange={(e) => handlePartnerChange(idx, e.target.value)}
-                    className="flex-1 px-3 py-1.5 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
-                  />
-                  <button
-                    onClick={() => removePartner(idx)}
-                    className="text-xs text-red-500 hover:text-red-700 px-1"
-                  >
-                    삭제
-                  </button>
-                </div>
-              ))}
+            <FontSizeSlider
+              label="안내 문구"
+              value={data.fontSizes?.partnersTitle}
+              min={12}
+              max={24}
+              onChange={(val) => updateFont('partnersTitle', val)}
+            />
+            <div>
+              <label className="text-xs text-slate-500 block mb-1">
+                파트너/보증 항목 (쉼표로 구분)
+              </label>
+              <input
+                type="text"
+                value={data.partnersSection.partners.join(', ')}
+                onChange={(e) =>
+                  setData({
+                    ...data,
+                    partnersSection: {
+                      ...data.partnersSection!,
+                      partners: e.target.value.split(',').map((p) => p.trim()),
+                    },
+                  })
+                }
+                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs"
+              />
             </div>
-          </div>
+          </section>
         )}
 
-        {/* 5. 실적 지표 섹션 */}
-        <div className="space-y-3">
-          <div className="flex items-center justify-between border-b pb-2">
-            <h3 className="text-sm font-bold text-slate-800">주요 실적 지표</h3>
-            <button
-              onClick={addStat}
-              className="text-xs text-sky-600 hover:text-sky-700 font-bold"
-            >
-              + 추가
-            </button>
-          </div>
-          <div className="space-y-3">
+        {/* 5. 주요 실적 지표 */}
+        <section className="space-y-3 pb-4 border-b border-slate-100">
+          <h3 className="font-bold text-slate-900 text-sm">5. 주요 실적 지표</h3>
+          <FontSizeSlider
+            label="지표 숫자"
+            value={data.fontSizes?.statsValue}
+            min={20}
+            max={52}
+            onChange={(val) => updateFont('statsValue', val)}
+          />
+          <FontSizeSlider
+            label="지표 설명 라벨"
+            value={data.fontSizes?.statsLabel}
+            min={12}
+            max={20}
+            onChange={(val) => updateFont('statsLabel', val)}
+          />
+          <div className="space-y-2">
             {data.stats.map((stat, idx) => (
-              <div key={idx} className="p-3 bg-slate-50 border border-slate-200 rounded-lg space-y-2">
-                <div className="flex justify-between items-center">
-                  <span className="text-xs font-bold text-slate-600">지표 #{idx + 1}</span>
-                  <button
-                    onClick={() => removeStat(idx)}
-                    className="text-xs text-red-500 hover:text-red-700"
-                  >
-                    삭제
-                  </button>
-                </div>
+              <div key={idx} className="flex gap-2">
                 <input
                   type="text"
-                  placeholder="수치 (예: 99.8%, 1,200건)"
                   value={stat.value}
-                  onChange={(e) => handleStatChange(idx, 'value', e.target.value)}
-                  className="w-full px-2.5 py-1.5 text-xs bg-white border border-slate-200 rounded focus:outline-none focus:ring-1 focus:ring-sky-500 font-bold"
+                  onChange={(e) => {
+                    const newStats = [...data.stats];
+                    newStats[idx].value = e.target.value;
+                    setData({ ...data, stats: newStats });
+                  }}
+                  className="w-1/3 px-3 py-1.5 border border-slate-200 rounded-lg text-xs font-bold"
                 />
                 <input
                   type="text"
-                  placeholder="항목 설명 (예: 고객 만족도)"
                   value={stat.label}
-                  onChange={(e) => handleStatChange(idx, 'label', e.target.value)}
-                  className="w-full px-2.5 py-1.5 text-xs bg-white border border-slate-200 rounded focus:outline-none focus:ring-1 focus:ring-sky-500"
+                  onChange={(e) => {
+                    const newStats = [...data.stats];
+                    newStats[idx].label = e.target.value;
+                    setData({ ...data, stats: newStats });
+                  }}
+                  className="flex-1 px-3 py-1.5 border border-slate-200 rounded-lg text-xs"
                 />
               </div>
             ))}
           </div>
-        </div>
+        </section>
 
-        {/* 6. 시공 / 솔루션 분야 섹션 */}
-        <div className="space-y-3">
-          <div className="flex items-center justify-between border-b pb-2">
-            <h3 className="text-sm font-bold text-slate-800">시공 / 솔루션 분야</h3>
+        {/* 6. 솔루션 / 핵심 시공 분야 */}
+        <section className="space-y-3 pb-4 border-b border-slate-100">
+          <div className="flex items-center justify-between">
+            <h3 className="font-bold text-slate-900 text-sm">6. 핵심 솔루션 / 시공 분야</h3>
             <button
               onClick={addSolution}
-              className="text-xs text-sky-600 hover:text-sky-700 font-bold"
+              className="text-xs font-semibold text-sky-600 hover:text-sky-700"
             >
-              + 추가
+              + 항목 추가
             </button>
           </div>
           <div>
-            <label className="block text-xs font-semibold text-slate-600 mb-1">섹션 제목</label>
+            <label className="text-xs text-slate-500 block mb-1">섹션 제목</label>
             <input
               type="text"
               value={data.solutionsSection?.title || ''}
               onChange={(e) =>
-                setData((prev) => ({
-                  ...prev,
+                setData({
+                  ...data,
                   solutionsSection: {
-                    ...prev.solutionsSection!,
+                    ...data.solutionsSection,
                     title: e.target.value,
+                    subtitle: data.solutionsSection?.subtitle || '',
                   },
-                }))
+                })
               }
-              className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
+              className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs"
             />
           </div>
-          <div className="space-y-3">
+          <FontSizeSlider
+            label="섹션 메인 제목"
+            value={data.fontSizes?.sectionTitle}
+            min={20}
+            max={44}
+            onChange={(val) => updateFont('sectionTitle', val)}
+          />
+          <div>
+            <label className="text-xs text-slate-500 block mb-1">섹션 부제목</label>
+            <input
+              type="text"
+              value={data.solutionsSection?.subtitle || ''}
+              onChange={(e) =>
+                setData({
+                  ...data,
+                  solutionsSection: {
+                    ...data.solutionsSection,
+                    title: data.solutionsSection?.title || '',
+                    subtitle: e.target.value,
+                  },
+                })
+              }
+              className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs"
+            />
+          </div>
+          <FontSizeSlider
+            label="섹션 부제목"
+            value={data.fontSizes?.sectionSubtitle}
+            min={12}
+            max={22}
+            onChange={(val) => updateFont('sectionSubtitle', val)}
+          />
+          <div className="space-y-4 pt-2">
             {data.solutions.map((sol, idx) => (
-              <div key={idx} className="p-3 bg-slate-50 border border-slate-200 rounded-lg space-y-2">
+              <div key={idx} className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
                 <div className="flex justify-between items-center">
-                  <span className="text-xs font-bold text-slate-600">솔루션 #{idx + 1}</span>
+                  <span className="text-xs font-bold text-slate-700">항목 #{idx + 1}</span>
                   <button
                     onClick={() => removeSolution(idx)}
-                    className="text-xs text-red-500 hover:text-red-700"
+                    className="text-xs text-red-500 hover:underline"
                   >
                     삭제
                   </button>
                 </div>
                 <input
                   type="text"
-                  placeholder="솔루션 명칭"
                   value={sol.title}
-                  onChange={(e) => handleSolutionChange(idx, 'title', e.target.value)}
-                  className="w-full px-2.5 py-1.5 text-xs bg-white border border-slate-200 rounded focus:outline-none focus:ring-1 focus:ring-sky-500 font-bold"
+                  placeholder="제목"
+                  onChange={(e) => updateSolution(idx, 'title', e.target.value)}
+                  className="w-full px-3 py-1.5 border border-slate-200 rounded-lg text-xs font-semibold"
                 />
                 <textarea
                   rows={2}
-                  placeholder="솔루션 상세 설명"
                   value={sol.description}
-                  onChange={(e) => handleSolutionChange(idx, 'description', e.target.value)}
-                  className="w-full px-2.5 py-1.5 text-xs bg-white border border-slate-200 rounded focus:outline-none focus:ring-1 focus:ring-sky-500"
+                  placeholder="설명"
+                  onChange={(e) => updateSolution(idx, 'description', e.target.value)}
+                  className="w-full px-3 py-1.5 border border-slate-200 rounded-lg text-xs"
                 />
+                <div>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) =>
+                      handleImageUpload(
+                        e,
+                        (url) => updateSolution(idx, 'image', url),
+                        `sol-${idx}`
+                      )
+                    }
+                    className="text-xs text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-slate-200 file:text-slate-700 cursor-pointer"
+                  />
+                  {uploading[`sol-${idx}`] && (
+                    <span className="text-xs text-sky-600 block mt-1">업로드 중...</span>
+                  )}
+                </div>
               </div>
             ))}
           </div>
-        </div>
+        </section>
 
-        {/* 7. 고객 후기 섹션 */}
-        <div className="space-y-3">
-          <div className="flex items-center justify-between border-b pb-2">
-            <h3 className="text-sm font-bold text-slate-800">고객 만족 후기</h3>
+        {/* 7. 고객사 평가 및 후기 */}
+        <section className="space-y-3 pb-4 border-b border-slate-100">
+          <div className="flex items-center justify-between">
+            <h3 className="font-bold text-slate-900 text-sm">7. 고객 평가 / 후기</h3>
             <button
               onClick={addReview}
-              className="text-xs text-sky-600 hover:text-sky-700 font-bold"
+              className="text-xs font-semibold text-sky-600 hover:text-sky-700"
             >
-              + 추가
+              + 후기 추가
             </button>
           </div>
-          <div className="space-y-3">
+          <div>
+            <label className="text-xs text-slate-500 block mb-1">섹션 제목</label>
+            <input
+              type="text"
+              value={data.reviewsSection?.title || ''}
+              onChange={(e) =>
+                setData({
+                  ...data,
+                  reviewsSection: {
+                    ...data.reviewsSection,
+                    title: e.target.value,
+                    subtitle: data.reviewsSection?.subtitle || '',
+                  },
+                })
+              }
+              className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs"
+            />
+          </div>
+          <div className="space-y-3 pt-2">
             {data.reviews.map((rev, idx) => (
-              <div key={idx} className="p-3 bg-slate-50 border border-slate-200 rounded-lg space-y-2">
+              <div key={idx} className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
                 <div className="flex justify-between items-center">
-                  <span className="text-xs font-bold text-slate-600">후기 #{idx + 1}</span>
+                  <span className="text-xs font-bold text-slate-700">후기 #{idx + 1}</span>
                   <button
                     onClick={() => removeReview(idx)}
-                    className="text-xs text-red-500 hover:text-red-700"
+                    className="text-xs text-red-500 hover:underline"
                   >
                     삭제
                   </button>
                 </div>
-                <textarea
-                  rows={2}
-                  placeholder="후기 본문 내용"
-                  value={rev.content}
-                  onChange={(e) => handleReviewChange(idx, 'content', e.target.value)}
-                  className="w-full px-2.5 py-1.5 text-xs bg-white border border-slate-200 rounded focus:outline-none focus:ring-1 focus:ring-sky-500"
-                />
                 <div className="flex gap-2">
                   <input
                     type="text"
-                    placeholder="작성자명"
                     value={rev.author}
-                    onChange={(e) => handleReviewChange(idx, 'author', e.target.value)}
-                    className="w-1/2 px-2.5 py-1.5 text-xs bg-white border border-slate-200 rounded focus:outline-none focus:ring-1 focus:ring-sky-500"
+                    placeholder="작성자/업체명"
+                    onChange={(e) => updateReview(idx, 'author', e.target.value)}
+                    className="w-1/2 px-3 py-1.5 border border-slate-200 rounded-lg text-xs"
                   />
                   <input
                     type="text"
-                    placeholder="소속 / 직함"
                     value={rev.role}
-                    onChange={(e) => handleReviewChange(idx, 'role', e.target.value)}
-                    className="w-1/2 px-2.5 py-1.5 text-xs bg-white border border-slate-200 rounded focus:outline-none focus:ring-1 focus:ring-sky-500"
+                    placeholder="직책/분야"
+                    onChange={(e) => updateReview(idx, 'role', e.target.value)}
+                    className="w-1/2 px-3 py-1.5 border border-slate-200 rounded-lg text-xs"
                   />
                 </div>
+                <textarea
+                  rows={2}
+                  value={rev.content}
+                  placeholder="후기 본문 내용"
+                  onChange={(e) => updateReview(idx, 'content', e.target.value)}
+                  className="w-full px-3 py-1.5 border border-slate-200 rounded-lg text-xs"
+                />
               </div>
             ))}
           </div>
-        </div>
+        </section>
 
-        {/* 8. 자주 묻는 질문(FAQ) 섹션 */}
-        <div className="space-y-3">
-          <div className="flex items-center justify-between border-b pb-2">
-            <h3 className="text-sm font-bold text-slate-800">자주 묻는 질문 (FAQ)</h3>
+        {/* 8. 자주 묻는 질문 (FAQ) */}
+        <section className="space-y-3 pb-4 border-b border-slate-100">
+          <div className="flex items-center justify-between">
+            <h3 className="font-bold text-slate-900 text-sm">8. 자주 묻는 질문 (FAQ)</h3>
             <button
               onClick={addFaq}
-              className="text-xs text-sky-600 hover:text-sky-700 font-bold"
+              className="text-xs font-semibold text-sky-600 hover:text-sky-700"
             >
-              + 추가
+              + 질문 추가
             </button>
           </div>
-          <div className="space-y-3">
+          <FontSizeSlider
+            label="질문 텍스트"
+            value={data.fontSizes?.faqQuestion}
+            min={14}
+            max={26}
+            onChange={(val) => updateFont('faqQuestion', val)}
+          />
+          <FontSizeSlider
+            label="답변 텍스트"
+            value={data.fontSizes?.faqAnswer}
+            min={12}
+            max={20}
+            onChange={(val) => updateFont('faqAnswer', val)}
+          />
+          <div className="space-y-3 pt-2">
             {data.faqs.map((faq, idx) => (
-              <div key={idx} className="p-3 bg-slate-50 border border-slate-200 rounded-lg space-y-2">
+              <div key={idx} className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
                 <div className="flex justify-between items-center">
-                  <span className="text-xs font-bold text-slate-600">질문 #{idx + 1}</span>
+                  <span className="text-xs font-bold text-slate-700">질문 #{idx + 1}</span>
                   <button
                     onClick={() => removeFaq(idx)}
-                    className="text-xs text-red-500 hover:text-red-700"
+                    className="text-xs text-red-500 hover:underline"
                   >
                     삭제
                   </button>
                 </div>
                 <input
                   type="text"
-                  placeholder="질문 (Q)"
                   value={faq.question}
-                  onChange={(e) => handleFaqChange(idx, 'question', e.target.value)}
-                  className="w-full px-2.5 py-1.5 text-xs bg-white border border-slate-200 rounded focus:outline-none focus:ring-1 focus:ring-sky-500 font-bold"
+                  placeholder="질문"
+                  onChange={(e) => updateFaq(idx, 'question', e.target.value)}
+                  className="w-full px-3 py-1.5 border border-slate-200 rounded-lg text-xs font-semibold"
                 />
                 <textarea
                   rows={2}
-                  placeholder="답변 (A)"
                   value={faq.answer}
-                  onChange={(e) => handleFaqChange(idx, 'answer', e.target.value)}
-                  className="w-full px-2.5 py-1.5 text-xs bg-white border border-slate-200 rounded focus:outline-none focus:ring-1 focus:ring-sky-500"
+                  placeholder="답변"
+                  onChange={(e) => updateFaq(idx, 'answer', e.target.value)}
+                  className="w-full px-3 py-1.5 border border-slate-200 rounded-lg text-xs"
                 />
               </div>
             ))}
           </div>
-        </div>
+        </section>
 
         {/* 9. 하단 푸터 (사업자 정보) 설정 */}
-        <div className="space-y-3 pt-2">
-          <div className="border-b pb-2">
-            <h3 className="text-sm font-bold text-slate-800">하단 푸터 정보</h3>
+        <section className="space-y-3 pb-4">
+          <div className="border-b border-slate-100 pb-2">
+            <h3 className="font-bold text-slate-900 text-sm">9. 하단 푸터 (사업자 정보)</h3>
             <p className="text-[11px] text-slate-400 mt-0.5">전자상거래법 필수 표기 사항</p>
           </div>
           <div>
-            <label className="block text-xs font-semibold text-slate-600 mb-1">푸터 상호명</label>
+            <label className="text-xs text-slate-500 block mb-1">푸터 상호명</label>
             <input
               type="text"
               value={data.footer.companyName}
-              onChange={(e) => handleFooterChange('companyName', e.target.value)}
-              className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
+              onChange={(e) => updateFooter('companyName', e.target.value)}
+              className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs"
             />
           </div>
           <div>
-            <label className="block text-xs font-semibold text-slate-600 mb-1">대표자명</label>
+            <label className="text-xs text-slate-500 block mb-1">대표자명</label>
             <input
               type="text"
               value={data.footer.ownerName}
-              onChange={(e) => handleFooterChange('ownerName', e.target.value)}
-              className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
+              onChange={(e) => updateFooter('ownerName', e.target.value)}
+              className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs"
             />
           </div>
           <div>
-            <label className="block text-xs font-semibold text-slate-600 mb-1">사업자등록번호</label>
+            <label className="text-xs text-slate-500 block mb-1">사업자등록번호</label>
             <input
               type="text"
               value={data.footer.businessNumber}
-              onChange={(e) => handleFooterChange('businessNumber', e.target.value)}
+              onChange={(e) => updateFooter('businessNumber', e.target.value)}
               placeholder="000-00-00000"
-              className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
+              className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs"
             />
           </div>
           <div>
-            <label className="block text-xs font-semibold text-slate-600 mb-1">사업장 주소</label>
+            <label className="text-xs text-slate-500 block mb-1">사업장 주소</label>
             <input
               type="text"
               value={data.footer.address}
-              onChange={(e) => handleFooterChange('address', e.target.value)}
-              className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
+              onChange={(e) => updateFooter('address', e.target.value)}
+              className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs"
             />
           </div>
           <div>
-            <label className="block text-xs font-semibold text-slate-600 mb-1">대표 이메일</label>
+            <label className="text-xs text-slate-500 block mb-1">대표 이메일</label>
             <input
               type="email"
               value={data.footer.contactEmail}
-              onChange={(e) => handleFooterChange('contactEmail', e.target.value)}
-              className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
+              onChange={(e) => updateFooter('contactEmail', e.target.value)}
+              className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs"
             />
           </div>
-        </div>
+        </section>
       </div>
     </aside>
   );
