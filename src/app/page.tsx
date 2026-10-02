@@ -3,8 +3,8 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 
-// ★ 대표님의 카카오톡 오픈채팅방 링크를 따옴표 안에 넣어주세요.
-const KAKAO_OPEN_CHAT_URL = 'http://pf.kakao.com/_qxmixiX/chat';
+// 실제 카카오톡 1:1 채팅 및 채널 URL 연동
+const KAKAO_CHAT_URL = 'http://pf.kakao.com/_qxmixiX/chat';
 
 export default function HomePage() {
   const [formData, setFormData] = useState({
@@ -15,14 +15,8 @@ export default function HomePage() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    // 고객이 입력한 내용으로 안내 문구 생성
-    alert(
-      `상담 신청이 접수되었습니다!\n카카오톡 1:1 오픈채팅으로 자동 연결됩니다.`
-    );
-
-    // 대표님의 카카오톡 오픈채팅방으로 이동
-    window.open(KAKAO_OPEN_CHAT_URL, '_blank');
+    alert('상담 신청이 확인되었습니다. 카카오톡 1:1 상담 채팅방으로 즉시 연결합니다.');
+    window.location.href = KAKAO_CHAT_URL;
   };
 
   return (
@@ -53,7 +47,7 @@ export default function HomePage() {
 
           <div className="flex items-center gap-2">
             <a
-              href={KAKAO_OPEN_CHAT_URL}
+              href={KAKAO_CHAT_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-amber-300 hover:bg-amber-400 text-amber-950 text-xs sm:text-sm font-bold px-4 py-2 sm:px-5 sm:py-2.5 rounded-full transition shadow-sm flex items-center gap-1.5"
@@ -88,7 +82,7 @@ export default function HomePage() {
             1:1 맞춤 견적 문의하기
           </a>
           <a
-            href={KAKAO_OPEN_CHAT_URL}
+            href={KAKAO_CHAT_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="w-full sm:w-auto bg-amber-300 hover:bg-amber-400 text-amber-950 font-extrabold px-6 py-4 rounded-xl text-base transition flex items-center justify-center gap-2 shadow"
@@ -256,7 +250,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 상담 신청 폼 영역 (완료 시 오픈채팅 자동 연결) */}
+      {/* 상담 신청 폼 영역 (제출 시 1:1 채팅방 다이렉트 연결) */}
       <section id="contact" className="py-20 px-4 sm:px-6 bg-white border-t border-slate-100">
         <div className="max-w-xl mx-auto">
           <div className="text-center mb-10">
@@ -267,7 +261,7 @@ export default function HomePage() {
               1:1 맞춤 상담 신청
             </h2>
             <p className="text-xs sm:text-sm text-slate-600 mt-2">
-              신청을 완료하시면 즉시 카카오톡 1:1 오픈채팅으로 연결됩니다.
+              신청을 완료하시면 카카오톡 1:1 상담 채팅방으로 즉시 연결됩니다.
             </p>
           </div>
 
@@ -315,17 +309,17 @@ export default function HomePage() {
 
             <button
               type="submit"
-              className="w-full bg-amber-400 hover:bg-amber-500 text-amber-950 font-extrabold py-3.5 rounded-xl transition shadow text-sm flex items-center justify-center gap-2"
+              className="w-full bg-amber-400 hover:bg-amber-500 text-amber-950 font-extrabold py-3.5 rounded-xl transition shadow text-sm flex items-center justify-center gap-2 cursor-pointer"
             >
-              <span>💬 카카오톡 오픈채팅으로 상담 시작하기</span>
+              <span>💬 카카오톡 1:1 상담 시작하기</span>
             </button>
           </form>
         </div>
       </section>
 
-      {/* 우측 하단 카카오톡 플로팅 상담 버튼 */}
+      {/* 우측 하단 카카오톡 플로팅 상담 버튼 (채팅방 직통) */}
       <a
-        href={KAKAO_OPEN_CHAT_URL}
+        href={KAKAO_CHAT_URL}
         target="_blank"
         rel="noopener noreferrer"
         className="fixed bottom-6 right-6 z-50 bg-[#FEE500] hover:bg-[#FDD800] text-[#191919] font-bold p-3.5 sm:px-5 sm:py-3.5 rounded-full shadow-2xl flex items-center gap-2 border border-black/5 transition transform hover:scale-105 active:scale-95"
