@@ -1,7 +1,6 @@
 ﻿'use client';
 
 import React, { useState, useEffect } from 'react';
-import '../globals.css'; //
 import { supabase } from '@/lib/supabase/client';
 import { publishSite } from '@/utils/publishSite';
 import { defaultB2BTemplate, B2BTemplateData } from '@/data/templates';
@@ -11,13 +10,12 @@ import LivePreview from '@/components/builder/LivePreview';
 export default function BuilderPage() {
   const [siteId, setSiteId] = useState<string | null>(null);
   const [data, setData] = useState<B2BTemplateData>(() => defaultB2BTemplate);
-  const [zoom, setZoom] = useState<number>(100);
+  const [zoom, setZoom] = useState<number>(80);
   const [saving, setSaving] = useState(false);
   const [publishedUrl, setPublishedUrl] = useState<string | null>(null);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [isPaymentOpen, setIsPaymentOpen] = useState(false);
 
-  // 로컬 스토리지에 임시 저장된 작업물이 있다면 자동 복원
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
@@ -51,7 +49,6 @@ export default function BuilderPage() {
     }
   }, []);
 
-  // 내용 변경 시 브라우저에 자동 백업
   const handleDataChange = (updater: any) => {
     setData((prev) => {
       const nextData = typeof updater === 'function' ? updater(prev) : updater;
@@ -118,7 +115,7 @@ export default function BuilderPage() {
             company: { ...prev.company, logoUrl: uploadedUrl },
           };
         } else if (targetKey === 'solution' && typeof index === 'number') {
-          const newSolutions = [...prev.solutions];
+          const newSolutions = [...data.solutions];
           newSolutions[index] = { ...newSolutions[index], image: uploadedUrl };
           return { ...prev, solutions: newSolutions };
         }
@@ -134,7 +131,6 @@ export default function BuilderPage() {
 
   return (
     <div className="flex h-screen w-full overflow-hidden bg-slate-900 font-sans">
-      {/* 좌측 사이드바: 고정 너비와 자체 스크롤 확보 */}
       <div className="w-[380px] h-full flex-shrink-0 border-r border-slate-800 bg-slate-950 overflow-y-auto">
         <EditorSidebar
           data={data}
@@ -148,7 +144,6 @@ export default function BuilderPage() {
         />
       </div>
 
-      {/* 우측 실시간 미리보기: 전체 남은 너비 차지 및 배경 분리 */}
       <div className="flex-1 h-full overflow-y-auto bg-slate-800 flex justify-center items-start p-4 md:p-8">
         <div className="w-full max-w-5xl bg-white rounded-xl shadow-2xl overflow-hidden min-h-[800px]">
           <LivePreview data={data} zoom={zoom} setZoom={setZoom} />
