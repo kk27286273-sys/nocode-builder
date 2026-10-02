@@ -15,18 +15,18 @@ export default function LivePreview({ data, zoom, setZoom }: LivePreviewProps) {
   return (
     <main className="flex-1 flex flex-col h-full bg-slate-100 overflow-hidden relative">
       {/* 상단 줌 컨트롤 바 */}
-      <div className="h-12 bg-white/80 backdrop-blur border-b border-slate-200 flex items-center justify-between px-6 z-10 shrink-0">
+      <div className="h-12 bg-white/80 backdrop-blur border-b border-slate-200 flex items-center justify-between px-4 sm:px-6 z-10 shrink-0">
         <span className="text-xs font-semibold text-slate-500 tracking-wider">
           미리보기 캔버스 ({zoom}%)
         </span>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 sm:gap-2">
           <button
             onClick={() => setZoom((prev) => Math.max(prev - 10, 50))}
             className="p-1 px-2.5 text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded border border-slate-300"
           >
             -
           </button>
-          <span className="text-xs font-medium text-slate-600 w-12 text-center">
+          <span className="text-xs font-medium text-slate-600 w-10 sm:w-12 text-center">
             {zoom}%
           </span>
           <button
@@ -37,15 +37,15 @@ export default function LivePreview({ data, zoom, setZoom }: LivePreviewProps) {
           </button>
           <button
             onClick={() => setZoom(100)}
-            className="ml-2 text-xs text-slate-500 hover:text-slate-800 underline"
+            className="ml-1 sm:ml-2 text-xs text-slate-500 hover:text-slate-800 underline"
           >
             초기화
           </button>
         </div>
       </div>
 
-      {/* 실시간 프리뷰 영역 (잘림 및 쏠림 방지) */}
-      <div className="flex-1 overflow-x-auto overflow-y-auto p-4 md:p-8 flex justify-center items-start">
+      {/* 실시간 프리뷰 영역 */}
+      <div className="flex-1 overflow-x-auto overflow-y-auto p-2 sm:p-4 md:p-8 flex justify-center items-start">
         <div
           style={{
             width: '1200px',
@@ -56,38 +56,42 @@ export default function LivePreview({ data, zoom, setZoom }: LivePreviewProps) {
           }}
           className="bg-white rounded-2xl shadow-2xl border border-slate-200/80 overflow-hidden shrink-0 transition-transform duration-75 text-slate-900 mx-auto"
         >
-          {/* GNB 네비게이션 헤더 */}
-          <header className="h-20 border-b border-slate-100 px-8 flex items-center justify-between bg-white/90 backdrop-blur sticky top-0 z-20">
-            <div className="flex items-center gap-3">
+          {/* GNB 네비게이션 헤더 (모바일 가로 1열 고정 및 줄바꿈 방지) */}
+          <header className="h-16 sm:h-20 border-b border-slate-100 px-4 sm:px-8 flex flex-row items-center justify-between bg-white/90 backdrop-blur sticky top-0 z-20">
+            {/* 좌측: 로고 및 업체명 */}
+            <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1 mr-2">
               {data.company.logoUrl && (
                 <img
                   src={data.company.logoUrl}
                   alt="Logo"
-                  className="h-10 w-auto object-contain"
+                  className="h-7 sm:h-10 w-auto object-contain shrink-0"
                 />
               )}
               <span
                 style={{ fontSize: `${fs.companyName || 20}px` }}
-                className="font-extrabold tracking-tight text-slate-900"
+                className="font-extrabold tracking-tight text-slate-900 truncate"
               >
                 {data?.company?.name || '기업명'}
               </span>
             </div>
 
-            <nav className="flex items-center gap-6">
-              {data?.navigation?.navLinks?.map((nav, idx) => (
-                <a
-                  key={idx}
-                  href={`#${nav.targetId}`}
-                  className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors"
-                >
-                  {nav.label}
-                </a>
-              ))}
+            {/* 우측: 메뉴 링크(PC 전용) + 상담 문의 버튼 */}
+            <nav className="flex items-center gap-3 sm:gap-6 shrink-0">
+              <div className="hidden md:flex items-center gap-6">
+                {data?.navigation?.navLinks?.map((nav, idx) => (
+                  <a
+                    key={idx}
+                    href={`#${nav.targetId}`}
+                    className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors whitespace-nowrap"
+                  >
+                    {nav.label}
+                  </a>
+                ))}
+              </div>
               <a
                 href={`tel:${data.supportPhone}`}
                 style={{ backgroundColor: data.themeColor || '#0284C7' }}
-                className="text-white text-sm font-bold px-5 py-2.5 rounded-full shadow hover:opacity-95 transition"
+                className="text-white text-xs sm:text-sm font-bold px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full shadow hover:opacity-95 transition whitespace-nowrap shrink-0"
               >
                 상담 문의
               </a>
@@ -95,7 +99,7 @@ export default function LivePreview({ data, zoom, setZoom }: LivePreviewProps) {
           </header>
 
           {/* 메인 히어로 섹션 */}
-          <section className="py-20 px-8 text-center bg-gradient-to-b from-slate-50/80 to-white flex flex-col items-center">
+          <section className="py-12 sm:py-20 px-4 sm:px-8 text-center bg-gradient-to-b from-slate-50/80 to-white flex flex-col items-center">
             {data.hero.badge && (
               <span
                 style={{
@@ -278,7 +282,8 @@ export default function LivePreview({ data, zoom, setZoom }: LivePreviewProps) {
               </div>
             </div>
           </section>
-          {/* 견적 상담 신청 폼 섹션 (개인정보 수집 동의 포함) */}
+
+          {/* 견적 상담 신청 폼 섹션 */}
           <section id="contact-form" className="py-20 px-8 bg-white border-t border-slate-100">
             <div className="max-w-2xl mx-auto bg-slate-50 border border-slate-200/80 rounded-2xl p-8 md:p-10 shadow-sm">
               <div className="text-center mb-8">
