@@ -1,25 +1,62 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { defaultB2BTemplate, B2BTemplateData } from '@/data/templates';
+import { supabase } from '@/lib/supabase';
 
 export default function PreviewPage() {
+  const searchParams = useSearchParams();
+  const siteId = searchParams.get('siteId');
   const [data, setData] = useState<B2BTemplateData>(defaultB2BTemplate);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  // 빌더에서 저장한 최신 수정 데이터를 불러옴
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const savedData = localStorage.getItem('thsoft_published_site');
-      if (savedData) {
-        try {
-          setData(JSON.parse(savedData));
-        } catch (e) {
-          console.error('데이터 파싱 오류:', e);
+    async function loadSiteData() {
+      try {
+        if (siteId) {
+          // URL 파라미터로 특정 고객 siteId가 넘어온 경우 DB 조회
+          const { data: dbSite, error } = await supabase
+            .from('sites')
+            .select('data')
+            .eq('id', siteId)
+            .single();
+
+          if (!error && dbSite?.data) {
+            setData(dbSite.data);
+            return;
+          }
         }
+
+        // 파라미터가 없으면 가장 최신 발행된 사이트 로드
+        const { data: latestSite, error } = await supabase
+          .from('sites')
+          .select('data')
+          .order('updated_at', { ascending: false })
+          .limit(1)
+          .single();
+
+        if (!error && latestSite?.data) {
+          setData(latestSite.data);
+          return;
+        }
+
+        // 오프라인/로컬 백업 캐시 확인
+        if (typeof window !== 'undefined') {
+          const savedData = localStorage.getItem('thsoft_published_site');
+          if (savedData) {
+            setData(JSON.parse(savedData));
+          }
+        }
+      } catch (err) {
+        console.error('프리뷰 데이터 로드 실패:', err);
+      } finally {
+        setIsLoading(false);
       }
     }
-  }, []);
+
+    loadSiteData();
+  }, [siteId]);
 
   const supportPhone = data?.supportPhone || '010-0000-0000';
   const themeColor = data?.themeColor || '#0284C7';
@@ -27,23 +64,8 @@ export default function PreviewPage() {
 
   return (
     <div className="min-h-screen bg-white text-slate-900 font-sans relative selection:bg-sky-600 selection:text-white">
-      {/* 미리보기 상단 안내 바 */}
-      <div className="bg-slate-900 text-white text-xs px-4 py-2.5 flex items-center justify-between sticky top-0 z-50">
-        <span className="font-medium text-slate-300">
-          [발행 완료 화면] 빌더에서 수정한 내용이 실시간 반영된 정식 데모 사이트입니다.
-        </span>
-        <div className="flex items-center gap-4">
-          <Link href="/builder" className="text-slate-300 hover:text-white underline text-xs">
-            빌더로 돌아가기
-          </Link>
-          <Link href="/" className="text-sky-400 hover:underline font-bold text-xs">
-            TH소프트 홈
-          </Link>
-        </div>
-      </div>
-
-      {/* GNB 헤더 */}
-      <header className="h-16 sm:h-20 border-b border-slate-100 px-4 sm:px-8 flex items-center justify-between bg-white/95 backdrop-blur sticky top-8 z-40">
+      {/* 1. GNB 헤더 (빌더 복귀/개발자 링크 100% 영구 삭제 유지) */}
+      <header className="h-16 sm:h-20 border-b border-slate-100 px-4 sm:px-8 flex items-center justify-between bg-white/95 backdrop-blur sticky top-0 z-40">
         <div className="flex items-center gap-2.5 min-w-0">
           {data?.company?.logoUrl && (
             <img
@@ -83,7 +105,7 @@ export default function PreviewPage() {
         </nav>
       </header>
 
-      {/* 메인 히어로 섹션 */}
+      {/* 2. 메인 히어로 섹션 */}
       <section className="py-20 sm:py-32 px-4 sm:px-8 text-center bg-gradient-to-b from-slate-50/80 to-white flex flex-col items-center">
         {data?.hero?.badge && (
           <span
@@ -123,7 +145,7 @@ export default function PreviewPage() {
         </div>
       </section>
 
-      {/* 파트너사 섹션 */}
+      {/* 3. 파트너사 섹션 */}
       {data?.partnersSection?.enabled && (
         <section className="py-10 border-y border-slate-100 bg-slate-50/50 px-8 text-center">
           <h2
@@ -145,7 +167,7 @@ export default function PreviewPage() {
         </section>
       )}
 
-      {/* 주요 실적 지표 섹션 */}
+      {/* 4. 주요 실적 지표 섹션 */}
       {data?.stats && (
         <section id="stats" className="py-20 px-8 bg-white border-b border-slate-100">
           <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
@@ -172,7 +194,7 @@ export default function PreviewPage() {
         </section>
       )}
 
-      {/* 핵심 솔루션/시공분야 섹션 */}
+      {/* 5. 핵심 솔루션/시공분야 섹션 */}
       {data?.solutions && (
         <section id="solutions" className="py-24 px-8 bg-slate-50/30">
           <div className="max-w-5xl mx-auto text-center mb-16">
@@ -209,7 +231,7 @@ export default function PreviewPage() {
         </section>
       )}
 
-      {/* 고객 후기 섹션 */}
+      {/* 6. 고객 후기 섹션 */}
       {data?.reviews && (
         <section id="reviews" className="py-24 px-8 bg-white border-t border-slate-100">
           <div className="max-w-5xl mx-auto text-center mb-16">
@@ -243,7 +265,7 @@ export default function PreviewPage() {
         </section>
       )}
 
-      {/* 자주 묻는 질문(FAQ) */}
+      {/* 7. 자주 묻는 질문(FAQ) */}
       {data?.faqs && (
         <section className="py-24 px-8 bg-slate-50/50 border-t border-slate-100">
           <div className="max-w-3xl mx-auto">
@@ -276,7 +298,7 @@ export default function PreviewPage() {
         </section>
       )}
 
-      {/* 견적 상담 신청 폼 */}
+      {/* 8. 견적 상담 신청 폼 */}
       <section id="contact-form" className="py-24 px-8 bg-white border-t border-slate-100">
         <div className="max-w-2xl mx-auto bg-slate-50 border border-slate-200/80 rounded-2xl p-8 md:p-10 shadow-sm">
           <div className="text-center mb-8">
@@ -342,7 +364,7 @@ export default function PreviewPage() {
         </div>
       </section>
 
-      {/* 푸터 */}
+      {/* 9. 푸터 */}
       <footer className="py-12 px-8 bg-slate-900 text-slate-400 text-xs border-t border-slate-800">
         <div className="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-start gap-8">
           <div>
@@ -370,7 +392,7 @@ export default function PreviewPage() {
         </div>
       </footer>
 
-      {/* 전화 플로팅 버튼 */}
+      {/* 10. 전화 플로팅 버튼 */}
       <a
         href={`tel:${supportPhone}`}
         style={{ backgroundColor: themeColor }}
