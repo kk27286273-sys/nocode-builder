@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Phone, CheckCircle2 } from 'lucide-react';
 import { B2BTemplateData } from '@/data/templates';
 
 interface LivePreviewProps {
@@ -105,7 +104,9 @@ export default function LivePreview({ data, zoom, setZoom }: LivePreviewProps) {
                 style={{ backgroundColor: data?.themeColor || '#0284C7' }}
                 className="text-white text-sm font-bold px-5 py-2.5 rounded-full shadow hover:opacity-95 transition whitespace-nowrap flex items-center gap-1.5"
               >
-                <Phone className="w-4 h-4" />
+                <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                  <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.02-.24 11.72 11.72 0 003.68.59 1 1 0 011 1v3.5a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1 11.72 11.72 0 00.59 3.68 1 1 0 01-.24 1.02l-2.23 2.09z" />
+                </svg>
                 전화 상담
               </a>
             </nav>
@@ -287,23 +288,23 @@ export default function LivePreview({ data, zoom, setZoom }: LivePreviewProps) {
 
                     <ul className="space-y-3.5 mb-8 text-sm text-slate-600">
                       <li className="flex items-start gap-2.5">
-                        <CheckCircle2 className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+                        <span className="text-blue-600 font-bold shrink-0 mt-0.5">✓</span>
                         <span>모바일 100% 최적화 단일 원페이지 스크롤</span>
                       </li>
                       <li className="flex items-start gap-2.5">
-                        <CheckCircle2 className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+                        <span className="text-blue-600 font-bold shrink-0 mt-0.5">✓</span>
                         <span>카카오톡 1:1 상담 및 다이렉트 전화 연결</span>
                       </li>
                       <li className="flex items-start gap-2.5">
-                        <CheckCircle2 className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+                        <span className="text-blue-600 font-bold shrink-0 mt-0.5">✓</span>
                         <span>인바운드 견적 접수 폼 & 관리자 DB 연동</span>
                       </li>
                       <li className="flex items-start gap-2.5">
-                        <CheckCircle2 className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+                        <span className="text-blue-600 font-bold shrink-0 mt-0.5">✓</span>
                         <span>네이버/구글 검색엔진(SEO) 등록 무료 대행</span>
                       </li>
                       <li className="flex items-start gap-2.5">
-                        <CheckCircle2 className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+                        <span className="text-blue-600 font-bold shrink-0 mt-0.5">✓</span>
                         <span className="font-semibold text-slate-900">제작 기간: 필수 자료 전달 후 3~4일 소요</span>
                       </li>
                     </ul>
@@ -347,23 +348,23 @@ export default function LivePreview({ data, zoom, setZoom }: LivePreviewProps) {
 
                     <ul className="space-y-3.5 mb-8 text-sm text-slate-600">
                       <li className="flex items-start gap-2.5">
-                        <CheckCircle2 className="w-5 h-5 text-slate-800 shrink-0 mt-0.5" />
+                        <span className="text-slate-800 font-bold shrink-0 mt-0.5">✓</span>
                         <span>3~5개 독립 멀티페이지 (홈/회사소개/시공실적/서비스/문의)</span>
                       </li>
                       <li className="flex items-start gap-2.5">
-                        <CheckCircle2 className="w-5 h-5 text-slate-800 shrink-0 mt-0.5" />
+                        <span className="text-slate-800 font-bold shrink-0 mt-0.5">✓</span>
                         <span>고해상도 시공 실적 갤러리/게시판 구성</span>
                       </li>
                       <li className="flex items-start gap-2.5">
-                        <CheckCircle2 className="w-5 h-5 text-slate-800 shrink-0 mt-0.5" />
+                        <span className="text-slate-800 font-bold shrink-0 mt-0.5">✓</span>
                         <span>카테고리별 맞춤 견적 신청 폼 & 관리자 DB 연동</span>
                       </li>
                       <li className="flex items-start gap-2.5">
-                        <CheckCircle2 className="w-5 h-5 text-slate-800 shrink-0 mt-0.5" />
+                        <span className="text-slate-800 font-bold shrink-0 mt-0.5">✓</span>
                         <span>네이버/구글 검색엔진(SEO) 및 사이트맵 등록 대행</span>
                       </li>
                       <li className="flex items-start gap-2.5">
-                        <CheckCircle2 className="w-5 h-5 text-slate-800 shrink-0 mt-0.5" />
+                        <span className="text-slate-800 font-bold shrink-0 mt-0.5">✓</span>
                         <span className="font-semibold text-slate-900">제작 기간: 필수 자료 전달 후 7~10일 소요</span>
                       </li>
                     </ul>
@@ -630,7 +631,9 @@ export default function LivePreview({ data, zoom, setZoom }: LivePreviewProps) {
           className="fixed bottom-6 right-6 z-50 flex items-center justify-center w-14 h-14 text-white rounded-full shadow-2xl transition duration-300 hover:scale-110 active:scale-95"
           title="전화 바로 연결"
         >
-          <Phone className="w-6 h-6" />
+          <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24">
+            <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.02-.24 11.72 11.72 0 003.68.59 1 1 0 011 1v3.5a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1 11.72 11.72 0 00.59 3.68 1 1 0 01-.24 1.02l-2.23 2.09z" />
+          </svg>
         </a>
       </div>
     </main>

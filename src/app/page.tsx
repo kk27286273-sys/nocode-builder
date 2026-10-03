@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Phone, CheckCircle2, ShieldCheck, Zap, Smartphone, Search, MessageSquare, ArrowRight } from 'lucide-react';
 
 export default function HomePage() {
   const [selectedPlan, setSelectedPlan] = useState<'basic' | 'pro'>('basic');
@@ -42,7 +41,9 @@ export default function HomePage() {
               href={`tel:${supportPhone}`}
               className="inline-flex items-center gap-1.5 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold bg-slate-900 text-white hover:bg-slate-800 transition"
             >
-              <Phone className="w-3.5 h-3.5" />
+              <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.02-.24 11.72 11.72 0 003.68.59 1 1 0 011 1v3.5a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1 11.72 11.72 0 00.59 3.68 1 1 0 01-.24 1.02l-2.23 2.09z" />
+              </svg>
               <span>전화 상담</span>
             </a>
           </div>
@@ -84,19 +85,19 @@ export default function HomePage() {
       <section className="py-6 border-y border-slate-100 bg-slate-50/60 px-4">
         <div className="max-w-6xl mx-auto flex flex-wrap justify-center items-center gap-6 sm:gap-12 text-xs sm:text-sm font-semibold text-slate-600">
           <div className="flex items-center gap-2">
-            <Zap className="w-4 h-4 text-blue-600" />
+            <span className="text-blue-600 font-bold">⚡</span>
             <span>초고속 Next.js 로딩</span>
           </div>
           <div className="flex items-center gap-2">
-            <Smartphone className="w-4 h-4 text-blue-600" />
+            <span className="text-blue-600 font-bold">📱</span>
             <span>모바일 100% 반응형 최적화</span>
           </div>
           <div className="flex items-center gap-2">
-            <Search className="w-4 h-4 text-blue-600" />
+            <span className="text-blue-600 font-bold">🔍</span>
             <span>네이버/구글 검색엔진(SEO) 무료 등록</span>
           </div>
           <div className="flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-blue-600" />
+            <span className="text-blue-600 font-bold">🔒</span>
             <span>Vercel 글로벌 CDN & SSL 보안</span>
           </div>
         </div>
@@ -145,7 +146,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 5. 2단 가격 안내 섹션 (베이직 / 프로) */}
+      {/* 5. 2단 가격 안내 섹션 */}
       <section id="pricing" className="py-24 px-4 sm:px-6 bg-slate-50 border-t border-slate-200">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
@@ -195,23 +196,23 @@ export default function HomePage() {
 
                 <ul className="space-y-3.5 mb-8 text-sm text-slate-600">
                   <li className="flex items-start gap-2.5">
-                    <CheckCircle2 className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+                    <span className="text-blue-600 font-bold shrink-0 mt-0.5">✓</span>
                     <span>모바일 100% 최적화 단일 원페이지 스크롤</span>
                   </li>
                   <li className="flex items-start gap-2.5">
-                    <CheckCircle2 className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+                    <span className="text-blue-600 font-bold shrink-0 mt-0.5">✓</span>
                     <span>카카오톡 1:1 상담 및 다이렉트 전화 연결</span>
                   </li>
                   <li className="flex items-start gap-2.5">
-                    <CheckCircle2 className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+                    <span className="text-blue-600 font-bold shrink-0 mt-0.5">✓</span>
                     <span>인바운드 견적 접수 폼 & 관리자 DB 연동</span>
                   </li>
                   <li className="flex items-start gap-2.5">
-                    <CheckCircle2 className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+                    <span className="text-blue-600 font-bold shrink-0 mt-0.5">✓</span>
                     <span>네이버/구글 검색엔진(SEO) 등록 무료 대행</span>
                   </li>
                   <li className="flex items-start gap-2.5">
-                    <CheckCircle2 className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+                    <span className="text-blue-600 font-bold shrink-0 mt-0.5">✓</span>
                     <span className="font-semibold text-slate-900">제작 기간: 필수 자료 전달 후 3~4일 소요</span>
                   </li>
                 </ul>
@@ -255,23 +256,23 @@ export default function HomePage() {
 
                 <ul className="space-y-3.5 mb-8 text-sm text-slate-600">
                   <li className="flex items-start gap-2.5">
-                    <CheckCircle2 className="w-5 h-5 text-slate-800 shrink-0 mt-0.5" />
+                    <span className="text-slate-800 font-bold shrink-0 mt-0.5">✓</span>
                     <span>3~5개 독립 멀티페이지 (홈/회사소개/시공실적/서비스/문의)</span>
                   </li>
                   <li className="flex items-start gap-2.5">
-                    <CheckCircle2 className="w-5 h-5 text-slate-800 shrink-0 mt-0.5" />
+                    <span className="text-slate-800 font-bold shrink-0 mt-0.5">✓</span>
                     <span>고해상도 시공 실적 갤러리/게시판 구성</span>
                   </li>
                   <li className="flex items-start gap-2.5">
-                    <CheckCircle2 className="w-5 h-5 text-slate-800 shrink-0 mt-0.5" />
+                    <span className="text-slate-800 font-bold shrink-0 mt-0.5">✓</span>
                     <span>카테고리별 맞춤 견적 신청 폼 & 관리자 DB 연동</span>
                   </li>
                   <li className="flex items-start gap-2.5">
-                    <CheckCircle2 className="w-5 h-5 text-slate-800 shrink-0 mt-0.5" />
+                    <span className="text-slate-800 font-bold shrink-0 mt-0.5">✓</span>
                     <span>네이버/구글 검색엔진(SEO) 및 사이트맵 등록 대행</span>
                   </li>
                   <li className="flex items-start gap-2.5">
-                    <CheckCircle2 className="w-5 h-5 text-slate-800 shrink-0 mt-0.5" />
+                    <span className="text-slate-800 font-bold shrink-0 mt-0.5">✓</span>
                     <span className="font-semibold text-slate-900">제작 기간: 필수 자료 전달 후 7~10일 소요</span>
                   </li>
                 </ul>
@@ -455,7 +456,9 @@ export default function HomePage() {
         className="fixed bottom-6 right-6 z-50 flex items-center justify-center w-14 h-14 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-2xl transition duration-300 hover:scale-110 active:scale-95"
         title="전화 바로 연결"
       >
-        <Phone className="w-6 h-6" />
+        <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24">
+          <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.02-.24 11.72 11.72 0 003.68.59 1 1 0 011 1v3.5a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1 11.72 11.72 0 00.59 3.68 1 1 0 01-.24 1.02l-2.23 2.09z" />
+        </svg>
       </a>
     </div>
   );
