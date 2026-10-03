@@ -99,43 +99,113 @@ function PreviewContent() {
         </nav>
       </header>
 
-      {/* 2. 메인 히어로 섹션 */}
-      <section className="py-20 sm:py-32 px-4 sm:px-8 text-center bg-gradient-to-b from-slate-50/80 to-white flex flex-col items-center">
-        {data?.hero?.badge && (
-          <span
-            style={{
-              fontSize: `${fs.heroBadge || 14}px`,
-              color: themeColor,
-              backgroundColor: `${themeColor}15`,
-            }}
-            className="font-bold px-4 py-1.5 rounded-full mb-6 inline-block"
-          >
-            {data.hero.badge}
-          </span>
-        )}
-        <h1
-          style={{ fontSize: `${fs.heroTitle || 40}px` }}
-          className="font-extrabold text-slate-900 leading-tight mb-6 whitespace-pre-line tracking-tight max-w-4xl"
-        >
-          {data?.hero?.title}
-        </h1>
-        <p
-          style={{ fontSize: `${fs.heroSubtitle || 18}px` }}
-          className="text-slate-600 max-w-2xl leading-relaxed mb-10"
-        >
-          {data?.hero?.subtitle}
-        </p>
-        <div className="flex items-center gap-4">
-          <a
-            href="#contact-form"
-            style={{ backgroundColor: themeColor }}
-            className="text-white font-bold px-8 py-3.5 rounded-xl shadow-lg hover:opacity-95 transition text-base flex items-center gap-2"
-          >
-            <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-              <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.02-.24 11.72 11.72 0 003.68.59 1 1 0 011 1v3.5a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1 11.72 11.72 0 00.59 3.68 1 1 0 01-.24 1.02l-2.23 2.09z" />
-            </svg>
-            빠른 견적 상담 신청
-          </a>
+      {/* 2. 2열 분할 꽉 찬 프리미엄 히어로 섹션 */}
+      <section className="relative py-16 sm:py-24 px-4 sm:px-8 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white overflow-hidden">
+        {/* 엔지니어링 그리드 배경 패턴 */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-40 -z-10" />
+
+        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          {/* [좌측 7컬럼] 핵심 신뢰 카피 & CTA */}
+          <div className="lg:col-span-7 space-y-6 text-left">
+            {data?.hero?.badge && (
+              <div
+                style={{
+                  color: themeColor,
+                  backgroundColor: `${themeColor}20`,
+                  borderColor: `${themeColor}40`,
+                }}
+                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border text-xs sm:text-sm font-bold"
+              >
+                <span style={{ backgroundColor: themeColor }} className="w-2 h-2 rounded-full animate-pulse" />
+                {data.hero.badge}
+              </div>
+            )}
+
+            <h1
+              style={{ fontSize: `${fs.heroTitle || 38}px` }}
+              className="font-black tracking-tight leading-[1.25] text-white whitespace-pre-line"
+            >
+              {data?.hero?.title}
+            </h1>
+
+            <p
+              style={{ fontSize: `${fs.heroSubtitle || 17}px` }}
+              className="text-slate-300 font-normal leading-relaxed max-w-xl"
+            >
+              {data?.hero?.subtitle}
+            </p>
+
+            {/* 핵심 강점 4가지 체크리스트 */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 text-xs sm:text-sm text-slate-300 font-semibold">
+              <div className="flex items-center gap-2">
+                <span style={{ color: themeColor }} className="font-bold">✓</span>
+                <span>100% 본사 직영 정밀 시공 체계</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span style={{ color: themeColor }} className="font-bold">✓</span>
+                <span>공기 준수율 99.8% 달성</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span style={{ color: themeColor }} className="font-bold">✓</span>
+                <span>현장 정밀 실측 및 다이렉트 견적</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span style={{ color: themeColor }} className="font-bold">✓</span>
+                <span>사후 무상 A/S 책임 보증제</span>
+              </div>
+            </div>
+
+            {/* CTA 버튼 그룹 */}
+            <div className="flex flex-col sm:flex-row items-center gap-4 pt-4">
+              <a
+                href="#contact-form"
+                style={{ backgroundColor: themeColor }}
+                className="w-full sm:w-auto px-8 py-4 text-white font-bold rounded-xl shadow-lg hover:opacity-95 transition text-center text-sm sm:text-base cursor-pointer"
+              >
+                도면 검토 & 빠른 견적 신청
+              </a>
+              <a
+                href={`tel:${supportPhone}`}
+                className="w-full sm:w-auto px-6 py-4 bg-slate-800/90 hover:bg-slate-700 text-white font-bold rounded-xl transition border border-slate-700 text-center flex items-center justify-center gap-2 text-sm sm:text-base cursor-pointer"
+              >
+                <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                  <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.02-.24 11.72 11.72 0 003.68.59 1 1 0 011 1v3.5a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1 11.72 11.72 0 00.59 3.68 1 1 0 01-.24 1.02l-2.23 2.09z" />
+                </svg>
+                <span>엔지니어 직통 전화 연결</span>
+              </a>
+            </div>
+          </div>
+
+          {/* [우측 5컬럼] 고해상도 현장 실사 & 오버레이 실적 카드 */}
+          <div className="lg:col-span-5 relative">
+            <div className="relative mx-auto rounded-3xl overflow-hidden border border-slate-700/80 shadow-2xl bg-slate-800 aspect-[4/3] lg:aspect-[4/4]">
+              <img
+                src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1000&q=80"
+                alt="전문 정밀 시공 및 엔지니어링 현장"
+                className="w-full h-full object-cover brightness-90 hover:scale-105 transition duration-700"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
+
+              {/* 좌측 상단 플로팅 뱃지 */}
+              <div className="absolute top-4 left-4 bg-slate-900/90 backdrop-blur border border-slate-700 px-3.5 py-1.5 rounded-xl shadow-lg flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="text-xs font-bold text-white">최신 정밀 설비 가동 중</span>
+              </div>
+
+              {/* 하단 플로팅 실적 카드 */}
+              <div className="absolute bottom-4 right-4 left-4 bg-slate-900/95 backdrop-blur-md border border-slate-700/90 p-4 rounded-2xl shadow-xl flex items-center justify-between">
+                <div>
+                  <div className="text-[11px] text-slate-400 font-semibold">누적 시공·개발 실적</div>
+                  <div className="text-xl font-black text-white mt-0.5">2,850건+</div>
+                </div>
+                <div className="h-8 w-px bg-slate-700" />
+                <div>
+                  <div className="text-[11px] text-slate-400 font-semibold">평균 납기 준수율</div>
+                  <div style={{ color: themeColor }} className="text-xl font-black mt-0.5">99.8%</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 

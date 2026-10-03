@@ -24,7 +24,7 @@ export default function LivePreview({ data, zoom, setZoom }: LivePreviewProps) {
         <div className="flex items-center gap-1 sm:gap-2">
           <button
             onClick={() => setZoom((prev) => Math.max(prev - 10, 50))}
-            className="p-1 px-2.5 text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded border border-slate-300"
+            className="p-1 px-2.5 text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded border border-slate-300 cursor-pointer"
           >
             -
           </button>
@@ -33,13 +33,13 @@ export default function LivePreview({ data, zoom, setZoom }: LivePreviewProps) {
           </span>
           <button
             onClick={() => setZoom((prev) => Math.min(prev + 10, 150))}
-            className="p-1 px-2.5 text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded border border-slate-300"
+            className="p-1 px-2.5 text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded border border-slate-300 cursor-pointer"
           >
             +
           </button>
           <button
             onClick={() => setZoom(100)}
-            className="ml-1 sm:ml-2 text-xs text-slate-500 hover:text-slate-800 underline"
+            className="ml-1 sm:ml-2 text-xs text-slate-500 hover:text-slate-800 underline cursor-pointer"
           >
             초기화
           </button>
@@ -99,43 +99,99 @@ export default function LivePreview({ data, zoom, setZoom }: LivePreviewProps) {
             </nav>
           </header>
 
-          {/* 메인 히어로 섹션 */}
-          <section className="py-12 sm:py-20 px-4 sm:px-8 text-center bg-gradient-to-b from-slate-50/80 to-white flex flex-col items-center">
-            {data?.hero?.badge && (
-              <span
-                style={{
-                  fontSize: `${fs.heroBadge || 14}px`,
-                  color: themeColor,
-                  backgroundColor: `${themeColor}15`,
-                }}
-                className="font-bold px-4 py-1.5 rounded-full mb-6 inline-block"
-              >
-                {data.hero.badge}
-              </span>
-            )}
-            <h1
-              style={{ fontSize: `${fs.heroTitle || 36}px` }}
-              className="font-extrabold text-slate-900 leading-tight mb-6 whitespace-pre-line tracking-tight max-w-4xl"
-            >
-              {data?.hero?.title}
-            </h1>
-            <p
-              style={{ fontSize: `${fs.heroSubtitle || 18}px` }}
-              className="text-slate-600 max-w-2xl leading-relaxed mb-10"
-            >
-              {data?.hero?.subtitle}
-            </p>
-            <div className="flex items-center gap-4">
-              <a
-                href={`tel:${supportPhone}`}
-                style={{ backgroundColor: themeColor }}
-                className="text-white font-bold px-8 py-3.5 rounded-xl shadow-lg hover:opacity-95 transition text-base flex items-center gap-2"
-              >
-                <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                  <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.02-.24 11.72 11.72 0 003.68.59 1 1 0 011 1v3.5a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1 11.72 11.72 0 00.59 3.68 1 1 0 01-.24 1.02l-2.23 2.09z" />
-                </svg>
-                빠른 견적 상담 신청
-              </a>
+          {/* 2열 분할 꽉 찬 프리미엄 히어로 섹션 */}
+          <section className="relative py-14 sm:py-20 px-4 sm:px-8 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white overflow-hidden">
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-40 -z-10" />
+
+            <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+              {/* 좌측 7컬럼 */}
+              <div className="lg:col-span-7 space-y-5 text-left">
+                {data?.hero?.badge && (
+                  <div
+                    style={{
+                      color: themeColor,
+                      backgroundColor: `${themeColor}20`,
+                      borderColor: `${themeColor}40`,
+                    }}
+                    className="inline-flex items-center gap-2 px-3 py-1 rounded-full border text-xs font-bold"
+                  >
+                    <span style={{ backgroundColor: themeColor }} className="w-2 h-2 rounded-full animate-pulse" />
+                    {data.hero.badge}
+                  </div>
+                )}
+
+                <h1
+                  style={{ fontSize: `${fs.heroTitle || 34}px` }}
+                  className="font-black tracking-tight leading-[1.25] text-white whitespace-pre-line"
+                >
+                  {data?.hero?.title}
+                </h1>
+
+                <p
+                  style={{ fontSize: `${fs.heroSubtitle || 16}px` }}
+                  className="text-slate-300 font-normal leading-relaxed max-w-xl"
+                >
+                  {data?.hero?.subtitle}
+                </p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1 text-xs text-slate-300 font-semibold">
+                  <div className="flex items-center gap-2">
+                    <span style={{ color: themeColor }} className="font-bold">✓</span>
+                    <span>100% 본사 직영 정밀 시공 체계</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span style={{ color: themeColor }} className="font-bold">✓</span>
+                    <span>공기 준수율 99.8% 달성</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span style={{ color: themeColor }} className="font-bold">✓</span>
+                    <span>현장 정밀 실측 및 다이렉트 견적</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span style={{ color: themeColor }} className="font-bold">✓</span>
+                    <span>사후 무상 A/S 책임 보증제</span>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-4 pt-3">
+                  <a
+                    href="#contact-form"
+                    style={{ backgroundColor: themeColor }}
+                    className="px-6 py-3.5 text-white font-bold rounded-xl shadow-lg hover:opacity-95 transition text-sm cursor-pointer"
+                  >
+                    도면 검토 & 빠른 견적 신청
+                  </a>
+                </div>
+              </div>
+
+              {/* 우측 5컬럼 */}
+              <div className="lg:col-span-5 relative">
+                <div className="relative mx-auto rounded-2xl overflow-hidden border border-slate-700/80 shadow-2xl bg-slate-800 aspect-[4/3] lg:aspect-[4/4]">
+                  <img
+                    src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1000&q=80"
+                    alt="정밀 시공 현장"
+                    className="w-full h-full object-cover brightness-90 hover:scale-105 transition duration-700"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
+
+                  <div className="absolute top-3 left-3 bg-slate-900/90 backdrop-blur border border-slate-700 px-3 py-1 rounded-lg shadow-lg flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                    <span className="text-[11px] font-bold text-white">최신 정밀 설비 가동 중</span>
+                  </div>
+
+                  <div className="absolute bottom-3 right-3 left-3 bg-slate-900/95 backdrop-blur-md border border-slate-700/90 p-3 rounded-xl shadow-xl flex items-center justify-between">
+                    <div>
+                      <div className="text-[10px] text-slate-400 font-semibold">누적 시공 실적</div>
+                      <div className="text-base font-black text-white mt-0.5">2,850건+</div>
+                    </div>
+                    <div className="h-6 w-px bg-slate-700" />
+                    <div>
+                      <div className="text-[10px] text-slate-400 font-semibold">납기 준수율</div>
+                      <div style={{ color: themeColor }} className="text-base font-black mt-0.5">99.8%</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </section>
 
@@ -411,7 +467,7 @@ export default function LivePreview({ data, zoom, setZoom }: LivePreviewProps) {
           )}
         </div>
 
-        {/* 우측 하단 전화 상담 플로팅 버튼 */}
+        {/* 우측 하단 전화 플로팅 버튼 */}
         <a
           href={`tel:${supportPhone}`}
           style={{ backgroundColor: themeColor }}
