@@ -1,21 +1,19 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { defaultB2BTemplate, B2BTemplateData } from '@/data/templates';
 import { supabase } from '@/lib/supabase';
 
-export default function PreviewPage() {
+function PreviewContent() {
   const searchParams = useSearchParams();
   const siteId = searchParams.get('siteId');
   const [data, setData] = useState<B2BTemplateData>(defaultB2BTemplate);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     async function loadSiteData() {
       try {
         if (siteId) {
-          // URL 파라미터로 특정 고객 siteId가 넘어온 경우 DB 조회
           const { data: dbSite, error } = await supabase
             .from('sites')
             .select('data')
@@ -28,7 +26,6 @@ export default function PreviewPage() {
           }
         }
 
-        // 파라미터가 없으면 가장 최신 발행된 사이트 로드
         const { data: latestSite, error } = await supabase
           .from('sites')
           .select('data')
@@ -41,7 +38,6 @@ export default function PreviewPage() {
           return;
         }
 
-        // 오프라인/로컬 백업 캐시 확인
         if (typeof window !== 'undefined') {
           const savedData = localStorage.getItem('thsoft_published_site');
           if (savedData) {
@@ -50,8 +46,6 @@ export default function PreviewPage() {
         }
       } catch (err) {
         console.error('프리뷰 데이터 로드 실패:', err);
-      } finally {
-        setIsLoading(false);
       }
     }
 
@@ -404,5 +398,13 @@ export default function PreviewPage() {
         </svg>
       </a>
     </div>
+  );
+}
+
+export default function PreviewPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-white flex items-center justify-center text-sm font-bold text-slate-500">페이지 로딩 중...</div>}>
+      <PreviewContent />
+    </Suspense>
   );
 }
