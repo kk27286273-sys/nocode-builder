@@ -2,281 +2,374 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-
-const KAKAO_CHAT_URL = 'http://pf.kakao.com/_qxmixiX/chat';
+import { Phone, CheckCircle2, ShieldCheck, Zap, Smartphone, Search, MessageSquare, ArrowRight } from 'lucide-react';
 
 export default function HomePage() {
-  const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    message: '',
-  });
+  const [selectedPlan, setSelectedPlan] = useState<'basic' | 'pro'>('basic');
+  const supportPhone = '010-0000-0000';
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    alert('상담 신청이 확인되었습니다. 카카오톡 1:1 상담 채팅방으로 즉시 연결합니다.');
-    window.location.href = KAKAO_CHAT_URL;
+  const handlePlanSelect = (plan: 'basic' | 'pro') => {
+    setSelectedPlan(plan);
+    const formElement = document.getElementById('contact-form');
+    if (formElement) {
+      formElement.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 flex flex-col selection:bg-sky-500 selection:text-white relative">
-      {/* 1. 상단 GNB 네비게이션 */}
-      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-slate-100">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <span className="font-extrabold text-lg sm:text-xl tracking-tight text-slate-900">
-              TH소프트 <span className="text-sky-600 text-xs sm:text-sm font-bold">TH SOFT</span>
+    <div className="min-h-screen bg-white text-slate-900 font-sans relative selection:bg-blue-600 selection:text-white">
+      {/* 1. GNB 헤더 */}
+      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-slate-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">TH소프트</span>
+            <span className="hidden sm:inline-block text-[11px] font-bold px-2 py-0.5 rounded bg-blue-50 text-blue-600 border border-blue-200">
+              정찰제 웹 에이전시
             </span>
-          </Link>
+          </div>
 
-          <nav className="hidden md:flex items-center gap-8">
-            <a href="#strengths" className="text-sm font-semibold text-slate-600 hover:text-sky-600 transition">
-              핵심 강점
-            </a>
-            <a href="#solutions" className="text-sm font-semibold text-slate-600 hover:text-sky-600 transition">
-              제작 사례
-            </a>
-            <a href="#pricing" className="text-sm font-semibold text-slate-600 hover:text-sky-600 transition">
-              정찰 단가
-            </a>
-            <a href="#contact" className="text-sm font-semibold text-slate-600 hover:text-sky-600 transition">
-              상담 신청
-            </a>
+          <nav className="hidden md:flex items-center space-x-8 text-sm font-semibold text-slate-600">
+            <a href="#features" className="hover:text-blue-600 transition">특장점</a>
+            <a href="#pricing" className="hover:text-blue-600 transition">정찰제 가격</a>
+            <a href="#contact-form" className="hover:text-blue-600 transition">견적 문의</a>
+            <Link href="/editor" className="text-blue-600 hover:text-blue-700 transition">
+              웹 빌더 체험
+            </Link>
           </nav>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <a
-              href={KAKAO_CHAT_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-amber-300 hover:bg-amber-400 text-amber-950 text-xs sm:text-sm font-bold px-4 py-2 sm:px-5 sm:py-2.5 rounded-full transition shadow-sm flex items-center gap-1.5"
+              href={`tel:${supportPhone}`}
+              className="inline-flex items-center gap-1.5 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold bg-slate-900 text-white hover:bg-slate-800 transition"
             >
-              <span>💬 카톡 상담</span>
+              <Phone className="w-3.5 h-3.5" />
+              <span>전화 상담</span>
             </a>
           </div>
         </div>
       </header>
 
-      {/* 2. 메인 히어로 영역 */}
-      <section className="py-16 sm:py-28 px-4 sm:px-6 text-center bg-gradient-to-b from-slate-50 via-white to-slate-50/50 flex flex-col items-center">
-        <div className="inline-flex items-center gap-2 bg-sky-50 border border-sky-100 text-sky-700 font-bold text-xs sm:text-sm px-4 py-1.5 rounded-full mb-6 sm:mb-8">
-          <span className="w-2 h-2 rounded-full bg-sky-500 animate-pulse"></span>
-          모바일 100% 최적화 · 3~4일 신속 구축 전문
-        </div>
-
-        <h1 className="text-2xl sm:text-4xl md:text-5xl font-black text-slate-900 leading-tight sm:leading-snug tracking-tight max-w-4xl mb-6">
-          명함 대신 링크 하나로 계약 따는<br className="hidden sm:block" />
-          <span className="text-sky-600"> 모바일 최적화 실속형 홈페이지</span> 제작
-        </h1>
-
-        {/* 1px 축소(text-[15px]) 및 줄바꿈 최적화 처리 */}
-        <p className="text-slate-600 text-[13px] sm:text-[15px] sm:leading-relaxed max-w-2xl mb-10 px-2 tracking-tight break-keep">
-          기업 회사소개부터 매장 홍보, 시공 포트폴리오까지. 불필요한 기능은 빼고 고객의 전화와 견적 문의로 직결되는 실속형 사이트를 3~4일 만에 합리적인 정찰제로 구축해 드립니다.
-        </p>
-
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full sm:w-auto">
-          <a
-            href="#contact"
-            className="w-full sm:w-auto bg-sky-600 hover:bg-sky-700 text-white font-extrabold px-8 py-4 rounded-xl text-base shadow-lg shadow-sky-600/20 transition transform active:scale-95"
-          >
-            1:1 맞춤 견적 문의하기
-          </a>
-          <a
-            href={KAKAO_CHAT_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full sm:w-auto bg-amber-300 hover:bg-amber-400 text-amber-950 font-extrabold px-6 py-4 rounded-xl text-base transition flex items-center justify-center gap-2 shadow"
-          >
-            카톡으로 빠른 상담
-          </a>
-        </div>
-      </section>
-
-      {/* 3. 주요 실적 지표 섹션 (핵심 강점) */}
-      <section id="strengths" className="py-12 sm:py-16 px-4 sm:px-6 bg-white border-y border-slate-100">
-        <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-          <div className="p-8 rounded-2xl bg-slate-50/80 border border-slate-100 text-center">
-            <div className="text-3xl sm:text-4xl font-black text-sky-600 mb-2">100%</div>
-            <div className="text-sm font-bold text-slate-800">모바일 반응형 화면 최적화</div>
-            <p className="text-xs text-slate-500 mt-1">스마트폰 터치 동선과 가독성을 1순위로 설계</p>
-          </div>
-          <div className="p-8 rounded-2xl bg-slate-50/80 border border-slate-100 text-center">
-            <div className="text-3xl sm:text-4xl font-black text-sky-600 mb-2">3~4일</div>
-            <div className="text-sm font-bold text-slate-800">필수 자료 전달 후 초안 완성</div>
-            <p className="text-xs text-slate-500 mt-1">기획과 개발 일정 지연 없는 신속 맞춤 셋업</p>
-          </div>
-          <div className="p-8 rounded-2xl bg-slate-50/80 border border-slate-100 text-center">
-            <div className="text-3xl sm:text-4xl font-black text-sky-600 mb-2">0원</div>
-            <div className="text-sm font-bold text-slate-800">숨겨진 추가 비용 일절 없음 (정찰제)</div>
-            <p className="text-xs text-slate-500 mt-1">호스팅 강매, 유지보수 꼼수 없는 투명 정찰가</p>
-          </div>
-        </div>
-      </section>
-
-      {/* 4. 핵심 솔루션 / 제작 분야 (제작 사례) */}
-      <section id="solutions" className="py-20 px-4 sm:px-6 bg-slate-50/50">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-14">
-            <span className="text-xs font-bold text-sky-600 tracking-wider uppercase mb-2 block">
-              Core Solutions
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-              핵심 솔루션 & 제작 분야
-            </h2>
-            <p className="text-sm text-slate-600 mt-2">
-              업종의 목적에 맞춰 견적 전환율을 극대화하는 3대 대표 구성
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white p-8 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
-              <div>
-                <span className="inline-block px-3 py-1 bg-sky-50 text-sky-700 text-xs font-bold rounded-md mb-4">
-                  Case 01
-                </span>
-                <h3 className="text-lg font-bold text-slate-900 mb-3">
-                  B2B 기업·제조업 전용 웹
-                </h3>
-                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                  거래처 미팅 전 회사소개서 대신 전달하는 신뢰도 높은 모바일 반응형 웹사이트.
-                </p>
-              </div>
-            </div>
-
-            <div className="bg-white p-8 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
-              <div>
-                <span className="inline-block px-3 py-1 bg-sky-50 text-sky-700 text-xs font-bold rounded-md mb-4">
-                  Case 02
-                </span>
-                <h3 className="text-lg font-bold text-slate-900 mb-3">
-                  매장 홍보 & 시공 포트폴리오 웹
-                </h3>
-                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                  인테리어, 설비, 학원 등 고객이 시공 실적과 후기를 보고 바로 견적을 요청하는 구조.
-                </p>
-              </div>
-            </div>
-
-            <div className="bg-white p-8 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
-              <div>
-                <span className="inline-block px-3 py-1 bg-sky-50 text-sky-700 text-xs font-bold rounded-md mb-4">
-                  Case 03
-                </span>
-                <h3 className="text-lg font-bold text-slate-900 mb-3">
-                  전문직 & 1인 기업 랜딩페이지
-                </h3>
-                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                  복잡한 메뉴 없이 스크롤 한 번으로 프로필 확인부터 상담 예약까지 1분 컷 연결.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 1번 수정: 투명한 실속형 정찰 단가 안내 섹션 (700,000 -> 490,000원 30% 할인) */}
-      <section id="pricing" className="py-20 px-4 sm:px-6 bg-white border-t border-slate-100">
-        <div className="max-w-4xl mx-auto text-center mb-12">
-          <span className="text-xs font-bold text-sky-600 tracking-wider uppercase mb-2 block">
-            Pricing
+      {/* 2. 메인 히어로 */}
+      <section className="relative py-20 sm:py-32 bg-slate-950 text-white overflow-hidden text-center px-4">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/20 via-slate-950 to-slate-950 -z-10" />
+        <div className="max-w-4xl mx-auto">
+          <span className="inline-block px-4 py-1.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs sm:text-sm font-bold mb-6">
+            거품 없는 B2B 정찰제 제작 솔루션
           </span>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
-            투명한 실속형 정찰 단가
-          </h2>
-          <p className="text-sm text-slate-600 mt-2">
-            숨겨진 옵션 비용 없이 기획부터 도메인 연결까지 완벽하게 원스톱 제공합니다.
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight leading-tight mb-8">
+            고객을 부르는 웹사이트,<br className="hidden sm:block" />
+            <span className="text-blue-500">투명한 정찰제</span>로 완성합니다
+          </h1>
+          <p className="text-base sm:text-xl text-slate-300 font-normal leading-relaxed max-w-2xl mx-auto mb-10">
+            기획부터 검색엔진 등록까지 한번에. 전환율 높은 인바운드 접수 시스템과 반응형 구조를 완벽 제공합니다.
           </p>
-        </div>
-
-        <div className="max-w-xl mx-auto bg-slate-50 border-2 border-sky-600 rounded-3xl p-8 sm:p-10 shadow-lg text-center relative overflow-hidden">
-          <div className="absolute top-0 right-0 bg-sky-600 text-white text-[11px] font-bold px-4 py-1.5 rounded-bl-xl">
-            선착순 5개 업체 한정 (30% 할인)
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a
+              href="#pricing"
+              className="w-full sm:w-auto px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg transition text-center"
+            >
+              정찰제 가격 플랜 보기
+            </a>
+            <a
+              href="#contact-form"
+              className="w-full sm:w-auto px-8 py-4 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl transition border border-slate-700 text-center"
+            >
+              빠른 온라인 견적 신청
+            </a>
           </div>
-          <h3 className="text-xl font-bold text-slate-900 mb-2">모바일 반응형 B2B 원페이지 패키지</h3>
-          <p className="text-xs text-slate-500 mb-6">기획 + 모바일 최적화 디자인 + 문의 CRM 연동 일체</p>
-          <div className="mb-6 flex items-center justify-center gap-2">
-            <span className="text-sm line-through text-slate-400">정상가 700,000원</span>
-            <span className="text-3xl sm:text-4xl font-black text-sky-600">490,000원</span>
-            <span className="text-xs font-medium text-slate-600">(부가세 별도)</span>
-          </div>
-          <ul className="text-xs sm:text-sm text-slate-600 space-y-2.5 text-left mb-8 max-w-sm mx-auto">
-            <li className="flex items-center gap-2">✔ 스마트폰 터치 중심 모바일 반응형 캔버스</li>
-            <li className="flex items-center gap-2">✔ 즉시 접수 인바운드 견적 폼 & 관리자 CRM 기본 장착</li>
-            <li className="flex items-center gap-2">✔ 카카오톡 및 다이렉트 전화 상담 버튼 연동</li>
-            <li className="flex items-center gap-2">✔ SSL 보안 인증서 및 대표 도메인 무료 연결 지원</li>
-          </ul>
-          <a
-            href="#contact"
-            className="block w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-3.5 rounded-xl transition shadow"
-          >
-            선착순 할인가로 상담 신청하기
-          </a>
         </div>
       </section>
 
-      {/* 5. 자주 묻는 질문 (FAQ) */}
-      <section className="py-20 px-4 sm:px-6 bg-slate-50/50 border-t border-slate-100">
-        <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
-              자주 묻는 질문 (FAQ)
+      {/* 3. 기술 인증 뱃지 바 */}
+      <section className="py-6 border-y border-slate-100 bg-slate-50/60 px-4">
+        <div className="max-w-6xl mx-auto flex flex-wrap justify-center items-center gap-6 sm:gap-12 text-xs sm:text-sm font-semibold text-slate-600">
+          <div className="flex items-center gap-2">
+            <Zap className="w-4 h-4 text-blue-600" />
+            <span>초고속 Next.js 로딩</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Smartphone className="w-4 h-4 text-blue-600" />
+            <span>모바일 100% 반응형 최적화</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Search className="w-4 h-4 text-blue-600" />
+            <span>네이버/구글 검색엔진(SEO) 무료 등록</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <ShieldCheck className="w-4 h-4 text-blue-600" />
+            <span>Vercel 글로벌 CDN & SSL 보안</span>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. 핵심 특장점 그리드 */}
+      <section id="features" className="py-24 px-4 sm:px-6 bg-white">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-4">
+              TH소프트가 제공하는 확실한 차이
             </h2>
-            <p className="text-xs sm:text-sm text-slate-500 mt-2">
-              궁금하신 사항을 사전에 명확하게 안내해 드립니다.
+            <p className="text-slate-600 text-base">
+              추가금 요구 없는 정직한 개발과 빠른 유지관리 체계를 보장합니다.
             </p>
           </div>
-
-          <div className="space-y-4">
-            <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm">
-              <h3 className="text-base font-bold text-slate-900 mb-2 flex items-start gap-2">
-                <span className="text-sky-600 font-black">Q1.</span>
-                컴맹이고 웹을 전혀 모르는데 제작이 가능한가요?
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed pl-6">
-                A. 네, 대표님은 업체 소개와 사진 몇 장만 편하게 던져주시면 됩니다. 기획, 모바일 최적화, 도메인 연결까지 TH소프트가 알아서 세팅해 드립니다.
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="p-8 rounded-2xl bg-slate-50 border border-slate-200/80">
+              <div className="w-12 h-12 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-black mb-6">
+                01
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">전화·카카오톡 즉시 연결</h3>
+              <p className="text-slate-600 text-sm leading-relaxed">
+                방문 고객이 망설임 없이 대표번호 연결 및 1:1 카톡 상담으로 진입할 수 있는 최적 동선을 설계합니다.
               </p>
             </div>
-
-            <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm">
-              <h3 className="text-base font-bold text-slate-900 mb-2 flex items-start gap-2">
-                <span className="text-sky-600 font-black">Q2.</span>
-                오픈 기념 30% 할인은 언제까지인가요?
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed pl-6">
-                A. 완성도 높은 1:1 맞춤 퀄리티 유지를 위해 선착순 5개 업체 한정으로 진행되며, 마감 즉시 정상가로 전환됩니다.
+            <div className="p-8 rounded-2xl bg-slate-50 border border-slate-200/80">
+              <div className="w-12 h-12 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-black mb-6">
+                02
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">인바운드 접수 폼 & DB 연동</h3>
+              <p className="text-slate-600 text-sm leading-relaxed">
+                홈페이지에서 인입되는 견적 및 상담 요청 데이터를 누락 없이 안전하게 관리자 DB로 수집합니다.
+              </p>
+            </div>
+            <div className="p-8 rounded-2xl bg-slate-50 border border-slate-200/80">
+              <div className="w-12 h-12 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-black mb-6">
+                03
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">검색엔진 SEO 대행 무료</h3>
+              <p className="text-slate-600 text-sm leading-relaxed">
+                네이버 서치어드바이저 및 구글 서치콘솔에 사이트맵과 소유확인을 무료로 대행하여 노출 기반을 다집니다.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 상담 신청 폼 영역 */}
-      <section id="contact" className="py-20 px-4 sm:px-6 bg-white border-t border-slate-100">
-        <div className="max-w-xl mx-auto">
-          <div className="text-center mb-10">
-            <span className="text-xs font-bold text-sky-600 tracking-wider uppercase mb-2 block">
-              Contact Us
+      {/* 5. 2단 가격 안내 섹션 (베이직 / 프로) */}
+      <section id="pricing" className="py-24 px-4 sm:px-6 bg-slate-50 border-t border-slate-200">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-16">
+            <span className="text-xs font-bold text-blue-600 tracking-widest uppercase mb-2 block">
+              Pricing Plan
             </span>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
-              1:1 맞춤 상담 신청
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-4">
+              합리적인 정찰제 제작 플랜
             </h2>
-            <p className="text-xs sm:text-sm text-slate-600 mt-2">
-              신청을 완료하시면 카카오톡 1:1 상담 채팅방으로 즉시 연결됩니다.
+            <p className="text-slate-600 text-sm sm:text-base">
+              불필요한 거품을 걷어내고 필수 고효율 기능만 엄선하여 제공합니다.
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4 bg-slate-50 p-6 sm:p-8 rounded-3xl border border-slate-200/80">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+            {/* 플랜 1: 베이직 */}
+            <div className="bg-white rounded-3xl p-8 sm:p-10 border-2 border-blue-600 shadow-xl flex flex-col justify-between relative">
+              <div className="absolute -top-4 left-8 bg-blue-600 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-md tracking-wider">
+                가장 많은 선택 · 추천
+              </div>
+
+              <div>
+                <div className="flex justify-between items-start mb-4 mt-2">
+                  <div>
+                    <h3 className="text-2xl font-black text-slate-900">베이직</h3>
+                    <p className="text-xs sm:text-sm text-slate-500 font-medium mt-1">실속형 원페이지 스크롤</p>
+                  </div>
+                  <span className="text-xs px-2.5 py-1 bg-blue-50 text-blue-600 rounded-md font-bold">
+                    단기 납기
+                  </span>
+                </div>
+
+                <div className="my-6 pb-6 border-b border-slate-100">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-sm text-slate-400 line-through">700,000원</span>
+                    <span className="text-xs font-bold text-red-500 bg-red-50 px-2 py-0.5 rounded">30% 할인</span>
+                  </div>
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-3xl sm:text-4xl font-extrabold text-slate-900">490,000</span>
+                    <span className="text-lg font-bold text-slate-800">원</span>
+                    <span className="text-xs text-slate-400 ml-1">(부가세 별도)</span>
+                  </div>
+                  <div className="mt-2 text-xs font-semibold text-blue-600">
+                    월 관리비: 59,900원
+                  </div>
+                </div>
+
+                <ul className="space-y-3.5 mb-8 text-sm text-slate-600">
+                  <li className="flex items-start gap-2.5">
+                    <CheckCircle2 className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+                    <span>모바일 100% 최적화 단일 원페이지 스크롤</span>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <CheckCircle2 className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+                    <span>카카오톡 1:1 상담 및 다이렉트 전화 연결</span>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <CheckCircle2 className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+                    <span>인바운드 견적 접수 폼 & 관리자 DB 연동</span>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <CheckCircle2 className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+                    <span>네이버/구글 검색엔진(SEO) 등록 무료 대행</span>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <CheckCircle2 className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+                    <span className="font-semibold text-slate-900">제작 기간: 필수 자료 전달 후 3~4일 소요</span>
+                  </li>
+                </ul>
+              </div>
+
+              <button
+                onClick={() => handlePlanSelect('basic')}
+                className="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg transition active:scale-[0.98] text-sm cursor-pointer"
+              >
+                베이직 상담 신청하기
+              </button>
+            </div>
+
+            {/* 플랜 2: 프로 */}
+            <div className="bg-white rounded-3xl p-8 sm:p-10 border border-slate-200/90 shadow-sm flex flex-col justify-between relative hover:border-slate-300 transition">
+              <div>
+                <div className="flex justify-between items-start mb-4">
+                  <div>
+                    <h3 className="text-2xl font-black text-slate-900">프로</h3>
+                    <p className="text-xs sm:text-sm text-slate-500 font-medium mt-1">기업형 독립 멀티페이지</p>
+                  </div>
+                  <span className="text-xs px-2.5 py-1 bg-slate-100 text-slate-600 rounded-md font-bold">
+                    고도화형
+                  </span>
+                </div>
+
+                <div className="my-6 pb-6 border-b border-slate-100">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-sm text-slate-400 line-through">1,200,000원</span>
+                    <span className="text-xs font-bold text-red-500 bg-red-50 px-2 py-0.5 rounded">25% 할인</span>
+                  </div>
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-3xl sm:text-4xl font-extrabold text-slate-900">890,000</span>
+                    <span className="text-lg font-bold text-slate-800">원</span>
+                    <span className="text-xs text-slate-400 ml-1">(부가세 별도)</span>
+                  </div>
+                  <div className="mt-2 text-xs font-semibold text-slate-600">
+                    월 관리비: 89,900원
+                  </div>
+                </div>
+
+                <ul className="space-y-3.5 mb-8 text-sm text-slate-600">
+                  <li className="flex items-start gap-2.5">
+                    <CheckCircle2 className="w-5 h-5 text-slate-800 shrink-0 mt-0.5" />
+                    <span>3~5개 독립 멀티페이지 (홈/회사소개/시공실적/서비스/문의)</span>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <CheckCircle2 className="w-5 h-5 text-slate-800 shrink-0 mt-0.5" />
+                    <span>고해상도 시공 실적 갤러리/게시판 구성</span>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <CheckCircle2 className="w-5 h-5 text-slate-800 shrink-0 mt-0.5" />
+                    <span>카테고리별 맞춤 견적 신청 폼 & 관리자 DB 연동</span>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <CheckCircle2 className="w-5 h-5 text-slate-800 shrink-0 mt-0.5" />
+                    <span>네이버/구글 검색엔진(SEO) 및 사이트맵 등록 대행</span>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <CheckCircle2 className="w-5 h-5 text-slate-800 shrink-0 mt-0.5" />
+                    <span className="font-semibold text-slate-900">제작 기간: 필수 자료 전달 후 7~10일 소요</span>
+                  </li>
+                </ul>
+              </div>
+
+              <button
+                onClick={() => handlePlanSelect('pro')}
+                className="w-full py-4 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl transition active:scale-[0.98] text-sm cursor-pointer shadow-md"
+              >
+                프로 상담 신청하기
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 6. 견적 상담 접수 폼 */}
+      <section id="contact-form" className="py-24 px-4 sm:px-6 bg-white border-t border-slate-100">
+        <div className="max-w-2xl mx-auto bg-slate-50 border border-slate-200/80 rounded-3xl p-6 sm:p-12 shadow-sm">
+          <div className="text-center mb-8">
+            <span className="text-xs font-bold text-blue-600 tracking-wider uppercase mb-2 block">
+              Online Inquiry
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-2">
+              빠른 제작 견적 신청
+            </h2>
+            <p className="text-sm text-slate-600">
+              상담 내용을 남겨주시면 담당 개발자가 검토 후 1시간 이내 연락드립니다.
+            </p>
+          </div>
+
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              alert(
+                `선택 플랜: [${selectedPlan === 'basic' ? '베이직 원페이지 (49만원)' : '프로 멀티페이지 (89만원)'}]\n상담 신청이 접수되었습니다. 신속하게 연락드리겠습니다.`
+              );
+            }}
+            className="space-y-5"
+          >
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-2">
+                희망 플랜 선택 <span className="text-red-500">*</span>
+              </label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <label
+                  className={`flex items-center gap-3 p-3.5 rounded-xl border cursor-pointer transition ${
+                    selectedPlan === 'basic'
+                      ? 'border-blue-600 bg-blue-50/50 shadow-sm'
+                      : 'border-slate-200 bg-white hover:bg-slate-50'
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name="main_plan"
+                    value="basic"
+                    checked={selectedPlan === 'basic'}
+                    onChange={() => setSelectedPlan('basic')}
+                    className="w-4 h-4 text-blue-600 focus:ring-blue-500"
+                  />
+                  <div>
+                    <div className="text-xs sm:text-sm font-bold text-slate-900">베이직 원페이지</div>
+                    <div className="text-xs text-blue-600 font-semibold">490,000원</div>
+                  </div>
+                </label>
+
+                <label
+                  className={`flex items-center gap-3 p-3.5 rounded-xl border cursor-pointer transition ${
+                    selectedPlan === 'pro'
+                      ? 'border-slate-900 bg-slate-100 shadow-sm'
+                      : 'border-slate-200 bg-white hover:bg-slate-50'
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name="main_plan"
+                    value="pro"
+                    checked={selectedPlan === 'pro'}
+                    onChange={() => setSelectedPlan('pro')}
+                    className="w-4 h-4 text-slate-900 focus:ring-slate-900"
+                  />
+                  <div>
+                    <div className="text-xs sm:text-sm font-bold text-slate-900">프로 멀티페이지</div>
+                    <div className="text-xs text-slate-700 font-semibold">890,000원</div>
+                  </div>
+                </label>
+              </div>
+            </div>
+
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                업체명 / 담당자명 <span className="text-red-500">*</span>
+                기업명 / 신청자명 <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
                 required
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                placeholder="예: TH기업 / 홍길동 대표"
-                className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
+                placeholder="홍길동 / (주)기업명"
+                className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
               />
             </div>
 
@@ -287,71 +380,83 @@ export default function HomePage() {
               <input
                 type="tel"
                 required
-                value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                 placeholder="010-0000-0000"
-                className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
+                className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
               />
             </div>
 
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                제작 희망 내용 / 문의 사항
+                제작 요구사항 / 참고 사이트 <span className="text-red-500">*</span>
               </label>
               <textarea
-                rows={3}
-                value={formData.message}
-                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                placeholder="희망하시는 업종, 참고 사이트 등을 자유롭게 적어주세요."
-                className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 resize-none"
-              ></textarea>
+                rows={4}
+                required
+                placeholder="원하시는 업종, 참고 사이트 URL, 필요 기능 등을 편하게 남겨주세요."
+                className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 resize-none"
+              />
+            </div>
+
+            <div className="pt-2 pb-1">
+              <div className="p-3 bg-white border border-slate-200 rounded-lg text-xs text-slate-500 leading-relaxed mb-2.5 max-h-24 overflow-y-auto">
+                <strong>[개인정보 수집 및 이용 동의]</strong><br />
+                1. 수집 항목: 신청자명, 연락처, 희망 플랜, 문의 내용<br />
+                2. 수집 목적: 견적 산출 및 개발 상담 안내<br />
+                3. 보유 기간: 상담 접수 후 1년간 보관 후 지체 없이 파기
+              </div>
+              <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-slate-700">
+                <input
+                  type="checkbox"
+                  required
+                  className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                />
+                <span>
+                  <span className="text-red-500">[필수]</span> 개인정보 수집 및 이용에 동의합니다.
+                </span>
+              </label>
             </div>
 
             <button
               type="submit"
-              className="w-full bg-amber-400 hover:bg-amber-500 text-amber-950 font-extrabold py-3.5 rounded-xl transition shadow text-sm flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm sm:text-base rounded-xl shadow-md transition active:scale-[0.98] cursor-pointer"
             >
-              <span>💬 카카오톡 1:1 상담 시작하기</span>
+              제작 견적 신청 완료
             </button>
           </form>
         </div>
       </section>
 
-      {/* 우측 하단 카카오톡 플로팅 상담 버튼 */}
-      <a
-        href={KAKAO_CHAT_URL}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 z-50 bg-[#FEE500] hover:bg-[#FDD800] text-[#191919] font-bold p-3.5 sm:px-5 sm:py-3.5 rounded-full shadow-2xl flex items-center gap-2 border border-black/5 transition transform hover:scale-105 active:scale-95"
-      >
-        <span className="text-lg">💬</span>
-        <span className="text-xs sm:text-sm">카톡 상담</span>
-      </a>
-
-      {/* 3번 수정: 상담 및 기술 지원 전화번호 010-0000-0000 반영 */}
-      <footer className="py-12 px-4 sm:px-6 bg-slate-900 text-slate-400 text-xs border-t border-slate-800">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-start gap-8">
+      {/* 7. 푸터 */}
+      <footer className="bg-slate-900 text-slate-400 py-12 px-4 sm:px-6 border-t border-slate-800 text-xs">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-8">
           <div>
-            <div className="text-base font-bold text-white mb-2">
-              TH소프트 (TH SOFT)
-            </div>
-            <p className="leading-relaxed">
-              대표자: 태현 | 대표 도메인: thsoft.co.kr
-              <br />
-              이메일: contact@thsoft.co.kr
-              <br />
-              고객센터: 010-0000-0000
+            <span className="text-lg font-bold text-white tracking-tight">TH소프트</span>
+            <p className="mt-2 text-slate-400">
+              기업 가치를 극대화하는 B2B 전문 웹 에이전시
             </p>
+            <div className="mt-4 text-slate-500 space-y-1 leading-relaxed">
+              <p>상호명: TH소프트 | 대표자: 대표자명 | 사업자등록번호: 000-00-00000</p>
+              <p>주소: 서울특별시 강남구 테헤란로 | 통신판매업신고: 제2026-서울-0000호</p>
+            </div>
           </div>
           <div className="text-left md:text-right">
-            <div className="text-sm font-semibold text-white mb-1">상담 및 기술 지원</div>
-            <div className="text-xl font-black text-sky-400 mb-2">
-              010-0000-0000
+            <span className="text-sm font-semibold text-white">직통 유선 문의</span>
+            <div className="text-xl font-black text-blue-400 mt-1 mb-2">
+              {supportPhone}
             </div>
-            <p className="text-slate-500">© TH소프트 (TH SOFT). All rights reserved.</p>
+            <p className="text-slate-500">© TH소프트. All rights reserved.</p>
           </div>
         </div>
       </footer>
+
+      {/* 8. 우측 하단 전화 플로팅 버튼 */}
+      <a
+        href={`tel:${supportPhone}`}
+        className="fixed bottom-6 right-6 z-50 flex items-center justify-center w-14 h-14 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-2xl transition duration-300 hover:scale-110 active:scale-95"
+        title="전화 바로 연결"
+      >
+        <Phone className="w-6 h-6" />
+      </a>
     </div>
   );
 }
