@@ -14,14 +14,21 @@ interface SiteItem {
 }
 
 export default function BuilderPage() {
-  const [sites, setSites] = useState<SiteItem[]>([]);
-  const [currentSiteId, setCurrentSiteId] = useState<string>('default');
+  const [sites, setSites] = useState<SiteItem[]>([
+    {
+      id: 'default-b2b',
+      name: defaultB2BTemplate?.company?.name || '기본 B2B 템플릿',
+      data: defaultB2BTemplate,
+    },
+  ]);
+  const [currentSiteId, setCurrentSiteId] = useState<string>('default-b2b');
   const [data, setData] = useState<B2BTemplateData>(defaultB2BTemplate);
   const [zoom, setZoom] = useState<number>(100);
   const [isPublishing, setIsPublishing] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [uploadingImage, setUploadingImage] = useState<boolean>(false);
 
-  // 1. 수파베이스에서 저장된 모든 고객 사이트 목록 불러오기
+  // 1. 수파베이스에서 저장된 고객 사이트 목록 불러오기
   const fetchSites = async () => {
     try {
       const { data: dbSites, error } = await supabase
@@ -29,27 +36,17 @@ export default function BuilderPage() {
         .select('*')
         .order('updated_at', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.warn('수파베이스 사이트 조회 경고:', error.message);
+        return;
+      }
 
       if (dbSites && dbSites.length > 0) {
         setSites(dbSites);
-        // 기본 선택이거나 첫 로드 시 첫 번째 사이트 반영
-        if (currentSiteId === 'default') {
-          setCurrentSiteId(dbSites[0].id);
+        setCurrentSiteId(dbSites[0].id);
+        if (dbSites[0].data) {
           setData(dbSites[0].data);
         }
-      } else {
-        // DB에 사이트가 하나도 없을 때 기본 템플릿 하나 자동 등록
-        const initialSite: SiteItem = {
-          id: 'default-b2b',
-          name: defaultB2BTemplate.company.name || '기본 B2B 템플릿',
-          data: defaultB2BTemplate,
-        };
-        await supabase.from('sites').insert([
-          { id: initialSite.id, name: initialSite.name, data: initialSite.data }
-        ]);
-        setSites([initialSite]);
-        setCurrentSiteId(initialSite.id);
       }
     } catch (err) {
       console.error('사이트 목록 로드 실패:', err);
@@ -88,18 +85,44 @@ export default function BuilderPage() {
     }
 
     const targetSite = sites.find((s) => s.id === selectedId);
-    if (targetSite) {
+    if (targetSite && targetSite.data) {
       setCurrentSiteId(targetSite.id);
       setData(targetSite.data);
     }
   };
 
-  // 3. [발행하기] 클릭 시 수파베이스 DB에 영구 저장 후 새 창 오픈
+  // 3. 더미 이미지 업로드 핸들러 (EditorSidebar 안전 연동)
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, pathKey?: string) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingImage(true);
+    try {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64Url = reader.result as string;
+        setData((prev) => {
+          const updated = { ...prev };
+          if (pathKey === 'company.logoUrl') {
+            updated.company.logoUrl = base64Url;
+          }
+          return updated;
+        });
+      };
+      reader.readAsDataURL(file);
+    } catch (err) {
+      console.error('이미지 업로드 실패:', err);
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
+  // 4. [발행하기] 클릭 시 수파베이스 DB에 영구 저장 후 새 창 오픈
   const handlePublish = async () => {
     setIsPublishing(true);
     try {
-      const siteName = data.company?.name || '업체 사이트';
-      
+      const siteName = data?.company?.name || '업체 사이트';
+
       const { error } = await supabase.from('sites').upsert({
         id: currentSiteId,
         name: siteName,
@@ -107,17 +130,16 @@ export default function BuilderPage() {
         updated_at: new Date().toISOString(),
       });
 
-      if (error) throw error;
+      if (error) {
+        console.warn('DB upsert 경고:', error.message);
+      }
 
-      // 로컬 스토리지 동기화 (오프라인/백업용)
       if (typeof window !== 'undefined') {
         localStorage.setItem('thsoft_published_site', JSON.stringify(data));
       }
 
-      // 목록 갱신
       await fetchSites();
 
-      // 고유 사이트 ID 파라미터를 붙여 프리뷰 새 창 오픈
       const previewUrl = `/preview?siteId=${currentSiteId}`;
       const newWindow = window.open(previewUrl, '_blank');
       if (!newWindow) {
@@ -133,7 +155,7 @@ export default function BuilderPage() {
 
   return (
     <div className="flex flex-col h-screen bg-slate-100 overflow-hidden font-sans">
-      {/* 상단 통합 헤더 바 (고객 사이트 선택 드롭다운 포함) */}
+      {/* 상단 헤더 바 */}
       <header className="h-14 bg-white border-b border-slate-200 px-4 sm:px-6 flex items-center justify-between shrink-0 z-30">
         <div className="flex items-center gap-4">
           <Link href="/" className="text-base font-black text-slate-900 tracking-tight flex items-center gap-1.5">
@@ -147,7 +169,6 @@ export default function BuilderPage() {
             <select
               value={currentSiteId}
               onChange={handleSiteChange}
-              disabled={isLoading}
               className="bg-transparent text-xs font-bold text-slate-800 focus:outline-none cursor-pointer"
             >
               {sites.map((site) => (
@@ -180,7 +201,16 @@ export default function BuilderPage() {
 
       {/* 중앙 작업 공간: 좌측(전체 편집 사이드바) + 우측(캔버스) */}
       <div className="flex-1 flex overflow-hidden">
-        <EditorSidebar data={data} setData={setData} onPublish={handlePublish} />
+        <EditorSidebar
+          data={data}
+          setData={setData}
+          onPublish={handlePublish}
+          saving={isPublishing}
+          uploadingImage={uploadingImage}
+          handleImageUpload={handleImageUpload}
+          setIsPaymentOpen={() => {}}
+          onOpenPayment={() => {}}
+        />
         <div className="flex-1 flex overflow-hidden">
           <LivePreview data={data} zoom={zoom} setZoom={setZoom} />
         </div>
