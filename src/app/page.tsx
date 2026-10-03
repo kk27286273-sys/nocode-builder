@@ -31,7 +31,10 @@ export default function HomePage() {
             <a href="#features" className="hover:text-blue-600 transition">특장점</a>
             <a href="#pricing" className="hover:text-blue-600 transition">정찰제 가격</a>
             <a href="#contact-form" className="hover:text-blue-600 transition">견적 문의</a>
-            <Link href="/builder" className="text-blue-600 hover:text-blue-700 transition">
+            <Link href="/preview" target="_blank" className="text-blue-600 hover:text-blue-700 font-semibold transition">
+              템플릿 미리보기
+            </Link>
+            <Link href="/builder" className="text-slate-600 hover:text-blue-600 transition">
               웹 빌더 체험
             </Link>
           </nav>
@@ -71,12 +74,16 @@ export default function HomePage() {
             >
               정찰제 가격 플랜 보기
             </a>
-            <a
-              href="#contact-form"
-              className="w-full sm:w-auto px-8 py-4 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl transition border border-slate-700 text-center"
+            <Link
+              href="/preview"
+              target="_blank"
+              className="w-full sm:w-auto px-8 py-4 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl transition border border-slate-700 text-center flex items-center justify-center gap-2"
             >
-              빠른 온라인 견적 신청
-            </a>
+              <span>템플릿 미리보기</span>
+              <svg className="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
+                <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3" />
+              </svg>
+            </Link>
           </div>
         </div>
       </section>

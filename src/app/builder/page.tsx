@@ -1,156 +1,134 @@
 ﻿'use client';
 
-import React, { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase/client';
-import { publishSite } from '@/utils/publishSite';
+import React, { useState } from 'react';
+import Link from 'next/link';
 import { defaultB2BTemplate, B2BTemplateData } from '@/data/templates';
-import EditorSidebar from '@/components/builder/EditorSidebar';
-import LivePreview from '@/components/builder/LivePreview';
+import LivePreview from '@/components/LivePreview';
 
 export default function BuilderPage() {
-  const [siteId, setSiteId] = useState<string | null>(null);
-  const [data, setData] = useState<B2BTemplateData>(() => defaultB2BTemplate);
-  const [zoom, setZoom] = useState<number>(80);
-  const [saving, setSaving] = useState(false);
-  const [publishedUrl, setPublishedUrl] = useState<string | null>(null);
-  const [uploadingImage, setUploadingImage] = useState(false);
-  const [isPaymentOpen, setIsPaymentOpen] = useState(false);
+  const [data, setData] = useState<B2BTemplateData>(defaultB2BTemplate);
+  const [zoom, setZoom] = useState<number>(100);
+  const [isPublishing, setIsPublishing] = useState<boolean>(false);
 
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    const savedDraft = localStorage.getItem('thsoft_builder_draft');
-    if (savedDraft) {
-      try {
-        const parsed = JSON.parse(savedDraft);
-        if (parsed && typeof parsed === 'object') {
-          setData(parsed);
-        }
-      } catch (e) {
-        console.error('Draft load error:', e);
-      }
-    }
-
-    const params = new URLSearchParams(window.location.search);
-    const id = params.get('siteId');
-    if (id) {
-      setSiteId(id);
-      setPublishedUrl(`${window.location.origin}/p/${id}`);
-      supabase
-        .from('sites')
-        .select('data')
-        .eq('id', id)
-        .single()
-        .then(({ data: siteRecord, error }) => {
-          if (!error && siteRecord?.data) {
-            setData(siteRecord.data);
-          }
-        });
-    }
-  }, []);
-
-  const handleDataChange = (updater: any) => {
-    setData((prev) => {
-      const nextData = typeof updater === 'function' ? updater(prev) : updater;
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('thsoft_builder_draft', JSON.stringify(nextData));
-      }
-      return nextData;
-    });
-  };
-
+  // [발행하기] 클릭 시 실제 판매 데모 창(새 탭)을 즉시 띄움
   const handlePublish = async () => {
-    setSaving(true);
+    setIsPublishing(true);
     try {
-      const result = await publishSite(data, siteId);
-      const targetId = (result as any)?.id || (result as any)?.siteId || siteId;
-      if (targetId) {
-        const viewUrl = `${window.location.origin}/p/${targetId}`;
-        setPublishedUrl(viewUrl);
-        alert('성공적으로 저장 및 발행되었습니다!');
+      // 로컬 스토리지에 현재 편집된 데이터 저장
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('thsoft_published_site', JSON.stringify(data));
       }
-    } catch (err) {
-      console.error(err);
-      alert('발행 중 오류가 발생했습니다.');
-    } finally {
-      setSaving(false);
-    }
-  };
 
-  const handleImageUpload = async (
-    e: React.ChangeEvent<HTMLInputElement>,
-    targetKey: 'hero' | 'logo' | 'solution',
-    index?: number
-  ) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    try {
-      setUploadingImage(true);
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
-      const filePath = `uploads/${fileName}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from('site-assets')
-        .upload(filePath, file);
-
-      if (uploadError) throw uploadError;
-
-      const { data: publicUrlData } = supabase.storage
-        .from('site-assets')
-        .getPublicUrl(filePath);
-
-      const uploadedUrl = publicUrlData.publicUrl;
-
-      handleDataChange((prev: B2BTemplateData) => {
-        if (targetKey === 'hero') {
-          return {
-            ...prev,
-            hero: { ...prev.hero, mediaUrl: uploadedUrl, mediaType: 'image' },
-          };
-        } else if (targetKey === 'logo') {
-          return {
-            ...prev,
-            company: { ...prev.company, logoUrl: uploadedUrl },
-          };
-        } else if (targetKey === 'solution' && typeof index === 'number') {
-          const newSolutions = [...data.solutions];
-          newSolutions[index] = { ...newSolutions[index], image: uploadedUrl };
-          return { ...prev, solutions: newSolutions };
-        }
-        return prev;
-      });
+      // 새 창으로 판매용 데모 페이지(/preview) 즉시 열기
+      const newWindow = window.open('/preview', '_blank');
+      if (!newWindow) {
+        alert('팝업이 차단되었습니다. 팝업 허용 후 다시 시도해 주세요.');
+      }
     } catch (error) {
-      console.error('이미지 업로드 실패:', error);
-      alert('이미지 업로드 중 오류가 발생했습니다.');
+      console.error('Publish error:', error);
+      alert('발행 처리 중 오류가 발생했습니다.');
     } finally {
-      setUploadingImage(false);
+      setIsPublishing(false);
     }
   };
 
   return (
-    <div className="relative flex h-screen w-full overflow-hidden bg-slate-900 font-sans">
-      {/* 좌측 편집기 사이드바: 고정 너비, 높은 우선순위(z-30), 독립 스크롤 */}
-      <aside className="relative z-30 w-[420px] min-w-[420px] max-w-[420px] h-full border-r border-slate-800 bg-slate-950 shadow-2xl overflow-y-auto">
-        <EditorSidebar
-          data={data}
-          setData={handleDataChange}
-          onPublish={handlePublish}
-          saving={saving}
-          setIsPaymentOpen={setIsPaymentOpen}
-          uploadingImage={uploadingImage}
-          handleImageUpload={handleImageUpload}
-          onOpenPayment={() => setIsPaymentOpen(true)}
-        />
-      </aside>
+    <div className="flex flex-col h-screen bg-slate-100 overflow-hidden font-sans">
+      {/* 상단 통합 내비게이션 바 */}
+      <header className="h-14 bg-white border-b border-slate-200 px-4 sm:px-6 flex items-center justify-between shrink-0 z-30">
+        <div className="flex items-center gap-4">
+          <Link href="/" className="text-base font-black text-slate-900 tracking-tight flex items-center gap-1.5">
+            <span>TH소프트</span>
+            <span className="text-xs font-medium text-slate-400">| 웹 빌더 에디터</span>
+          </Link>
+        </div>
 
-      {/* 우측 실시간 미리보기: 사이드바 영역을 침범하지 않도록 flex-1 및 격리 */}
-      <main className="relative z-10 flex-1 h-full overflow-y-auto overflow-x-hidden bg-slate-800 flex justify-center items-start p-4 md:p-8">
-        <div className="w-full max-w-5xl bg-white rounded-xl shadow-2xl overflow-hidden min-h-[900px]">
+        <div className="flex items-center gap-3">
+          <Link
+            href="/preview"
+            target="_blank"
+            className="px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 transition"
+          >
+            새 탭에서 미리보기
+          </Link>
+          <button
+            onClick={handlePublish}
+            disabled={isPublishing}
+            className="px-4 py-1.5 rounded-lg text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white shadow-sm transition active:scale-95 disabled:opacity-50 cursor-pointer flex items-center gap-1.5"
+          >
+            {isPublishing ? '발행 처리 중...' : '웹사이트 발행하기'}
+          </button>
+        </div>
+      </header>
+
+      {/* 중앙 작업 공간: 좌측(설정 사이드바) + 우측(캔버스) */}
+      <div className="flex-1 flex overflow-hidden">
+        {/* 좌측 심플 편집 사이드바 */}
+        <aside className="w-80 bg-white border-r border-slate-200 p-6 overflow-y-auto shrink-0 hidden lg:block">
+          <h2 className="text-sm font-bold text-slate-900 mb-4 pb-2 border-b border-slate-100">
+            기본 정보 실시간 편집
+          </h2>
+
+          <div className="space-y-4 text-xs">
+            <div>
+              <label className="block font-semibold text-slate-700 mb-1">업체명 (상호)</label>
+              <input
+                type="text"
+                value={data.company.name}
+                onChange={(e) => setData({ ...data, company: { ...data.company, name: e.target.value } })}
+                className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-600"
+              />
+            </div>
+
+            <div>
+              <label className="block font-semibold text-slate-700 mb-1">메인 헤드카피 (히어로 타이틀)</label>
+              <textarea
+                rows={2}
+                value={data.hero.title}
+                onChange={(e) => setData({ ...data, hero: { ...data.hero, title: e.target.value } })}
+                className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-600 resize-none"
+              />
+            </div>
+
+            <div>
+              <label className="block font-semibold text-slate-700 mb-1">대표 전화번호</label>
+              <input
+                type="text"
+                value={data.supportPhone}
+                onChange={(e) => setData({ ...data, supportPhone: e.target.value })}
+                className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-600"
+              />
+            </div>
+
+            <div>
+              <label className="block font-semibold text-slate-700 mb-1">브랜드 테마 색상</label>
+              <div className="flex items-center gap-2">
+                <input
+                  type="color"
+                  value={data.themeColor || '#0284C7'}
+                  onChange={(e) => setData({ ...data, themeColor: e.target.value })}
+                  className="w-8 h-8 rounded border border-slate-200 cursor-pointer"
+                />
+                <span className="text-slate-600 font-mono">{data.themeColor || '#0284C7'}</span>
+              </div>
+            </div>
+
+            <div className="pt-4 border-t border-slate-100">
+              <button
+                onClick={handlePublish}
+                className="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl transition active:scale-95 cursor-pointer text-xs"
+              >
+                현재 내용으로 즉시 발행 및 새 창 보기
+              </button>
+            </div>
+          </div>
+        </aside>
+
+        {/* 우측 실시간 프리뷰 캔버스 */}
+        <div className="flex-1 flex overflow-hidden">
           <LivePreview data={data} zoom={zoom} setZoom={setZoom} />
         </div>
-      </main>
+      </div>
     </div>
   );
 }
