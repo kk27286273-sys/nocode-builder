@@ -1,27 +1,45 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { defaultB2BTemplate } from '@/data/templates';
+import { defaultB2BTemplate, B2BTemplateData } from '@/data/templates';
 
 export default function PreviewPage() {
-  const data = defaultB2BTemplate;
+  const [data, setData] = useState<B2BTemplateData>(defaultB2BTemplate);
+
+  // 빌더에서 저장한 최신 수정 데이터를 불러옴
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const savedData = localStorage.getItem('thsoft_published_site');
+      if (savedData) {
+        try {
+          setData(JSON.parse(savedData));
+        } catch (e) {
+          console.error('데이터 파싱 오류:', e);
+        }
+      }
+    }
+  }, []);
+
   const supportPhone = data?.supportPhone || '010-0000-0000';
   const themeColor = data?.themeColor || '#0284C7';
+  const fs = data?.fontSizes || {};
 
   return (
     <div className="min-h-screen bg-white text-slate-900 font-sans relative selection:bg-sky-600 selection:text-white">
-      {/* 미리보기 전용 상단 안내 바 */}
+      {/* 미리보기 상단 안내 바 */}
       <div className="bg-slate-900 text-white text-xs px-4 py-2.5 flex items-center justify-between sticky top-0 z-50">
         <span className="font-medium text-slate-300">
-          [데모 미리보기] 실제 고객에게 납품되는 B2B 표준 템플릿 화면입니다.
+          [발행 완료 화면] 빌더에서 수정한 내용이 실시간 반영된 정식 데모 사이트입니다.
         </span>
-        <Link
-          href="/"
-          className="text-sky-400 hover:underline font-bold text-xs"
-        >
-          ← TH소프트 홈으로 이동
-        </Link>
+        <div className="flex items-center gap-4">
+          <Link href="/builder" className="text-slate-300 hover:text-white underline text-xs">
+            빌더로 돌아가기
+          </Link>
+          <Link href="/" className="text-sky-400 hover:underline font-bold text-xs">
+            TH소프트 홈
+          </Link>
+        </div>
       </div>
 
       {/* GNB 헤더 */}
@@ -34,7 +52,10 @@ export default function PreviewPage() {
               className="h-8 sm:h-10 w-auto object-contain shrink-0"
             />
           )}
-          <span className="font-extrabold tracking-tight text-xl sm:text-2xl text-slate-900 truncate">
+          <span
+            style={{ fontSize: `${fs.companyName || 22}px` }}
+            className="font-extrabold tracking-tight text-slate-900 truncate"
+          >
             {data?.company?.name || '기업명'}
           </span>
         </div>
@@ -67,18 +88,25 @@ export default function PreviewPage() {
         {data?.hero?.badge && (
           <span
             style={{
+              fontSize: `${fs.heroBadge || 14}px`,
               color: themeColor,
               backgroundColor: `${themeColor}15`,
             }}
-            className="font-bold px-4 py-1.5 rounded-full mb-6 inline-block text-xs sm:text-sm"
+            className="font-bold px-4 py-1.5 rounded-full mb-6 inline-block"
           >
             {data.hero.badge}
           </span>
         )}
-        <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold text-slate-900 leading-tight mb-6 whitespace-pre-line tracking-tight max-w-4xl">
+        <h1
+          style={{ fontSize: `${fs.heroTitle || 40}px` }}
+          className="font-extrabold text-slate-900 leading-tight mb-6 whitespace-pre-line tracking-tight max-w-4xl"
+        >
           {data?.hero?.title}
         </h1>
-        <p className="text-base sm:text-xl text-slate-600 max-w-2xl leading-relaxed mb-10">
+        <p
+          style={{ fontSize: `${fs.heroSubtitle || 18}px` }}
+          className="text-slate-600 max-w-2xl leading-relaxed mb-10"
+        >
           {data?.hero?.subtitle}
         </p>
         <div className="flex items-center gap-4">
@@ -98,7 +126,10 @@ export default function PreviewPage() {
       {/* 파트너사 섹션 */}
       {data?.partnersSection?.enabled && (
         <section className="py-10 border-y border-slate-100 bg-slate-50/50 px-8 text-center">
-          <h2 className="font-semibold text-slate-500 mb-6 text-sm">
+          <h2
+            style={{ fontSize: `${fs.partnersTitle || 15}px` }}
+            className="font-semibold text-slate-500 mb-6"
+          >
             {data.partnersSection.title}
           </h2>
           <div className="flex flex-wrap justify-center items-center gap-6 md:gap-10">
@@ -121,12 +152,18 @@ export default function PreviewPage() {
             {data.stats.map((stat, idx) => (
               <div key={idx} className="p-8 rounded-2xl bg-slate-50 border border-slate-100">
                 <div
-                  style={{ color: themeColor }}
-                  className="font-black text-3xl sm:text-4xl mb-2"
+                  style={{
+                    color: themeColor,
+                    fontSize: `${fs.statsValue || 36}px`,
+                  }}
+                  className="font-black mb-2"
                 >
                   {stat.value}
                 </div>
-                <div className="font-medium text-slate-600 text-sm">
+                <div
+                  style={{ fontSize: `${fs.statsLabel || 14}px` }}
+                  className="font-medium text-slate-600"
+                >
                   {stat.label}
                 </div>
               </div>
@@ -135,14 +172,20 @@ export default function PreviewPage() {
         </section>
       )}
 
-      {/* 솔루션 / 시공분야 섹션 */}
+      {/* 핵심 솔루션/시공분야 섹션 */}
       {data?.solutions && (
         <section id="solutions" className="py-24 px-8 bg-slate-50/30">
           <div className="max-w-5xl mx-auto text-center mb-16">
-            <h2 className="text-3xl font-bold text-slate-900 mb-4">
+            <h2
+              style={{ fontSize: `${fs.sectionTitle || 30}px` }}
+              className="font-bold text-slate-900 mb-4"
+            >
               {data.solutionsSection?.title || '핵심 시공 분야'}
             </h2>
-            <p className="text-slate-600 text-sm sm:text-base">
+            <p
+              style={{ fontSize: `${fs.sectionSubtitle || 16}px` }}
+              className="text-slate-600"
+            >
               {data.solutionsSection?.subtitle}
             </p>
           </div>
@@ -170,10 +213,16 @@ export default function PreviewPage() {
       {data?.reviews && (
         <section id="reviews" className="py-24 px-8 bg-white border-t border-slate-100">
           <div className="max-w-5xl mx-auto text-center mb-16">
-            <h2 className="text-3xl font-bold text-slate-900 mb-4">
+            <h2
+              style={{ fontSize: `${fs.sectionTitle || 30}px` }}
+              className="font-bold text-slate-900 mb-4"
+            >
               {data.reviewsSection?.title || '고객 만족 후기'}
             </h2>
-            <p className="text-slate-600 text-sm sm:text-base">
+            <p
+              style={{ fontSize: `${fs.sectionSubtitle || 16}px` }}
+              className="text-slate-600"
+            >
               {data.reviewsSection?.subtitle}
             </p>
           </div>
@@ -190,6 +239,39 @@ export default function PreviewPage() {
                 </div>
               </div>
             ))}
+          </div>
+        </section>
+      )}
+
+      {/* 자주 묻는 질문(FAQ) */}
+      {data?.faqs && (
+        <section className="py-24 px-8 bg-slate-50/50 border-t border-slate-100">
+          <div className="max-w-3xl mx-auto">
+            <h2
+              style={{ fontSize: `${fs.sectionTitle || 30}px` }}
+              className="font-bold text-slate-900 text-center mb-12"
+            >
+              자주 묻는 질문 (FAQ)
+            </h2>
+            <div className="space-y-4">
+              {data.faqs.map((faq, idx) => (
+                <div key={idx} className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                  <h3
+                    style={{ fontSize: `${fs.faqQuestion || 18}px` }}
+                    className="font-bold text-slate-900 mb-2 flex items-center gap-2"
+                  >
+                    <span style={{ color: themeColor }}>Q.</span>
+                    {faq.question}
+                  </h3>
+                  <p
+                    style={{ fontSize: `${fs.faqAnswer || 15}px` }}
+                    className="text-slate-600 leading-relaxed pl-6"
+                  >
+                    {faq.answer}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
       )}
@@ -271,6 +353,8 @@ export default function PreviewPage() {
               대표자: {data?.footer?.ownerName || '대표자명'} | 사업자등록번호: {data?.footer?.businessNumber || '000-00-00000'}
               <br />
               주소: {data?.footer?.address || '서울특별시'}
+              <br />
+              이메일: {data?.footer?.contactEmail || 'contact@example.com'}
             </p>
           </div>
           <div className="text-left md:text-right">
