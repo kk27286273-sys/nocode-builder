@@ -153,7 +153,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 5. 2단 가격 안내 섹션 */}
+      {/* 5. 2단 가격 안내 섹션 (부가세 별도 문구 제거) */}
       <section id="pricing" className="py-24 px-4 sm:px-6 bg-slate-50 border-t border-slate-200">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
@@ -194,7 +194,6 @@ export default function HomePage() {
                   <div className="flex items-baseline gap-1">
                     <span className="text-3xl sm:text-4xl font-extrabold text-slate-900">490,000</span>
                     <span className="text-lg font-bold text-slate-800">원</span>
-                    <span className="text-xs text-slate-400 ml-1">(부가세 별도)</span>
                   </div>
                   <div className="mt-2 text-xs font-semibold text-blue-600">
                     월 관리비: 59,900원
@@ -254,7 +253,6 @@ export default function HomePage() {
                   <div className="flex items-baseline gap-1">
                     <span className="text-3xl sm:text-4xl font-extrabold text-slate-900">890,000</span>
                     <span className="text-lg font-bold text-slate-800">원</span>
-                    <span className="text-xs text-slate-400 ml-1">(부가세 별도)</span>
                   </div>
                   <div className="mt-2 text-xs font-semibold text-slate-600">
                     월 관리비: 89,900원
