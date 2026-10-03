@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { defaultB2BTemplate, B2BTemplateData } from '@/data/templates';
-import LivePreview from '@/components/LivePreview';
+import LivePreview from '@/components/builder/LivePreview';
 
 export default function BuilderPage() {
   const [data, setData] = useState<B2BTemplateData>(defaultB2BTemplate);
@@ -14,12 +14,10 @@ export default function BuilderPage() {
   const handlePublish = async () => {
     setIsPublishing(true);
     try {
-      // 로컬 스토리지에 현재 편집된 데이터 저장
       if (typeof window !== 'undefined') {
         localStorage.setItem('thsoft_published_site', JSON.stringify(data));
       }
 
-      // 새 창으로 판매용 데모 페이지(/preview) 즉시 열기
       const newWindow = window.open('/preview', '_blank');
       if (!newWindow) {
         alert('팝업이 차단되었습니다. 팝업 허용 후 다시 시도해 주세요.');
@@ -63,7 +61,7 @@ export default function BuilderPage() {
 
       {/* 중앙 작업 공간: 좌측(설정 사이드바) + 우측(캔버스) */}
       <div className="flex-1 flex overflow-hidden">
-        {/* 좌측 심플 편집 사이드바 */}
+        {/* 좌측 편집 사이드바 */}
         <aside className="w-80 bg-white border-r border-slate-200 p-6 overflow-y-auto shrink-0 hidden lg:block">
           <h2 className="text-sm font-bold text-slate-900 mb-4 pb-2 border-b border-slate-100">
             기본 정보 실시간 편집
