@@ -31,7 +31,7 @@ export default function HomePage() {
             <a href="#features" className="hover:text-blue-600 transition">특장점</a>
             <a href="#pricing" className="hover:text-blue-600 transition">정찰제 가격</a>
             <a href="#contact-form" className="hover:text-blue-600 transition">견적 문의</a>
-            <Link href="/editor" className="text-blue-600 hover:text-blue-700 transition">
+            <Link href="/builder" className="text-blue-600 hover:text-blue-700 transition">
               웹 빌더 체험
             </Link>
           </nav>
