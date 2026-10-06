@@ -1,6 +1,7 @@
 ﻿'use client';
 
 import React from 'react';
+import ShowroomSlider from '@/components/showroom/ShowroomSlider';
 import Link from 'next/link';
 
 export default function LandingPage() {
@@ -20,6 +21,7 @@ export default function LandingPage() {
           문의하기
         </a>
       </nav>
+<ShowroomSlider />
 
       {/* Hero Section */}
       <section className="px-6 py-20 text-center max-w-4xl mx-auto">
