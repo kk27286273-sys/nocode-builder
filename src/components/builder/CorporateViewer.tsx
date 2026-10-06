@@ -14,12 +14,16 @@ export default function CorporateViewer({ data }: { data: B2BTemplateData }) {
   return (
     <div className="p-10 bg-white min-h-screen font-sans text-slate-900">
       {/* 헤더 */}
-      <header className="mb-12 border-b pb-8">
-        <h1 className="text-4xl font-extrabold mb-2" style={{ color: data?.themeColor || '#000' }}>
-          {data?.company?.name || '회사명을 입력하세요'}
-        </h1>
-        <p className="text-slate-500 text-lg">{data?.company?.description || '회사 설명을 입력하세요'}</p>
-      </header>
+<header className="mb-12 border-b pb-8">
+  <h1 className="text-4xl font-extrabold mb-2" 
+      style={{ color: data?.themeColor || '#000', fontSize: `${data.fontSizes?.companyName || 32}px` }}>
+    {data?.company?.name || '회사명을 입력하세요'}
+  </h1>
+  <p className="text-slate-500 leading-relaxed" 
+     style={{ fontSize: `${data.fontSizes?.companyDesc || 16}px` }}>
+    {data?.company?.description || '회사 설명을 입력하세요'}
+  </p>
+</header>
 
       {/* 회사 소개 */}
       <section className="mb-16">

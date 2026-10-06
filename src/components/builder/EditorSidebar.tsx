@@ -26,6 +26,7 @@ function FontSizeSlider({ label, value, min = 12, max = 60, onChange }: { label:
     </div>
   );
 }
+
 export default function EditorSidebar({ data, setData, siteId, setIsPaymentOpen, refreshSites }: EditorSidebarProps) {
   const [uploading, setUploading] = useState<{ [key: string]: boolean }>({});
   const [isSaving, setIsSaving] = useState(false);
@@ -116,13 +117,7 @@ export default function EditorSidebar({ data, setData, siteId, setIsPaymentOpen,
               <input type="text" value={data.themeColor} onChange={(e) => setData(prev => ({ ...prev, themeColor: e.target.value }))} className="flex-1 px-3 py-2 border border-slate-200 rounded-lg text-xs font-mono focus:outline-none focus:ring-1 focus:ring-sky-500" />
             </div>
           </section>
-          <section className="space-y-3 pb-4 border-b border-slate-100">
-            <label className="text-xs font-bold text-slate-500 uppercase">브랜드 테마 컬러</label>
-            <div className="flex items-center gap-3">
-              <input type="color" value={data.themeColor} onChange={(e) => setData(prev => ({ ...prev, themeColor: e.target.value }))} className="w-10 h-10 rounded border border-slate-300 p-0.5 cursor-pointer" />
-              <input type="text" value={data.themeColor} onChange={(e) => setData(prev => ({ ...prev, themeColor: e.target.value }))} className="flex-1 px-3 py-2 border border-slate-200 rounded-lg text-xs font-mono focus:outline-none focus:ring-1 focus:ring-sky-500" />
-            </div>
-          </section>
+
           <section className="space-y-3 pb-4 border-b border-slate-100">
             <h3 className="font-bold text-slate-900 text-sm">1. 기업 기본 정보</h3>
             <div className="space-y-3">
@@ -130,11 +125,19 @@ export default function EditorSidebar({ data, setData, siteId, setIsPaymentOpen,
                 <label className="text-xs text-slate-500 block mb-1">회사명</label>
                 <input type="text" value={data.company.name} onChange={(e) => setData(prev => ({ ...prev, company: { ...prev.company, name: e.target.value } }))} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-sky-500" />
               </div>
-              <FontSizeSlider label="회사명 글자" value={data.fontSizes?.companyName} min={14} max={32} onChange={(val) => updateFont('companyName', val)} />
+              <FontSizeSlider label="회사명 크기" value={data.fontSizes?.companyName} min={14} max={60} onChange={(val) => updateFont('companyName', val)} />
+              
+              <div>
+                <label className="text-xs text-slate-500 block mb-1">회사 설명 (부제)</label>
+                <textarea rows={2} value={data.company.description} onChange={(e) => setData(prev => ({ ...prev, company: { ...prev.company, description: e.target.value } }))} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-sky-500" placeholder="상단 제목 밑에 들어갈 문구를 입력하세요" />
+              </div>
+              <FontSizeSlider label="부제 크기" value={data.fontSizes?.companyDesc} min={12} max={30} onChange={(val) => updateFont('companyDesc', val)} />
+
               <div>
                 <label className="text-xs text-slate-500 block mb-1">대표번호</label>
-                <input type="text" value={data.supportPhone} onChange={(e) => setData(prev => ({ ...prev, supportPhone: e.target.value }))} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-sky-500" />
+                <input type="text" value={data.supportPhone} onChange={(e) => setData(prev => ({ ...prev, supportPhone: e.target.value }))} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-sky-500" placeholder="010-0000-0000" />
               </div>
+              
               <div className="mt-3">
                 <label className="text-xs text-slate-500 block mb-1">로고 이미지</label>
                 <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, (url) => setData(prev => ({ ...prev, company: { ...prev.company, logoUrl: url } })), 'logo')} className="text-xs text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-md file:border-0 file:bg-slate-100 file:text-slate-700 cursor-pointer" />
@@ -169,7 +172,9 @@ export default function EditorSidebar({ data, setData, siteId, setIsPaymentOpen,
                   <span className="w-1 h-4 bg-sky-600 rounded-full"></span> 회사 소개
                 </h3>
                 <textarea rows={5} value={(data.specifics as any)?.about?.greeting || ''} onChange={(e) => setData(prev => ({ ...prev, specifics: { ...prev.specifics, about: { greeting: e.target.value } } }))} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-1 focus:ring-sky-500 outline-none" placeholder="인사말 입력" />
+                <FontSizeSlider label="본문 글자 크기" value={data.fontSizes?.bodyText} min={12} max={24} onChange={(val) => updateFont('bodyText', val)} />
               </section>
+
               <section className="space-y-3 pb-6 border-b border-slate-100">
                 <div className="flex items-center justify-between">
                   <h3 className="font-bold text-slate-900 text-sm flex items-center gap-2">
@@ -187,6 +192,7 @@ export default function EditorSidebar({ data, setData, siteId, setIsPaymentOpen,
                   ))}
                 </div>
               </section>
+
               <section className="space-y-3 pb-6 border-b border-slate-100">
                 <div className="flex items-center justify-between">
                   <h3 className="font-bold text-slate-900 text-sm flex items-center gap-2">
@@ -235,6 +241,7 @@ export default function EditorSidebar({ data, setData, siteId, setIsPaymentOpen,
               </section>
             </div>
           )}
+
           {/* 4. 포트폴리오 설정 */}
           {data.templateType === 'portfolio' && (
             <div className="space-y-8 animate-in fade-in slide-in-from-top-2 duration-300">
@@ -259,15 +266,19 @@ export default function EditorSidebar({ data, setData, siteId, setIsPaymentOpen,
             </div>
           )}
 
-          {/* 5. 공통 기본 설정 */}
+          {/* 5. 검색 최적화 및 SEO 설정 (기존 기본 설정 대체) */}
           <section className="space-y-3 pt-6 border-t border-slate-100">
             <h3 className="font-bold text-slate-900 text-sm flex items-center gap-2">
-              <span className="w-1 h-4 bg-slate-400 rounded-full"></span> 기본 설정
+              <span className="w-1 h-4 bg-slate-400 rounded-full"></span> SEO 및 검색 설정
             </h3>
             <div className="space-y-3">
               <div>
-                <label className="text-xs text-slate-500 block mb-1">사이트 제목</label>
-                <input type="text" value={data.company.name} onChange={(e) => setData(prev => ({ ...prev, company: { ...prev.company, name: e.target.value } }))} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs outline-none" />
+                <label className="text-xs text-slate-500 block mb-1">검색 키워드 (쉼표 구분)</label>
+                <input type="text" value={(data as any).seoKeywords || ''} onChange={(e) => setData(prev => ({ ...prev, seoKeywords: e.target.value }))} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs outline-none" placeholder="예: 강남 법무법인, 세무상담, 전문변호사" />
+              </div>
+              <div>
+                <label className="text-xs text-slate-500 block mb-1">사이트 검색 설명</label>
+                <textarea rows={2} value={(data as any).seoDescription || ''} onChange={(e) => setData(prev => ({ ...prev, seoDescription: e.target.value }))} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs outline-none" placeholder="구글/네이버 검색 시 노출될 설명을 입력하세요" />
               </div>
             </div>
           </section>
