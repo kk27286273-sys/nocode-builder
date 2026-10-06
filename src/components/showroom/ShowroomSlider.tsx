@@ -1,4 +1,4 @@
-'use client'; // 반드시 최상단에 있어야 합니다.
+'use client';
 
 import React, { useRef, useEffect } from 'react';
 import Link from 'next/link';
@@ -8,7 +8,6 @@ export default function ShowroomSlider() {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // 자동 이동 인터벌 설정
     const interval = setInterval(() => {
       const el = scrollRef.current;
       if (!el) return;
@@ -16,13 +15,17 @@ export default function ShowroomSlider() {
       const { scrollLeft, scrollWidth, clientWidth } = el;
       const itemWidth = 288 + 16; // 카드너비(w-72) + gap(16px)
 
-      // 끝단 판정 범위를 20px 정도로 여유 있게 잡음
-      if (scrollLeft + clientWidth >= scrollWidth - 20) {
+      // 현재 위치가 끝에 도달했는지 확인
+      if (scrollLeft + clientWidth >= scrollWidth - 10) {
         el.scrollTo({ left: 0, behavior: 'smooth' });
       } else {
-        el.scrollBy({ left: itemWidth, behavior: 'smooth' });
+        // 정확한 다음 좌표로 이동
+        el.scrollTo({ 
+          left: scrollLeft + itemWidth, 
+          behavior: 'smooth' 
+        });
       }
-    }, 1000);
+    }, 2000); // 1초는 너무 빨라 씹힐 수 있으므로 2초로 조정 (필요시 1000으로 변경)
 
     return () => clearInterval(interval);
   }, []);
@@ -45,7 +48,7 @@ export default function ShowroomSlider() {
 
       <div
         ref={scrollRef}
-        className="flex gap-4 overflow-x-auto px-6 pb-4 no-scrollbar snap-x snap-mandatory"
+        className="flex gap-4 overflow-x-auto px-6 pb-4 no-scrollbar"
         style={{ 
           scrollbarWidth: 'none', 
           msOverflowStyle: 'none',
@@ -56,7 +59,7 @@ export default function ShowroomSlider() {
           <Link
             key={template.id}
             href={`/showroom/${template.id}`}
-            className="flex-shrink-0 w-72 bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-all snap-center group"
+            className="flex-shrink-0 w-72 bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-all group"
           >
             <div className="h-40 bg-slate-100 overflow-hidden relative">
               <img
