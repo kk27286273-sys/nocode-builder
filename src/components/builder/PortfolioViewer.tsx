@@ -1,13 +1,11 @@
-'use client';
+﻿'use client';
 import React from 'react';
 import { B2BTemplateData } from '@/types/template';
 
 export default function PortfolioViewer({ data }: { data: B2BTemplateData }) {
   if (!data) return <div className="p-10">데이터를 불러오는 중입니다...</div>;
-
   const specifics = data.specifics as any;
   const gallery = specifics?.gallery || [];
-
   return (
     <div className="p-10 bg-white min-h-screen font-sans text-slate-900">
       <header className="mb-12 border-b pb-8">
@@ -16,7 +14,6 @@ export default function PortfolioViewer({ data }: { data: B2BTemplateData }) {
         </h1>
         <p className="text-slate-500 text-lg">{data?.company?.description || '소개를 입력하세요'}</p>
       </header>
-
       <section className="mb-16">
         <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
           <span className="w-1 h-6" style={{ backgroundColor: data?.themeColor }}></span>
@@ -27,7 +24,7 @@ export default function PortfolioViewer({ data }: { data: B2BTemplateData }) {
             gallery.map((item: any, idx: number) => (
               <div key={idx} className="group relative overflow-hidden rounded-xl border bg-slate-50">
                 <div className="aspect-video overflow-hidden">
-                  <img src={item?.thumbnail || 'https://via.placeholder.com/400'} alt={item?.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                  <img src={item?.thumbnail || 'https://via.placeholder.com/400'} alt={item?.title} className="w-full h-full object-cover" />
                 </div>
                 <div className="p-4 bg-white">
                   <div className="flex justify-between items-center mb-1">
