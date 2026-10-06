@@ -1,79 +1,93 @@
-'use client';
+export interface ShowroomTemplateItem {
+  id: string;
+  category: string;
+  name: string;
+  tagline: string;
+  description: string;
+  themeColor: string;
+  previewUrl: string;
+  thumbnailImage: string;
+  features: string[];
+  targetAudience: string;
+  status: 'available' | 'coming_soon';
+  pageStructure: {
+    main: string;
+    sub: string;
+    conversion: string;
+  };
+}
 
-import React, { useEffect, useState, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
-import { defaultB2BTemplateData, B2BTemplateData } from '@/data/templates';
-import { SHOWROOM_TEMPLATES } from '@/data/showroomTemplates';
-import LivePreview from '@/components/builder/LivePreview';
-import { supabase } from '@/lib/supabase/client';
-
-function PreviewContent() {
-  const searchParams = useSearchParams();
-  const siteId = searchParams.get('id'); 
-  const templateId = searchParams.get('templateId'); 
-  
-  const [data, setData] = useState<B2BTemplateData>(defaultB2BTemplateData);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function loadPreviewData() {
-      setLoading(true);
-
-      if (siteId) {
-        // 1. 실제 사이트 데이터 로드
-        const { data: siteRecord } = await supabase
-          .from('sites')
-          .select('content')
-          .eq('id', siteId)
-          .single();
-        
-        if (siteRecord?.content) {
-          setData(siteRecord.content);
-        }
-      } else if (templateId) {
-        // 2. 쇼룸 템플릿 ID로 프리셋 데이터 매칭
-        const template = SHOWROOM_TEMPLATES.find((t) => t.id === templateId);
-        
-        // previewUrl에서 'preset=xxx' 부분만 추출 (예: legal, counseling 등)
-        const presetMatch = template?.previewUrl.match(/preset=([^&]+)/);
-        const presetName = presetMatch ? presetMatch[1] : null;
-
-        if (presetName) {
-          // templates.ts에 정의된 프리셋 데이터들을 가져오는 로직
-          // 주의: templates.ts에 B2B_PRESETS 같은 객체가 정의되어 있어야 합니다.
-          // 만약 없다면 일단 defaultB2BTemplateData를 쓰되, 
-          // 색상만이라도 template.themeColor로 변경해주는 처리를 합니다.
-          
-          // 임시 방편: 프리셋 데이터를 찾지 못했을 때 최소한 색상이라도 맞춤
-          const baseData = { ...defaultB2BTemplateData };
-          if (template) {
-            baseData.themeColor = template.themeColor;
-          }
-          setData(baseData);
-        }
-      } else {
-        setData(defaultB2BTemplateData);
-      }
-
-      setLoading(false);
+export const SHOWROOM_TEMPLATES: ShowroomTemplateItem[] = [
+  {
+    id: 'legal-tax',
+    category: '법률·세무·노무',
+    name: '신뢰 기반 승소·자문형',
+    tagline: '승소와 절세, 신뢰를 증명하는 압도적 속도',
+    description: '전문직의 무게감과 신뢰도를 극대화하는 딥 네이비 테마입니다. 승소 사례와 전문 자격 증명을 최우선으로 배치하여 고객의 신뢰를 즉각적으로 확보합니다.',
+    themeColor: '#0F172A',
+    previewUrl: '/preview?preset=legal',
+    thumbnailImage: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80',
+    features: ['승소 사례 타임라인', '비밀 보장 1:1 상담 폼', '전문 자격 인증 섹션'],
+    targetAudience: '변호사, 세무사, 회계사, 노무사',
+    status: 'available',
+    pageStructure: {
+      main: '메인 페이지',
+      sub: '승소/성공사례',
+      conversion: '비밀상담신청'
     }
-
-    loadPreviewData();
-  }, [siteId, templateId]);
-
-  if (loading) return <div className="min-h-screen flex items-center justify-center bg-white">로딩 중...</div>;
-  
-  return (
-    <div className="min-h-screen bg-white">
-      <LivePreview data={data} zoom={100} />
-    </div>
-  );
-}
-
-export default function PreviewPage() {
-  return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-white">로딩 중...</div>}>
-      <PreviewContent />
-    </Suspense>
-  );
-}
+  },
+  {
+    id: 'counseling',
+    category: '심리상담·치유',
+    name: '안정과 회복 중심 케어형',
+    tagline: '마음을 여는 첫 걸음, 24시간 간편 예약',
+    description: '방문 전 불안을 낮추는 세이지 그린 테마입니다. 차분한 분위기의 공간 소개와 원장 약력을 통해 정서적 안정을 제공하고 예약 진입 장벽을 낮춥니다.',
+    themeColor: '#065F46',
+    previewUrl: '/preview?preset=counseling',
+    thumbnailImage: 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80',
+    features: ['차분한 톤앤매너 UI', '프라이빗 예약 슬롯', '내담자 안심 후기'],
+    targetAudience: '심리상담센터, 치료실, 마인드케어',
+    status: 'available',
+    pageStructure: {
+      main: '메인 페이지',
+      sub: '프로그램소개',
+      conversion: '간편예약'
+    }
+  },
+  {
+    id: 'fitness-lesson',
+    category: 'PT·필라테스·레슨',
+    name: '성과 전환 에너제틱형',
+    tagline: '회원권 문의 폭발, 스케줄·비포애프터 자동화',
+    description: '성과를 직관적으로 보여주는 네온 오렌지 테마입니다. 비포애프터 지표와 강사 프로필을 강조하여 체험 예약 전환율을 극대화합니다.',
+    themeColor: '#EA580C',
+    previewUrl: '/preview?preset=fitness',
+    thumbnailImage: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=800&q=80',
+    features: ['비포애프터 갤러리', '코치별 스케줄러', '1회 체험 신청 폼'],
+    targetAudience: 'PT, 필라테스, 1:1 레슨 강사',
+    status: 'available',
+    pageStructure: {
+      main: '메인 페이지',
+      sub: '코치소개',
+      conversion: '패키지/시간표'
+    }
+  },
+  {
+    id: 'b2b-rental',
+    category: '기기렌탈·기업 서비스',
+    name: 'B2B 견적 및 사양 안내형',
+    tagline: '복잡한 견적 신청을 30초 만에 해결',
+    description: '신속한 사양 비교와 효율성을 강조하는 스카이 블루 테마입니다. 제품 라인업과 요금제를 명확히 제시하여 빠른 견적 요청을 유도합니다.',
+    themeColor: '#0284C7',
+    previewUrl: '/preview?preset=rental',
+    thumbnailImage: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=800&q=80',
+    features: ['제품 스펙 비교표', '빠른 견적 요청 CTA', 'B2B 납품 실적'],
+    targetAudience: '사무기기·가전 렌탈, B2B 서비스',
+    status: 'available',
+    pageStructure: {
+      main: '메인 페이지',
+      sub: '렌탈 라인업',
+      conversion: '간편 견적요청'
+    }
+  }
+];
