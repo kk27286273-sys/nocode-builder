@@ -15,8 +15,69 @@ export default async function ShowroomDetailPage({ params }: Props) {
     notFound();
   }
 
-  // 카카오톡 1:1 상담 링크 (손님 링크 또는 기본 오픈채팅)
-const kakaoConsultUrl = 'http://pf.kakao.com/_qxmixiX/chat';
+  const kakaoConsultUrl = 'http://pf.kakao.com/_qxmixiX/chat';
+
+  // 업종별 레이아웃 타입 분기 (피트니스, B2B는 기능 강조형)
+  const isVisualLayout = id === 'fitness-lesson' || id === 'b2b-rental';
+
+  // 섹션 1: 소개
+  const IntroSection = (
+    <div>
+      <h2 className="text-lg font-bold text-slate-900 mb-2">템플릿 소개</h2>
+      <p className="text-slate-600 leading-relaxed text-sm sm:text-base">
+        {template.description}
+      </p>
+    </div>
+  );
+
+  // 섹션 2: 추천 대상
+  const TargetSection = (
+    <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
+      <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">
+        추천 대상
+      </h3>
+      <p className="text-slate-800 font-medium">{template.targetAudience}</p>
+    </div>
+  );
+
+  // 섹션 3: 주요 특화 기능
+  const FeatureSection = (
+    <div>
+      <h2 className="text-lg font-bold text-slate-900 mb-3">주요 특화 기능</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        {template.features.map((feature, idx) => (
+          <div
+            key={idx}
+            className="p-3.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-700 flex items-center gap-2"
+          >
+            <span
+              className="w-1.5 h-1.5 rounded-full"
+              style={{ backgroundColor: template.themeColor }}
+            />
+            {feature}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  // 섹션 4: 페이지 구조
+  const StructureSection = (
+    <div>
+      <h2 className="text-lg font-bold text-slate-900 mb-3">제공 페이지 구성</h2>
+      <div className="flex flex-wrap gap-2 text-xs">
+        <span className="px-3 py-1.5 rounded-md bg-slate-100 text-slate-700">
+          1. {template.pageStructure.main}
+        </span>
+        <span className="px-3 py-1.5 rounded-md bg-slate-100 text-slate-700">
+          2. {template.pageStructure.sub}
+        </span>
+        <span className="px-3 py-1.5 rounded-md bg-slate-100 text-slate-700 font-semibold text-indigo-600">
+          3. {template.pageStructure.conversion}
+        </span>
+      </div>
+    </div>
+  );
 
   return (
     <main className="min-h-screen bg-slate-50 py-16 px-4 sm:px-6 lg:px-8">
@@ -42,58 +103,25 @@ const kakaoConsultUrl = 'http://pf.kakao.com/_qxmixiX/chat';
           </div>
         </div>
 
-        {/* 본문 콘텐츠 */}
+        {/* 본문 콘텐츠 (레이아웃에 따른 배치 순서 차별화) */}
         <div className="p-6 sm:p-10 space-y-8">
-          
-          {/* 소개 */}
-          <div>
-            <h2 className="text-lg font-bold text-slate-900 mb-2">템플릿 소개</h2>
-            <p className="text-slate-600 leading-relaxed text-sm sm:text-base">
-              {template.description}
-            </p>
-          </div>
+          {isVisualLayout ? (
+            <>
+              {FeatureSection}
+              {IntroSection}
+              {TargetSection}
+              {StructureSection}
+            </>
+          ) : (
+            <>
+              {IntroSection}
+              {TargetSection}
+              {StructureSection}
+              {FeatureSection}
+            </>
+          )}
 
-          {/* 추천 대상 */}
-          <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
-            <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">
-              추천 대상
-            </h3>
-            <p className="text-slate-800 font-medium">{template.targetAudience}</p>
-          </div>
-
-          {/* 주요 구성 기능 */}
-          <div>
-            <h2 className="text-lg font-bold text-slate-900 mb-3">주요 특화 기능</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              {template.features.map((feature, idx) => (
-                <div
-                  key={idx}
-                  className="p-3.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-700 flex items-center gap-2"
-                >
-                  <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: template.themeColor }} />
-                  {feature}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* 페이지 구조 */}
-          <div>
-            <h2 className="text-lg font-bold text-slate-900 mb-3">제공 페이지 구성</h2>
-            <div className="flex flex-wrap gap-2 text-xs">
-              <span className="px-3 py-1.5 rounded-md bg-slate-100 text-slate-700">
-                1. {template.pageStructure.main}
-              </span>
-              <span className="px-3 py-1.5 rounded-md bg-slate-100 text-slate-700">
-                2. {template.pageStructure.sub}
-              </span>
-              <span className="px-3 py-1.5 rounded-md bg-slate-100 text-slate-700 font-semibold text-indigo-600">
-                3. {template.pageStructure.conversion}
-              </span>
-            </div>
-          </div>
-
-          {/* 액션 버튼 2종 */}
+          {/* 액션 버튼 */}
           <div className="pt-6 border-t border-slate-100 flex flex-col sm:flex-row gap-3">
             <Link
               href={template.previewUrl}
@@ -118,7 +146,6 @@ const kakaoConsultUrl = 'http://pf.kakao.com/_qxmixiX/chat';
               ← 쇼룸 메인으로 돌아가기
             </Link>
           </div>
-
         </div>
       </div>
     </main>
