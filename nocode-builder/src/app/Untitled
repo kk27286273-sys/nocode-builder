@@ -1,0 +1,4 @@
+cd "C:\Users\kk272\Desktop\first project\nocode-builder"
+git add .
+git commit -m "fix: publish API JSON 파싱 에러 방어 및 프리뷰 기본값 TH소프트 복구"
+git push origin main
