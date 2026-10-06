@@ -1,34 +1,39 @@
 'use client';
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { SHOWROOM_TEMPLATES } from '@/data/showroomTemplates';
 
 export default function ShowroomSlider() {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isMounted) return;
+
+    const timer = setInterval(() => {
       const el = scrollRef.current;
       if (!el) return;
 
       const { scrollLeft, scrollWidth, clientWidth } = el;
       const itemWidth = 288 + 16; // 카드너비(w-72) + gap(16px)
 
-      // 현재 위치가 끝에 도달했는지 확인
-      if (scrollLeft + clientWidth >= scrollWidth - 10) {
+      if (scrollLeft + clientWidth >= scrollWidth - 20) {
         el.scrollTo({ left: 0, behavior: 'smooth' });
       } else {
-        // 정확한 다음 좌표로 이동
         el.scrollTo({ 
           left: scrollLeft + itemWidth, 
           behavior: 'smooth' 
         });
       }
-    }, 2000); // 1초는 너무 빨라 씹힐 수 있으므로 2초로 조정 (필요시 1000으로 변경)
+    }, 2000);
 
-    return () => clearInterval(interval);
-  }, []);
+    return () => clearInterval(timer);
+  }, [isMounted]);
 
   return (
     <div className="w-full py-6 bg-slate-50 border-y border-slate-100 overflow-hidden">
