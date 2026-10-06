@@ -15,26 +15,17 @@ export default function ShowroomSlider() {
   useEffect(() => {
     if (!isMounted) return;
 
-    console.log("🚀 쇼룸 슬라이더 타이머 시작됨");
-
     const timer = setInterval(() => {
       const el = scrollRef.current;
-      if (!el) {
-        console.log("❌ 엘리먼트를 찾을 수 없음");
-        return;
-      }
+      if (!el) return;
 
       const { scrollLeft, scrollWidth, clientWidth } = el;
       const itemWidth = 288 + 16; 
 
-      console.log(`현재 위치: ${scrollLeft}, 전체너비: ${scrollWidth}, 화면너비: ${clientWidth}`);
-
-      // 조건 없이 일단 밀어보고, 끝에 도달했는지만 체크
+      // 이제 scrollWidth가 clientWidth보다 커야 정상 작동합니다.
       if (scrollLeft + clientWidth >= scrollWidth - 20) {
-        console.log("🔄 끝 도달 -> 처음으로 이동");
         el.scrollTo({ left: 0, behavior: 'smooth' });
       } else {
-        console.log("➡️ 다음 카드로 이동");
         el.scrollTo({ 
           left: scrollLeft + itemWidth, 
           behavior: 'smooth' 
@@ -61,13 +52,19 @@ export default function ShowroomSlider() {
         </span>
       </div>
 
+      {/* 
+        핵심 수정: 
+        1. w-full 대신 min-w-full 부여
+        2. 내부 items가 찌그러지지 않게 min-width: max-content 설정
+      */}
       <div
         ref={scrollRef}
         className="flex gap-4 overflow-x-auto px-6 pb-4 no-scrollbar"
         style={{ 
           scrollbarWidth: 'none', 
           msOverflowStyle: 'none',
-          WebkitOverflowScrolling: 'touch' 
+          WebkitOverflowScrolling: 'touch',
+          minWidth: 'max-content' // 내부 아이템들이 화면 너비에 갇히지 않고 옆으로 뻗게 함
         }}
       >
         {SHOWROOM_TEMPLATES.map((template) => (
