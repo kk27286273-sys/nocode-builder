@@ -84,7 +84,7 @@ export default function EditorSidebar({ data, setData, siteId, setIsPaymentOpen,
 
   return (
     <aside className="w-[430px] h-full bg-white border-r border-slate-200 flex flex-col shrink-0 z-20 shadow-xl">
-      <div className="p-4 border-b border-slate-200 flex flex-col gap-4 bg-slate-50">
+      <div className="p-4 border-b border-slate-200 flex flex-col gap-4 bg-slate-50 shrink-0">
         <div className="flex items-center justify-between">
           <div className="flex flex-col">
             <h2 className="text-sm font-extrabold text-slate-900">통합 웹 빌더 에디터</h2>
@@ -107,8 +107,15 @@ export default function EditorSidebar({ data, setData, siteId, setIsPaymentOpen,
         />
       </div>
 
-      <div className="flex-1 overflow-y-auto p-5 space-y-7 text-sm">
+      <div className="flex-1 overflow-y-auto p-5 space-y-7 text-sm pb-24">
         <div className="space-y-7">
+          <section className="space-y-3 pb-4 border-b border-slate-100">
+            <label className="text-xs font-bold text-slate-500 uppercase">브랜드 테마 컬러</label>
+            <div className="flex items-center gap-3">
+              <input type="color" value={data.themeColor} onChange={(e) => setData(prev => ({ ...prev, themeColor: e.target.value }))} className="w-10 h-10 rounded border border-slate-300 p-0.5 cursor-pointer" />
+              <input type="text" value={data.themeColor} onChange={(e) => setData(prev => ({ ...prev, themeColor: e.target.value }))} className="flex-1 px-3 py-2 border border-slate-200 rounded-lg text-xs font-mono focus:outline-none focus:ring-1 focus:ring-sky-500" />
+            </div>
+          </section>
           <section className="space-y-3 pb-4 border-b border-slate-100">
             <label className="text-xs font-bold text-slate-500 uppercase">브랜드 테마 컬러</label>
             <div className="flex items-center gap-3">
@@ -142,6 +149,7 @@ export default function EditorSidebar({ data, setData, siteId, setIsPaymentOpen,
               {data.templateType || 'one-page'} 전용 설정
             </span>
           </div>
+
           {/* 1. 원페이지형 설정 */}
           {(data.templateType === 'one-page' || !data.templateType) && (
             <div className="space-y-7">
