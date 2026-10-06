@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import EditorSidebar from '@/components/builder/EditorSidebar';
-import LivePreview from '@/components/builder/LivePreview';
+import ViewerManager from '@/components/builder/ViewerManager';
 import { defaultB2BTemplateData, B2BTemplateData } from '@/data/templates'; // 👈 이름 수정 완료
 import { supabase } from '@/lib/supabase/client';
 
@@ -164,7 +164,7 @@ export default function BuilderPage() {
         <EditorSidebar data={data} setData={setData} siteId={siteId} refreshSites={fetchSites} />
       </div>
       <main className="flex-1 h-full overflow-hidden relative">
-        <LivePreview data={data} />
+        <ViewerManager data={data} />
       </main>
     </div>
   );
