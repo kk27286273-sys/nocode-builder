@@ -74,7 +74,7 @@ export const SHOWROOM_TEMPLATES: ShowroomTemplateItem[] = [
       sub: '프로그램 상세 및 강사 소개',
       conversion: '간편 상담 신청 및 예약 폼'
     },
-    previewUrl: '/preview/fitness-lesson',
+    previewUrl: '/preview?preset=fitness', 
     thumbnailImage: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=800&q=80',
   },
   {
