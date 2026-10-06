@@ -623,19 +623,24 @@ export default function EditorSidebar({ data, setData, siteId, setIsPaymentOpen,
   </div >
 )}
 
-        {/* [구역 3] 공통 하단 설정 (푸터) */}
-        <section className="space-y-3 pt-6 pb-4 border-t border-slate-100">
-          <h3 className="font-bold text-slate-900 text-sm border-b border-slate-100 pb-2">하단 푸터</h3>
-          <div className="space-y-3">
-            {['companyName', 'ownerName', 'businessNumber', 'address', 'contactEmail'].map((field) => (
-              <div key={field}>
-                <label className="text-xs text-slate-500 block mb-1">{field === 'companyName' ? '상호명' : field === 'ownerName' ? '대표자' : field === 'businessNumber' ? '사업자번호' : field === 'address' ? '주소' : '이메일'}</label>
-                <input type="text" value={(data.footer as any)[field]} onChange={(e) => setData(prev => ({ ...prev, footer: { ...prev.footer, [field]: e.target.value } }))} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs" />
-              </div>
-            ))}
-          </div>
-        </section>
+    {/* 5. 공통 설정 (Common Settings) - 기존에 있던 부분 */}
+    <section className="space-y-3 pt-6 border-t border-slate-100">
+      <h3 className="font-bold text-slate-900 text-sm flex items-center gap-2">
+        <span className="w-1 h-4 bg-slate-400 rounded-full"></span> 기본 설정
+      </h3>
+      <div className="space-y-3">
+        <div>
+          <label className="text-xs text-slate-500 block mb-1">사이트 제목</label>
+          <input 
+            type="text" 
+            value={data.company.name} 
+            onChange={(e) => setData(prev => ({ ...prev, company: { ...prev.company, name: e.target.value } }))} 
+            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs outline-none" 
+          />
+        </div>
       </div>
-    </aside>
+    </section>
+  </div> 
+</aside>
   );
 }
