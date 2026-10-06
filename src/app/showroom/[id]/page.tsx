@@ -16,7 +16,7 @@ export default async function ShowroomDetailPage({ params }: Props) {
   }
 
   // 카카오톡 1:1 상담 링크 (손님 링크 또는 기본 오픈채팅)
-  const kakaoConsultUrl = 'https://open.kakao.com';
+const kakaoConsultUrl = 'http://pf.kakao.com/_qxmixiX/chat';
 
   return (
     <main className="min-h-screen bg-slate-50 py-16 px-4 sm:px-6 lg:px-8">
