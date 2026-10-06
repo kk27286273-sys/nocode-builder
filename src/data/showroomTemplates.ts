@@ -56,21 +56,26 @@ export const SHOWROOM_TEMPLATES: ShowroomTemplateItem[] = [
   },
   {
     id: 'fitness-lesson',
-    category: 'PT·필라테스·레슨',
-    name: '성과 전환 에너제틱형',
-    tagline: '회원권 문의 폭발, 스케줄·비포애프터 자동화',
-    description: '성과를 직관적으로 보여주는 네온 오렌지 테마입니다. 비포애프터 지표와 강사 프로필을 강조하여 체험 예약 전환율을 극대화합니다.',
+    name: '에너제틱 피트니스',
+    category: '피트니스·레슨',
     themeColor: '#EA580C',
-    previewUrl: '/preview?preset=fitness',
-    thumbnailImage: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=800&q=80',
-    features: ['비포애프터 갤러리', '코치별 스케줄러', '1회 체험 신청 폼'],
-    targetAudience: 'PT, 필라테스, 1:1 레슨 강사',
+    tagline: '결과로 증명하는 프리미엄 PT 시스템',
+    description: '체계적인 식단 관리와 과학적인 운동 프로그램을 통해 최단 기간 최대 효율의 신체 변화를 만들어내는 피트니스 전용 템플릿입니다.',
+    targetAudience: 'PT 샵, 필라테스 스튜디오, 요가 센터, 개인 레슨 강사',
+    features: [
+      '실시간 예약 시스템 연동',
+      '비포&애프터 포트폴리오 갤러리',
+      '강사별 전문 분야 소개 섹션',
+      '프로그램별 가격표 및 패키지 안내'
+    ],
     status: 'available',
     pageStructure: {
-      main: '메인 페이지',
-      sub: '코치소개',
-      conversion: '패키지/시간표'
-    }
+      main: '강렬한 첫인상의 메인 비주얼',
+      sub: '프로그램 상세 및 강사 소개',
+      conversion: '간편 상담 신청 및 예약 폼'
+    },
+    previewUrl: '/preview/fitness-lesson',
+    thumbnailImage: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 'b2b-rental',
