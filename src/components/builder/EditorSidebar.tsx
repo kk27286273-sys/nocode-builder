@@ -30,7 +30,6 @@ export default function EditorSidebar({ data, setData, siteId, setIsPaymentOpen,
   const [uploading, setUploading] = useState<{ [key: string]: boolean }>({});
   const [isSaving, setIsSaving] = useState(false);
 
-  // 이미지 업로드 로직
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, callback: (url: string) => void, key: string) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -78,6 +77,7 @@ export default function EditorSidebar({ data, setData, siteId, setIsPaymentOpen,
   };
 
   const updateFont = (key: any, val: number) => setData(prev => ({ ...prev, fontSizes: { ...prev.fontSizes, [key]: val } }));
+
   return (
     <aside className="w-[430px] h-full bg-white border-r border-slate-200 flex flex-col shrink-0 z-20 shadow-xl">
       <div className="p-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
@@ -98,7 +98,6 @@ export default function EditorSidebar({ data, setData, siteId, setIsPaymentOpen,
       </div>
 
       <div className="flex-1 overflow-y-auto p-5 space-y-7 text-sm">
-        {/* 테마 컬러 설정 */}
         <section className="space-y-3 pb-4 border-b border-slate-100">
           <label className="text-xs font-bold text-slate-500 uppercase">브랜드 테마 컬러</label>
           <div className="flex items-center gap-3">
@@ -107,7 +106,6 @@ export default function EditorSidebar({ data, setData, siteId, setIsPaymentOpen,
           </div>
         </section>
 
-        {/* 1. 기업 기본 정보 */}
         <section className="space-y-3 pb-4 border-b border-slate-100">
           <h3 className="font-bold text-slate-900 text-sm">1. 기업 기본 정보</h3>
           <div className="space-y-3">
@@ -131,7 +129,6 @@ export default function EditorSidebar({ data, setData, siteId, setIsPaymentOpen,
           </div>
         </section>
 
-        {/* 2. GNB 메뉴 */}
         <section className="space-y-3 pb-4 border-b border-slate-100">
           <div className="flex items-center justify-between">
             <h3 className="font-bold text-slate-900 text-sm">2. GNB 메뉴</h3>
@@ -148,7 +145,6 @@ export default function EditorSidebar({ data, setData, siteId, setIsPaymentOpen,
           </div>
         </section>
 
-        {/* 3. 히어로 영역 */}
         <section className="space-y-3 pb-4 border-b border-slate-100">
           <h3 className="font-bold text-slate-900 text-sm">3. 히어로 영역</h3>
           <div className="space-y-3">
@@ -165,7 +161,7 @@ export default function EditorSidebar({ data, setData, siteId, setIsPaymentOpen,
             <FontSizeSlider label="사진 높이" value={data.heroImageHeight} min={200} max={800} onChange={(val) => setData(prev => ({ ...prev, heroImageHeight: val }))} />
           </div>
         </section>
-        {/* 4. 파트너 섹션 */}
+
         <section className="space-y-3 pb-4 border-b border-slate-100">
           <div className="flex items-center justify-between">
             <h3 className="font-bold text-slate-900 text-sm">4. 파트너 섹션</h3>
@@ -178,7 +174,6 @@ export default function EditorSidebar({ data, setData, siteId, setIsPaymentOpen,
           <input type="text" value={data.partnersSection.partners.join(', ')} onChange={(e) => setData(prev => ({ ...prev, partnersSection: { ...prev.partnersSection, partners: e.target.value.split(',') } }))} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs" placeholder="쉼표로 구분" />
         </section>
 
-        {/* 5. 실적 지표 */}
         <section className="space-y-3 pb-4 border-b border-slate-100">
           <h3 className="font-bold text-slate-900 text-sm">5. 실적 지표</h3>
           <div className="space-y-2">
@@ -186,44 +181,37 @@ export default function EditorSidebar({ data, setData, siteId, setIsPaymentOpen,
               <div key={idx} className="flex gap-2">
                 <input type="text" value={stat.value} onChange={(e) => { setData(prev => { const s = [...prev.stats]; s[idx].value = e.target.value; return { ...prev, stats: s }; }); }} className="w-1/3 px-3 py-1.5 border border-slate-200 rounded-lg text-xs font-bold" />
                 <input type="text" value={stat.label} onChange={(e) => { setData(prev => { const s = [...prev.stats]; s[idx].label = e.target.value; return { ...prev, stats: s }; }); }} className="flex-1 px-3 py-1.5 border border-slate-200 rounded-lg text-xs" />
-                <input type="checkbox" checked={stat.enabled} onChange={(e) => { setData(prev => { const s = [...prev.stats]; s[idx].enabled = e.target.checked; return { ...prev, stats: s }; }); }} className="w-4 h-4" />
               </div>
             ))}
           </div>
         </section>
 
-        {/* 6. 핵심 솔루션 */}
         <section className="space-y-3 pb-4 border-b border-slate-100">
           <div className="flex items-center justify-between">
             <h3 className="font-bold text-slate-900 text-sm">6. 핵심 솔루션</h3>
             <button onClick={() => setData(prev => ({ ...prev, solutions: [...prev.solutions, { title: '새 서비스', description: '내용 입력', image: '' }] }))} className="text-xs font-semibold text-sky-600 hover:text-sky-700 transition">+ 추가</button>
           </div>
           <div className="space-y-3">
-            <input type="text" value={data.solutionsSection?.title || ''} onChange={(e) => setData(prev => ({ ...prev, solutionsSection: { ...prev.solutionsSection!, title: e.target.value } }))} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs" placeholder="섹션 제목" />
+            <input type="text" value={data.solutionsSection?.title || ''} onChange={(e) => setData(prev => ({ ...prev, solutionsSection: { ...prev.solutionsSection!, title: e.target.value } }))} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-sky-500" placeholder="섹션 제목" />
             <FontSizeSlider label="제목 크기" value={data.fontSizes?.sectionTitle} min={20} max={44} onChange={(val) => updateFont('sectionTitle', val)} />
-            <textarea rows={2} value={data.solutionsSection?.subtitle || ''} onChange={(e) => setData(prev => ({ ...prev, solutionsSection: { ...prev.solutionsSection!, subtitle: e.target.value } }))} className="w-//full px-3 py-2 border border-slate-200 rounded-lg text-xs" placeholder="서브 문구" />
-            <FontSizeSlider label="서브 크기" value={data.fontSizes?.sectionSubtitle} min={12} max={22} onChange={(val) => updateFont('sectionSubtitle', val)} />
-            <FontSizeSlider label="사진 높이" value={data.solutionImageHeight} min={100} max={400} onChange={(val) => setData(prev => ({ ...prev, solutionImageHeight: val }))} />
-            <div className="space-y-4 pt-2">
-              {data.solutions.map((sol, idx) => (
-                <div key={idx} className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-xs font-bold text-slate-700">항목 #{idx + 1}</span>
-                    <button onClick={() => setData(prev => ({ ...prev, solutions: prev.solutions.filter((_, i) => i !== idx) }))} className="text-xs text-red-500 hover:underline">삭제</button>
-                  </div>
-                  <input type="text" value={sol.title} onChange={(e) => setData(prev => { const s = [...prev.solutions]; s[idx].title = e.target.value; return { ...prev, solutions: s }; })} className="w-full px-3 py-1.5 border border-slate-200 rounded-lg text-xs font-semibold" />
-                  <textarea rows={2} value={sol.description} onChange={(e) => setData(prev => { const s = [...prev.solutions]; s[idx].description = e.//target.value; return { ...prev, solutions: s }; })} className="w-full px-3 py-1.5 border border-slate-200 rounded-lg text-xs" />
-                  <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, (url) => setData(prev => { const s = [...prev.solutions]; s[idx].image = url; return { ...prev, solutions: s }; }), `sol-${idx}`)} className="text-xs text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-md file:border-0 file:bg-slate-100 file:text-slate-700 cursor-pointer" />
+<textarea rows={2} value={data.solutionsSection?.subtitle || ''} onChange={(e) => setData(prev => ({ ...prev, solutionsSection: { ...prev.solutionsSection!, subtitle: e.target.value } }))} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-sky-500" placeholder="서브 문구" />
+
+                <div className="flex justify-between items-center">
+                  <span className="text-xs font-bold text-slate-700">항목 #{idx + 1}</span>
+                  <button onClick={() => setData(prev => ({ ...prev, solutions: prev.solutions.filter((_, i) => i !== idx) }))} className="text-xs text-red-500 hover:underline">삭제</button>
                 </div>
-              ))}
-            </div>
+                <input type="text" value={sol.title} onChange={(e) => setData(prev => { const s = [...prev.solutions]; s[idx].title = e.target.value; return { ...prev, solutions: s }; })} className="w-full px-3 py-1.5 border border-slate-200 rounded-lg text-xs font-semibold" />
+                <textarea rows={2} value={sol.description} onChange={(e) => setData(prev => { const s = [...prev.solutions]; s[idx].description = e.target.value; return { ...prev, solutions: s }; })} className="w-full px-3 py-1.5 border border-slate-200 rounded-lg text-xs" />
+                <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, (url) => setData(prev => { const s = [...prev.solutions]; s[idx].image = url; return { ...prev, solutions: s }; }), `sol-${idx}`)} className="text-xs text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-md file:border-0 file:bg-slate-200 file:text-slate-700 cursor-pointer" />
+              </div>
+            ))}
           </div>
         </section>
 
         {/* 7. 고객 후기 */}
         <section className="space-y-3 pb-4 border-b border-slate-100">
           <div className="flex items-center justify-between">
-            <h3 className="font-bold text-slate-900 text-sm">7. 고객 후기</h3>
+            <h3 className="font-bold text-slate-900 text-sm">7. 고객 후지</h3>
             <button onClick={() => setData(prev => ({ ...prev, reviews: [...prev.reviews, { author: '이름', role: '직책', content: '내용' }] }))} className="text-xs font-semibold text-sky-600 hover:text-sky-700 transition">+ 추가</button>
           </div>
           <textarea rows={2} value={data.reviewsSection?.title || ''} onChange={(e) => setData(prev => ({ ...prev, reviewsSection: { ...prev.reviewsSection!, title: e.target.value } }))} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs" placeholder="섹션 문구" />
@@ -232,7 +220,7 @@ export default function EditorSidebar({ data, setData, siteId, setIsPaymentOpen,
               <div key={idx} className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
                 <div className="flex justify-between items-center">
                   <span className="text-xs font-bold text-slate-700">후기 #{idx + 1}</span>
-                  <button onClick={() => setData(prev => ({ ...prev, reviews: prev.//reviews.filter((_, i) => i !== idx) }))} className="text-xs text-red-500 hover:underline">삭제</button>
+                  <button onClick={() => setData(prev => ({ ...prev, reviews: prev.reviews.filter((_, i) => i !== idx) }))} className="text-xs text-red-500 hover:underline">삭제</button>
                 </div>
                 <div className="flex gap-2">
                   <input type="text" value={rev.author} onChange={(e) => setData(prev => { const r = [...prev.reviews]; r[idx].author = e.target.value; return { ...prev, reviews: r }; })} className="w-1/2 px-3 py-1.5 border border-slate-200 rounded-lg text-xs" placeholder="작성자" />
@@ -257,37 +245,18 @@ export default function EditorSidebar({ data, setData, siteId, setIsPaymentOpen,
               <div key={idx} className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
                 <div className="flex justify-between items-center">
                   <span className="text-xs font-bold text-slate-700">질문 #{idx + 1}</span>
-                  <button onClick={() => setData(//prev => ({ ...prev, faqs: prev.faqs.filter((_, i) => i !== idx) }))} className="text-xs text-red-500 hover:underline">삭제</button>
+                  <button onClick={() => setData(prev => ({ ...prev, faqs: prev.faqs.filter((_, i) => i !== idx) }))} className="text-xs text-red-500 hover:underline">삭제</button>
                 </div>
                 <input type="text" value={faq.question} onChange={(e) => setData(prev => { const f = [...prev.faqs]; f[idx].question = e.target.value; return { ...prev, faqs: f }; })} className="w-full px-3 py-1.5 border border-slate-200 rounded-lg text-xs font-semibold" />
-                <textarea rows={2} value={faq.answer} onChange={(e) => setData(prev => { const f = [...prev.faqs]; f[idx].answer = e.target.value; return { ...prev, faqs: f }; })} className="w-full px-3 py-1.5 border border-slate-200 rounded-lg text-xs" />
+                <textarea rows={2} value={faq.answer} onChange={(e) => setData(prev => { const f = [...prev.faqs]; f[idx].answer = e.target.value; return { ...prev, faqs: f }; })} className="w-full px-3 py-1.5 border border-slate-200 rounded-lg text-xs" placeholder="답변" />
               </div>
             ))}
           </div>
         </section>
 
-        {/* 🚀 [신규 추가] 9. 예약 시스템 설정 */}
-        <section className="space-y-3 pb-4 border-b border-slate-100">
-          <div className="flex items-center justify-between">
-            <h3 className="font-bold text-slate-900 text-sm">9. 예약 시스템 설정</h3>
-            <label className="text-xs flex items-center gap-1.5 cursor-pointer">
-              <input type="checkbox" checked={data.booking.enabled} onChange={(e) => setData(prev => ({ ...prev, booking: { ...prev.booking, enabled: e.target.checked } }))} /> 활성화
-            </label>
-          </div>
-          <div className="space-y-3">
-            <input type="text" value={data.booking.title} onChange={(e) => setData(prev => ({ ...prev, booking: { ...prev.booking, title: e.target.value } }))} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs" placeholder="예약 섹션 타이틀" />
-            <textarea rows={2} value={data.booking.subtitle} onChange={(e) => setData(prev => ({ ...prev, booking: { ...prev.booking, subtitle: e.target.value } }))} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs" placeholder="예약 섹션 서브타이틀" />
-            <div className="mt-3">
-              <label className="text-xs text-slate-500 block mb-1">상담 가능 시간대 (쉼표로 구분)</label>
-              <input type="text" value={data.booking.availableHours.join(', ')} onChange={(e) => setData(prev => ({ ...prev, booking: { ...prev.booking, availableHours: e.target.value.split(',') } }))} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs" placeholder="10:00, 11:00, 13:00..." />
-            </div>
-            <textarea rows={2} value={data.booking.bookingMessage} onChange={(e) => setData(prev => ({ ...prev, booking: { ...prev.booking, bookingMessage: e.target.value } }))} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs" placeholder="예약 완료 후 안내 메시지" />
-          </div>
-        </section>
-
-        {/* 10. 하단 푸터 설정 */}
+        {/* 9. 하단 푸터 */}
         <section className="space-y-3 pb-4">
-          <h3 className="font-bold text-slate-900 text-sm border-b border-slate-100 pb-2">10. 하단 푸터</h3>
+          <h3 className="font-bold text-slate-900 text-sm border-b border-slate-100 pb-2">9. 하단 푸터</h3>
           <div className="space-y-3">
             {['companyName', 'ownerName', 'businessNumber', 'address', 'contactEmail'].map((field) => (
               <div key={field}>
@@ -295,6 +264,25 @@ export default function EditorSidebar({ data, setData, siteId, setIsPaymentOpen,
                 <input type="text" value={(data.footer as any)[field]} onChange={(e) => setData(prev => ({ ...prev, footer: { ...prev.footer, [field]: e.target.value } }))} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs" />
               </div>
             ))}
+          </div>
+        </section>
+
+        {/* 🚀 [신규 추가] 10. 예약 시스템 설정 */}
+        <section className="space-y-3 pt-6 pb-4 border-t-2 border-slate-200">
+          <div className="flex items-center justify-between">
+            <h3 className="font-bold text-sky-700 text-sm">10. 예약 시스템 설정</h3>
+            <label className="text-xs flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" checked={data.booking.enabled} onChange={(e) => setData(prev => ({ ...prev, booking: { ...prev.booking, enabled: e.target.checked } }))} className="rounded text-sky-600" /> 활성화
+            </label>
+          </div>
+          <div className="space-y-3">
+            <input type="text" value={data.booking.title} onChange={(e) => setData(prev => ({ ...prev, booking: { ...prev.booking, title: e.target.value } }))} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-sky-500" placeholder="예약 섹션 타이틀" />
+            <textarea rows={2} value={data.booking.subtitle} onChange={(e) => setData(prev => ({ ...prev, booking: { ...prev.booking, subtitle: e.target.value } }))} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-sky-500" placeholder="예약 안내 문구" />
+            <div className="mt-3">
+              <label className="text-xs text-slate-500 block mb-1">상담 가능 시간 (쉼표로 구분)</label>
+              <input type="text" value={data.booking.availableHours.join(', ')} onChange={(e) => setData(prev => ({ ...prev, booking: { ...prev.booking, availableHours: e.target.value.split(',').map(s => s.trim()) } }))} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-sky-500" placeholder="10:00, 11:00, 14:00..." />
+            </div>
+            <textarea rows={2} value={data.booking.bookingMessage} onChange={(e) => setData(prev => ({ ...prev, booking: { ...prev.booking, bookingMessage: e.target.value } }))} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-sky-500" placeholder="예약 완료 후 안내 메시지" />
           </div>
         </section>
       </div>

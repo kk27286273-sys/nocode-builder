@@ -53,13 +53,12 @@ export interface B2BTemplateData {
     address: string;
     contactEmail: string;
   };
-  // 🚀 [신규 추가] 예약 시스템 설정
   booking: {
-    enabled: boolean;           // 예약 기능 활성화 여부
-    title: string;              // 예약 섹션 타이틀
-    subtitle: string;           // 예약 섹션 서브타이틀
-    availableHours: string[];   // 상담 가능 시간대 (예: ['10:00', '11:00', ...])
-    bookingMessage: string;      // 예약 완료 후 메시지
+    enabled: boolean;
+    title: string;
+    subtitle: string;
+    availableHours: string[];
+    bookingMessage: string;
   };
   fontSizes: {
     companyName?: number;
@@ -76,7 +75,7 @@ export interface B2BTemplateData {
   };
 }
 
-export const defaultB2BTemplate: B2BTemplateData = {
+export const defaultB2BTemplateData: B2BTemplateData = {
   themeColor: '#0284C7',
   company: { name: '회사명을 입력하세요', logoUrl: '' },
   siteImage: '', 
@@ -129,7 +128,6 @@ export const defaultB2BTemplate: B2BTemplateData = {
     address: '사업장 주소 입력',
     contactEmail: 'contact@thsoft.com',
   },
-  // 🚀 [신규 추가] 기본 예약 설정값
   booking: {
     enabled: false,
     title: '실시간 상담 예약',
@@ -139,5 +137,3 @@ export const defaultB2BTemplate: B2BTemplateData = {
   },
   fontSizes: {},
 };
-
-export const defaultB2BTemplateData = defaultB2BTemplate;

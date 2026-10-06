@@ -1,9 +1,9 @@
 ﻿'use client';
 
-import React, { useState, useEffect, useCallback } from 'react'; // useCallback 추가
+import React, { useState, useEffect, useCallback } from 'react';
 import EditorSidebar from '@/components/builder/EditorSidebar';
 import LivePreview from '@/components/builder/LivePreview';
-import { defaultTemplateData, B2BTemplateData } from '@/data/templates';
+import { defaultB2BTemplateData, B2BTemplateData } from '@/data/templates'; // 👈 이름 수정 완료
 import { supabase } from '@/lib/supabase/client';
 
 const ADMIN_PASSWORD = 'Kk@72862';
@@ -12,18 +12,17 @@ export default function BuilderPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [passwordInput, setPasswordInput] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
-  const [data, setData] = useState<B2BTemplateData>(defaultTemplateData);
+  const [data, setData] = useState<B2BTemplateData>(defaultB2BTemplateData); // 👈 이름 수정 완료
   const [siteId, setSiteId] = useState<string | null>(null);
   const [sitesList, setSitesList] = useState<{ id: string; name: string }[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // 🔄 fetchSites를 useCallback으로 감싸서 자식에게 전달해도 무한루프 안 돌게 설정
   const fetchSites = useCallback(async () => {
     try {
       const { data: sites, error } = await supabase
         .from('sites')
         .select('id, name')
-        .order('updated_at', { ascending: false }); // ✨ created_at -> updated_at으로 수정
+        .order('updated_at', { ascending: false });
 
       if (error) throw error;
       setSitesList(sites || []);
@@ -60,7 +59,7 @@ export default function BuilderPage() {
         localStorage.setItem('current_site_id', id);
       } else {
         alert('해당 사이트에 저장된 데이터가 없습니다. 기본 템플릿으로 시작합니다.');
-        setData(defaultTemplateData);
+        setData(defaultB2BTemplateData);
         setSiteId(id);
       }
     } catch (err: any) {
@@ -77,21 +76,16 @@ export default function BuilderPage() {
 
     setIsLoading(true);
     try {
-      console.log('삭제 요청 시작 - SiteID:', siteId); // 🔍 로그 추가
       const { error } = await supabase
         .from('sites')
         .delete()
         .eq('id', siteId);
 
-      if (error) {
-        console.error('Supabase 삭제 에러 상세:', error); // 🔍 상세 에러 로그
-        throw error;
-      }
+      if (error) throw error;
 
       alert('사이트가 성공적으로 삭제되었습니다.');
-      
       await fetchSites();
-      setData(defaultTemplateData);
+      setData(defaultB2BTemplateData);
       const newId = `site-${Date.now()}`;
       setSiteId(newId);
       localStorage.setItem('current_site_id', newId);
@@ -102,6 +96,7 @@ export default function BuilderPage() {
       setIsLoading(false);
     }
   };
+
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     if (passwordInput === ADMIN_PASSWORD) {
@@ -155,7 +150,6 @@ export default function BuilderPage() {
               ))}
             </select>
           </div>
-          
           <div className="flex items-center gap-2">
             {isLoading && <span className="text-[10px] text-sky-400 animate-pulse">...</span>}
             <button 
@@ -167,10 +161,8 @@ export default function BuilderPage() {
             </button>
           </div>
         </div>
-        {/* 🌟 여기서 fetchSites 함수를 넘겨줍니다 */}
         <EditorSidebar data={data} setData={setData} siteId={siteId} refreshSites={fetchSites} />
       </div>
-      
       <main className="flex-1 h-full overflow-hidden relative">
         <LivePreview data={data} />
       </main>
