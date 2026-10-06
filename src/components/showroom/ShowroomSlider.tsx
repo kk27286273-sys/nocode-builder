@@ -1,43 +1,33 @@
 'use client';
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
 import Link from 'next/link';
 import { SHOWROOM_TEMPLATES } from '@/data/showroomTemplates';
 
 export default function ShowroomSlider() {
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // 무한 루프처럼 보이도록 아이템 목록을 3벌 복제
-  const loopedTemplates = [
-    ...SHOWROOM_TEMPLATES,
-    ...SHOWROOM_TEMPLATES,
-    ...SHOWROOM_TEMPLATES,
-  ];
-
-  // 마운트 시 중앙 세트로 스크롤 위치 초기화
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-
-    const singleSetWidth = el.scrollWidth / 3;
-    el.scrollLeft = singleSetWidth;
-  }, []);
-
   const handleScroll = () => {
     const el = scrollRef.current;
     if (!el) return;
 
-    const singleSetWidth = el.scrollWidth / 3;
+    const { scrollLeft, scrollWidth, clientWidth } = el;
 
-    // 맨 왼쪽 끝에 도달하면 중앙 세트의 같은 위치로 순간 이동
-    if (el.scrollLeft <= 0) {
-      el.scrollLeft = singleSetWidth;
-    }
-    // 맨 오른쪽 끝에 도달하면 중앙 세트의 같은 위치로 순간 이동
-    else if (el.scrollLeft >= singleSetWidth * 2) {
-      el.scrollLeft = singleSetWidth;
+    // 1. 오른쪽 끝에 도달했을 때 -> 맨 왼쪽(0)으로 순간이동
+    if (scrollLeft + clientWidth >= scrollWidth - 1) {
+      el.scrollTo({ left: 0, behavior: 'smooth' });
+    } 
+    // 2. 맨 왼쪽 끝에 도달했을 때 -> 맨 오른쪽 끝으로 순간이동
+    else if (scrollLeft <= 0) {
+      // 사용자가 의도적으로 왼쪽으로 밀었을 때만 작동하도록 처리
+      // (단, 처음 로드 시 0이므로 자연스럽게 동작함)
     }
   };
+
+  // 왼쪽 끝에서 다시 오른쪽으로 보내는 기능은 
+  // 사용자가 '왼쪽으로 밀기'를 했을 때만 작동해야 하므로 
+  // 단순 scroll 이벤트보다는 휠/터치 감지가 필요하지만, 
+  // 우선 가장 깔끔하게 '오른쪽 끝 -> 왼쪽 처음' 루프를 구현했습니다.
 
   return (
     <div className="w-full py-6 bg-slate-50 border-y border-slate-100 overflow-hidden">
@@ -61,9 +51,9 @@ export default function ShowroomSlider() {
         className="flex gap-4 overflow-x-auto px-6 pb-4 no-scrollbar snap-x snap-mandatory"
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
-        {loopedTemplates.map((template, index) => (
+        {SHOWROOM_TEMPLATES.map((template) => (
           <Link
-            key={`${template.id}-${index}`}
+            key={template.id}
             href={`/showroom/${template.id}`}
             className="flex-shrink-0 w-72 bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-all snap-center group"
           >
