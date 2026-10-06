@@ -53,7 +53,8 @@ export default async function ShowroomDetailPage({ params }: PageProps) {
         <div className="grid md:grid-cols-3 gap-8">
           <div className="md:col-span-2 space-y-6">
             <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
-              <h2 className="text-xl font-bold mb-4">템플릿 최적화 구성</h2>
+              <h2 className="text-xl font-bold mb-2">템플릿 최적화 구성</h2>
+              <p className="text-sm text-slate-500 mb-6">업종 특성에 맞춘 최적의 동선과 기능을 제공합니다.</p>
               <ul className="space-y-3">
                 {template.features.map((feature, idx) => (
                   <li key={idx} className="flex items-center gap-3 text-slate-700">
@@ -90,7 +91,7 @@ export default async function ShowroomDetailPage({ params }: PageProps) {
 
             <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-3">
               <Link
-                href="/preview"
+                href={`/preview?templateId=${template.id}`} 
                 className="w-full py-4 text-center font-bold text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-xl transition-all"
               >
                 실시간 프리뷰 열기
@@ -101,7 +102,7 @@ export default async function ShowroomDetailPage({ params }: PageProps) {
                 rel="noreferrer"
                 className="w-full py-4 text-center font-bold text-white bg-slate-900 hover:bg-slate-800 rounded-xl transition-all shadow-md"
               >
-                이 템플릿으로 문의하기
+                {template.name} 도입 문의하기
               </a>
             </div>
           </div>
