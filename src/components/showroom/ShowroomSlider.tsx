@@ -1,33 +1,32 @@
 'use client';
 
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { SHOWROOM_TEMPLATES } from '@/data/showroomTemplates';
 
 export default function ShowroomSlider() {
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const handleScroll = () => {
-    const el = scrollRef.current;
-    if (!el) return;
+  // 1. 자동 이동 로직 (1초마다 다음 템플릿으로)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const el = scrollRef.current;
+      if (!el) return;
 
-    const { scrollLeft, scrollWidth, clientWidth } = el;
+      const { scrollLeft, scrollWidth, clientWidth } = el;
+      const itemWidth = 288 + 16; // 카드너비(w-72=288px) + gap(16px)
 
-    // 1. 오른쪽 끝에 도달했을 때 -> 맨 왼쪽(0)으로 순간이동
-    if (scrollLeft + clientWidth >= scrollWidth - 1) {
-      el.scrollTo({ left: 0, behavior: 'smooth' });
-    } 
-    // 2. 맨 왼쪽 끝에 도달했을 때 -> 맨 오른쪽 끝으로 순간이동
-    else if (scrollLeft <= 0) {
-      // 사용자가 의도적으로 왼쪽으로 밀었을 때만 작동하도록 처리
-      // (단, 처음 로드 시 0이므로 자연스럽게 동작함)
-    }
-  };
+      if (scrollLeft + clientWidth >= scrollWidth - 10) {
+        // 끝에 도달하면 처음으로 부드럽게 이동
+        el.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        // 다음 아이템으로 이동
+        el.scrollBy({ left: itemWidth, behavior: 'smooth' });
+      }
+    }, 1000);
 
-  // 왼쪽 끝에서 다시 오른쪽으로 보내는 기능은 
-  // 사용자가 '왼쪽으로 밀기'를 했을 때만 작동해야 하므로 
-  // 단순 scroll 이벤트보다는 휠/터치 감지가 필요하지만, 
-  // 우선 가장 깔끔하게 '오른쪽 끝 -> 왼쪽 처음' 루프를 구현했습니다.
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="w-full py-6 bg-slate-50 border-y border-slate-100 overflow-hidden">
@@ -37,19 +36,27 @@ export default function ShowroomSlider() {
             업종별 추천 쇼룸
           </h2>
           <p className="text-xs text-slate-500 mt-1">
-            좌우로 밀어서 최적화된 템플릿 구성을 확인해 보세요.
+            자동으로 추천 템플릿이 넘어갑니다. 직접 밀어서 확인해 보세요.
           </p>
         </div>
         <span className="text-xs font-medium text-slate-400">
-          좌우 드래그 가능 ↔
+          자동 이동 중 ↔
         </span>
       </div>
 
+      {/* 
+        - snap-x snap-mandatory: 스크롤 시 자석처럼 착 붙음
+        - overflow-x-auto: 마우스/터치 스크롤 허용
+        - justify-center: 아이템이 적을 때 중앙 정렬 (단, overflow-x-auto와 함께 쓰려면 내부 wrapper 필요)
+      */}
       <div
         ref={scrollRef}
-        onScroll={handleScroll}
-        className="flex gap-4 overflow-x-auto px-6 pb-4 no-scrollbar snap-x snap-mandatory"
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        className="flex gap-4 overflow-x-auto px-[calc((100vw-1152px)/2)] md:px-6 pb-4 no-scrollbar snap-x snap-mandatory"
+        style={{ 
+          scrollbarWidth: 'none', 
+          msOverflowStyle: 'none',
+          WebkitOverflowScrolling: 'touch' // iOS 터치 최적화
+        }}
       >
         {SHOWROOM_TEMPLATES.map((template) => (
           <Link
@@ -78,7 +85,6 @@ export default function ShowroomSlider() {
               <p className="text-xs text-slate-500 line-clamp-1 mb-3">
                 {template.tagline}
               </p>
-
               <div className="flex items-center text-xs font-semibold text-slate-700">
                 상세 구성 보기
                 <span className="ml-1 text-[10px] group-hover:translate-x-1 transition-transform">
