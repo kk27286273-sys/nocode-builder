@@ -10,17 +10,14 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 
 export default function ShowroomSlider() {
-  // 템플릿 개수가 적을 때 루프 경고를 방지하기 위해 배열을 2배로 복제합니다.
-  const extendedTemplates = [...SHOWROOM_TEMPLATES, ...SHOWROOM_TEMPLATES];
-
   return (
     <div className="w-full py-6 bg-slate-50 border-y border-slate-100 overflow-hidden">
       <div className="max-w-6xl mx-auto px-6 mb-6 flex justify-between items-end">
         <div>
           <h2 className="text-xl font-bold tracking-tight text-slate-900">업종별 추천 쇼룸</h2>
-          <p className="text-xs text-slate-500 mt-1">자동으로 추천 템플릿이 넘어갑니다. 직접 밀어보세요.</p>
+          <p className="text-xs text-slate-500 mt-1">추천 템플릿을 확인해 보세요.</p>
         </div>
-        <span className="text-xs font-medium text-slate-400 hidden sm:block">자동 이동 중 ↔</span>
+        <span className="text-xs font-medium text-slate-400 hidden sm:block">추천 리스트 ↔</span>
       </div>
 
       <div className="max-w-6xl mx-auto px-6">
@@ -28,19 +25,28 @@ export default function ShowroomSlider() {
           modules={[Autoplay, Pagination]}
           spaceBetween={16}
           slidesPerView={'auto'} 
-          loop={true}
+          loop={false} // 무한 루프를 끕니다. (4번 끝에서 멈춤)
           autoplay={{
             delay: 2500,
             disableOnInteraction: false,
+            reverseDirection: false, // 정방향 진행
           }}
           pagination={{
             clickable: true,
             dynamicBullets: true,
           }}
+          // 4번 슬라이드 도달 후 다시 1번으로 돌아가게 하는 핵심 설정
+          onReachEnd={() => {
+            setTimeout(() => {
+              // Swiper 인스턴스를 통해 처음으로 슬라이드 이동
+              // @ts-ignore
+              document.querySelector('.swiper-pagination-bullet').click();
+            }, 2000);
+          }}
           className="pb-12 !overflow-visible"
         >
-          {extendedTemplates.map((template, index) => (
-            <SwiperSlide key={`${template.id}-${index}`} style={{ width: '288px' }}>
+          {SHOWROOM_TEMPLATES.map((template) => (
+            <SwiperSlide key={template.id} style={{ width: '288px' }}>
               <Link
                 href={`/showroom/${template.id}`}
                 className="block w-full bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-all group"
@@ -64,7 +70,7 @@ export default function ShowroomSlider() {
                   </h3>
                   <p className="text-xs text-slate-500 line-clamp-1 mb-3">{template.tagline}</p>
                   <div className="flex items-center text-xs font-semibold text-slate-700">
-                    상세 구성 보기 <span className="ml-1 text-[10px] group-hover:translate-x-1 transition-transform">→</span>
+                    상세 구성 보기 <span className="ml-1 text-[10px] group-hover:translate-x-1 transition-transform">→</</span>
                   </div>
                 </div>
               </Link>
