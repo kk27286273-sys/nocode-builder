@@ -164,57 +164,79 @@ export default function EditorSidebar({ data, setData, siteId, setIsPaymentOpen,
             </div>
           )}
 
-          {/* 2. 기업형 설정 */}
-          {data.templateType === 'corporate' && (
-            <div className="space-y-8 animate-in fade-in slide-in-from-top-2 duration-300">
-              <section className="space-y-3 pb-6 border-b border-slate-100">
-                <h3 className="font-bold text-slate-900 text-sm flex items-center gap-2">
-                  <span className="w-1 h-4 bg-sky-600 rounded-full"></span> 회사 소개
-                </h3>
-                <textarea rows={5} value={(data.specifics as any)?.about?.greeting || ''} onChange={(e) => setData(prev => ({ ...prev, specifics: { ...prev.specifics, about: { greeting: e.target.value } } }))} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-1 focus:ring-sky-500 outline-none" placeholder="인사말 입력" />
-                <FontSizeSlider label="본문 글자 크기" value={data.fontSizes?.bodyText} min={12} max={24} onChange={(val) => updateFont('bodyText', val)} />
-              </section>
+{/* 2. 기업형 설정 */}
+{data.templateType === 'corporate' && (
+  <div className="space-y-8 animate-in fade-in slide-in-from-top-2 duration-300">
+    <section className="space-y-3 pb-6 border-b border-slate-100">
+      <h3 className="font-bold text-slate-900 text-sm flex items-center gap-2">
+        <span className="w-1 h-4 bg-sky-600 rounded-full"></span> 회사 소개
+      </h3>
+      <textarea 
+        rows={5} 
+        value={(data.specifics as any)?.about?.greeting || ''} 
+        onChange={(e) => setData(prev => ({ ...prev, specifics: { ...prev.specifics, about: { greeting: e.target.value } } }))} 
+        className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-1 focus:ring-sky-500 outline-none" 
+        placeholder="인사말 입력" 
+      />
+      <FontSizeSlider label="본문 글자 크기" value={data.fontSizes?.bodyText} min={12} max={24} onChange={(val) => updateFont('bodyText', val)} />
+    </section>
 
-              <section className="space-y-3 pb-6 border-b border-slate-100">
-                <div className="flex items-center justify-between">
-                  <h3 className="font-bold text-slate-900 text-sm flex items-center gap-2">
-                    <span className="w-1 h-4 bg-sky-600 rounded-full"></span> 사업 영역
-                  </h3>
-                  <button onClick={() => setData(prev => ({ ...prev, specifics: { ...prev.specifics, businessAreas: [...(prev.specifics as any).businessAreas || [], { title: '새 사업', description: '설명', image: 'https://via.placeholder.com/300' }] } }))} className="text-[10px] font-bold text-sky-600">+ 추가</button>
-                </div>
-                <div className="space-y-4">
-                  {(data.specifics as any)?.businessAreas?.map((area: any, idx: number) => (
-                    <div key={idx} className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-3 relative group">
-                      <button onClick={() => setData(prev => ({ ...prev, specifics: { ...prev.specifics, businessAreas: (prev.specifics as any).businessAreas.filter((_, i) => i !== idx) } }))} className="absolute top-2 right-2 text-slate-300 hover:text-red-500">✕</button>
-                      <input type="text" value={area.title} onChange={(e) => { const newA = [...(data.specifics as any).businessAreas]; newA[idx].title = e.target.value; setData(prev => ({ ...prev, specifics: { ...prev.specifics, businessAreas: newA } })); }} className="w-full px-2 py-1 border border-slate-200 rounded bg-white text-xs font-bold" />
-                      <textarea rows={2} value={area.description} onChange={(e) => { const newA = [...(data.specifics as any).businessAreas]; newA[idx].description = e.target.value; setData(prev => ({ ...prev, specifics: { ...prev.specifics, businessAreas: newA } })); }} className="w-full px-2 py-1 border border-slate-200 rounded bg-white text-[11px]" />
-                    </div>
-                  ))}
-                </div>
-              </section>
+    <section className="space-y-3 pb-6 border-b border-slate-100">
+      <div className="flex items-center justify-between">
+        <h3 className="font-bold text-slate-900 text-sm flex items-center gap-2">
+          <span className="w-1 h-4 bg-sky-600 rounded-full"></span> 사업 영역
+        </h3>
+        <button 
+          onClick={() => setData(prev => ({ 
+            ...prev, 
+            specifics: { 
+              ...prev.specifics, 
+              businessAreas: [...(prev.specifics as any)?.businessAreas || [], { title: '새 사업', description: '설명', image: 'https://via.placeholder.com/300' }] 
+            } 
+          }))} 
+          className="text-[10px] font-bold text-sky-600">+ 추가</button>
+      </div>
+      <div className="space-y-4">
+        {((data.specifics as any)?.businessAreas || []).map((area: any, idx: number) => (
+          <div key={idx} className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-3 relative group">
+            <button onClick={() => setData(prev => ({ ...prev, specifics: { ...prev.specifics, businessAreas: (prev.specifics as any).businessAreas.filter((_, i) => i !== idx) } }))} className="absolute top-2 right-2 text-slate-300 hover:text-red-500">✕</button>
+            <input type="text" value={area.title} onChange={(e) => { const newA = [...(data.specifics as any).businessAreas]; newA[idx].title = e.target.value; setData(prev => ({ ...prev, specifics: { ...prev.specifics, businessAreas: newA } })); }} className="w-full px-2 py-1 border border-slate-200 rounded bg-white text-xs font-bold" />
+            <textarea rows={2} value={area.description} onChange={(e) => { const newA = [...(data.specifics as any).businessAreas]; newA[idx].description = e.target.value; setData(prev => ({ ...prev, specifics: { ...prev.specifics, businessAreas: newA } })); }} className="w-full px-2 py-1 border border-slate-200 rounded bg-white text-[11px]" />
+          </div>
+        ))}
+      </div>
+    </section>
 
-              <section className="space-y-3 pb-6 border-b border-slate-100">
-                <div className="flex items-center justify-between">
-                  <h3 className="font-bold text-slate-900 text-sm flex items-center gap-2">
-                    <span className="w-1 h-4 bg-sky-600 rounded-full"></span> 기업 연혁
-                  </h3>
-                  <button onClick={() => setData(prev => ({ ...prev, specifics: { ...prev.specifics, history: [...(prev.specifics as any).history || [], { year: '2026', title: '성과', content: '내용' }] } }))} className="text-[10px] font-bold text-sky-600">+ 추가</button>
-                </div>
-                <div className="space-y-3">
-                  {(data.specifics as any)?.history?.map((item: any, idx: number) => (
-                    <div key={idx} className="flex gap-2 items-start p-2 bg-slate-50 rounded-lg border border-slate-200">
-                      <input type="text" value={item.year} onChange={(e) => { const newH = [...(data.specifics as any).history]; newH[idx].year = e.target.value; setData(prev => ({ ...prev, specifics: { ...prev.specifics, history: newH } })); }} className="w-16 px-1 py-1 border border-slate-200 rounded bg-white text-xs font-bold text-center" />
-                      <div className="flex-1 space-y-1">
-                        <input type="text" value={item.title} onChange={(e) => { const newH = [...(data.specifics as any).history]; newH[idx].title = e.target.value; setData(prev => ({ ...prev, specifics: { ...prev.specifics, history: newH } })); }} className="w-full px-2 py-1 border border-slate-200 rounded bg-white text-xs" />
-                        <input type="text" value={item.content} onChange={(e) => { const newH = [...(data.specifics as any).history]; newH[idx].content = e.target.value; setData(prev => ({ ...prev, specifics: { ...prev.specifics, history: newH } })); }} className="w-full px-2 py-1 border border-slate-200 rounded bg-white text-[11px] text-slate-500" />
-                      </div>
-                      <button onClick={() => setData(prev => ({ ...prev, specifics: { ...prev.specifics, history: (prev.specifics as any).history.filter((_, i) => i !== idx) } }))} className="text-slate-300 hover:text-red-500 p-1">✕</button>
-                    </div>
-                  ))}
-                </div>
-              </section>
+    <section className="space-y-3 pb-6 border-b border-slate-100">
+      <div className="flex items-center justify-between">
+        <h3 className="font-bold text-slate-900 text-sm flex items-center gap-2">
+          <span className="w-1 h-4 bg-sky-600 rounded-full"></span> 기업 연혁
+        </h3>
+        <button 
+          onClick={() => setData(prev => ({ 
+            ...prev, 
+            specifics: { 
+              ...prev.specifics, 
+              history: [...(prev.specifics as any)?.history || [], { year: '2026', title: '성과', content: '내용' }] 
+            } 
+          }))} 
+          className="text-[10px] font-bold text-sky-600">+ 추가</button>
+      </div>
+      <div className="space-y-3">
+        {((data.specifics as any)?.history || []).map((item: any, idx: number) => (
+          <div key={idx} className="flex gap-2 items-start p-2 bg-slate-50 rounded-lg border border-slate-200">
+            <input type="text" value={item.year} onChange={(e) => { const newH = [...(data.specifics as any).history]; newH[idx].year = e.target.value; setData(prev => ({ ...prev, specifics: { ...prev.specifics, history: newH } })); }} className="w-16 px-1 py-1 border border-slate-200 rounded bg-white text-xs font-bold text-center" />
+            <div className="flex-1 space-y-1">
+              <input type="text" value={item.title} onChange={(e) => { const newH = [...(data.specifics as any).history]; newH[idx].title = e.target.value; setData(prev => ({ ...prev, specifics: { ...prev.specifics, history: newH } })); }} className="w-full px-2 py-1 border border-slate-200 rounded bg-white text-xs" />
+              <input type="text" value={item.content} onChange={(e) => { const newH = [...(data.specifics as any).history]; newH[idx].content = e.target.value; setData(prev => ({ ...prev, specifics: { ...prev.specifics, history: newH } })); }} className="w-full px-2 py-1 border border-slate-200 rounded bg-white text-[11px] text-slate-500" />
             </div>
-          )}
+            <button onClick={() => setData(prev => ({ ...prev, specifics: { ...prev.specifics, history: (prev.specifics as any).history.filter((_, i) => i !== idx) } }))} className="text-slate-300 hover:text-red-500 p-1">✕</button>
+          </div>
+        ))}
+      </div>
+    </section>
+  </div>
+)}
 
           {/* 3. 렌탈/쇼핑몰 설정 */}
           {data.templateType === 'rental-shop' && (
