@@ -10,6 +10,9 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 
 export default function ShowroomSlider() {
+  // 템플릿 개수가 적을 때 루프 경고를 방지하기 위해 배열을 2배로 복제합니다.
+  const extendedTemplates = [...SHOWROOM_TEMPLATES, ...SHOWROOM_TEMPLATES];
+
   return (
     <div className="w-full py-6 bg-slate-50 border-y border-slate-100 overflow-hidden">
       <div className="max-w-6xl mx-auto px-6 mb-6 flex justify-between items-end">
@@ -26,8 +29,6 @@ export default function ShowroomSlider() {
           spaceBetween={16}
           slidesPerView={'auto'} 
           loop={true}
-          loopedSlides={SHOWROOM_TEMPLATES.length} 
-          loopAdditionalSlides={3}
           autoplay={{
             delay: 2500,
             disableOnInteraction: false,
@@ -38,8 +39,8 @@ export default function ShowroomSlider() {
           }}
           className="pb-12 !overflow-visible"
         >
-          {SHOWROOM_TEMPLATES.map((template) => (
-            <SwiperSlide key={template.id} style={{ width: '288px' }}>
+          {extendedTemplates.map((template, index) => (
+            <SwiperSlide key={`${template.id}-${index}`} style={{ width: '288px' }}>
               <Link
                 href={`/showroom/${template.id}`}
                 className="block w-full bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-all group"
