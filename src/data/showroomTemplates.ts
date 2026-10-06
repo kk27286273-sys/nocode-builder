@@ -5,11 +5,17 @@ export interface ShowroomTemplateItem {
   tagline: string;
   description: string;
   themeColor: string;
-  previewUrl: string; // 현재 기본 프리뷰 경로 및 쿼리 파라미터 활용
+  previewUrl: string;
   thumbnailImage: string;
   features: string[];
   targetAudience: string;
   status: 'available' | 'coming_soon';
+  // 내일 멀티페이지 확장을 위한 구조 설계
+  pageStructure: {
+    main: string;
+    sub: string;
+    conversion: string;
+  };
 }
 
 export const SHOWROOM_TEMPLATES: ShowroomTemplateItem[] = [
@@ -17,52 +23,72 @@ export const SHOWROOM_TEMPLATES: ShowroomTemplateItem[] = [
     id: 'legal-tax',
     category: '법률·세무·노무',
     name: '신뢰 기반 승소·자문형',
-    tagline: '전문직의 무게감과 승소 실적을 강조하는 다크 블루 테마',
-    description: '고객에게 가장 중요한 전문 자격, 승소·자문 이력, 비밀 보장 상담 예약 동선에 집중한 템플릿입니다.',
-    themeColor: '#1E3A8A',
+    tagline: '승소와 절세, 신뢰를 증명하는 압도적 속도',
+    description: '전문직의 무게감과 신뢰도를 극대화하는 딥 네이비 테마입니다. 승소 사례와 전문 자격 증명을 최우선으로 배치하여 고객의 신뢰를 즉각적으로 확보합니다.',
+    themeColor: '#0F172A',
     previewUrl: '/preview?preset=legal',
     thumbnailImage: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80',
-    features: ['전문 이력 타임라인', '비밀 보장 1:1 예약 폼', '사건/자문 통계 지표'],
+    features: ['승소 사례 타임라인', '비밀 보장 1:1 상담 폼', '전문 자격 인증 섹션'],
     targetAudience: '변호사, 세무사, 회계사, 노무사',
-    status: 'available'
+    status: 'available',
+    pageStructure: {
+      main: '메인 페이지',
+      sub: '승소/성공사례',
+      conversion: '비밀상담신청'
+    }
   },
   {
-    id: 'therapy-counseling',
+    id: 'counseling',
     category: '심리상담·치유',
     name: '안정과 회복 중심 케어형',
-    tagline: '방문 전 불안을 낮추는 차분한 세이지 그린 테마',
-    description: '공간 분위기 소개, 원장 약력, 100% 사전 예약 안내를 통해 고객의 첫 상담 진입 장벽을 낮춥니다.',
-    themeColor: '#2D5A47',
+    tagline: '마음을 여는 첫 걸음, 24시간 간편 예약',
+    description: '방문 전 불안을 낮추는 세이지 그린 테마입니다. 차분한 분위기의 공간 소개와 원장 약력을 통해 정서적 안정을 제공하고 예약 진입 장벽을 낮춥니다.',
+    themeColor: '#065F46',
     previewUrl: '/preview?preset=counseling',
     thumbnailImage: 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80',
-    features: ['차분한 컬러 톤앤매너', '프라이빗 예약 타임슬롯', '내담자 후기 캐러셀'],
-    targetAudience: '심리상담센터, 미술치료실, 마인드케어 클리닉',
-    status: 'available'
+    features: ['차분한 톤앤매너 UI', '프라이빗 예약 슬롯', '내담자 안심 후기'],
+    targetAudience: '심리상담센터, 치료실, 마인드케어',
+    status: 'available',
+    pageStructure: {
+      main: '메인 페이지',
+      sub: '프로그램소개',
+      conversion: '간편예약'
+    }
   },
   {
     id: 'fitness-lesson',
     category: 'PT·필라테스·레슨',
     name: '성과 전환 에너제틱형',
-    tagline: '바디프로필·비포애프터 성과를 직관적으로 보여주는 테마',
-    description: '강사진 프로필, 회원 비포애프터 지표, 1회 체험 예약 전환을 최우선으로 배치한 고전환 템플릿입니다.',
+    tagline: '회원권 문의 폭발, 스케줄·비포애프터 자동화',
+    description: '성과를 직관적으로 보여주는 네온 오렌지 테마입니다. 비포애프터 지표와 강사 프로필을 강조하여 체험 예약 전환율을 극대화합니다.',
     themeColor: '#EA580C',
     previewUrl: '/preview?preset=fitness',
     thumbnailImage: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=800&q=80',
-    features: ['강사진 상세 스펙 카드', '체험 세션 신청 폼', '위치/시설 고화질 갤러리'],
-    targetAudience: '1:1 PT 스튜디오, 필라테스, 골프/음악 레슨',
-    status: 'available'
+    features: ['비포애프터 갤러리', '코치별 스케줄러', '1회 체험 신청 폼'],
+    targetAudience: 'PT, 필라테스, 1:1 레슨 강사',
+    status: 'available',
+    pageStructure: {
+      main: '메인 페이지',
+      sub: '코치소개',
+      conversion: '패키지/시간표'
+    }
   },
   {
-    id: 'rental-b2b',
+    id: 'b2b-rental',
     category: '기기렌탈·기업 서비스',
     name: 'B2B 견적 및 사양 안내형',
-    tagline: '신속한 사양 비교와 빠른 견적서 요청에 최적화된 테마',
-    description: '제품군 스펙 표기, 월 렌탈 요금제 안내, 대량 납품 문의 폼이 통합된 실무형 템플릿입니다.',
+    tagline: '복잡한 견적 신청을 30초 만에 해결',
+    description: '신속한 사양 비교와 효율성을 강조하는 스카이 블루 테마입니다. 제품 라인업과 요금제를 명확히 제시하여 빠른 견적 요청을 유도합니다.',
     themeColor: '#0284C7',
     previewUrl: '/preview?preset=rental',
     thumbnailImage: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=800&q=80',
-    features: ['요금제/스펙 비교 테이블', '빠른 상담 콜투액션(CTA)', 'FAQ 기반 이탈 방지'],
-    targetAudience: '사무기기 렌탈, 특수장비 대여, B2B 대행사',
-    status: 'available'
+    features: ['제품 스펙 비교표', '빠른 견적 요청 CTA', 'B2B 납품 실적'],
+    targetAudience: '사무기기·가전 렌탈, B2B 서비스',
+    status: 'available',
+    pageStructure: {
+      main: '메인 페이지',
+      sub: '렌탈 라인업',
+      conversion: '간편 견적요청'
+    }
   }
 ];
