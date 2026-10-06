@@ -3,45 +3,68 @@
 import React from 'react';
 
 interface LegalModalProps {
-  type: 'terms' | 'privacy';
+  isOpen: boolean;
+  type: 'terms' | 'privacy' | null;
   onClose: () => void;
+  companyName?: string;
+  contactEmail?: string;
 }
 
-export default function LegalModal({ type, onClose }: LegalModalProps) {
+export default function LegalModal({
+  isOpen,
+  type,
+  onClose,
+  companyName = 'TH소프트',
+  contactEmail = 'contact@thsoft.kr'
+}: LegalModalProps) {
+  if (!isOpen || !type) return null;
+
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="bg-white w-full max-w-2xl max-h-[80vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-200">
-        <div className="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-          <h3 className="font-bold text-slate-900 text-lg">
-            {type === 'terms' ? '이용약관' : '개인정보 처리방침'}
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+      <div className="bg-white rounded-xl max-w-lg w-full max-h-[80vh] flex flex-col shadow-2xl">
+        <div className="flex items-center justify-between p-4 border-b border-slate-200">
+          <h3 className="font-bold text-slate-900 text-sm">
+            {type === 'terms' ? '서비스 이용약관' : '개인정보 처리방침'}
           </h3>
-          <button onClick={onClose} className="p-2 hover:bg-slate-200 rounded-full transition text-slate-400 hover:text-slate-600">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
+          <button
+            onClick={onClose}
+            className="text-slate-400 hover:text-slate-700 text-sm font-bold p-1"
+          >
+            닫기
           </button>
         </div>
-        <div className="p-6 overflow-y-auto text-sm leading-relaxed text-slate-600 space-y-4">
+
+        <div className="p-4 overflow-y-auto text-xs text-slate-600 space-y-3 leading-relaxed">
           {type === 'terms' ? (
-            <div className="space-y-3">
-              <p className="font-bold text-slate-900">제 1조 (목적)</p>
-              <p>본 약관은 TH소프트가 제공하는 웹사이트 구축 및 관리 서비스의 이용 조건 및 절차에 관한 사항을 규정함을 목적으로 합니다.</p>
-              <p className="font-bold text-slate-900">제 2조 (서비스 제공)</p>
-              <p>회사는 고객의 요구사항에 맞춘 고성능 웹사이트 구축, 유지보수 및 도메인 관리 서비스를 제공합니다.</p>
-              <p className="font-bold text-slate-900">제 3조 (이용료 및 환불)</p>
-              <p>서비스 이용료는 선택하신 요금제에 따르며, 구축 완료 후 발행된 사이트에 대해서는 단순 변심으로 인한 환불이 제한될 수 있습니다.</p>
-            </div>
+            <>
+              <p className="font-semibold text-slate-800">제1조 (목적)</p>
+              <p>본 약관은 {companyName}(이하 "회사")이 제공하는 제반 서비스의 이용과 관련하여 회사와 이용자의 권리, 의무 및 책임사항을 규정함을 목적으로 합니다.</p>
+              <p className="font-semibold text-slate-800">제2조 (이용자의 의무)</p>
+              <p>이용자는 서비스 이용 시 허위 정보를 제공해서는 안 되며, 타인의 권리를 침해하거나 업무를 방해하는 행위를 하여서는 안 됩니다.</p>
+              <p className="font-semibold text-slate-800">제3조 (문의 및 안내)</p>
+              <p>서비스 이용 관련 문의는 {contactEmail}을 통해 접수하실 수 있습니다.</p>
+            </>
           ) : (
-            <div className="space-y-3">
-              <p className="font-bold text-slate-900">1. 수집하는 개인정보 항목</p>
-              <p>이용자가 상담 신청 시 입력하는 성함, 연락처, 문의 내용 등을 수집합니다.</p>
-              <p className="font-bold text-slate-900">2. 개인정보의 수집 및 이용 목적</p>
-              <p>수집된 정보는 견적 상담 응대 및 서비스 제공을 위한 연락 목적으로만 사용됩니다.</p>
-              <p className="font-bold text-slate-900">3. 보유 및 이용 기간</p>
-              <p>수집된 정보는 목적 달성 후 또는 이용자의 삭제 요청 시 즉시 파기합니다. (단, 법령에 따라 보존이 필요한 경우 해당 기간까지 보관)</p>
-            </div>
+            <>
+              <p className="font-semibold text-slate-800">1. 수집하는 개인정보 항목</p>
+              <p>회사는 상담 및 서비스 예약 제공을 위해 성명, 연락처, 이메일 등의 기본 정보를 수집합니다.</p>
+              <p className="font-semibold text-slate-800">2. 개인정보의 수집 및 이용 목적</p>
+              <p>수집된 개인정보는 고객 문의 처리, 상담 일정 조율, 서비스 관련 공지 전달 외 목적으로는 사용되지 않습니다.</p>
+              <p className="font-semibold text-slate-800">3. 개인정보 보유 및 파기</p>
+              <p>목적 달성 후 관계 법령에 따른 보존 의무가 없는 한 즉시 파기합니다.</p>
+              <p className="font-semibold text-slate-800">4. 개인정보 보호책임자</p>
+              <p>문의 접수: {contactEmail}</p>
+            </>
           )}
         </div>
-        <div className="p-4 border-t border-slate-100 flex justify-end bg-slate-50">
-          <button onClick={onClose} className="px-5 py-2 bg-slate-900 text-white text-sm font-bold rounded-lg hover:bg-slate-800 transition">확인</button>
+
+        <div className="p-3 border-t border-slate-100 flex justify-end">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 bg-slate-900 text-white rounded-lg text-xs font-semibold hover:bg-slate-800 transition"
+          >
+            확인
+          </button>
         </div>
       </div>
     </div>
