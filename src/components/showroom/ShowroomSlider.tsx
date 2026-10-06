@@ -1,45 +1,21 @@
 'use client';
 
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { SHOWROOM_TEMPLATES } from '@/data/showroomTemplates';
 
 export default function ShowroomSlider() {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [isMounted, setIsMounted] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const totalItems = SHOWROOM_TEMPLATES.length;
 
+  // 1. 타이머를 통한 자동 이동 (2초마다 다음 카드로)
   useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (!isMounted) return;
-
-    console.log("🚀 슬라이더 엔진 가동");
-
     const timer = setInterval(() => {
-      const el = scrollRef.current;
-      if (!el) return;
-
-      const { scrollLeft, scrollWidth, clientWidth } = el;
-      const itemWidth = 288 + 16; 
-
-      console.log(`현재위치:${scrollLeft} / 전체:${scrollWidth} / 화면:${clientWidth}`);
-
-      if (scrollLeft + clientWidth >= scrollWidth - 20) {
-        console.log("🔄 처음으로 리셋");
-        el.scrollTo({ left: 0, behavior: 'smooth' });
-      } else {
-        console.log("➡️ 다음으로 이동");
-        el.scrollTo({ 
-          left: scrollLeft + itemWidth, 
-          behavior: 'smooth' 
-        });
-      }
+      setCurrentIndex((prev) => (prev + 1) % totalItems);
     }, 2000);
 
     return () => clearInterval(timer);
-  }, [isMounted]);
+  }, [totalItems]);
 
   return (
     <div className="w-full py-6 bg-slate-50 border-y border-slate-100 overflow-hidden">
@@ -48,24 +24,28 @@ export default function ShowroomSlider() {
           <h2 className="text-xl font-bold tracking-tight text-slate-900">업종별 추천 쇼룸</h2>
           <p className="text-xs text-slate-500 mt-1">자동으로 추천 템플릿이 넘어갑니다.</p>
         </div>
-        <span className="text-xs font-medium text-slate-400">자동 이동 중 ↔</span>
+        <div className="flex gap-1.5 items-center">
+          {SHOWROOM_TEMPLATES.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setCurrentIndex(idx)}
+              className={`h-2 rounded-full transition-all ${
+                currentIndex === idx ? 'w-6 bg-blue-600' : 'w-2 bg-slate-300'
+              }`}
+              aria-label={`슬라이드 ${idx + 1}`}
+            />
+          ))}
+        </div>
       </div>
 
-      {/* 
-        가장 확실하게 스크롤을 만드는 방법: 
-        부모 컨테이너에 overflow-x-auto를 주고, 
-        내부 wrapper(div)에 아주 큰 min-width를 주어 강제로 스크롤을 생성함 
-      */}
-      <div
-        ref={scrollRef}
-        className="overflow-x-auto no-scrollbar px-6 pb-4"
-        style={{ 
-          scrollbarWidth: 'none', 
-          msOverflowStyle: 'none',
-          WebkitOverflowScrolling: 'touch' 
-        }}
-      >
-        <div className="flex gap-4" style={{ minWidth: 'max-content' }}>
+      <div className="max-w-6xl mx-auto px-6 overflow-hidden">
+        {/* 2. transform translate 방식을 사용해 너비 계산 오류 완전 배제 */}
+        <div
+          className="flex gap-4 transition-transform duration-500 ease-in-out"
+          style={{
+            transform: `translateX(-${currentIndex * (288 + 16)}px)`,
+          }}
+        >
           {SHOWROOM_TEMPLATES.map((template) => (
             <Link
               key={template.id}
@@ -86,10 +66,15 @@ export default function ShowroomSlider() {
                 </span>
               </div>
               <div className="p-4">
-                <h3 className="font-bold text-slate-900 text-sm mb-1 group-hover:text-blue-600 transition-colors">{template.name}</h3>
+                <h3 className="font-bold text-slate-900 text-sm mb-1 group-hover:text-blue-600 transition-colors">
+                  {template.name}
+                </h3>
                 <p className="text-xs text-slate-500 line-clamp-1 mb-3">{template.tagline}</p>
                 <div className="flex items-center text-xs font-semibold text-slate-700">
-                  상세 구성 보기 <span className="ml-1 text-[10px] group-hover:translate-x-1 transition-transform">→</span>
+                  상세 구성 보기{' '}
+                  <span className="ml-1 text-[10px] group-hover:translate-x-1 transition-transform">
+                    →
+                  </span>
                 </div>
               </div>
             </Link>
