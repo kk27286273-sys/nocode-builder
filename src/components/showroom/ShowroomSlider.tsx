@@ -24,23 +24,19 @@ export default function ShowroomSlider() {
         <Swiper
           modules={[Autoplay, Pagination]}
           spaceBetween={16}
-          slidesPerView={'auto'} 
-          loop={false} // 무한 루프를 끕니다. (4번 끝에서 멈춤)
+          slidesPerView={'auto'}
+          loop={false}
           autoplay={{
             delay: 2500,
             disableOnInteraction: false,
-            reverseDirection: false, // 정방향 진행
           }}
           pagination={{
             clickable: true,
             dynamicBullets: true,
           }}
-          // 4번 슬라이드 도달 후 다시 1번으로 돌아가게 하는 핵심 설정
-          onReachEnd={() => {
+          onReachEnd={(swiper) => {
             setTimeout(() => {
-              // Swiper 인스턴스를 통해 처음으로 슬라이드 이동
-              // @ts-ignore
-              document.querySelector('.swiper-pagination-bullet').click();
+              swiper.slideTo(0, 600);
             }, 2000);
           }}
           className="pb-12 !overflow-visible"
@@ -70,7 +66,10 @@ export default function ShowroomSlider() {
                   </h3>
                   <p className="text-xs text-slate-500 line-clamp-1 mb-3">{template.tagline}</p>
                   <div className="flex items-center text-xs font-semibold text-slate-700">
-                    상세 구성 보기 <span className="ml-1 text-[10px] group-hover:translate-x-1 transition-transform">→</</span>
+                    상세 구성 보기
+                    <span className="ml-1 text-[10px] group-hover:translate-x-1 transition-transform">
+                      &rarr;
+                    </span>
                   </div>
                 </div>
               </Link>
