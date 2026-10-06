@@ -1,4 +1,4 @@
-'use client';
+'use client'; // 반드시 최상단에 있어야 합니다.
 
 import React, { useRef, useEffect } from 'react';
 import Link from 'next/link';
@@ -7,20 +7,19 @@ import { SHOWROOM_TEMPLATES } from '@/data/showroomTemplates';
 export default function ShowroomSlider() {
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // 1. 자동 이동 로직 (1초마다 다음 템플릿으로)
   useEffect(() => {
+    // 자동 이동 인터벌 설정
     const interval = setInterval(() => {
       const el = scrollRef.current;
       if (!el) return;
 
       const { scrollLeft, scrollWidth, clientWidth } = el;
-      const itemWidth = 288 + 16; // 카드너비(w-72=288px) + gap(16px)
+      const itemWidth = 288 + 16; // 카드너비(w-72) + gap(16px)
 
-      if (scrollLeft + clientWidth >= scrollWidth - 10) {
-        // 끝에 도달하면 처음으로 부드럽게 이동
+      // 끝단 판정 범위를 20px 정도로 여유 있게 잡음
+      if (scrollLeft + clientWidth >= scrollWidth - 20) {
         el.scrollTo({ left: 0, behavior: 'smooth' });
       } else {
-        // 다음 아이템으로 이동
         el.scrollBy({ left: itemWidth, behavior: 'smooth' });
       }
     }, 1000);
@@ -44,18 +43,13 @@ export default function ShowroomSlider() {
         </span>
       </div>
 
-      {/* 
-        - snap-x snap-mandatory: 스크롤 시 자석처럼 착 붙음
-        - overflow-x-auto: 마우스/터치 스크롤 허용
-        - justify-center: 아이템이 적을 때 중앙 정렬 (단, overflow-x-auto와 함께 쓰려면 내부 wrapper 필요)
-      */}
       <div
         ref={scrollRef}
-        className="flex gap-4 overflow-x-auto px-[calc((100vw-1152px)/2)] md:px-6 pb-4 no-scrollbar snap-x snap-mandatory"
+        className="flex gap-4 overflow-x-auto px-6 pb-4 no-scrollbar snap-x snap-mandatory"
         style={{ 
           scrollbarWidth: 'none', 
           msOverflowStyle: 'none',
-          WebkitOverflowScrolling: 'touch' // iOS 터치 최적화
+          WebkitOverflowScrolling: 'touch' 
         }}
       >
         {SHOWROOM_TEMPLATES.map((template) => (
