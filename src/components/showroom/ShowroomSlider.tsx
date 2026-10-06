@@ -15,16 +15,26 @@ export default function ShowroomSlider() {
   useEffect(() => {
     if (!isMounted) return;
 
+    console.log("🚀 쇼룸 슬라이더 타이머 시작됨");
+
     const timer = setInterval(() => {
       const el = scrollRef.current;
-      if (!el) return;
+      if (!el) {
+        console.log("❌ 엘리먼트를 찾을 수 없음");
+        return;
+      }
 
       const { scrollLeft, scrollWidth, clientWidth } = el;
-      const itemWidth = 288 + 16; // 카드너비(w-72) + gap(16px)
+      const itemWidth = 288 + 16; 
 
+      console.log(`현재 위치: ${scrollLeft}, 전체너비: ${scrollWidth}, 화면너비: ${clientWidth}`);
+
+      // 조건 없이 일단 밀어보고, 끝에 도달했는지만 체크
       if (scrollLeft + clientWidth >= scrollWidth - 20) {
+        console.log("🔄 끝 도달 -> 처음으로 이동");
         el.scrollTo({ left: 0, behavior: 'smooth' });
       } else {
+        console.log("➡️ 다음 카드로 이동");
         el.scrollTo({ 
           left: scrollLeft + itemWidth, 
           behavior: 'smooth' 
