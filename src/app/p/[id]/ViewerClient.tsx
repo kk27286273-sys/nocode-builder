@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'next/navigation'; // 👈 추가: URL 파라미터 읽기 위해 필수
 import { B2BTemplateData, defaultB2BTemplate } from '@/data/templates';
 import { supabase } from '@/lib/supabase/client';
 import LivePreview from '@/components/builder/LivePreview';
@@ -12,8 +13,13 @@ export interface ViewerClientProps {
 
 export default function ViewerClient({
   data: initialData,
-  siteId,
+  siteId: propSiteId,
 }: ViewerClientProps) {
+  // 🚀 [핵심 추가] 현재 URL에서 siteId와 pageId를 모두 추출합니다.
+  const params = useParams();
+  const siteId = propSiteId || (params?.id as string);
+  const pageId = params?.pageId as string | undefined; 
+
   const [data, setData] = useState<B2BTemplateData>(
     initialData || defaultB2BTemplate
   );
@@ -54,9 +60,14 @@ export default function ViewerClient({
 
   return (
     <div className="min-h-screen bg-white">
+      {/* 
+        LivePreview에 현재 어떤 페이지(pageId)를 보여줘야 하는지 전달합니다.
+        pageId가 없으면(메인 페이지면) 'main'을 기본값으로 넘깁니다.
+      */}
       <LivePreview 
         data={data} 
         zoom={100} 
+        currentPageId={pageId || 'main'} 
       />
     </div>
   );

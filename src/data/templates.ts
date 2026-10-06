@@ -22,7 +22,6 @@ export interface B2BTemplateData {
     title: string;
     partners: string[];
   };
-  // ✅ 수정: enabled 속성 추가
   stats: { value: string; label: string; enabled: boolean }[]; 
   solutionsSection: {
     title: string;
@@ -54,6 +53,14 @@ export interface B2BTemplateData {
     address: string;
     contactEmail: string;
   };
+  // 🚀 [신규 추가] 예약 시스템 설정
+  booking: {
+    enabled: boolean;           // 예약 기능 활성화 여부
+    title: string;              // 예약 섹션 타이틀
+    subtitle: string;           // 예약 섹션 서브타이틀
+    availableHours: string[];   // 상담 가능 시간대 (예: ['10:00', '11:00', ...])
+    bookingMessage: string;      // 예약 완료 후 메시지
+  };
   fontSizes: {
     companyName?: number;
     heroBadge?: number;
@@ -69,7 +76,7 @@ export interface B2BTemplateData {
   };
 }
 
-export const defaultTemplateData: B2BTemplateData = {
+export const defaultB2BTemplate: B2BTemplateData = {
   themeColor: '#0284C7',
   company: { name: '회사명을 입력하세요', logoUrl: '' },
   siteImage: '', 
@@ -90,7 +97,6 @@ export const defaultTemplateData: B2BTemplateData = {
     title: '함께하는 신뢰의 파트너사',
     partners: ['파트너사1', '파트너사2', '파트너사3'],
   },
-  // ✅ 수정: 모든 항목에 enabled: true 추가
   stats: [
     { value: '2,850', label: '누적 시공 실적', enabled: true },
     { value: '99.8', label: '납기 준수율(%)', enabled: true },
@@ -123,7 +129,15 @@ export const defaultTemplateData: B2BTemplateData = {
     address: '사업장 주소 입력',
     contactEmail: 'contact@thsoft.com',
   },
+  // 🚀 [신규 추가] 기본 예약 설정값
+  booking: {
+    enabled: false,
+    title: '실시간 상담 예약',
+    subtitle: '원하시는 시간을 선택하시면 담당 엔지니어가 배정됩니다.',
+    availableHours: ['10:00', '11:00', '13:00', '14:00', '15:00', '16:00', '17:00'],
+    bookingMessage: '예약이 정상적으로 접수되었습니다. 곧 연락드리겠습니다.',
+  },
   fontSizes: {},
 };
 
-export const defaultB2BTemplate = defaultTemplateData;
+export const defaultB2BTemplateData = defaultB2BTemplate;

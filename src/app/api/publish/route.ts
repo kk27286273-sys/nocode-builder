@@ -1,47 +1,35 @@
-﻿import { NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/lib/supabaseAdmin';
+﻿import { createClient } from '@supabase/supabase-js';
+import { NextResponse } from 'next/server';
 
-export async function POST(request: Request) {
+// 서버 전용 서비스 롤 키를 사용하여 RLS를 우회하고 강제로 저장합니다.
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY! 
+);
+
+export async function POST(req: Request) {
   try {
-    const body = await request.json();
-    const { siteId, name, data, adminPassword } = body;
+    const { id, name, content } = await req.json();
 
-    const serverPassword = process.env.ADMIN_PASSWORD || 'admin1234';
-
-    // 1. 비밀번호 체크
-    if (!adminPassword || adminPassword !== serverPassword) {
-      return NextResponse.json(
-        { error: '인증에 실패했습니다. 올바른 비밀번호를 입력해 주세요.' },
-        { status: 401 }
-      );
+    if (!id || !content) {
+      return NextResponse.json({ error: '필수 데이터(id, content)가 누락되었습니다.' }, { status: 400 });
     }
 
-    if (!siteId || !data) {
-      return NextResponse.json(
-        { error: '필수 데이터가 누락되었습니다.' },
-        { status: 400 }
-      );
-    }
+    // 1. 기존 사이트 데이터가 있는지 확인 후 업데이트 또는 삽입 (Upsert)
+    const { data, error } = await supabaseAdmin
+      .from('sites')
+      .upsert({ 
+        id: id, 
+        name: name || '이름 없는 사이트', 
+        content: content, // 여기서 이미지 URL이 포함된 전체 JSON이 저장됩니다.
+        updated_at: new Date().toISOString(),
+      }, { onConflict: 'id' });
 
-    // 2. 서비스 롤 권한으로 sites 테이블에 업서트
-    const { error } = await supabaseAdmin.from('sites').upsert({
-      id: siteId,
-      name: name || '업체 사이트',
-      data: data,
-      updated_at: new Date().toISOString(),
-    });
+    if (error) throw error;
 
-    if (error) {
-      console.error('Supabase DB 업서트 에러:', error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
-
-    return NextResponse.json({ success: true, siteId });
-  } catch (err: any) {
-    console.error('Publish API 서버 에러:', err);
-    return NextResponse.json(
-      { error: err.message || '서버 내부 처리 오류가 발생했습니다.' },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: true, message: '사이트가 성공적으로 발행되었습니다.' });
+  } catch (error: any) {
+    console.error('발행 에러 상세:', error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
