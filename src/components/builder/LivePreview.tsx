@@ -103,14 +103,21 @@ export default function LivePreview({ data, zoom: propZoom, setZoom: propSetZoom
                 )}
                 <h1 style={{ fontSize: `${fs.heroTitle || 34}px` }} className="font-black tracking-tight leading-[1.25] text-white whitespace-pre-line">{data?.hero?.title}</h1>
                 <p style={{ fontSize: `${fs.heroSubtitle || 16}px` }} className="text-slate-300 font-normal leading-relaxed max-w-xl">{data?.hero?.subtitle}</p>
+                
+                {/* 하드코딩된 체크리스트 삭제 -> data.features 또는 data.stats 활용 */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1 text-xs text-slate-300 font-semibold">
-                  <div className="flex items-center gap-2"><span style={{ color: themeColor }} className="font-bold">✓</span><span>100% 본사 직영 정밀 시공 체계</span></div>
-                  <div className="flex items-center gap-2"><span style={{ color: themeColor }} className="font-bold">✓</span><span>공기 준수율 99.8% 달성</span></div>
-                  <div className="flex items-center gap-2"><span style={{ color: themeColor }} className="font-bold">✓</span><span>현장 정밀 실측 및 다이렉트 견적</span></div>
-                  <div className="flex items-center gap-2"><span style={{ color: themeColor }} className="font-bold">✓</span><span>사후 무상 A/S 책임 보증제</span></div>
+                  {data?.features?.map((feat, idx) => (
+                    <div key={idx} className="flex items-center gap-2">
+                      <span style={{ color: themeColor }} className="font-bold">✓</span>
+                      <span>{feat.title}</span>
+                    </div>
+                  )) || <div className="text-slate-500">특장점이 등록되지 않았습니다.</div>}
                 </div>
+                
                 <div className="flex items-center gap-4 pt-3">
-                  <a href="#contact-form" style={{ backgroundColor: themeColor }} className="px-6 py-3.5 text-white font-bold rounded-xl shadow-lg hover:opacity-95 transition text-sm cursor-pointer">도면 검토 & 빠른 견적 신청</a>
+                  <a href="#contact-form" style={{ backgroundColor: themeColor }} className="px-6 py-3.5 text-white font-bold rounded-xl shadow-lg hover:opacity-95 transition text-sm cursor-pointer">
+                    {data?.contactForm?.title || '상담 신청하기'}
+                  </a>
                 </div>
               </div>
               <div className="lg:col-span-5 relative">
@@ -126,12 +133,18 @@ export default function LivePreview({ data, zoom: propZoom, setZoom: propSetZoom
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
                   <div className="absolute top-3 left-3 bg-slate-900/90 backdrop-blur border border-slate-700 px-3 py-1 rounded-lg shadow-lg flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                    <span className="text-[11px] font-bold text-white">최신 정밀 설비 가동 중</span>
+                    <span className="text-[11px] font-bold text-white">{data?.hero?.badge || '서비스 운영 중'}</span>
                   </div>
                   <div className="absolute bottom-3 right-3 left-3 bg-slate-900/95 backdrop-blur-md border border-slate-700/90 p-3 rounded-xl shadow-xl flex items-center justify-between">
-                    <div><div className="text-[10px] text-slate-400 font-semibold">누적 시공 실적</div><div className="text-base font-black text-white mt-0.5">2,850건+</div></div>
-                    <div className="h-6 w-px bg-slate-700" />
-                    <div><div className="text-[10px] text-slate-400 font-semibold">납기 준수율</div><div style={{ color: themeColor }} className="text-base font-black mt-0.5">99.8%</div></div>
+                    {data?.stats?.slice(0, 2).map((stat, idx) => (
+                      <React.Fragment key={idx}>
+                        <div>
+                          <div className="text-[10px] text-slate-400 font-semibold">{stat.label}</div>
+                          <div className="text-base font-black text-white mt-0.5">{stat.value}</div>
+                        </div>
+                        {idx === 0 && <div className="h-6 w-px bg-slate-700" />}
+                      </React.Fragment>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -146,12 +159,12 @@ export default function LivePreview({ data, zoom: propZoom, setZoom: propSetZoom
                   <span key={idx} className="px-4 py-2 bg-white rounded-lg border border-slate-200 text-sm font-semibold text-slate-700 shadow-sm">{partner}</span>
                 ))}
               </div>
-</section>
+            </section>
           )}
           {data?.stats && (
             <section id="stats" className="py-16 px-8 bg-white border-b border-slate-100">
               <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-{data.stats.filter(stat => stat.enabled !== false).map((stat, idx) => (
+                {data.stats.filter(stat => stat.enabled !== false).map((stat, idx) => (
                   <div key={idx} className="text-center px-4">
                     <div style={{ fontSize: `${fs.statsValue || 32}px` }} className="font-extrabold text-slate-900 mb-1">{stat.value}</div>
                     <div style={{ fontSize: `${fs.statsLabel || 14}px` }} className="text-slate-500 font-medium">{stat.label}</div>
@@ -216,8 +229,8 @@ export default function LivePreview({ data, zoom: propZoom, setZoom: propSetZoom
             <div className="max-w-2xl mx-auto bg-slate-50 border border-slate-200/80 rounded-2xl p-8 md:p-10 shadow-sm">
               <div className="text-center mb-8">
                 <span style={{ color: themeColor }} className="text-xs font-bold tracking-wider uppercase mb-2 block">Online Inquiry</span>
-                <h2 className="text-2xl font-extrabold text-slate-900 mb-2">빠른 견적 및 현장 실측 신청</h2>
-                <p className="text-sm text-slate-600">문의 내용을 남겨주시면 확인 후 담당자가 신속히 연락드립니다.</p>
+                <h2 className="text-2xl font-extrabold text-slate-900 mb-2">{data?.contactForm?.title || '상담 신청하기'}</h2>
+                <p className="text-sm text-slate-600">{data?.contactForm?.description || '문의 내용을 남겨주시면 신속히 연락드립니다.'}</p>
               </div>
               <form onSubmit={handleTestSubmit} className="space-y-4">
                 <div><label className="block text-xs font-bold text-slate-700 mb-1.5">성함 / 담당자명 <span className="text-red-500">*</span></label>
@@ -226,12 +239,12 @@ export default function LivePreview({ data, zoom: propZoom, setZoom: propSetZoom
                 <div><label className="block text-xs font-bold text-slate-700 mb-1.5">연락처 <span className="text-red-500">*</span></label>
                   <input type="tel" required value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} placeholder="010-1234-5678" className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-sky-500" />
                 </div>
-                <div><label className="block text-xs font-bold text-slate-700 mb-1.5">시공 및 견적 문의 내용 <span className="text-red-500">*</span></label>
-                  <textarea rows={4} required value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} placeholder="시공 장소, 희망 일정, 면적 등 상세 내용을 입력하세요." className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 resize-none" />
+                <div><label className="block text-xs font-bold text-slate-700 mb-1.5">문의 내용 <span className="text-red-500">*</span></label>
+                  <textarea rows={4} required value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} placeholder="상세 내용을 입력하세요." className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 resize-none" />
                 </div>
                 <div className="pt-2 pb-1">
                   <div className="p-3 bg-white border border-slate-200 rounded-lg text-xs text-slate-500 leading-relaxed mb-2.5 max-h-24 overflow-y-auto">
-                    <strong>[개인정보 수집 및 이용 안내]</strong><br />1. 수집 항목: 성함, 연락처, 문의 내용<br />2. 수집 목적: 견적 상담 응대 및 현장 방문 일정 안내<br />3. 보유 기간: 문의 처리 완료 후 1년간 보관 후 파기
+                    <strong>[개인정보 수집 및 이용 안내]</strong><br />1. 수집 항목: 성함, 연락처, 문의 내용<br />2. 수집 목적: 상담 응대 및 일정 안내<br />3. 보유 기간: 문의 처리 완료 후 1년간 보관 후 파기
                   </div>
                   <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-slate-700">
                     <input type="checkbox" required className="w-4 h-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500 cursor-pointer" />
@@ -239,7 +252,7 @@ export default function LivePreview({ data, zoom: propZoom, setZoom: propSetZoom
                   </label>
                 </div>
                 <button type="submit" disabled={isSubmitting} style={{ backgroundColor: themeColor }} className="w-full py-3.5 text-white font-bold text-sm rounded-xl shadow-md hover:opacity-95 transition mt-2 cursor-pointer disabled:opacity-50">
-                  {isSubmitting ? '견적 신청 등록 중...' : '무료 견적 상담 신청하기'}
+                  {isSubmitting ? '등록 중...' : data?.contactForm?.buttonText || '무료 상담 신청하기'}
                 </button>
               </form>
             </div>
