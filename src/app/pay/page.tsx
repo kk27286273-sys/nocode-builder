@@ -7,11 +7,12 @@ export default function PayPage() {
   useEffect(() => {
     const init = async () => {
       try {
-        // 클라이언트 키를 사용하여 위젯 로드
+        // 1. 위젯 로드
         const paymentWidget = await loadPaymentWidget('test_ck_Z61JOxRQVENyaaewWlDRrW0X9bAq');
         
-        // [핵심] renderPaymentMethods는 우리 페이지 내에 결제 수단을 그려줍니다. (404 발생 안 함)
-        await paymentWidget.renderPaymentMethods('#payment-method', { 
+        // 2. [핵심 수정] renderPaymentMethods 대신 renderPaymentWidget 사용
+        // renderPaymentWidget은 variantKey 없이 기본 UI를 즉시 렌더링합니다.
+        await paymentWidget.renderPaymentWidget('#payment-method', { 
           value: 39000 
         });
 
@@ -42,7 +43,6 @@ export default function PayPage() {
     <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6">
       <div className="max-w-md w-full bg-white p-8 rounded-3xl shadow-lg border border-slate-200">
         <h1 className="text-2xl font-bold text-center mb-6">결제하기</h1>
-        {/* 토스 위젯이 그려질 영역 */}
         <div id="payment-method" className="mb-6"></div>
         <button id="payment-button" className="w-full py-4 bg-black text-white font-bold rounded-xl hover:bg-slate-800 transition-all">
           결제 요청하기
