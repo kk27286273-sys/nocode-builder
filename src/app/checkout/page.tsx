@@ -12,16 +12,16 @@ export default function CheckoutPage() {
         const clientKey = 'test_ck_Z61JOxRQVENyaaewWlDRrW0X9bAq';
         const customerKey = 'GUEST_' + Math.random().toString(36).substring(2, 11);
 
-        // 1. 위젯 로드
         const paymentWidget = await loadPaymentWidget(clientKey, customerKey);
         widgetRef.current = paymentWidget;
 
-        // 2. 결제 수단 렌더링 (variantKey 절대 포함 안 함)
-        await paymentWidget.renderPaymentMethods('#payment-method', {
+        // renderPaymentMethods 대신 renderPaymentWidget 사용 (가장 기본형)
+        // 이 메서드는 variantKey를 참조하지 않고 기본 위젯을 띄웁니다.
+        await paymentWidget.renderPaymentWidget('#payment-method', {
           value: 39000,
         });
 
-        console.log('결제 위젯 렌더링 완료');
+        console.log('결제 위젯 렌더링 완료 (Basic Mode)');
       } catch (error) {
         console.error('결제 위젯 초기화 실패:', error);
       }
@@ -32,7 +32,7 @@ export default function CheckoutPage() {
 
   const handlePaymentRequest = async () => {
     if (!widgetRef.current) {
-      alert('결제 위젯이 아직 준비되지 않았습니다. 잠시만 기다려주세요.');
+      alert('결제 위젯이 준비되지 않았습니다.');
       return;
     }
 
@@ -45,7 +45,6 @@ export default function CheckoutPage() {
       });
     } catch (error) {
       console.error('결제 요청 실패:', error);
-      alert('결제 요청 중 오류가 발생했습니다.');
     }
   };
 
