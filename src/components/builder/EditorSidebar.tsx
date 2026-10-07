@@ -153,78 +153,95 @@ export default function EditorSidebar({ data, setData, siteId, setIsPaymentOpen,
             </div>
           )}
 
-          {/* 2. 기업형 설정 (Corporate) - 뷰어 데이터 구조와 1:1 매칭 */}
+           {/* 2. 기업형 설정 (Corporate) 전수 매칭 */}
           {data.templateType === 'corporate' && (
             <div className="space-y-8 animate-in fade-in slide-in-from-top-2 duration-300">
-              {/* 히어로 영역 수정 */}
+              
+              {/* 히어로 섹션 */}
               <section className="space-y-3 pb-6 border-b border-slate-100">
                 <h3 className="font-bold text-slate-900 text-sm flex items-center gap-2">
-                  <span className="w-1 h-4 bg-sky-600 rounded-full"></span> 메인 히어로
+                  <span className="w-1 h-4 bg-sky-600 rounded-full"></span> 메인 히어로 영역
                 </h3>
-                <input type="text" value={data.hero.badge} onChange={(e) => setData(prev => ({ ...prev, hero: { ...prev.hero, badge: e.target.value } }))} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs" placeholder="배지 문구" />
-                <textarea rows={2} value={data.hero.title} onChange={(e) => setData(prev => ({ ...prev, hero: { ...prev.hero, title: e.target.value } }))} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs" placeholder="메인 타이틀" />
-                <textarea rows={2} value={data.hero.subtitle} onChange={(e) => setData(prev => ({ ...prev, hero: { ...prev.hero, subtitle: e.target.value } }))} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs" placeholder="메인 서브타이틀" />
-                <div className="mt-2">
-                  <label className="text-xs text-slate-500 block mb-1">배경 이미지</label>
-                  <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, (url) => setData(prev => ({ ...prev, hero: { ...prev.hero, mediaUrl: url } })), 'hero')} className="text-xs text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-md file:border-0 file:bg-slate-100 file:text-slate-700 cursor-pointer" />
+                <div>
+                  <label className="text-xs text-slate-500 block mb-1">상단 배지</label>
+                  <input type="text" value={data.hero?.badge || ''} onChange={(e) => setData(prev => ({ ...prev, hero: { ...prev.hero, badge: e.target.value } }))} className="w-full px-3 py-2 border rounded-lg text-xs" />
+                </div>
+                <div>
+                  <label className="text-xs text-slate-500 block mb-1">메인 타이틀</label>
+                  <textarea rows={2} value={data.hero?.title || ''} onChange={(e) => setData(prev => ({ ...prev, hero: { ...prev.hero, title: e.target.value } }))} className="w-full px-3 py-2 border rounded-lg text-xs" />
+                </div>
+                <div>
+                  <label className="text-xs text-slate-500 block mb-1">서브 타이틀</label>
+                  <textarea rows={2} value={data.hero?.subtitle || ''} onChange={(e) => setData(prev => ({ ...prev, hero: { ...prev.hero, subtitle: e.target.value } }))} className="w-full px-3 py-2 border rounded-lg text-xs" />
+                </div>
+                <div>
+                  <label className="text-xs text-slate-500 block mb-1">배경 이미지 업로드</label>
+                  <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, (url) => setData(prev => ({ ...prev, hero: { ...prev.hero, mediaUrl: url } })), 'hero')} className="text-xs text-slate-500" />
                 </div>
               </section>
 
-              {/* CEO 인사말 수정 */}
+              {/* CEO 인사말 */}
               <section className="space-y-3 pb-6 border-b border-slate-100">
                 <h3 className="font-bold text-slate-900 text-sm flex items-center gap-2">
                   <span className="w-1 h-4 bg-sky-600 rounded-full"></span> CEO 인사말
                 </h3>
-                <input type="text" value={data.corporateInfo.ceoGreeting.title} onChange={(e) => setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, ceoGreeting: { ...prev.corporateInfo.ceoGreeting, title: e.target.value } } }))} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs" placeholder="인사말 제목" />
-                <textarea rows={5} value={data.corporateInfo.ceoGreeting.content} onChange={(e) => setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, ceoGreeting: { ...prev.corporateInfo.ceoGreeting, content: e.target.value } } }))} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs" placeholder="인사말 본문" />
-                <div className="mt-2">
-                  <label className="text-xs text-slate-500 block mb-1">CEO 사진</label>
-                  <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, (url) => setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, ceoGreeting: { ...prev.corporateInfo.ceoGreeting, image: url } } })), 'ceo')} className="text-xs text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-md file:border-0 file:bg-slate-100 file:text-slate-700 cursor-pointer" />
+                <input type="text" placeholder="인사말 제목" value={data.corporateInfo?.ceoGreeting?.title || ''} onChange={(e) => setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, ceoGreeting: { ...prev.corporateInfo.ceoGreeting, title: e.target.value } } }))} className="w-full px-3 py-2 border rounded-lg text-xs font-bold" />
+                <textarea rows={5} placeholder="인사말 본문" value={data.corporateInfo?.ceoGreeting?.content || ''} onChange={(e) => setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, ceoGreeting: { ...prev.corporateInfo.ceoGreeting, content: e.target.value } } }))} className="w-full px-3 py-2 border rounded-lg text-xs" />
+                <div>
+                  <label className="text-xs text-slate-500 block mb-1">CEO 프로필 사진</label>
+                  <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, (url) => setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, ceoGreeting: { ...prev.corporateInfo.ceoGreeting, image: url } } })), 'ceo')} className="text-xs text-slate-500" />
                 </div>
               </section>
 
-              {/* 사업 영역(솔루션) 수정 */}
+              {/* 솔루션 관리 */}
               <section className="space-y-3 pb-6 border-b border-slate-100">
                 <div className="flex items-center justify-between">
                   <h3 className="font-bold text-slate-900 text-sm flex items-center gap-2">
-                    <span className="w-1 h-4 bg-sky-600 rounded-full"></span> 사업 영역 (솔루션)
+                    <span className="w-1 h-4 bg-sky-600 rounded-full"></span> 솔루션 (사업 영역)
                   </h3>
                   <button 
-                    onClick={() => setData(prev => ({ ...prev, solutions: [...prev.solutions, { title: '새 솔루션', category: '카테고리', description: '설명', image: '', detailedFeatures: [{ featureTitle: '특징', featureContent: '내용' }] }] }))} 
+                    onClick={() => setData(prev => ({ 
+                      ...prev, 
+                      solutions: [...(prev.solutions || []), { title: '신규 솔루션', category: 'Category', description: '솔루션 세부 설명', image: '', detailedFeatures: [{ featureTitle: '특장점 1', featureContent: '내용' }] }] 
+                    }))} 
                     className="text-[10px] font-bold text-sky-600">+ 추가</button>
                 </div>
                 <div className="space-y-4">
-                  {data.solutions.map((sol, idx) => (
-                    <div key={idx} className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-3 relative group">
-                      <button onClick={() => setData(prev => ({ ...prev, solutions: prev.solutions.filter((_, i) => i !== idx) }))} className="absolute top-2 right-2 text-slate-300 hover:text-red-500">✕</button>
-                      <input type="text" value={sol.title} onChange={(e) => { const newS = [...data.solutions]; newS[idx].title = e.target.value; setData(prev => ({ ...prev, solutions: newS })); }} className="w-full px-2 py-1 border border-slate-200 rounded bg-white text-xs font-bold" placeholder="솔루션 제목" />
-                      <input type="text" value={sol.category} onChange={(e) => { const newS = [...data.solutions]; newS[idx].category = e.target.value; setData(prev => ({ ...prev, solutions: newS })); }} className="w-full px-2 py-1 border border-slate-200 rounded bg-white text-[11px]" placeholder="카테고리" />
-                      <textarea rows={2} value={sol.description} onChange={(e) => { const newS = [...data.solutions]; newS[idx].description = e.target.value; setData(prev => ({ ...prev, solutions: newS })); }} className="w-full px-2 py-1 border border-slate-200 rounded bg-white text-[11px]" placeholder="설명" />
-                      <div className="mt-2">
-                        <label className="text-[10px] text-slate-400 block mb-1">이미지 업로드</label>
-                        <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, (url) => { const newS = [...data.solutions]; newS[idx].image = url; setData(prev => ({ ...prev, solutions: newS })); }, `sol-${idx}`)} className="text-[10px] text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-md file:border-0 file:bg-slate-100 file:text-slate-700 cursor-pointer" />
-                      </div>
+                  {(data.solutions || []).map((sol, idx) => (
+                    <div key={idx} className="p-3 bg-slate-50 border rounded-xl space-y-2 relative">
+                      <button onClick={() => setData(prev => ({ ...prev, solutions: prev.solutions.filter((_, i) => i !== idx) }))} className="absolute top-2 right-2 text-slate-400 hover:text-red-500 text-xs">✕</button>
+                      <input type="text" value={sol.title} onChange={(e) => { const next = [...data.solutions]; next[idx].title = e.target.value; setData(prev => ({ ...prev, solutions: next })); }} className="w-full px-2 py-1 border rounded text-xs font-bold bg-white" placeholder="솔루션명" />
+                      <input type="text" value={sol.category} onChange={(e) => { const next = [...data.solutions]; next[idx].category = e.target.value; setData(prev => ({ ...prev, solutions: next })); }} className="w-full px-2 py-1 border rounded text-xs bg-white" placeholder="카테고리" />
+                      <textarea rows={2} value={sol.description} onChange={(e) => { const next = [...data.solutions]; next[idx].description = e.target.value; setData(prev => ({ ...prev, solutions: next })); }} className="w-full px-2 py-1 border rounded text-[11px] bg-white" placeholder="설명" />
+                      <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, (url) => { const next = [...data.solutions]; next[idx].image = url; setData(prev => ({ ...prev, solutions: next })); }, `sol-${idx}`)} className="text-[10px] text-slate-500" />
                     </div>
                   ))}
                 </div>
               </section>
 
-              {/* 회사 정보(미션, 비전, 위치 등) 수정 */}
+              {/* 회사 기본 정보 / 푸터 */}
               <section className="space-y-3 pb-6 border-b border-slate-100">
                 <h3 className="font-bold text-slate-900 text-sm flex items-center gap-2">
-                  <span className="w-1 h-4 bg-sky-600 rounded-full"></span> 회사 기본 정보
+                  <span className="w-1 h-4 bg-sky-600 rounded-full"></span> 주소 및 푸터 사업자 정보
                 </h3>
-                <div className="space-y-3">
-                  <div>
-                    <label className="text-xs text-slate-500 block mb-1">미션/비전</label>
-                    <textarea rows={3} value={data.corporateInfo.missionVision.mission} onChange={(e) => setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, missionVision: { ...prev.corporateInfo.missionVision, mission: e.target.value } } }))} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs" />
-                  </div>
-                  <div>
-                    <label className="text-xs text-slate-500 block mb-1">본사 주소</label>
-                    <input type="text" value={data.corporateInfo.location.headOffice.address} onChange={(e) => setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, location: { ...prev.corporateInfo.location, headOffice: { ...prev.corporateInfo.location.headOffice, address: e.target.value } } } }))} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs" />
-                  </div>
+                <div>
+                  <label className="text-xs text-slate-500 block mb-1">본사 주소</label>
+                  <input type="text" value={data.corporateInfo?.location?.headOffice?.address || ''} onChange={(e) => setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, location: { ...prev.corporateInfo.location, headOffice: { address: e.target.value } } }, footer: { ...prev.footer, address: e.target.value } }))} className="w-full px-3 py-2 border rounded-lg text-xs" />
+                </div>
+                <div>
+                  <label className="text-xs text-slate-500 block mb-1">대표자명</label>
+                  <input type="text" value={data.footer?.ownerName || ''} onChange={(e) => setData(prev => ({ ...prev, footer: { ...prev.footer, ownerName: e.target.value } }))} className="w-full px-3 py-2 border rounded-lg text-xs" />
+                </div>
+                <div>
+                  <label className="text-xs text-slate-500 block mb-1">사업자 등록번호</label>
+                  <input type="text" value={data.footer?.businessNumber || ''} onChange={(e) => setData(prev => ({ ...prev, footer: { ...prev.footer, businessNumber: e.target.value } }))} className="w-full px-3 py-2 border rounded-lg text-xs" />
+                </div>
+                <div>
+                  <label className="text-xs text-slate-500 block mb-1">대표 이메일</label>
+                  <input type="text" value={data.footer?.contactEmail || ''} onChange={(e) => setData(prev => ({ ...prev, footer: { ...prev.footer, contactEmail: e.target.value } }))} className="w-full px-3 py-2 border rounded-lg text-xs" />
                 </div>
               </section>
+
             </div>
           )}
 
