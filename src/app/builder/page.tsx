@@ -17,7 +17,7 @@ export default function BuilderPage() {
   const [sitesList, setSitesList] = useState<{ id: string; name: string }[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // 🚩 [핵심 추가] 현재 뷰어에서 보고 있는 섹션 상태 (전역 관리)
+  // 🚩 [핵심] 뷰어-에디터 상태 공유를 위한 전역 섹션 관리
   const [activeSection, setActiveSection] = useState<'main' | 'ceo' | 'mission' | 'org' | 'ci' | 'location' | 'sol' | 'news' | 'video' | 'talent' | 'benefit' | 'cs'>('main');
 
   const fetchSites = useCallback(async () => {
@@ -26,7 +26,6 @@ export default function BuilderPage() {
         .from('sites')
         .select('id, name')
         .order('updated_at', { ascending: false });
-
       if (error) throw error;
       setSitesList(sites || []);
     } catch (err: any) {
@@ -37,64 +36,42 @@ export default function BuilderPage() {
   useEffect(() => {
     const auth = sessionStorage.getItem('is_builder_admin');
     if (auth === 'true') setIsAuthenticated(true);
-
     const storedId = localStorage.getItem('current_site_id') || `site-${Date.now()}`;
     setSiteId(storedId);
     localStorage.setItem('current_site_id', storedId);
-
     fetchSites();
   }, [fetchSites]);
 
   const loadSiteData = async (id: string) => {
     setIsLoading(true);
     try {
-      const { data: siteData, error } = await supabase
-        .from('sites')
-        .select('content')
-        .eq('id', id)
-        .single();
-
+      const { data: siteData, error } = await supabase.from('sites').select('content').eq('id', id).single();
       if (error) throw error;
-
       if (siteData && siteData.content) {
         setData(siteData.content);
         setSiteId(id);
         localStorage.setItem('current_site_id', id);
       } else {
-        alert('해당 사이트에 저장된 데이터가 없습니다. 기본 템플릿으로 시작합니다.');
         setData(defaultB2BTemplateData);
         setSiteId(id);
       }
     } catch (err: any) {
-      console.error('데이터 로드 실패:', err.message);
-      alert('데이터를 불러오는 중 오류가 발생했습니다.');
+      alert('데이터 로드 실패');
     } finally {
       setIsLoading(false);
     }
   };
 
   const deleteSite = async () => {
-    if (!siteId) return alert("삭제할 사이트 ID가 없습니다.");
-    if (!confirm(`정말로 [${siteId}] 사이트를 삭제하시겠습니까?\n삭제 후에는 복구가 불가능합니다.`)) return;
-
+    if (!siteId || !confirm(`정말로 삭제하시겠습니까?`)) return;
     setIsLoading(true);
     try {
-      const { error } = await supabase
-        .from('sites')
-        .delete()
-        .eq('id', siteId);
-
-      if (error) throw error;
-
-      alert('사이트가 성공적으로 삭제되었습니다.');
-      await fetchSites();
+      await supabase.from('sites').delete().eq('id', siteId);
+      alert('삭제 완료');
+      fetchSites();
       setData(defaultB2BTemplateData);
-      const newId = `site-${Date.now()}`;
-      setSiteId(newId);
-      localStorage.setItem('current_site_id', newId);
     } catch (err: any) {
-      console.error('삭제 최종 실패:', err);
-      alert(`삭제 중 오류가 발생했습니다: ${err.message}`);
+      alert('삭제 실패');
     } finally {
       setIsLoading(false);
     }
@@ -105,7 +82,6 @@ export default function BuilderPage() {
     if (passwordInput === ADMIN_PASSWORD) {
       sessionStorage.setItem('is_builder_admin', 'true');
       setIsAuthenticated(true);
-      setErrorMsg('');
     } else {
       setErrorMsg('비밀번호가 일치하지 않습니다.');
     }
@@ -114,7 +90,6 @@ export default function BuilderPage() {
   const handlePublish = async () => {
     if (!siteId) return alert("사이트 ID가 없습니다.");
     const newWindow = window.open('about:blank', '_blank');
-    if (!newWindow) return alert("팝업이 차단되었습니다.");
     try {
       setIsLoading(true);
       const res = await fetch('/api/publish', {
@@ -122,13 +97,12 @@ export default function BuilderPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: siteId, name: data.company?.name || '이름 없는 사이트', content: data }),
       });
-      if (!res.ok) throw new Error('발행 중 오류 발생');
+      if (!res.ok) throw new Error('발행 오류');
       alert('발행 성공!');
-      if (typeof fetchSites === 'function') fetchSites();
       newWindow.location.href = `/p/${siteId}`;
     } catch (error: any) {
       alert(`발행 실패: ${error.message}`);
-      newWindow.close();
+      newWindow?.close();
     } finally { setIsLoading(false); }
   };
 
@@ -138,19 +112,9 @@ export default function BuilderPage() {
         <form onSubmit={handleLogin} className="w-full max-w-sm bg-white p-6 rounded-2xl shadow-xl space-y-4">
           <div className="text-center">
             <h1 className="text-lg font-bold text-slate-800">관리자 인증</h1>
-            <p className="text-xs text-slate-500 mt-1">빌더 접근을 위해 비밀번호를 입력하세요.</p>
           </div>
-          <div>
-            <input
-              type="password"
-              placeholder="비밀번호"
-              value={passwordInput}
-              onChange={(e) => setPasswordInput(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 text-slate-900"
-              autoFocus
-            />
-            {errorMsg && <p className="text-xs text-red-500 mt-1.5">{errorMsg}</p>}
-          </div>
+          <input type="password" placeholder="비밀번호" value={passwordInput} onChange={(e) => setPasswordInput(e.target.value)} className="w-full px-3 py-2 border rounded-lg text-sm text-slate-900" autoFocus />
+          {errorMsg && <p className="text-xs text-red-500">{errorMsg}</p>}
           <button type="submit" className="w-full py-2.5 bg-sky-600 text-white font-semibold text-sm rounded-lg hover:bg-sky-700 transition">확인</button>
         </form>
       </div>
@@ -162,66 +126,30 @@ export default function BuilderPage() {
       <div className="flex flex-col h-full w-[430px] shrink-0 border-r border-slate-200 bg-white shadow-xl">
         <div className="p-3 bg-slate-800 flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 overflow-hidden">
-            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider shrink-0">Site</label>
-            <select 
-              value={siteId || ''} 
-              onChange={(e) => loadSiteData(e.target.value)}
-              className="bg-slate-700 text-white text-xs px-2 py-1 rounded border border-slate-600 focus:outline-none focus:ring-1 focus:ring-sky-500 cursor-pointer max-w-full"
-            >
+            <label className="text-[10px] font-bold text-slate-400 uppercase shrink-0">Site</label>
+            <select value={siteId || ''} onChange={(e) => loadSiteData(e.target.value)} className="bg-slate-700 text-white text-xs px-2 py-1 rounded border border-slate-600 outline-none max-w-full">
               <option value="">사이트 선택</option>
-              {sitesList.map((site) => (
-                <option key={site.id} value={site.id}>{site.name || site.id}</option>
-              ))}
+              {sitesList.map((site) => <option key={site.id} value={site.id}>{site.name || site.id}</option>)}
             </select>
           </div>
           <div className="flex items-center gap-2">
             {isLoading && <span className="text-[10px] text-sky-400 animate-pulse">...</span>}
-            
-            {/* 🚩 [추가] 뒤로가기 버튼: 사이트 발행 버튼 바로 옆에 배치 */}
+            {/* 🚩 [수정] 뒤로가기 버튼을 빌더 헤더에 완전히 고정 (뷰어를 가리지 않음) */}
             {activeSection !== 'main' && (
-              <button 
-                onClick={() => setActiveSection('main')}
-                className="px-3 py-1 bg-white text-slate-800 text-[10px] font-bold rounded hover:bg-slate-100 transition border border-slate-300"
-              >
-                ← 메인으로
+              <button onClick={() => setActiveSection('main')} className="px-3 py-1.5 bg-white text-slate-900 text-[11px] font-extrabold rounded-md hover:bg-slate-100 transition border border-slate-300 shadow-sm">
+                ← 메인으로 돌아가기
               </button>
             )}
-
-            <button 
-              onClick={handlePublish} 
-              disabled={isLoading} 
-              style={{ backgroundColor: data.themeColor }} 
-              className="px-4 py-2 text-xs font-bold text-white rounded-lg shadow disabled:opacity-50 hover:opacity-90 transition"
-            >
+            <button onClick={handlePublish} disabled={isLoading} style={{ backgroundColor: data.themeColor }} className="px-4 py-2 text-xs font-bold text-white rounded-lg shadow disabled:opacity-50 hover:opacity-90 transition">
               {isLoading ? '처리 중...' : '사이트 발행'}
             </button>
-
-            <button 
-              onClick={deleteSite}
-              disabled={!siteId || isLoading}
-              className="bg-red-600 hover:bg-red-700 disabled:bg-slate-600 text-white text-[10px] font-bold px-2 py-1 rounded transition"
-            >
-              삭제
-            </button>
+            <button onClick={deleteSite} disabled={!siteId || isLoading} className="bg-red-600 hover:bg-red-700 disabled:bg-slate-600 text-white text-[10px] font-bold px-2 py-1 rounded transition">삭제</button>
           </div>
         </div>
-        {/* 🚩 activeSection과 setActiveSection을 에디터에 전달하여 연동 구현 */}
-        <EditorSidebar 
-          data={data} 
-          setData={setData} 
-          siteId={siteId} 
-          refreshSites={fetchSites} 
-          activeSection={activeSection} 
-          setActiveSection={setActiveSection} 
-        />
+        <EditorSidebar data={data} setData={setData} siteId={siteId} refreshSites={fetchSites} activeSection={activeSection} setActiveSection={setActiveSection} />
       </div>
       <main className="flex-1 h-full overflow-hidden relative">
-        {/* 🚩 activeSection과 setActiveSection을 뷰어매니저에 전달하여 연동 구현 */}
-        <ViewerManager 
-          data={data} 
-          activeSection={activeSection} 
-          setActiveSection={setActiveSection} 
-        />
+        <ViewerManager data={data} activeSection={activeSection} setActiveSection={setActiveSection} />
       </main>
     </div>
   );
