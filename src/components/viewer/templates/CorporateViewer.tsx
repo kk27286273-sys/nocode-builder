@@ -1,155 +1,215 @@
 'use client';
 
 import React, { useState } from 'react';
-import { SiteData } from '@/types/template';
+import { B2BTemplateData } from '@/data/template';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export const CorporateViewer = ({ data }: { data: SiteData }) => {
-  const { company, specifics } = data;
-  const corpData = specifics as any;
+export const CorporateViewer = ({ data }: { data: B2BTemplateData }) => {
+  const { company, navigation, corporateInfo, solutions, irCenter, customerSupport, hero, themeColor, footer } = data;
   
-  const [selectedArea, setSelectedArea] = useState<any>(null);
+  // 현재 활성화된 화면 상태 (main, ceo, mission, solutions, news, etc...)
+  const [activePage, setActivePage] = useState('main');
+  const [selectedSolution, setSelectedSolution] = useState<number | null>(null);
 
-  const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+  // 화면 전환 함수
+  const navigateTo = (targetId: string) => {
+    setActivePage(targetId);
+    window.scrollTo(0, 0);
   };
 
-  // [전략적 CSS] 가변 폰트 및 반응형 스타일 상수
-  const styles = {
-    title: "text-[clamp(1.75rem,5vw,3rem)] font-extrabold leading-tight tracking-tight mb-6 break-keep",
-    subtitle: "text-[clamp(1rem,2vw,1.25rem)] leading-relaxed break-keep",
-    body: "text-[clamp(0.9rem,1.5vw,1.1rem)] leading-relaxed text-slate-600 break-keep",
-    sectionTitle: "text-[clamp(1.5rem,4vw,2.25rem)] font-bold text-center mb-16",
-  };
-
-  return (
-    <div className="min-h-screen bg-white text-slate-900 scroll-smooth overflow-x-hidden">
-      {/* GNB: 블러 효과 및 모바일 최적화 */}
-      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 px-5 md:px-10 py-4 flex justify-between items-center">
-        <img src={company.logoUrl} alt="logo" className="h-7 md:h-8 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} />
-        <div className="hidden md:flex gap-8 text-sm font-medium">
-          <button onClick={() => scrollToSection('about')} className="hover:text-sky-600 transition">회사소개</button>
-          <button onClick={() => scrollToSection('business')} className="hover:text-sky-600 transition">사업영역</button>
-          <button onClick={() => scrollToSection('history')} className="hover:text-sky-600 transition">연혁</button>
-          <button onClick={() => scrollToSection('contact')} className="hover:text-sky-600 transition">문의하기</button>
+  // [컴포넌트] 상단 네비게이션 (메가 메뉴)
+  const Navbar = () => (
+    <nav className="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
+      <div className="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
+        <div className="cursor-pointer" onClick={() => navigateTo('main')}>
+          {company.logoUrl ? (
+            <img src={company.logoUrl} alt={company.name} className="h-10 object-contain" />
+          ) : (
+            <span className="text-2xl font-bold" style={{ color: themeColor }}>{company.name}</span>
+          )}
         </div>
-      </nav>
+        
+        <div className="hidden md:flex gap-8">
+          {navigation.menus.map((menu) => (
+            <div key={menu.label} className="group relative py-7">
+              <button className="font-medium text-slate-700 hover:text-blue-600 transition-colors">
+                {menu.label}
+              </button>
+              {/* 드롭다운 메뉴 */}
+              <div className="absolute top-20 left-0 w-48 bg-white border border-slate-100 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 p-4">
+                {menu.children.map((child) => (
+                  <button 
+                    key={child.label} 
+                    onClick={() => navigateTo(child.targetId)}
+                    className="block w-full text-left px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-blue-600 rounded"
+                  >
+                    {child.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </nav>
+  );
 
-      {/* 히어로 섹션: 텍스트 밀림 방지 및 가독성 강화 */}
-      <section className="relative h-[70vh] flex items-center justify-center overflow-hidden bg-slate-900 text-white">
-        <img src={corpData.hero?.mediaUrl} className="absolute inset-0 w-full h-full object-cover opacity-60" alt="hero" />
-        <div className="relative z-10 text-center px-6 max-w-4xl">
-          <motion.span 
-            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-            className="inline-block px-3 py-1 bg-sky-600 text-xs font-bold rounded-full mb-4"
-          >
-            {corpData.hero?.badge}
+  // [컴포넌트] 메인 홈 화면
+  const MainHome = () => (
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+      {/* Hero Section */}
+      <section className="relative h-[700px] flex items-center justify-center text-white overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <img src={hero.mediaUrl} alt="hero" className="w-full h-full object-cover brightness-50" />
+        </div>
+        <div className="relative z-10 text-center px-4">
+          <motion.span initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="inline-block px-4 py-1 rounded-full bg-blue-600 text-sm font-bold mb-6">
+            {hero.badge}
           </motion.span>
-          <motion.h1 
-            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-            className={`${styles.title} text-white`}
-          >
-            {corpData.hero?.title}
+          <motion.h1 initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }} className="text-5xl md:text-7xl font-extrabold mb-6 leading-tight whitespace-pre-line">
+            {hero.title}
           </motion.h1>
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
-            className={`${styles.subtitle} text-slate-300 max-w-2xl mx-auto`}
-          >
-            {corpData.hero?.subtitle}
+          <motion.p initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.4 }} className="text-lg md:text-xl text-slate-200 max-w-3xl mx-auto leading-relaxed whitespace-pre-line">
+            {hero.subtitle}
           </motion.p>
         </div>
       </section>
 
-      {/* 회사 소개 섹션 */}
-      <section id="about" className="py-20 px-6 max-w-5xl mx-auto text-center">
-        <h2 className={styles.sectionTitle}>About Us</h2>
-        <p className={`${styles.body} whitespace-pre-wrap`}>{corpData.about?.greeting}</p>
-      </section>
-
-      {/* 사업 영역 섹션: 호버 인터랙션 및 그리드 최적화 */}
-      <section id="business" className="py-20 bg-slate-50 px-6">
-        <div className="max-w-6xl mx-auto">
-          <h2 className={styles.sectionTitle}>Our Business</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {corpData.businessAreas?.map((area: any, idx: number) => (
-              <motion.div 
-                key={idx} 
-                whileHover={{ y: -5 }}
-                onClick={() => setSelectedArea(area)}
-                className="bg-white rounded-3xl shadow-sm overflow-hidden border border-slate-200 flex flex-col md:flex-row cursor-pointer hover:border-sky-500 transition-all group"
-              >
-                <img src={area.image} className="w-full md:w-1/3 h-56 md:h-auto object-cover group-hover:scale-105 transition duration-500" alt={area.title} />
-                <div className="p-8 flex-1">
-                  <h3 className="text-xl font-bold mb-3 group-hover:text-sky-600 transition">{area.title}</h3>
-                  <p className="text-slate-600 text-sm mb-4 line-clamp-3">{area.description}</p>
-                  <span className="text-xs font-bold text-sky-600 inline-flex items-center gap-1">자세히 보기 <span className="group-hover:translate-x-1 transition-transform">→</span></span>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+      {/* Solution Grid (Main) */}
+      <section className="py-24 bg-slate-50 px-4">
+        <div className="max-w-7xl mx-auto text-center mb-16">
+          <h2 className="text-4xl font-bold mb-4">Our Solutions</h2>
+          <div className="w-16 h-1 bg-blue-600 mx-auto"></div>
         </div>
-      </section>
-
-      {/* 상세 내용 오버레이 뷰어: 쫀득한 애니메이션 추가 */}
-      <AnimatePresence>
-        {selectedArea && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm" onClick={() => setSelectedArea(null)}>
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+          {solutions.map((sol, idx) => (
             <motion.div 
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="bg-white w-full max-w-3xl rounded-[2rem] overflow-hidden shadow-2xl" 
-              onClick={e => e.stopPropagation()}
+              key={idx} 
+              whileHover={{ y: -10 }}
+              onClick={() => { setSelectedSolution(idx); navigateTo('sol_detail'); }}
+              className="bg-white rounded-2xl overflow-hidden shadow-lg cursor-pointer group"
             >
-              <div className="relative h-64 md:h-80">
-                <img src={selectedArea.image} className="w-full h-full object-cover" alt={selectedArea.title} />
-                <button onClick={() => setSelectedArea(null)} className="absolute top-5 right-5 w-10 h-10 bg-white/20 hover:bg-white/40 backdrop-blur-md text-white rounded-full flex items-center justify-center text-xl font-bold transition">✕</button>
+              <div className="h-60 overflow-hidden">
+                <img src={sol.image} alt={sol.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
               </div>
-              <div className="p-8 md:p-12">
-                <h3 className={`${styles.title} mb-4`}>{selectedArea.title}</h3>
-                <p className={`${styles.body} mb-8`}>{selectedArea.fullDescription || selectedArea.description}</p>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {selectedArea.details?.map((d: string, i: number) => (
-                    <div key={i} className="flex items-start gap-3 p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                      <span className="text-sky-600 font-bold">✓</span>
-                      <span className="text-sm text-slate-700 break-keep">{d}</span>
-                    </div>
-                  ))}
+              <div className="p-8">
+                <span className="text-blue-600 font-bold text-sm uppercase">{sol.category}</span>
+                <h3 className="text-2xl font-bold mt-2 mb-4">{sol.title}</h3>
+                <p className="text-slate-600 leading-relaxed">{sol.description}</p>
+                <div className="mt-6 text-blue-600 font-semibold flex items-center gap-2">
+                  자세히 보기 <span className="text-xl">→</span>
                 </div>
-                <button onClick={() => setSelectedArea(null)} className="w-full mt-10 py-4 bg-slate-900 text-white font-bold rounded-2xl hover:bg-slate-800 transition-all active:scale-95">닫기</button>
               </div>
             </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
-
-      {/* 연혁 섹션: 모바일 여백 및 포인트 디자인 최적화 */}
-      <section id="history" className="py-20 px-6 max-w-4xl mx-auto">
-        <h2 className={styles.sectionTitle}>History</h2>
-        <div className="space-y-12 border-l-2 border-slate-200 pl-8 ml-2 md:ml-4">
-          {corpData.history?.map((item: any, idx: number) => (
-            <div key={idx} className="relative">
-              <div className="absolute -left-[41px] top-1 w-4 h-4 bg-sky-600 rounded-full border-4 border-white shadow-sm"></div>
-              <span className="text-sm font-bold text-sky-600">{item.year}</span>
-              <h4 className="text-lg font-bold mt-1">{item.title}</h4>
-              <p className="text-slate-500 text-sm leading-relaxed">{item.content}</p>
-            </div>
           ))}
         </div>
       </section>
+    </motion.div>
+  );
 
-      {/* 문의 섹션 */}
-      <section id="contact" className="py-24 bg-slate-900 text-white px-6 text-center">
-        <h2 className={styles.sectionTitle + " text-white"}>Contact Us</h2>
-        <p className={`${styles.subtitle} text-slate-400 mb-12 max-w-xl mx-auto`}>전문가와 상담하여 최적의 솔루션을 찾아보세요.</p>
-        <button className="px-10 py-4 bg-sky-600 hover:bg-sky-500 text-white font-bold rounded-full transition-all shadow-xl hover:scale-105 active:scale-95">문의하기 신청</button>
-      </section>
+  // [컴포넌트] 회사소개/상세 페이지 (Generic Page)
+  const PageLayout = ({ title, content }: { title: string; content: React.ReactNode }) => (
+    <motion.div initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -20, opacity: 0 }} className="py-24 px-4">
+      <div className="max-w-5xl mx-auto">
+        <div className="flex items-center gap-4 mb-12">
+          <div className="w-2 h-8 bg-blue-600"></div>
+          <h2 className="text-4xl font-bold">{title}</h2>
+        </div>
+        <div className="bg-white p-8 md:p-16 rounded-3xl shadow-sm border border-slate-100">
+          {content}
+        </div>
+      </div>
+    </motion.div>
+  );
 
-      <footer className="bg-slate-900 text-slate-400 py-12 px-6 text-center text-xs border-t border-slate-800">
-        <p>© {new Date().getFullYear()} {company.name}. All rights reserved.</p>
+  // [컴포넌트] 솔루션 상세 뷰
+  const SolutionDetail = () => {
+    const sol = solutions[selectedSolution || 0];
+    return (
+      <PageLayout title={sol.category}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-16">
+          <img src={sol.image} alt={sol.title} className="rounded-2xl shadow-2xl w-full h-96 object-cover" />
+          <div>
+            <h3 className="text-3xl font-bold mb-6">{sol.title}</h3>
+            <p className="text-lg text-slate-600 leading-relaxed mb-8">{sol.description}</p>
+            <button className="px-8 py-4 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition-colors">
+              문의하기
+            </button>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {sol.detailedFeatures.map((feat, idx) => (
+            <div key={idx} className="p-6 border border-slate-200 rounded-xl hover:border-blue-400 transition-colors">
+              <h4 className="text-xl font-bold mb-2">{feat.featureTitle}</h4>
+              <p className="text-slate-600">{feat.featureContent}</p>
+            </div>
+          ))}
+        </div>
+      </PageLayout>
+    );
+  };
+
+  return (
+    <div className="min-h-screen bg-white text-slate-900 font-sans">
+      <Navbar />
+      
+      <main>
+        <AnimatePresence mode="wait">
+          {activePage === 'main' && <MainHome key="main" />}
+          {activePage === 'ceo' && (
+            <PageLayout title="CEO 인사말" content={
+              <div className="flex flex-col md:flex-row gap-12 items-center">
+                <img src={corporateInfo.ceoGreeting.image} className="w-64 h-80 object-cover rounded-2xl shadow-lg" />
+                <div>
+                  <h3 className="text-2xl font-bold mb-6">{corporateInfo.ceoGreeting.title}</h3>
+                  <p className="text-slate-600 leading-relaxed whitespace-pre-line">{corporateInfo.ceoGreeting.content}</p>
+                </div>
+              </div>
+            } />
+          )}
+          {activePage === 'mission' && (
+            <PageLayout title="미션 & 비전" content={
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="p-8 bg-blue-50 rounded-2xl border-l-8 border-blue-600">
+                  <h4 className="text-xl font-bold mb-4">Mission</h4>
+                  <p className="text-lg leading-relaxed">{corporateInfo.missionVision.mission}</p>
+                </div>
+                <div className="p-8 bg-slate-50 rounded-2xl border-l-8 border-slate-600">
+                  <h4 className="text-xl font-bold mb-4">Vision</h4>
+                  <p className="text-lg leading-relaxed">{corporateInfo.missionVision.vision}</p>
+                </div>
+              </div>
+            } />
+          )}
+          {activePage === 'sol_detail' && <SolutionDetail key="sol_detail" />}
+          {/* 추가 페이지들(IR, 고객센터 등) 동일한 방식으로 확장 */}
+          {activePage !== 'main' && activePage !== 'ceo' && activePage !== 'mission' && activePage !== 'sol_detail' && (
+            <PageLayout title="준비 중인 페이지" content={<p>해당 콘텐츠는 현재 업데이트 중입니다.</p>} />
+          )}
+        </AnimatePresence>
+      </main>
+
+      <footer className="bg-slate-900 text-slate-400 py-16 px-4">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
+          <div>
+            <div className="text-2xl font-bold text-white mb-6">{company.name}</div>
+            <p className="text-sm leading-relaxed mb-6">{footer.address}<br/>TEL: {corporateInfo.location.headOffice.tel}<br/>FAX: {corporateInfo.location.headOffice.fax}</p>
+            <p className="text-xs">COPYRIGHT Ⓒ {new Date().getFullYear()} {company.name}. ALL RIGHTS RESERVED.</p>
+          </div>
+          <div>
+            <h4 className="text-white font-bold mb-6">Quick Links</h4>
+            <ul className="space-y-3 text-sm">
+              <li className="hover:text-white cursor-pointer" onClick={() => navigateTo('main')}>홈으로</li>
+              <li className="hover:text-white cursor-pointer" onClick={() => navigateTo('ceo')}>CEO 인사말</li>
+              <li className="hover:text-white cursor-pointer" onClick={() => navigateTo('sol_detail')}>사업소개</li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="text-white font-bold mb-6">Customer Support</h4>
+            <p className="text-2xl font-bold text-white mb-2">{customerSupport.phone}</p>
+            <p className="text-sm">{customerSupport.hours}</p>
+          </div>
+        </div>
       </footer>
     </div>
   );
