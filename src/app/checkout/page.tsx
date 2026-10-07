@@ -7,20 +7,22 @@ export default function CheckoutPage() {
   useEffect(() => {
     const initializePayment = async () => {
       try {
-        // 1. 위젯 초기화 (클라이언트 키만 정확히 전달)
-        const paymentWidget = await loadPaymentWidget('test_ck_Z61JOxRQVENyaaewWlDRrW0X9bAq');
+        // 비회원 결제용 고유 customerKey 전달 (영문/숫자 조합)
+        const clientKey = 'test_ck_Z61JOxRQVENyaaewWlDRrW0X9bAq';
+        const customerKey = 'GUEST_USER_' + Math.random().toString(36).substring(2, 11);
 
-        // 2. 결제 수단 렌더링
+        const paymentWidget = await loadPaymentWidget(clientKey, customerKey);
+
+        // variantKey 없이 기본 금액만 전달
         await paymentWidget.renderPaymentMethods('#payment-method', {
           value: 39000,
-          variantKey: 'DEFAULT',
         });
 
         const paymentButton = document.getElementById('payment-button');
         if (paymentButton) {
           paymentButton.onclick = async () => {
             await paymentWidget.requestPayment({
-              orderId: `ORDER_${new Date().getTime()}`,
+              orderId: `ORDER_${Date.now()}`,
               orderName: 'TH소프트 노코드 빌더 이용권',
               successUrl: `${window.location.origin}/checkout/success`,
               failUrl: `${window.location.origin}/checkout/fail`,
