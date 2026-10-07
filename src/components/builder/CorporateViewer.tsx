@@ -34,7 +34,6 @@ export default function CorporateViewer({ data, activeSection, setActiveSection 
               <section className="relative h-[85vh] flex items-center justify-center text-center text-white" 
                 style={{ backgroundImage: `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(${data.hero?.mediaUrl || 'https://via.placeholder.com/1920x1080'})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
                 <div className="max-w-4xl px-6">
-                  {/* 🚩 [복구] 상단 뱃지 */}
                   {data.hero?.badge && <span className="inline-block px-3 py-1 bg-blue-600 text-white text-xs font-bold rounded-full mb-4">{data.hero.badge}</span>}
                   <h1 className="text-5xl md:text-7xl font-black mb-6 leading-tight">{data.hero?.title || '(메인 타이틀)'}</h1>
                   <p className="text-xl md:text-2xl opacity-90 mb-10">{data.hero?.subtitle || '(서브 타이틀)'}</p>

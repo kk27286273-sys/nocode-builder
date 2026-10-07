@@ -4,7 +4,8 @@ import CorporateViewer from './CorporateViewer';
 import LivePreview from './LivePreview';
 
 export default function ViewerManager({ data, activeSection, setActiveSection }: any) {
-  const currentType = data?.templateType || 'one-page';
+  // 🚩 무조건 기업형 뷰어를 우선하도록 설정
+  const currentType = data?.templateType || 'corporate';
 
   return (
     <div className="flex flex-col h-full w-full bg-slate-200 overflow-hidden">
@@ -18,10 +19,12 @@ export default function ViewerManager({ data, activeSection, setActiveSection }:
         </div>
       </div>
 
-      <div className="flex-1 overflow-auto custom-scrollbar flex justify-center bg-slate-200 p-4">
-        {/* 🚩 80% 배율 설정: w-[1280px] 기준 scale(0.8) 적용하여 짤림 방지 */}
-        <div className="w-[1280px] h-fit origin-top transition-transform duration-200" style={{ transform: 'scale(0.8)' }}>
-          <div className="bg-white shadow-2xl min-h-full">
+      <div className="flex-1 overflow-y-auto custom-scrollbar flex justify-center bg-slate-200 p-4">
+        <div 
+          className="w-[1280px] origin-top transition-transform duration-200 pb-20" 
+          style={{ transform: 'scale(0.8)' }}
+        >
+          <div className="bg-white shadow-2xl min-h-screen">
             {currentType === 'corporate' ? (
               <CorporateViewer data={data} activeSection={activeSection} setActiveSection={setActiveSection} />
             ) : (
