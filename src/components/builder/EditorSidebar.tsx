@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { B2BTemplateData, TemplateType } from '@/types/template';
 import { supabase } from '@/lib/supabase/client';
 import { compressImage } from '@/utils/compressImage';
@@ -10,8 +10,9 @@ interface EditorSidebarProps {
   data: B2BTemplateData;
   setData: React.Dispatch<React.SetStateAction<B2BTemplateData>>;
   siteId: string | null;
-  setIsPaymentOpen?: (open: boolean) => void;
   refreshSites?: () => void;
+  activeSection: string; // 🚩 추가
+  setActiveSection: (section: any) => void; // 🚩 추가
 }
 
 function FontSizeSlider({ label, value, min = 12, max = 60, onChange }: { label: string; value?: number; min?: number; max?: number; onChange: (val: number) => void }) {
@@ -27,9 +28,16 @@ function FontSizeSlider({ label, value, min = 12, max = 60, onChange }: { label:
   );
 }
 
-export default function EditorSidebar({ data, setData, siteId, setIsPaymentOpen, refreshSites }: EditorSidebarProps) {
+export default function EditorSidebar({ data, setData, siteId, refreshSites, activeSection, setActiveSection }: EditorSidebarProps) {
   const [uploading, setUploading] = useState<{ [key: string]: boolean }>({});
-  const [isSaving, setIsSaving] = useState(false);
+
+  // 🚩 [핵심] 뷰어에서 섹션 변경 시 에디터의 해당 위치로 자동 스크롤
+  useEffect(() => {
+    const element = document.getElementById(`edit-section-${activeSection}`);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [activeSection]);
 
   const handleTemplateChange = (type: TemplateType) => {
     setData(prev => ({ ...prev, templateType: type }));
@@ -41,9 +49,7 @@ export default function EditorSidebar({ data, setData, siteId, setIsPaymentOpen,
     try {
       setUploading(prev => ({ ...prev, [key]: true }));
       let processedFile = file;
-      if (typeof compressImage === 'function') {
-        processedFile = await compressImage(file);
-      }
+      if (typeof compressImage === 'function') processedFile = await compressImage(file);
       const fileExt = file.name.split('.').pop();
       const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 9)}.${fileExt}`;
       const filePath = `${key}/${fileName}`;
@@ -53,32 +59,10 @@ export default function EditorSidebar({ data, setData, siteId, setIsPaymentOpen,
       callback(publicUrl);
       alert('이미지가 성공적으로 업로드되었습니다!');
     } catch (err: any) { 
-      console.error("업로드 에러:", err);
       alert('업로드 실패: ' + err.message); 
     } finally { 
       setUploading(prev => ({ ...prev, [key]: false })); 
     }
-  };
-
-  const handlePublish = async () => {
-    if (!siteId) return alert("사이트 ID가 없습니다.");
-    const newWindow = window.open('about:blank', '_blank');
-    if (!newWindow) return alert("팝업이 차단되었습니다.");
-    try {
-      setIsSaving(true);
-      const res = await fetch('/api/publish', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: siteId, name: data.company?.name || '이름 없는 사이트', content: data }),
-      });
-      if (!res.ok) throw new Error('발행 중 오류 발생');
-      alert('발행 성공!');
-      if (typeof refreshSites === 'function') refreshSites();
-      newWindow.location.href = `/p/${siteId}`;
-    } catch (error: any) {
-      alert(`발행 실패: ${error.message}`);
-      newWindow.close();
-    } finally { setIsSaving(false); }
   };
 
   const updateFont = (key: any, val: number) => setData(prev => ({ ...prev, fontSizes: { ...prev.fontSizes, [key]: val } }));
@@ -86,194 +70,180 @@ export default function EditorSidebar({ data, setData, siteId, setIsPaymentOpen,
   return (
     <aside className="w-[430px] h-screen bg-white border-r border-slate-200 flex flex-col shrink-0 z-20 shadow-xl">
       <div className="p-4 border-b border-slate-200 flex flex-col gap-4 bg-slate-50 shrink-0">
-        <div className="flex items-center justify-between">
-          <div className="flex flex-col">
-            <h2 className="text-sm font-extrabold text-slate-900">통합 웹 빌더 에디터</h2>
-            <span className="text-[10px] text-slate-500">실시간 통합 디자인 스튜디오</span>
-          </div>
-          <div className="flex items-center gap-2">
-            {setIsPaymentOpen && (
-              <button onClick={() => setIsPaymentOpen(true)} className="px-3 py-2 text-xs font-bold text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition">
-                대행 결제
-              </button>
-            )}
-            <button onClick={handlePublish} disabled={isSaving} style={{ backgroundColor: data.themeColor }} className="px-4 py-2 text-xs font-bold text-white rounded-lg shadow disabled:opacity-50 hover:opacity-90 transition">
-              {isSaving ? '발행 중...' : '사이트 발행'}
-            </button>
-          </div>
+        <div className="flex flex-col">
+          <h2 className="text-sm font-extrabold text-slate-900">통합 웹 빌더 에디터</h2>
+          <span className="text-[10px] text-slate-500">에이텍 스타일 완벽 복제 모드</span>
         </div>
-        <TemplateSelector 
-          currentType={data.templateType || 'one-page'} 
-          onTypeChange={handleTemplateChange} 
-        />
+        <TemplateSelector currentType={data.templateType || 'one-page'} onTypeChange={handleTemplateChange} />
       </div>
 
-      <div className="flex-1 overflow-y-auto p-5 space-y-7 text-sm custom-scrollbar">
-        <div className="space-y-7">
-          <section className="space-y-3 pb-4 border-b border-slate-100">
-            <label className="text-xs font-bold text-slate-500 uppercase">브랜드 테마 컬러</label>
-            <div className="flex items-center gap-3">
-              <input type="color" value={data.themeColor} onChange={(e) => setData(prev => ({ ...prev, themeColor: e.target.value }))} className="w-10 h-10 rounded border border-slate-300 p-0.5 cursor-pointer" />
-              <input type="text" value={data.themeColor} onChange={(e) => setData(prev => ({ ...prev, themeColor: e.target.value }))} className="flex-1 px-3 py-2 border border-slate-200 rounded-lg text-xs font-mono focus:outline-none focus:ring-1 focus:ring-sky-500" />
+      <div className="flex-1 overflow-y-auto p-5 space-y-10 text-sm custom-scrollbar">
+        
+        {/* 0. 브랜드 기본 설정 */}
+        <section className="space-y-4 pb-6 border-b-2 border-slate-200">
+          <h3 className="font-black text-slate-800 text-xs uppercase tracking-widest">Brand Identity</h3>
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <label className="text-[10px] text-slate-500 block mb-1">테마 컬러</label>
+              <input type="color" value={data.themeColor} onChange={(e) => setData(prev => ({ ...prev, themeColor: e.target.value }))} className="w-full h-8 rounded border cursor-pointer" />
             </div>
-          </section>
-
-          <section className="space-y-3 pb-4 border-b border-slate-100">
-            <h3 className="font-bold text-slate-900 text-sm">1. 기업 기본 정보</h3>
-            <div className="space-y-3">
-              <div>
-                <label className="text-xs text-slate-500 block mb-1">회사명</label>
-                <input type="text" value={data.company.name} onChange={(e) => setData(prev => ({ ...prev, company: { ...prev.company, name: e.target.value } }))} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-sky-500" />
-              </div>
-              <FontSizeSlider label="회사명 크기" value={data.fontSizes?.companyName} min={14} max={60} onChange={(val) => updateFont('companyName', val)} />
-              
-              <div className="mt-3">
-                <label className="text-xs text-slate-500 block mb-1">로고 이미지</label>
-                <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, (url) => setData(prev => ({ ...prev, company: { ...prev.company, logoUrl: url } })), 'logo')} className="text-xs text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-md file:border-0 file:bg-slate-100 file:text-slate-700 cursor-pointer" />
-              </div>
+            <div>
+              <label className="text-[10px] text-slate-500 block mb-1">회사명</label>
+              <input type="text" value={data.company.name} onChange={(e) => setData(prev => ({ ...prev, company: { ...prev.company, name: e.target.value } }))} className="w-full px-2 py-1 border rounded text-xs" />
             </div>
-          </section>
-        </div>
-
-        <div className="pt-4 border-t-2 border-slate-200 space-y-7">
-          <div className="flex items-center gap-2 mb-4">
-            <span className="px-2 py-1 bg-sky-100 text-sky-700 text-[10px] font-bold rounded uppercase">
-              {data.templateType || 'one-page'} 전용 설정
-            </span>
           </div>
+          <div>
+            <label className="text-[10px] text-slate-500 block mb-1">로고 이미지</label>
+            <input type="file" onChange={(e) => handleImageUpload(e, (url) => setData(prev => ({ ...prev, company: { ...prev.company, logoUrl: url } })), 'logo')} className="text-xs" />
+          </div>
+        </section>
 
-          {/* 1. 원페이지형 설정 */}
-          {(data.templateType === 'one-page' || !data.templateType) && (
-            <div className="space-y-7">
-              <section className="space-y-3 pb-4 border-b border-slate-100">
-                <h3 className="font-bold text-slate-900 text-sm">히어로 영역</h3>
-                <input type="text" value={data.hero.badge} onChange={(e) => setData(prev => ({ ...prev, hero: { ...prev.hero, badge: e.target.value } }))} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs" placeholder="배지 문구" />
-                <textarea rows={2} value={data.hero.title} onChange={(e) => setData(prev => ({ ...prev, hero: { ...prev.hero, title: e.target.value } }))} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs" placeholder="메인 타이틀" />
-              </section>
-            </div>
-          )}
-
-           {/* 2. 기업형 설정 (Corporate) 전수 매칭 */}
-          {data.templateType === 'corporate' && (
-            <div className="space-y-8 animate-in fade-in slide-in-from-top-2 duration-300">
+        {data.templateType === 'corporate' && (
+          <div className="space-y-12">
+            
+            {/* 1. 회사 소개 섹션 */}
+            <div id="edit-section-company" className="space-y-6">
+              <h3 className="font-black text-blue-700 text-sm flex items-center gap-2 border-l-4 border-blue-700 pl-2">1. 회사 소개</h3>
               
-              {/* 히어로 섹션 */}
-              <section className="space-y-3 pb-6 border-b border-slate-100">
-                <h3 className="font-bold text-slate-900 text-sm flex items-center gap-2">
-                  <span className="w-1 h-4 bg-sky-600 rounded-full"></span> 메인 히어로 영역
-                </h3>
-                <div>
-                  <label className="text-xs text-slate-500 block mb-1">상단 배지</label>
-                  <input type="text" value={data.hero?.badge || ''} onChange={(e) => setData(prev => ({ ...prev, hero: { ...prev.hero, badge: e.target.value } }))} className="w-full px-3 py-2 border rounded-lg text-xs" />
+              {/* 1-1. CEO 인사말 */}
+              <div id="edit-section-ceo" className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-xs font-bold text-slate-700">CEO 인사말</span>
+                  <button onClick={() => setActiveSection('ceo')} className="text-[10px] text-blue-600 underline">미리보기</button>
                 </div>
-                <div>
-                  <label className="text-xs text-slate-500 block mb-1">메인 타이틀</label>
-                  <textarea rows={2} value={data.hero?.title || ''} onChange={(e) => setData(prev => ({ ...prev, hero: { ...prev.hero, title: e.target.value } }))} className="w-full px-3 py-2 border rounded-lg text-xs" />
-                </div>
-                <div>
-                  <label className="text-xs text-slate-500 block mb-1">서브 타이틀</label>
-                  <textarea rows={2} value={data.hero?.subtitle || ''} onChange={(e) => setData(prev => ({ ...prev, hero: { ...prev.hero, subtitle: e.target.value } }))} className="w-full px-3 py-2 border rounded-lg text-xs" />
-                </div>
-                <div>
-                  <label className="text-xs text-slate-500 block mb-1">배경 이미지 업로드</label>
-                  <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, (url) => setData(prev => ({ ...prev, hero: { ...prev.hero, mediaUrl: url } })), 'hero')} className="text-xs text-slate-500" />
-                </div>
-              </section>
-
-              {/* CEO 인사말 */}
-              <section className="space-y-3 pb-6 border-b border-slate-100">
-                <h3 className="font-bold text-slate-900 text-sm flex items-center gap-2">
-                  <span className="w-1 h-4 bg-sky-600 rounded-full"></span> CEO 인사말
-                </h3>
-                <input type="text" placeholder="인사말 제목" value={data.corporateInfo?.ceoGreeting?.title || ''} onChange={(e) => setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, ceoGreeting: { ...prev.corporateInfo.ceoGreeting, title: e.target.value } } }))} className="w-full px-3 py-2 border rounded-lg text-xs font-bold" />
-                <textarea rows={5} placeholder="인사말 본문" value={data.corporateInfo?.ceoGreeting?.content || ''} onChange={(e) => setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, ceoGreeting: { ...prev.corporateInfo.ceoGreeting, content: e.target.value } } }))} className="w-full px-3 py-2 border rounded-lg text-xs" />
-                <div>
-                  <label className="text-xs text-slate-500 block mb-1">CEO 프로필 사진</label>
-                  <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, (url) => setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, ceoGreeting: { ...prev.corporateInfo.ceoGreeting, image: url } } })), 'ceo')} className="text-xs text-slate-500" />
-                </div>
-              </section>
-
-              {/* 솔루션 관리 */}
-              <section className="space-y-3 pb-6 border-b border-slate-100">
-                <div className="flex items-center justify-between">
-                  <h3 className="font-bold text-slate-900 text-sm flex items-center gap-2">
-                    <span className="w-1 h-4 bg-sky-600 rounded-full"></span> 솔루션 (사업 영역)
-                  </h3>
-                  <button 
-                    onClick={() => setData(prev => ({ 
-                      ...prev, 
-                      solutions: [...(prev.solutions || []), { title: '신규 솔루션', category: 'Category', description: '솔루션 세부 설명', image: '', detailedFeatures: [{ featureTitle: '특장점 1', featureContent: '내용' }] }] 
-                    }))} 
-                    className="text-[10px] font-bold text-sky-600">+ 추가</button>
-                </div>
-                <div className="space-y-4">
-                  {(data.solutions || []).map((sol, idx) => (
-                    <div key={idx} className="p-3 bg-slate-50 border rounded-xl space-y-2 relative">
-                      <button onClick={() => setData(prev => ({ ...prev, solutions: prev.solutions.filter((_, i) => i !== idx) }))} className="absolute top-2 right-2 text-slate-400 hover:text-red-500 text-xs">✕</button>
-                      <input type="text" value={sol.title} onChange={(e) => { const next = [...data.solutions]; next[idx].title = e.target.value; setData(prev => ({ ...prev, solutions: next })); }} className="w-full px-2 py-1 border rounded text-xs font-bold bg-white" placeholder="솔루션명" />
-                      <input type="text" value={sol.category} onChange={(e) => { const next = [...data.solutions]; next[idx].category = e.target.value; setData(prev => ({ ...prev, solutions: next })); }} className="w-full px-2 py-1 border rounded text-xs bg-white" placeholder="카테고리" />
-                      <textarea rows={2} value={sol.description} onChange={(e) => { const next = [...data.solutions]; next[idx].description = e.target.value; setData(prev => ({ ...prev, solutions: next })); }} className="w-full px-2 py-1 border rounded text-[11px] bg-white" placeholder="설명" />
-                      <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, (url) => { const next = [...data.solutions]; next[idx].image = url; setData(prev => ({ ...prev, solutions: next })); }, `sol-${idx}`)} className="text-[10px] text-slate-500" />
-                    </div>
-                  ))}
-                </div>
-              </section>
-
-              {/* 회사 기본 정보 / 푸터 */}
-              <section className="space-y-3 pb-6 border-b border-slate-100">
-                <h3 className="font-bold text-slate-900 text-sm flex items-center gap-2">
-                  <span className="w-1 h-4 bg-sky-600 rounded-full"></span> 주소 및 푸터 사업자 정보
-                </h3>
-                <div>
-                  <label className="text-xs text-slate-500 block mb-1">본사 주소</label>
-                  <input type="text" value={data.corporateInfo?.location?.headOffice?.address || ''} onChange={(e) => setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, location: { ...prev.corporateInfo.location, headOffice: { address: e.target.value } } }, footer: { ...prev.footer, address: e.target.value } }))} className="w-full px-3 py-2 border rounded-lg text-xs" />
-                </div>
-                <div>
-                  <label className="text-xs text-slate-500 block mb-1">대표자명</label>
-                  <input type="text" value={data.footer?.ownerName || ''} onChange={(e) => setData(prev => ({ ...prev, footer: { ...prev.footer, ownerName: e.target.value } }))} className="w-full px-3 py-2 border rounded-lg text-xs" />
-                </div>
-                <div>
-                  <label className="text-xs text-slate-500 block mb-1">사업자 등록번호</label>
-                  <input type="text" value={data.footer?.businessNumber || ''} onChange={(e) => setData(prev => ({ ...prev, footer: { ...prev.footer, businessNumber: e.target.value } }))} className="w-full px-3 py-2 border rounded-lg text-xs" />
-                </div>
-                <div>
-                  <label className="text-xs text-slate-500 block mb-1">대표 이메일</label>
-                  <input type="text" value={data.footer?.contactEmail || ''} onChange={(e) => setData(prev => ({ ...prev, footer: { ...prev.footer, contactEmail: e.target.value } }))} className="w-full px-3 py-2 border rounded-lg text-xs" />
-                </div>
-              </section>
-
-            </div>
-          )}
-
-          {/* 3. 렌탈/쇼핑몰 및 포트폴리오 설정 (기존 유지) */}
-          {data.templateType === 'rental-shop' && (
-            <div className="space-y-8 animate-in fade-in slide-in-from-top-2 duration-300">
-              {/* ... 기존 렌탈샵 코드 동일 ... */}
-            </div>
-          )}
-          {data.templateType === 'portfolio' && (
-            <div className="space-y-8 animate-in fade-in slide-in-from-top-2 duration-300">
-              {/* ... 기존 포트폴리오 코드 동일 ... */}
-            </div>
-          )}
-
-          {/* 5. SEO 설정 */}
-          <section className="space-y-3 pt-6 border-t border-slate-100">
-            <h3 className="font-bold text-slate-900 text-sm flex items-center gap-2">
-              <span className="w-1 h-4 bg-slate-400 rounded-full"></span> SEO 및 검색 설정
-            </h3>
-            <div className="space-y-3">
-              <div>
-                <label className="text-xs text-slate-500 block mb-1">검색 키워드 (쉼표 구분)</label>
-                <input type="text" value={(data as any).seoKeywords || ''} onChange={(e) => setData(prev => ({ ...prev, seoKeywords: e.target.value }))} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs outline-none" />
+                <input type="text" value={data.corporateInfo?.ceoGreeting?.title || ''} onChange={(e) => setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, ceoGreeting: { ...prev.corporateInfo.ceoGreeting, title: e.target.value } } }))} className="w-full p-2 border rounded text-xs" placeholder="인사말 제목" />
+                <textarea rows={4} value={data.corporateInfo?.ceoGreeting?.content || ''} onChange={(e) => setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, ceoGreeting: { ...prev.corporateInfo.ceoGreeting, content: e.target.value } } }))} className="w-full p-2 border rounded text-xs" placeholder="인사말 본문" />
+                <input type="file" onChange={(e) => handleImageUpload(e, (url) => setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, ceoGreeting: { ...prev.corporateInfo.ceoGreeting, image: url } } })), 'ceo')} className="text-[10px]" />
               </div>
-              <div>
-                <label className="text-xs text-slate-500 block mb-1">사이트 검색 설명</label>
-                <textarea rows={2} value={(data as any).seoDescription || ''} onChange={(e) => setData(prev => ({ ...prev, seoDescription: e.target.value }))} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs outline-none" />
+
+              {/* 1-2. 미션 & 비전 */}
+              <div id="edit-section-mission" className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-xs font-bold text-slate-700">미션 & 비전</span>
+                  <button onClick={() => setActiveSection('mission')} className="text-[10px] text-blue-600 underline">미리보기</button>
+                </div>
+                <textarea rows={3} value={data.corporateInfo?.missionVision?.mission || ''} onChange={(e) => setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, missionVision: { ...prev.corporateInfo.missionVision, mission: e.target.value } } }))} className="w-full p-2 border rounded text-xs" placeholder="미션 및 비전 내용 입력" />
+              </div>
+
+              {/* 1-3. 조직도 */}
+              <div id="edit-section-org" className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-xs font-bold text-slate-700">조직도</span>
+                  <button onClick={() => setActiveSection('org')} className="text-[10px] text-blue-600 underline">미리보기</button>
+                </div>
+                <input type="file" onChange={(e) => handleImageUpload(e, (url) => setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, orgChart: url } })), 'org')} className="text-[10px]" />
+                <p className="text-[10px] text-slate-400">조직도 이미지를 업로드하세요.</p>
+              </div>
+
+              {/* 1-4. CI 소개 */}
+              <div id="edit-section-ci" className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-xs font-bold text-slate-700">CI 소개</span>
+                  <button onClick={() => setActiveSection('ci')} className="text-[10px] text-blue-600 underline">미리보기</button>
+                </div>
+                <input type="file" onChange={(e) => handleImageUpload(e, (url) => setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, ciImage: url } })), 'ci')} className="text-[10px]" />
+                <textarea rows={2} value={(data.corporateInfo as any)?.ciDescription || ''} onChange={(e) => setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, ciDescription: e.target.value } }))} className="w-full p-2 border rounded text-xs" placeholder="CI 의미 설명" />
+              </div>
+
+              {/* 1-5. 오시는 길 */}
+              <div id="edit-section-location" className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-xs font-bold text-slate-700">오시는 길</span>
+                  <button onClick={() => setActiveSection('location')} className="text-[10px] text-blue-600 underline">미리보기</button>
+                </div>
+                <input type="text" value={data.corporateInfo?.location?.headOffice?.address || ''} onChange={(e) => setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, location: { ...prev.corporateInfo.location, headOffice: { address: e.target.value } } } }))} className="w-full p-2 border rounded text-xs" placeholder="본사 주소 입력" />
               </div>
             </div>
-          </section>
-        </div>
+
+            {/* 2. 사업 소개 섹션 */}
+            <div id="edit-section-business" className="space-y-6">
+              <h3 className="font-black text-blue-700 text-sm flex items-center gap-2 border-l-4 border-blue-700 pl-2">2. 사업 소개</h3>
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-xs font-bold text-slate-700">솔루션 관리</span>
+                <button onClick={() => setActiveSection('sol')} className="text-[10px] text-blue-600 underline">미리보기</button>
+              </div>
+              <div className="space-y-4">
+                {(data.solutions || []).map((sol, idx) => (
+                  <div key={idx} className="p-4 bg-slate-50 border rounded-xl space-y-3 relative group">
+                    <button onClick={() => setData(prev => ({ ...prev, solutions: prev.solutions.filter((_, i) => i !== idx) }))} className="absolute top-2 right-2 text-slate-400 hover:text-red-500">✕</button>
+                    <input type="text" value={sol.title} onChange={(e) => { const next = [...data.solutions]; next[idx].title = e.target.value; setData(prev => ({ ...prev, solutions: next })); }} className="w-full p-2 border rounded text-xs font-bold" placeholder="솔루션 제목" />
+                    <input type="text" value={sol.category} onChange={(e) => { const next = [...data.solutions]; next[idx].category = e.target.value; setData(prev => ({ ...prev, solutions: next })); }} className="w-full p-2 border rounded text-xs" placeholder="카테고리" />
+                    <textarea rows={2} value={sol.description} onChange={(e) => { const next = [...data.solutions]; next[idx].description = e.target.value; setData(prev => ({ ...prev, solutions: next })); }} className="w-full p-2 border rounded text-xs" placeholder="상세 설명" />
+                    <input type="file" onChange={(e) => handleImageUpload(e, (url) => { const next = [...data.solutions]; next[idx].image = url; setData(prev => ({ ...prev, solutions: next })); }, `sol-${idx}`)} className="text-[10px]" />
+                  </div>
+                ))}
+                <button onClick={() => setData(prev => ({ ...prev, solutions: [...(prev.solutions || []), { title: '신규 솔루션', category: '분야', description: '설명을 입력하세요', image: '', detailedFeatures: [] }] }))} className="w-full py-2 bg-slate-200 text-slate-700 rounded-lg text-xs font-bold hover:bg-slate-300 transition">+ 솔루션 추가</button>
+              </div>
+            </div>
+
+            {/* 3. 홍보 센터 */}
+            <div id="edit-section-pr" className="space-y-6">
+              <h3 className="font-black text-blue-700 text-sm flex items-center gap-2 border-l-4 border-blue-700 pl-2">3. 홍보 센터</h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div id="edit-section-news" className="p-4 bg-slate-50 rounded-xl border space-y-3">
+                  <span className="text-xs font-bold block">회사 소식</span>
+                  <textarea rows={3} value={(data as any).newsContent || ''} onChange={(e) => setData(prev => ({ ...prev, newsContent: e.target.value }))} className="w-full p-2 border rounded text-xs" placeholder="최신 소식 입력" />
+                  <button onClick={() => setActiveSection('news')} className="text-[10px] text-blue-600 underline">미리보기</button>
+                </div>
+                <div id="edit-section-video" className="p-4 bg-slate-50 rounded-xl border space-y-3">
+                  <span className="text-xs font-bold block">홍보 영상</span>
+                  <input type="text" value={(data as any).videoUrl || ''} onChange={(e) => setData(prev => ({ ...prev, videoUrl: e.target.value }))} className="w-full p-2 border rounded text-xs" placeholder="유튜브 URL" />
+                  <button onClick={() => setActiveSection('video')} className="text-[10px] text-blue-600 underline">미리보기</button>
+                </div>
+              </div>
+            </div>
+
+            {/* 4. 인재경영 */}
+            <div id="edit-section-talent" className="space-y-6">
+              <h3 className="font-black text-blue-700 text-sm flex items-center gap-2 border-l-4 border-blue-700 pl-2">4. 인재경영</h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div id="edit-section-talent-val" className="p-4 bg-slate-50 rounded-xl border space-y-3">
+                  <span className="text-xs font-bold block">인재상</span>
+                  <textarea rows={3} value={(data as any).talentValue || ''} onChange={(e) => setData(prev => ({ ...prev, talentValue: e.target.value }))} className="w-full p-2 border rounded text-xs" placeholder="인재상 입력" />
+                  <button onClick={() => setActiveSection('talent')} className="text-[10px] text-blue-600 underline">미리보기</button>
+                </div>
+                <div id="edit-section-benefit" className="p-4 bg-slate-50 rounded-xl border space-y-3">
+                  <span className="text-xs font-bold block">복리후생</span>
+                  <textarea rows={3} value={(data as any).benefitInfo || ''} onChange={(e) => setData(prev => ({ ...prev, benefitInfo: e.target.value }))} className="w-full p-2 border rounded text-xs" placeholder="복리후생 입력" />
+                  <button onClick={() => setActiveSection('benefit')} className="text-[10px] text-blue-600 underline">미리보기</button>
+                </div>
+              </div>
+            </div>
+
+            {/* 5. 고객센터 */}
+            <div id="edit-section-cs" className="space-y-6">
+              <h3 className="font-black text-blue-700 text-sm flex items-center gap-2 border-l-4 border-blue-700 pl-2">5. 고객센터</h3>
+              <div className="p-4 bg-slate-50 rounded-xl border space-y-3">
+                <span className="text-xs font-bold block">문의하기 안내</span>
+                <textarea rows={3} value={(data as any).csGuide || ''} onChange={(e) => setData(prev => ({ ...prev, csGuide: e.target.value }))} className="w-full p-2 border rounded text-xs" placeholder="문의 안내 문구" />
+                <button onClick={() => setActiveSection('cs')} className="text-[10px] text-blue-600 underline">미리보기</button>
+              </div>
+            </div>
+
+            {/* 푸터 정보 */}
+            <div id="edit-section-footer" className="space-y-6">
+              <h3 className="font-black text-slate-800 text-sm flex items-center gap-2 border-l-4 border-slate-800 pl-2">푸터 정보</h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-3">
+                  <label className="text-[10px] text-slate-500 block">사업자 주소</label>
+                  <input type="text" value={data.footer?.address || ''} onChange={(e) => setData(prev => ({ ...prev, footer: { ...prev.footer, address: e.target.value } }))} className="w-full p-2 border rounded text-xs" />
+                </div>
+                <div className="space-y-3">
+                  <label className="text-[10px] text-slate-500 block">대표자명</label>
+                  <input type="text" value={data.footer?.ownerName || ''} onChange={(e) => setData(prev => ({ ...prev, footer: { ...prev.footer, ownerName: e.target.value } }))} className="w-full p-2 border rounded text-xs" />
+                </div>
+                <div className="space-y-3">
+                  <label className="text-[10px] text-slate-500 block">사업자 번호</label>
+                  <input type="text" value={data.footer?.businessNumber || ''} onChange={(e) => setData(prev => ({ ...prev, footer: { ...prev.footer, businessNumber: e.target.value } }))} className="w-full p-2 border rounded text-xs" />
+                </div>
+                <div className="space-y-3">
+                  <label className="text-[10px] text-slate-500 block">공식 이메일</label>
+                  <input type="text" value={data.footer?.contactEmail || ''} onChange={(e) => setData(prev => ({ ...prev, footer: { ...prev.footer, contactEmail: e.target.value } }))} className="w-full p-2 border rounded text-xs" />
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </aside>
   );

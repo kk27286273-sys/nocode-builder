@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import EditorSidebar from '@/components/builder/EditorSidebar';
 import ViewerManager from '@/components/builder/ViewerManager';
-import { defaultB2BTemplateData, B2BTemplateData } from '@/data/templates'; // 👈 이름 수정 완료
+import { defaultB2BTemplateData, B2BTemplateData } from '@/data/templates';
 import { supabase } from '@/lib/supabase/client';
 
 const ADMIN_PASSWORD = 'Kk@72862';
@@ -12,10 +12,13 @@ export default function BuilderPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [passwordInput, setPasswordInput] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
-  const [data, setData] = useState<B2BTemplateData>(defaultB2BTemplateData); // 👈 이름 수정 완료
+  const [data, setData] = useState<B2BTemplateData>(defaultB2BTemplateData);
   const [siteId, setSiteId] = useState<string | null>(null);
   const [sitesList, setSitesList] = useState<{ id: string; name: string }[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  // 🚩 [핵심 추가] 현재 뷰어에서 보고 있는 섹션 상태 (전역 관리)
+  const [activeSection, setActiveSection] = useState<'main' | 'ceo' | 'mission' | 'org' | 'ci' | 'location' | 'sol' | 'news' | 'video' | 'talent' | 'benefit' | 'cs'>('main');
 
   const fetchSites = useCallback(async () => {
     try {
@@ -108,6 +111,27 @@ export default function BuilderPage() {
     }
   };
 
+  const handlePublish = async () => {
+    if (!siteId) return alert("사이트 ID가 없습니다.");
+    const newWindow = window.open('about:blank', '_blank');
+    if (!newWindow) return alert("팝업이 차단되었습니다.");
+    try {
+      setIsLoading(true);
+      const res = await fetch('/api/publish', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: siteId, name: data.company?.name || '이름 없는 사이트', content: data }),
+      });
+      if (!res.ok) throw new Error('발행 중 오류 발생');
+      alert('발행 성공!');
+      if (typeof fetchSites === 'function') fetchSites();
+      newWindow.location.href = `/p/${siteId}`;
+    } catch (error: any) {
+      alert(`발행 실패: ${error.message}`);
+      newWindow.close();
+    } finally { setIsLoading(false); }
+  };
+
   if (!isAuthenticated) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-slate-900 px-4">
@@ -152,6 +176,26 @@ export default function BuilderPage() {
           </div>
           <div className="flex items-center gap-2">
             {isLoading && <span className="text-[10px] text-sky-400 animate-pulse">...</span>}
+            
+            {/* 🚩 [추가] 뒤로가기 버튼: 사이트 발행 버튼 바로 옆에 배치 */}
+            {activeSection !== 'main' && (
+              <button 
+                onClick={() => setActiveSection('main')}
+                className="px-3 py-1 bg-white text-slate-800 text-[10px] font-bold rounded hover:bg-slate-100 transition border border-slate-300"
+              >
+                ← 메인으로
+              </button>
+            )}
+
+            <button 
+              onClick={handlePublish} 
+              disabled={isLoading} 
+              style={{ backgroundColor: data.themeColor }} 
+              className="px-4 py-2 text-xs font-bold text-white rounded-lg shadow disabled:opacity-50 hover:opacity-90 transition"
+            >
+              {isLoading ? '처리 중...' : '사이트 발행'}
+            </button>
+
             <button 
               onClick={deleteSite}
               disabled={!siteId || isLoading}
@@ -161,10 +205,23 @@ export default function BuilderPage() {
             </button>
           </div>
         </div>
-        <EditorSidebar data={data} setData={setData} siteId={siteId} refreshSites={fetchSites} />
+        {/* 🚩 activeSection과 setActiveSection을 에디터에 전달하여 연동 구현 */}
+        <EditorSidebar 
+          data={data} 
+          setData={setData} 
+          siteId={siteId} 
+          refreshSites={fetchSites} 
+          activeSection={activeSection} 
+          setActiveSection={setActiveSection} 
+        />
       </div>
       <main className="flex-1 h-full overflow-hidden relative">
-        <ViewerManager data={data} />
+        {/* 🚩 activeSection과 setActiveSection을 뷰어매니저에 전달하여 연동 구현 */}
+        <ViewerManager 
+          data={data} 
+          activeSection={activeSection} 
+          setActiveSection={setActiveSection} 
+        />
       </main>
     </div>
   );
