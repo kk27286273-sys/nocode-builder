@@ -7,30 +7,35 @@ export default function CheckoutPage() {
   useEffect(() => {
     const initializePayment = async () => {
       try {
-        // 1. 위젯 초기화 (클라이언트 키 입력)
-        const paymentWidget = await loadPaymentWidget('test_ck_Z61JOxRQVENyaaewWlDRrW0X9bAq'); 
-        
-        // 2. 결제 수단 렌더링 (variantKey: 'DEFAULT' 추가)
-        await paymentWidget.renderPaymentMethods('#payment-method', { 
+        const paymentWidget = await loadPaymentWidget(
+          'test_ck_Z61JOxRQVENyaaewWlDRrW0X9bAq',
+          '@tosspayments/payment-widget-sdk'
+        );
+
+        await paymentWidget.renderPaymentMethods('#payment-method', {
           value: 39000,
-          variantKey: 'DEFAULT' // 이 부분이 빠져서 에러가 났던 것입니다.
+          variantKey: 'DEFAULT',
         });
 
         const paymentButton = document.getElementById('payment-button');
         if (paymentButton) {
-          paymentButton.addEventListener('click', async () => {
+          paymentButton.onclick = async () => {
             await paymentWidget.requestPayment({
               orderId: `ORDER_${new Date().getTime()}`,
               orderName: 'TH소프트 노코드 빌더 이용권',
               successUrl: `${window.location.origin}/checkout/success`,
               failUrl: `${window.location.origin}/checkout/fail`,
             });
-          });
+          };
         }
       } catch (error) {
         console.error('결제 위젯 초기화 실패:', error);
       }
     };
+
+    initializePayment();
+  }, []);
+
   return (
     <div className="min-h-screen bg-slate-50 py-20 px-6">
       <div className="max-w-md mx-auto bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
@@ -40,7 +45,10 @@ export default function CheckoutPage() {
         </div>
         <div className="p-8">
           <div id="payment-method" className="mb-8"></div>
-          <button id="payment-button" className="w-full py-4 bg-slate-900 text-white font-bold rounded-2xl hover:bg-slate-800 transition-all active:scale-95">
+          <button
+            id="payment-button"
+            className="w-full py-4 bg-slate-900 text-white font-bold rounded-2xl hover:bg-slate-800 transition-all active:scale-95"
+          >
             결제 요청하기
           </button>
         </div>
