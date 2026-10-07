@@ -91,19 +91,37 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Footer CTA */}
-      <footer className="py-20 px-6 bg-slate-900 text-white text-center">
-        <h2 className="text-2xl md:text-3xl font-bold mb-8">지금 바로 상담을 시작하세요</h2>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <a href={KAKAO_LINK} target="_blank" className="px-8 py-4 bg-[#FEE500] text-[#3C1E1E] font-bold rounded-2xl hover:scale-105 transition-all">
-            카카오톡 상담하기
-          </a>
-          <a href={`tel:${PHONE_NUMBER}`} className="px-8 py-4 bg-white text-slate-900 font-bold rounded-2xl hover:scale-105 transition-all">
-            전화 상담하기
-          </a>
+      {/* Footer CTA & Business Info */}
+      <footer className="py-20 px-6 bg-slate-900 text-white">
+        <div className="max-w-6xl mx-auto text-center">
+          {/* 상담 유도 섹션 */}
+          <h2 className="text-2xl md:text-3xl font-bold mb-8">지금 바로 상담을 시작하세요</h2>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+            <a href={KAKAO_LINK} target="_blank" className="px-8 py-4 bg-[#FEE500] text-[#3C1E1E] font-bold rounded-2xl hover:scale-105 transition-all">
+              카카오톡 상담하기
+            </a>
+            <a href={`tel:${PHONE_NUMBER}`} className="px-8 py-4 bg-white text-slate-900 font-bold rounded-2xl hover:scale-105 transition-all">
+              전화 상담하기
+            </a>
+          </div>
+
+          {/* 법적 사업자 정보 섹션 (심사 필수 항목) */}
+          <div className="border-t border-slate-800 pt-12 text-slate-400 text-sm space-y-3 text-left max-w-2xl mx-auto">
+            <div className="flex flex-col sm:flex-row sm:justify-between gap-2">
+              <span className="font-bold text-slate-200 text-base">티에이치소프트</span>
+              <div className="flex gap-4 text-xs">
+                <a href="/terms" className="underline hover:text-white">이용약관</a>
+                <a href="/privacy" className="underline hover:text-white">개인정보처리방침</a>
+              </div>
+            </div>
+            <p>대표자명: 김태헌</p>
+            <p>사업자등록번호: 599-18-02634</p>
+            <p>사업장 주소: 경상북도 구미시 수출대로3길 130, (공단동 우림필유아파트) 108동 101호</p>
+            <p>대표번호: 010-2948-2728</p>
+            <p>통신판매업신고: 신고 진행 중</p>
+            <p className="mt-8 text-center sm:text-left opacity-50 text-xs">
+              © 2026 TH SOFT. All rights reserved.
+            </p>
+          </div>
         </div>
-        <p className="mt-12 text-slate-400 text-sm">© 2026 TH SOFT. All rights reserved.</p>
       </footer>
-    </div>
-  );
-}
