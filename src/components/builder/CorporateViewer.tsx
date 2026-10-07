@@ -122,6 +122,7 @@ export default function CorporateViewer({ data, activeSection, setActiveSection 
         </AnimatePresence>
       </main>
 
+      {/* 푸터 부분 오타 수정 */}
       <footer className="bg-slate-900 text-white py-12 border-t border-slate-800 w-full">
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between gap-8 text-xs text-slate-400">
           <div className="space-y-3">
@@ -140,7 +141,7 @@ export default function CorporateViewer({ data, activeSection, setActiveSection 
         <div className="max-w-7xl mx-auto px-6 mt-12 pt-6 border-t border-slate-800 text-center text-gray-500 text-[10px]">
           © {new Date().getFullYear()} {data.company?.name || 'Company'}. All rights reserved.
         </div>
-      </footer}
+      </footer>
     </div>
   );
 }
