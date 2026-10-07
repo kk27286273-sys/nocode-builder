@@ -1,22 +1,29 @@
 'use client';
 
 import React from 'react';
-import { loadTossPayments } from '@tosspayments/payment-widget-sdk';
 
 export default function PayPage() {
   const handlePayment = async () => {
     try {
-      // 1. 토스 SDK 로드 (위젯이 아닌 기본 SDK 로드)
-      const tossPayments = await loadTossPayments('test_ck_Z61JOxRQVENyaaewWlDRrW0X9bAq');
+      // 라이브러리 임포트 없이 토스 결제창 스크립트를 직접 로드하여 호출합니다.
+      const script = document.createElement('script');
+      script.src = 'https://js.tosspayments.com/v1/payment';
+      script.async = true;
+      document.body.appendChild(script);
 
-      // 2. 즉시 결제창 요청 (팝업 방식)
-      await tossPayments.requestPayment('카드', {
-        amount: 39000,
-        orderId: `ORDER_${Date.now()}`,
-        orderName: 'TH소프트 이용권',
-        successUrl: `${window.location.origin}/checkout/success`,
-        failUrl: `${window.location.origin}/checkout/fail`,
-      });
+      script.onload = () => {
+        // @ts-ignore
+        const tossPayments = window.TossPayments('test_ck_Z61JOxRQVENyaaewWlDRrW0X9bAq');
+        
+        // @ts-ignore
+        tossPayments.requestPayment('카드', {
+          amount: 39000,
+          orderId: `ORDER_${Date.now()}`,
+          orderName: 'TH소프트 이용권',
+          successUrl: `${window.location.origin}/checkout/success`,
+          failUrl: `${window.location.origin}/checkout/fail`,
+        });
+      };
     } catch (e) {
       console.error('결제 요청 실패:', e);
       alert('결제창을 띄우는 중 오류가 발생했습니다.');
