@@ -1,8 +1,10 @@
 // src/data/templates.ts
 
 export interface B2BTemplateData {
+  templateType: 'corporate' | 'rental-shop' | 'portfolio' | 'one-page'; // [추가] 뷰어 결정 이름표
   themeColor: string;
   company: { name: string; logoUrl: string; slogan: string; };
+  // ... 나머지 기존 필드들 그대로 유지 ...
   siteImage: string; 
   supportPhone: string;
   navigation: { 
@@ -35,10 +37,11 @@ export interface B2BTemplateData {
   fontSizes: { [key: string]: number; };
 }
 
-// [하드코딩] 이제 default 자체가 '기업형 뼈대'입니다.
 export const defaultB2BTemplateData: B2BTemplateData = {
+  templateType: 'corporate', // [하드코딩] 이제 기본값이 무조건 '기업형'입니다.
   themeColor: '#003366', 
   company: { name: '기업형 템플릿 (수정 가능)', logoUrl: '', slogan: '기업 슬로건을 입력하세요' },
+  // ... 아래 나머지 데이터들은 이전과 동일하게 유지 ...
   siteImage: '', 
   supportPhone: '010-0000-0000',
   navigation: { 
