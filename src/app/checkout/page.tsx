@@ -7,7 +7,7 @@ export default function CheckoutPage() {
   useEffect(() => {
     const initializePayment = async () => {
       try {
-        const paymentWidget = await loadPaymentWidget('test'); 
+        const paymentWidget = await loadPaymentWidget(test_ck_Z61JOxRQVENyaaewWlDRrW0X9bAq); 
         await paymentWidget.renderPaymentMethods('#payment-method', { value: 39000 });
 
         const paymentButton = document.getElementById('payment-button');
