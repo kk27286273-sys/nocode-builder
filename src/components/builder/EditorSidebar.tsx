@@ -52,7 +52,7 @@ export default function EditorSidebar({ data, setData, siteId, refreshSites, act
   };
 
   return (
-    <aside className="w-[430px] h-screen bg-white border-r border-slate-200 flex flex-col shrink-0 z-20 shadow-xl">
+    <div className="w-full flex flex-col bg-white">
       <div className="p-4 border-b border-slate-200 flex flex-col gap-4 bg-slate-50 shrink-0">
         <div className="flex flex-col">
           <h2 className="text-sm font-extrabold text-slate-900">통합 웹 빌더 에디터</h2>

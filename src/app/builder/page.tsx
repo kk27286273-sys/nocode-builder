@@ -12,13 +12,14 @@ export default function BuilderPage() {
   const [activeSection, setActiveSection] = useState('main');
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => { fetchSites(); }, []);
+  useEffect(() => {
+    fetchSites();
+  }, []);
 
   async function fetchSites() {
     const { data: sites } = await supabase.from('sites').select('*');
     if (sites && sites.length > 0) {
       setSitesList(sites);
-      // 🚩 접속 시 첫 번째 사이트 즉시 로드 (백지 화면 방지)
       if (!siteId) loadSiteData(sites[0].id);
     }
   }
@@ -32,7 +33,6 @@ export default function BuilderPage() {
     if (error) {
       console.error("데이터 로드 에러:", error);
     } else if (siteData && siteData.data) {
-      // 🚩 중요: templateType이 없거나 달라도 무조건 'corporate'로 강제 지정 (초기빌더 롤백 방지)
       setData({
         ...siteData.data,
         templateType: 'corporate'
@@ -44,7 +44,12 @@ export default function BuilderPage() {
   async function handlePublish() {
     if (!siteId || !data) return alert('사이트를 먼저 선택해주세요.');
     setIsLoading(true);
-    alert('사이트가 성공적으로 발행되었습니다!');
+    const { error } = await supabase.from('sites').update({ data }).eq('id', siteId);
+    if (error) {
+      alert('발행 실패: ' + error.message);
+    } else {
+      alert('사이트가 성공적으로 발행되었습니다!');
+    }
     setIsLoading(false);
   }
 
@@ -58,29 +63,69 @@ export default function BuilderPage() {
     setIsLoading(false);
   }
 
-  // 🚩 데이터가 로드될 때까지는 아주 심플한 로딩창만 보여줌
-  if (!data) return <div className="h-screen w-screen flex items-center justify-center bg-slate-100 font-bold text-slate-500">빌더 데이터를 불러오는 중입니다...</div>;
+  if (!data) return <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900 font-bold text-white">빌더 데이터를 불러오는 중...</div>;
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-slate-100">
-      <div className="flex flex-col h-full w-[430px] shrink-0 border-r border-slate-200 bg-white shadow-xl">
-        <div className="p-3 bg-slate-800 flex items-center justify-between gap-2 shrink-0">
-          <div className="flex items-center gap-2 overflow-hidden">
-            <label className="text-[10px] font-bold text-slate-400 uppercase shrink-0">Site</label>
-            <select value={siteId || ''} onChange={(e) => loadSiteData(e.target.value)} className="bg-slate-700 text-white text-xs px-2 py-1 rounded border border-slate-600 outline-none max-w-full">
+    <div className="fixed inset-0 z-[9999] w-screen h-screen flex overflow-hidden bg-slate-100">
+      {/* 좌측 패널 전체: 상단 제어바 + 에디터 */}
+      <div className="w-[430px] h-full flex flex-col shrink-0 bg-white border-r border-slate-300 shadow-2xl relative z-20">
+        
+        {/* 상단 제어바: 화면 맨 위에 고정 */}
+        <div className="h-14 px-4 bg-slate-900 flex items-center justify-between shrink-0 border-b border-slate-800">
+          <div className="flex items-center gap-2">
+            <span className="text-[11px] font-black text-slate-400 uppercase tracking-wider">Site</span>
+            <select 
+              value={siteId || ''} 
+              onChange={(e) => loadSiteData(e.target.value)} 
+              className="bg-slate-800 text-white text-xs px-2 py-1.5 rounded border border-slate-700 outline-none cursor-pointer max-w-[130px] truncate"
+            >
               <option value="">사이트 선택</option>
               {sitesList.map((site) => <option key={site.id} value={site.id}>{site.name || site.id}</option>)}
             </select>
           </div>
-          <div className="flex items-center gap-2">
-            <button type="button" onClick={() => setActiveSection('main')} className="px-3 py-1.5 bg-white text-slate-900 text-[11px] font-extrabold rounded-md hover:bg-slate-100 transition border border-slate-300 shadow-sm">← 메인으로</button>
-            <button type="button" onClick={handlePublish} disabled={isLoading} style={{ backgroundColor: data.themeColor || '#2563eb' }} className="px-4 py-2 text-xs font-bold text-white rounded-lg shadow disabled:opacity-50 hover:opacity-90 transition">{isLoading ? '...' : '사이트 발행'}</button>
-            <button type="button" onClick={deleteSite} disabled={!siteId || isLoading} className="bg-red-600 hover:bg-red-700 disabled:bg-slate-600 text-white text-[10px] font-bold px-2 py-1 rounded transition">삭제</button>
+          
+          <div className="flex items-center gap-1.5">
+            <button 
+              type="button" 
+              onClick={() => setActiveSection('main')} 
+              className="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded border border-slate-700 transition"
+            >
+              메인
+            </button>
+            <button 
+              type="button" 
+              onClick={handlePublish} 
+              disabled={isLoading} 
+              className="px-3 py-1.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-500 rounded shadow disabled:opacity-50 transition"
+            >
+              {isLoading ? '저장...' : '발행'}
+            </button>
+            <button 
+              type="button" 
+              onClick={deleteSite} 
+              disabled={!siteId || isLoading} 
+              className="bg-rose-600 hover:bg-rose-700 disabled:bg-slate-800 text-white text-xs font-medium px-2 py-1.5 rounded transition"
+            >
+              삭제
+            </button>
           </div>
         </div>
-        <EditorSidebar data={data} setData={setData} siteId={siteId} refreshSites={fetchSites} activeSection={activeSection} setActiveSection={setActiveSection} />
+
+        {/* 하단 에디터 영역 */}
+        <div className="flex-1 overflow-y-auto">
+          <EditorSidebar 
+            data={data} 
+            setData={setData} 
+            siteId={siteId} 
+            refreshSites={fetchSites} 
+            activeSection={activeSection} 
+            setActiveSection={setActiveSection} 
+          />
+        </div>
       </div>
-      <main className="flex-1 h-full overflow-hidden relative">
+
+      {/* 우측 뷰어 */}
+      <main className="flex-1 h-full overflow-hidden bg-slate-200 relative z-10">
         <ViewerManager data={data} activeSection={activeSection} setActiveSection={setActiveSection} />
       </main>
     </div>
