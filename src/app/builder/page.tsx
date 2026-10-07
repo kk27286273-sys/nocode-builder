@@ -121,7 +121,7 @@ export default function BuilderPage() {
     );
   }
 
-  return (
+return (
     <div className="flex h-screen w-screen overflow-hidden bg-slate-100">
       <div className="flex flex-col h-full w-[430px] shrink-0 border-r border-slate-200 bg-white shadow-xl">
         <div className="p-3 bg-slate-800 flex items-center justify-between gap-2">
@@ -134,16 +134,24 @@ export default function BuilderPage() {
           </div>
           <div className="flex items-center gap-2">
             {isLoading && <span className="text-[10px] text-sky-400 animate-pulse">...</span>}
-            {/* 🚩 [수정] 뒤로가기 버튼을 빌더 헤더에 완전히 고정 (뷰어를 가리지 않음) */}
-            {activeSection !== 'main' && (
-              <button onClick={() => setActiveSection('main')} className="px-3 py-1.5 bg-white text-slate-900 text-[11px] font-extrabold rounded-md hover:bg-slate-100 transition border border-slate-300 shadow-sm">
-                ← 메인으로 돌아가기
-              </button>
-            )}
+            
+            {/* 🚩 [복구] 메인으로 돌아가기 버튼: 조건 없이 항상 보이거나, main이 아닐 때만 명확히 표시 */}
+            <button 
+              onClick={() => setActiveSection('main')} 
+              className={`px-3 py-1.5 bg-white text-slate-900 text-[11px] font-extrabold rounded-md hover:bg-slate-100 transition border border-slate-300 shadow-sm ${activeSection === 'main' ? 'opacity-50 cursor-not-allowed' : 'opacity-100'}`}
+            >
+              ← 메인으로
+            </button>
+
+            {/* 🚩 [복구] 발행하기 버튼 */}
             <button onClick={handlePublish} disabled={isLoading} style={{ backgroundColor: data.themeColor }} className="px-4 py-2 text-xs font-bold text-white rounded-lg shadow disabled:opacity-50 hover:opacity-90 transition">
               {isLoading ? '처리 중...' : '사이트 발행'}
             </button>
-            <button onClick={deleteSite} disabled={!siteId || isLoading} className="bg-red-600 hover:bg-red-700 disabled:bg-slate-600 text-white text-[10px] font-bold px-2 py-1 rounded transition">삭제</button>
+
+            {/* 🚩 [복구] 삭제하기 버튼 */}
+            <button onClick={deleteSite} disabled={!siteId || isLoading} className="bg-red-600 hover:bg-red-700 disabled:bg-slate-600 text-white text-[10px] font-bold px-2 py-1 rounded transition">
+              삭제
+            </button>
           </div>
         </div>
         <EditorSidebar data={data} setData={setData} siteId={siteId} refreshSites={fetchSites} activeSection={activeSection} setActiveSection={setActiveSection} />
