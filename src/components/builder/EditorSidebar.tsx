@@ -84,7 +84,7 @@ export default function EditorSidebar({ data, setData, siteId, setIsPaymentOpen,
   const updateFont = (key: any, val: number) => setData(prev => ({ ...prev, fontSizes: { ...prev.fontSizes, [key]: val } }));
 
   return (
-    <aside className="w-[430px] h-full bg-white border-r border-slate-200 flex flex-col shrink-0 z-20 shadow-xl">
+    <aside className="w-[430px] h-screen bg-white border-r border-slate-200 flex flex-col shrink-0 z-20 shadow-xl">
       <div className="p-4 border-b border-slate-200 flex flex-col gap-4 bg-slate-50 shrink-0">
         <div className="flex items-center justify-between">
           <div className="flex flex-col">
@@ -108,7 +108,7 @@ export default function EditorSidebar({ data, setData, siteId, setIsPaymentOpen,
         />
       </div>
 
-      <div className="flex-1 overflow-y-auto p-5 space-y-7 text-sm pb-24">
+      <div className="flex-1 overflow-y-auto p-5 space-y-7 text-sm custom-scrollbar">
         <div className="space-y-7">
           <section className="space-y-3 pb-4 border-b border-slate-100">
             <label className="text-xs font-bold text-slate-500 uppercase">브랜드 테마 컬러</label>
