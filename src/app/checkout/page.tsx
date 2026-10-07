@@ -1,34 +1,27 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { loadPaymentWidget } from '@tosspayments/payment-widget-sdk';
 
 export default function CheckoutPage() {
+  const widgetRef = useRef<any>(null);
+
   useEffect(() => {
     const initializePayment = async () => {
       try {
-        // 비회원 결제용 고유 customerKey 전달 (영문/숫자 조합)
         const clientKey = 'test_ck_Z61JOxRQVENyaaewWlDRrW0X9bAq';
-        const customerKey = 'GUEST_USER_' + Math.random().toString(36).substring(2, 11);
+        const customerKey = 'GUEST_' + Math.random().toString(36).substring(2, 11);
 
+        // 1. 위젯 로드
         const paymentWidget = await loadPaymentWidget(clientKey, customerKey);
+        widgetRef.current = paymentWidget;
 
-        // variantKey 없이 기본 금액만 전달
+        // 2. 결제 수단 렌더링 (variantKey 절대 포함 안 함)
         await paymentWidget.renderPaymentMethods('#payment-method', {
           value: 39000,
         });
 
-        const paymentButton = document.getElementById('payment-button');
-        if (paymentButton) {
-          paymentButton.onclick = async () => {
-            await paymentWidget.requestPayment({
-              orderId: `ORDER_${Date.now()}`,
-              orderName: 'TH소프트 노코드 빌더 이용권',
-              successUrl: `${window.location.origin}/checkout/success`,
-              failUrl: `${window.location.origin}/checkout/fail`,
-            });
-          };
-        }
+        console.log('결제 위젯 렌더링 완료');
       } catch (error) {
         console.error('결제 위젯 초기화 실패:', error);
       }
@@ -36,6 +29,25 @@ export default function CheckoutPage() {
 
     initializePayment();
   }, []);
+
+  const handlePaymentRequest = async () => {
+    if (!widgetRef.current) {
+      alert('결제 위젯이 아직 준비되지 않았습니다. 잠시만 기다려주세요.');
+      return;
+    }
+
+    try {
+      await widgetRef.current.requestPayment({
+        orderId: `ORDER_${Date.now()}`,
+        orderName: 'TH소프트 노코드 빌더 이용권',
+        successUrl: `${window.location.origin}/checkout/success`,
+        failUrl: `${window.location.origin}/checkout/fail`,
+      });
+    } catch (error) {
+      console.error('결제 요청 실패:', error);
+      alert('결제 요청 중 오류가 발생했습니다.');
+    }
+  };
 
   return (
     <div className="min-h-screen bg-slate-50 py-20 px-6">
@@ -47,7 +59,7 @@ export default function CheckoutPage() {
         <div className="p-8">
           <div id="payment-method" className="mb-8"></div>
           <button
-            id="payment-button"
+            onClick={handlePaymentRequest}
             className="w-full py-4 bg-slate-900 text-white font-bold rounded-2xl hover:bg-slate-800 transition-all active:scale-95"
           >
             결제 요청하기
