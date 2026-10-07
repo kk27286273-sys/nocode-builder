@@ -7,8 +7,14 @@ export default function CheckoutPage() {
   useEffect(() => {
     const initializePayment = async () => {
       try {
+        // 1. 위젯 초기화 (클라이언트 키 입력)
         const paymentWidget = await loadPaymentWidget('test_ck_Z61JOxRQVENyaaewWlDRrW0X9bAq'); 
-        await paymentWidget.renderPaymentMethods('#payment-method', { value: 39000 });
+        
+        // 2. 결제 수단 렌더링 (variantKey: 'DEFAULT' 추가)
+        await paymentWidget.renderPaymentMethods('#payment-method', { 
+          value: 39000,
+          variantKey: 'DEFAULT' // 이 부분이 빠져서 에러가 났던 것입니다.
+        });
 
         const paymentButton = document.getElementById('payment-button');
         if (paymentButton) {
@@ -25,9 +31,6 @@ export default function CheckoutPage() {
         console.error('결제 위젯 초기화 실패:', error);
       }
     };
-    initializePayment();
-  }, []);
-
   return (
     <div className="min-h-screen bg-slate-50 py-20 px-6">
       <div className="max-w-md mx-auto bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
