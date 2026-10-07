@@ -7,11 +7,10 @@ export default function CheckoutPage() {
   useEffect(() => {
     const initializePayment = async () => {
       try {
-        const paymentWidget = await loadPaymentWidget(
-          'test_ck_Z61JOxRQVENyaaewWlDRrW0X9bAq',
-          '@tosspayments/payment-widget-sdk'
-        );
+        // 1. 위젯 초기화 (클라이언트 키만 정확히 전달)
+        const paymentWidget = await loadPaymentWidget('test_ck_Z61JOxRQVENyaaewWlDRrW0X9bAq');
 
+        // 2. 결제 수단 렌더링
         await paymentWidget.renderPaymentMethods('#payment-method', {
           value: 39000,
           variantKey: 'DEFAULT',
