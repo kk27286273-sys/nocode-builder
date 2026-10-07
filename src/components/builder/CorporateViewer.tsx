@@ -105,8 +105,7 @@ export default function CorporateViewer({ data, activeSection, setActiveSection 
         <div className="max-w-7xl mx-auto px-6 mt-12 pt-6 border-t border-slate-800 text-center text-gray-500 text-[10px]">
           © {new Date().getFullYear()} {data.company?.name || 'Company'}. All rights reserved.
         </div>
-      </footer} 
-      {/* 🚩 위 footer 태그 닫힘 오타 방지를 위해 다시 확인: </div> 가 아니라 </footer> 여야 함 */}
+      </footer>
     </div>
   );
 }
