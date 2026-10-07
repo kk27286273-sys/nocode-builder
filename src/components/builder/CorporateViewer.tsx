@@ -37,6 +37,22 @@ export default function CorporateViewer({ data }: CorporateViewerProps) {
 
   return (
     <div className="min-h-screen bg-white font-sans text-gray-900">
+      {/* 🚩 [추가] 뒤로가기 플로팅 버튼: 메인이 아닐 때만 부드럽게 등장 */}
+      <AnimatePresence>
+        {activeSection !== 'main' && (
+          <motion.button
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            onClick={() => setActiveSection('main')}
+            className="fixed top-24 left-6 z-[110] flex items-center gap-2 px-4 py-2 bg-slate-900/90 hover:bg-slate-800 text-white text-xs font-bold rounded-full backdrop-blur-md shadow-2xl transition-all group"
+          >
+            <span className="group-hover:-translate-x-1 transition-transform">←</span>
+            메인으로 돌아가기
+          </motion.button>
+        )}
+      </AnimatePresence>
+
       {/* 1. 상단 헤더 & 메가 메뉴 */}
       <header className="fixed top-0 w-full bg-white/90 backdrop-blur-md border-b z-[100]">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
@@ -133,7 +149,7 @@ export default function CorporateViewer({ data }: CorporateViewerProps) {
             </motion.section>
           )}
 
-          {/* 나머지 섹션들은 유사한 패턴으로 구현 (생략 없이 핵심 구조 유지) */}
+          {/* 나머지 섹션들 */}
           {(activeSection === 'mission' || activeSection === 'org' || activeSection === 'ci' || activeSection === 'location') && (
             <motion.section 
               key="info" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -143,7 +159,6 @@ export default function CorporateViewer({ data }: CorporateViewerProps) {
               <div className="bg-gray-100 p-20 rounded-3xl text-2xl font-medium">
                 {activeSection === 'mission' && <div><p className="mb-4 font-bold text-blue-600">Mission</p><p>{data.corporateInfo.missionVision.mission}</p></div>}
                 {activeSection === 'location' && <div><p className="mb-4 font-bold text-blue-600">Location</p><p>{data.corporateInfo.location.headOffice.address}</p></div>}
-                {/* ... 다른 정보들도 동일하게 매칭 ... */}
                 <p className="mt-8 text-gray-400 text-lg">상세 내용을 에디터에서 수정하세요.</p>
               </div>
             </motion.section>
