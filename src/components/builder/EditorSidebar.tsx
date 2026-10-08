@@ -292,7 +292,16 @@ export default function EditorSidebar({ data, setData, siteId, refreshSites, act
                     <span className="text-[10px] font-bold block">인증서 관리</span>
                     {(data.corporateInfo?.disclosure?.certifications || []).map((cert, idx) => (
                       <div key={idx} className="flex gap-2 mb-2">
-                        <input type="text" value={cert.name} onChange={(e) => { const next = [...data.corporateInfo.disclosure.certifications]; next[idx].name = e.target.value; setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, disclosure: { ...prev.corporateInfo.disclosure, certifications: next } } })); }} className="flex-1 p-1 border rounded text-[10px]" />
+                        <input 
+                          type="text" 
+                          value={cert.name} 
+                          onChange={(e) => { 
+                            const next = [...data.corporateInfo.disclosure.certifications]; 
+                            next[idx].name = e.target.value; 
+                            setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, disclosure: { ...prev.corporateInfo.disclosure, certifications: next } } })); 
+                          }} 
+                          className="flex-1 p-1 border rounded text-[10px]" 
+                        />
                         <input 
                           type="text" 
                           value={cert.date} 
@@ -307,14 +316,14 @@ export default function EditorSidebar({ data, setData, siteId, refreshSites, act
                     ))}
                     <button 
                       onClick={() => {
-                        const currentCerts = data.corporateInfo?.disclosure?.certifications || [];
+                        const current = data.corporateInfo?.disclosure?.certifications || [];
                         setData(prev => ({ 
                           ...prev, 
                           corporateInfo: { 
                             ...prev.corporateInfo, 
                             disclosure: { 
                               ...prev.corporateInfo?.disclosure, 
-                              certifications: [...currentCerts, { name: '신규 인증서', image: '', date: '2024-00-00' }] 
+                              certifications: [...current, { name: '신규 인증서', image: '', date: '2024-00-00' }] 
                             } 
                           } 
                         }));
@@ -324,6 +333,7 @@ export default function EditorSidebar({ data, setData, siteId, refreshSites, act
                       + 인증서 추가
                     </button>
                   </div>
+
                   <div className="p-3 bg-white border rounded-lg space-y-2">
                     <span className="text-[10px] font-bold block">보고서 관리</span>
                     {(data.corporateInfo?.disclosure?.reports || []).map((rep, idx) => (
@@ -350,12 +360,25 @@ export default function EditorSidebar({ data, setData, siteId, refreshSites, act
                         />
                       </div>
                     ))}
-                    <button onClick={() => setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, disclosure: { ...prev.corporateInfo.disclosure, reports: [...(prev.corporateInfo?.disclosure?.reports || []), { title: '신규 보고서', date: '2024-00-00', link: '' }] } }))} className="text-[10px] text-blue-600 font-bold">+ 보고서 추가</button>
+                    <button 
+                      onClick={() => {
+                        const current = data.corporateInfo?.disclosure?.reports || [];
+                        setData(prev => ({ 
+                          ...prev, 
+                          corporateInfo: { 
+                            ...prev.corporateInfo, 
+                            disclosure: { 
+                              ...prev.corporateInfo?.disclosure, 
+                              reports: [...current, { title: '신규 보고서', date: '2024-00-00', link: '' }] 
+                            } 
+                          } 
+                        }));
+                      }} 
+                      className="text-[10px] text-blue-600 font-bold"
+                    >
+                      + 보고서 추가
+                    </button>
                   </div>
-                </div>
-              </div>
-            </div>
-
             {/* 6. 홍보센터 설정 */}
             <div id="edit-section-pr" className="space-y-6">
               <h3 className="font-black text-blue-700 text-sm flex items-center gap-2 border-l-4 border-blue-700 pl-2">홍보센터</h3>
