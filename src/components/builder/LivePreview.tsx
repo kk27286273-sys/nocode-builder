@@ -15,11 +15,13 @@ export default function LivePreview({ data, zoom: propZoom, setZoom: propSetZoom
   const zoom = propZoom !== undefined ? propZoom : internalZoom;
   const setZoom = propSetZoom || setInternalZoom;
 
-  const scale = zoom / 100;
+  // 기준 너비를 1280px로 잡고 줌 수치에 따라 실제 픽셀 너비를 계산합니다.
+  const baseWidth = 1280;
+  const currentWidth = baseWidth * (zoom / 100);
 
   return (
-    <div className="flex-1 flex flex-col w-full h-full min-h-0 bg-slate-200 overflow-hidden select-none">
-      {/* 상단 줌 컨트롤 바 */}
+    <div className="flex-1 flex flex-col w-full h-full bg-slate-200 overflow-hidden">
+      {/* 상단 컨트롤 바: 고정 높이 */}
       <div className="h-12 bg-white border-b border-slate-300 flex items-center justify-between px-6 z-30 shrink-0 shadow-sm">
         <span className="text-xs font-bold text-slate-600 tracking-wider uppercase">
           Preview Canvas ({zoom}%)
@@ -50,25 +52,22 @@ export default function LivePreview({ data, zoom: propZoom, setZoom: propSetZoom
         </div>
       </div>
 
-      {/* 무한 스크롤 가능한 캔버스 뷰포트 영역 */}
-      <div className="flex-1 w-full h-[calc(100%-3rem)] overflow-y-auto overflow-x-auto p-4 md:p-10 flex justify-center items-start">
-        {/* 스케일 보정 래퍼: scale 축소 시 줄어든 실제 높이를 보정 */}
+      {/* 캔버스 뷰포트: overflow-y-auto를 통해 물리적 높이를 모두 인식하게 함 */}
+      <div className="flex-1 overflow-y-auto overflow-x-auto p-4 md:p-10 flex justify-center items-start bg-slate-200">
         <div 
-          className="relative transition-all duration-100 origin-top flex justify-center pb-20"
-          style={{
-            width: zoom === 100 ? '1280px' : `${1280 * scale}px`,
+          style={{ 
+            width: `${currentWidth}px`,
+            minWidth: `${currentWidth}px`,
+            maxWidth: '100%',
           }}
+          className="bg-white shadow-2xl border border-slate-300 rounded-lg overflow-hidden shrink-0 h-fit"
         >
-          <div
-            style={{
-              width: '1280px',
-              transform: `scale(${scale})`,
-              transformOrigin: 'top left',
-            }}
-            className="bg-white shadow-2xl border border-slate-300 rounded-lg overflow-visible shrink-0"
-          >
-            <CorporateViewer data={data} />
-          </div>
+          {/* 
+            중요: 이제 scale을 쓰지 않으므로 내부 요소들의 폰트 크기나 레이아웃이 
+            너비에 따라 유동적으로 변하는 '반응형' 상태가 됩니다. 
+            CorporateViewer 내부의 Tailwind 클래스(md:, lg:)들이 정상 작동합니다.
+          */}
+          <CorporateViewer data={data} />
         </div>
       </div>
     </div>
