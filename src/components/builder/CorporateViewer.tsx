@@ -10,10 +10,9 @@ interface CorporateViewerProps {
 }
 
 export default function CorporateViewer({ data, activeSection: propSection, setActiveSection: propSetSection }: CorporateViewerProps) {
-  // 데이터가 아예 없을 때의 방어막
   if (!data) return <div style={{ padding: '40px', textAlign: 'center', color: '#94a3b8' }}>데이터를 불러오는 중입니다...</div>;
 
-  // 데이터 구조 분해 시 기본값 설정 및 필드명 유연하게 대응
+  // 에디터(EditorSidebar)의 저장 구조인 corporateInfo를 최우선으로 참조하도록 설정
   const { 
     company = {}, 
     navigation = {}, 
@@ -21,14 +20,7 @@ export default function CorporateViewer({ data, activeSection: propSection, setA
     footer = {},
     hero = {},
     solutions = [],
-    ceo = {},
-    mission = {},
-    orgChart = {},
-    ci = {},
-    location = {},
-    pr = {},
-    recruit = {},
-    cs = {}
+    corporateInfo = {} // 에디터가 저장하는 핵심 데이터 상자
   } = data;
   
   const [internalPage, setInternalPage] = useState('main');
@@ -52,7 +44,6 @@ export default function CorporateViewer({ data, activeSection: propSection, setA
           )}
         </div>
         <div style={{ display: 'flex', gap: '25px' }}>
-          {/* navLinks가 없을 경우를 대비해 빈 배열 처리 */}
           {(navigation?.navLinks || []).map((menu: any, idx: number) => (
             <button 
               key={idx}
@@ -83,7 +74,7 @@ export default function CorporateViewer({ data, activeSection: propSection, setA
         alignItems: 'center', 
         justifyContent: 'center', 
         textAlign: 'center', 
-        backgroundImage: `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(${hero?.backgroundImage || hero?.bgImage || 'https://via.placeholder.com/1920x600'})`, 
+        backgroundImage: `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(${hero?.backgroundImage || hero?.mediaUrl || 'https://via.placeholder.com/1920x600'})`, 
         backgroundSize: 'cover', 
         backgroundPosition: 'center', 
         color: 'white' 
@@ -104,12 +95,11 @@ export default function CorporateViewer({ data, activeSection: propSection, setA
         <h3 style={{ fontSize: '24px', marginBottom: '20px' }}>CEO 인사말</h3>
         <div style={{ display: 'flex', gap: '40px', alignItems: 'center', backgroundColor: '#f9f9f9', padding: '40px', borderRadius: '20px' }}>
           <div style={{ width: '200px', height: '250px', backgroundColor: '#ddd', borderRadius: '10px', overflow: 'hidden' }}>
-            <img src={ceo?.image || 'https://via.placeholder.com/200x250'} style={{width:'100%', height:'100%', objectFit:'cover'}} />
+            <img src={corporateInfo?.ceoGreeting?.image || 'https://via.placeholder.com/200x250'} style={{width:'100%', height:'100%', objectFit:'cover'}} />
           </div>
           <div>
-            {/* ceoGreeting 또는 message 어떤 필드든 대응하도록 처리 */}
             <p style={{ fontSize: '18px', lineHeight: '1.8', color: '#444' }}>
-              {ceo?.ceoGreeting || ceo?.message || 'CEO 인사말을 입력해주세요.'}
+              {corporateInfo?.ceoGreeting?.content || 'CEO 인사말을 입력해주세요.'}
             </p>
           </div>
         </div>
@@ -117,11 +107,11 @@ export default function CorporateViewer({ data, activeSection: propSection, setA
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '40px' }}>
         <div style={{ padding: '30px', border: '1px solid #eee', borderRadius: '15px' }}>
           <h3 style={{ color: themeColor, marginBottom: '15px' }}>미션 & 비전</h3>
-          <p>{mission?.text || mission?.content || '미션과 비전 내용을 입력해주세요.'}</p>
+          <p>{corporateInfo?.missionVision?.mission || '미션과 비전 내용을 입력해주세요.'}</p>
         </div>
         <div style={{ padding: '30px', border: '1px solid #eee', borderRadius: '15px' }}>
           <h3 style={{ color: themeColor, marginBottom: '15px' }}>CI 소개</h3>
-          <p>{ci?.description || ci?.content || 'CI 소개 내용을 입력해주세요.'}</p>
+          <p>{corporateInfo?.ciDescription || 'CI 소개 내용을 입력해주세요.'}</p>
         </div>
       </div>
     </motion.div>
@@ -151,7 +141,7 @@ export default function CorporateViewer({ data, activeSection: propSection, setA
       <h2 style={{ fontSize: '32px', fontWeight: 'bold', marginBottom: '40px', borderLeft: `6px solid ${themeColor}`, paddingLeft: '20px' }}>홍보센터</h2>
       <div style={{ marginBottom: '40px' }}>
         <h3 style={{ fontSize: '22px', marginBottom: '20px' }}>회사 소식</h3>
-        <div style={{ padding: '20px', border: '1px solid #eee', borderRadius: '10px', backgroundColor: '#f9f9f9' }}>{pr?.news || '등록된 소식이 없습니다.'}</div>
+        <div style={{ padding: '20px', border: '1px solid #eee', borderRadius: '10px', backgroundColor: '#f9f9f9' }}>{data?.newsContent || '등록된 소식이 없습니다.'}</div>
       </div>
     </motion.div>
   );
@@ -162,11 +152,11 @@ export default function CorporateViewer({ data, activeSection: propSection, setA
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px' }}>
         <div style={{ padding: '30px', backgroundColor: '#f4f7fa', borderRadius: '15px' }}>
           <h3 style={{ color: themeColor, marginBottom: '15px', fontSize: '22px' }}>인재상</h3>
-          <p style={{ lineHeight: '1.8' }}>{recruit?.talent || '인재상 내용을 입력해주세요.'}</p>
+          <p style={{ lineHeight: '1.8' }}>{data?.talentValue || '인재상 내용을 입력해주세요.'}</p>
         </div>
         <div style={{ padding: '30px', backgroundColor: '#f4f7fa', borderRadius: '15px' }}>
           <h3 style={{ color: themeColor, marginBottom: '15px', fontSize: '22px' }}>복리후생</h3>
-          <p style={{ lineHeight: '1.8' }}>{recruit?.benefit || '복리후생 내용을 입력해주세요.'}</p>
+          <p style={{ lineHeight: '1.8' }}>{data?.benefitInfo || '복리후생 내용을 입력해주세요.'}</p>
         </div>
       </div>
     </motion.div>
@@ -176,11 +166,11 @@ export default function CorporateViewer({ data, activeSection: propSection, setA
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ padding: '80px 20px', maxWidth: '1200px', margin: '0 auto', textAlign: 'center' }}>
       <h2 style={{ fontSize: '32px', fontWeight: 'bold', marginBottom: '40px', borderLeft: `6px solid ${themeColor}`, paddingLeft: '20px', textAlign: 'left' }}>고객센터</h2>
       <div style={{ backgroundColor: '#f9f9f9', padding: '50px', borderRadius: '20px', border: '1px solid #eee' }}>
-        <p style={{ fontSize: '20px', marginBottom: '30px', color: '#444' }}>{cs?.guide || '문의 안내 문구입니다.'}</p>
+        <p style={{ fontSize: '20px', marginBottom: '30px', color: '#444' }}>{data?.csGuide || '문의 안내 문구입니다.'}</p>
         <div style={{ display: 'flex', justifyContent: 'center', gap: '20px' }}>
           <div style={{ padding: '20px', border: '1px solid #ddd', borderRadius: '10px', minWidth: '200px' }}>
             <div style={{ fontSize: '14px', color: '#888', marginBottom: '5px' }}>대표 전화</div>
-            <div style={{ fontSize: '22px', fontWeight: 'bold' }}>{cs?.phone || '000-0000-0000'}</div>
+            <div style={{ fontSize: '22px', fontWeight: 'bold' }}>{data?.supportPhone || '000-0000-0000'}</div>
           </div>
         </div>
       </div>
@@ -194,11 +184,11 @@ export default function CorporateViewer({ data, activeSection: propSection, setA
         <AnimatePresence mode="wait">
           {['main'].includes(activePage) && <MainPage key="main" />}
           {['about', 'ceo', 'company'].includes(activePage) && <CompanyPage key="about" />}
-          {['business', 'service', 'solution'].includes(activePage) && <BusinessPage key="business" />}
+          {['business', 'service', 'solution', 'sol'].includes(activePage) && <BusinessPage key="business" />}
           {['pr', 'news'].includes(activePage) && <PRPage key="pr" />}
-          {['recruit', 'job'].includes(activePage) && <RecruitPage key="recruit" />}
+          {['recruit', 'job', 'talent'].includes(activePage) && <RecruitPage key="recruit" />}
           {['cs', 'contact'].includes(activePage) && <CSPage key="cs" />}
-          {!['main', 'about', 'ceo', 'company', 'business', 'service', 'solution', 'pr', 'news', 'recruit', 'job', 'cs', 'contact'].includes(activePage) && (
+          {!['main', 'about', 'ceo', 'company', 'business', 'service', 'solution', 'sol', 'pr', 'news', 'recruit', 'job', 'talent', 'cs', 'contact'].includes(activePage) && (
             <div style={{ padding: '100px', textAlign: 'center' }}>준비 중인 페이지입니다. (ID: {activePage})</div>
           )}
         </AnimatePresence>
@@ -207,7 +197,7 @@ export default function CorporateViewer({ data, activeSection: propSection, setA
         <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '20px' }}>
           <div style={{ color: '#fff' }}>
             <div style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '10px' }}>{company?.name}</div>
-            <p style={{ fontSize: '14px', lineHeight: '1.6', color: '#aaa' }}>{footer?.address}<br/>대표자: {footer?.ceoName} | 사업자번호: {footer?.bizNumber}</p>
+            <p style={{ fontSize: '14px', lineHeight: '1.6', color: '#aaa' }}>{footer?.address}<br/>대표자: {footer?.ownerName || footer?.ceoName} | 사업자번호: {footer?.businessNumber || footer?.bizNumber}</p>
           </div>
           <div style={{ textAlign: 'right', fontSize: '14px' }}>
             <p>© {new Date().getFullYear()} {company?.name}. All rights reserved.</p>
