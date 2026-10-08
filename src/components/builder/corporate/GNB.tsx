@@ -28,7 +28,11 @@ export default function GNB({ company, navigation, themeColor, activePage, navig
             <div key={menu.label} className="group relative py-8">
               <button 
                 className={`text-[15px] font-semibold transition-all duration-300 ${activePage === menu.targetId ? 'text-blue-600' : 'text-slate-700 hover:text-blue-600'}`}
-                onClick={() => navigateTo(menu.targetId || 'main')}
+onClick={() => {
+  // 메뉴 이름이 '회사소개'면 무조건 'about'으로 보내고, 아니면 targetId 사용
+  const target = menu.label === '회사소개' ? 'about' : (menu.targetId || 'main');
+  navigateTo(target);
+}}
               >
                 {menu.label}
               </button>
