@@ -12,7 +12,10 @@ interface CorporateViewerProps {
 export const CorporateViewer = ({ data, activeSection: propSection, setActiveSection: propSetSection }: CorporateViewerProps) => {
   if (!data) return <div className="p-10 text-center">데이터를 불러오는 중입니다...</div>;
 
-  // [수정] 실제 로그 구조에 맞게 최상위에서 직접 추출
+  // [검증용] 데이터 구조를 화면에 직접 출력하여 매핑 오류를 잡습니다.
+  // 실제 배포 후 이 부분의 텍스트를 보고 데이터 변수명을 수정하겠습니다.
+  const debugData = JSON.stringify(data, null, 2);
+
   const { 
     company = {}, 
     navigation = {}, 
@@ -20,14 +23,12 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
     hero = {}, 
     themeColor = '#000', 
     footer = {},
-    // corporateInfo가 없을 경우를 대비해 기본값 설정
     corporateInfo = {} 
   } = data;
   
   const [internalPage, setInternalPage] = useState('main');
   const activePage = propSection || internalPage;
   const setActivePage = propSetSection || setInternalPage;
-
   const [selectedSolution, setSelectedSolution] = useState<number | null>(null);
 
   const navigateTo = (targetId: string) => {
@@ -54,13 +55,6 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
               >
                 {menu.label}
               </button>
-              {menu.children && (
-                <div className="absolute top-20 left-0 w-48 bg-white border border-slate-100 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 p-4">
-                  {menu.children.map((child: any) => (
-                    <button key={child.label} onClick={() => navigateTo(child.targetId)} className="block w-full text-left px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-blue-600 rounded">{child.label}</button>
-                  ))}
-                </div>
-              )}
             </div>
           ))}
         </div>
@@ -70,152 +64,56 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
 
   const MainHome = () => (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-      <section className="relative h-[700px] flex items-center justify-center text-white overflow-hidden">
+      <section className="relative h-[700px] flex items-center justify-center text-white overflow-hidden bg-slate-800">
         <div className="absolute inset-0 z-0">
-          <img src={hero?.mediaUrl || ''} alt="hero" className="w-full h-full object-cover brightness-50" />
+          {hero?.mediaUrl && <img src={hero.mediaUrl} alt="hero" className="w-full h-full object-cover brightness-50" />}
         </div>
         <div className="relative z-10 text-center px-4">
-          <motion.span initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="inline-block px-4 py-1 rounded-full bg-blue-600 text-sm font-bold mb-6">{hero?.badge || '배지'}</motion.span>
-          <motion.h1 initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }} className="text-5xl md:text-7xl font-extrabold mb-6 leading-tight whitespace-pre-line">{hero?.title || '타이틀'}</motion.h1>
-          <motion.p initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.4 }} className="text-lg md:text-xl text-slate-200 max-w-3xl mx-auto leading-relaxed whitespace-pre-line">{hero?.subtitle || '서브타이틀'}</motion.p>
+          <motion.span className="inline-block px-4 py-1 rounded-full bg-blue-600 text-sm font-bold mb-6">{hero?.badge || '배지'}</motion.span>
+          <motion.h1 className="text-5xl md:text-7xl font-extrabold mb-6 leading-tight whitespace-pre-line">{hero?.title || '타이틀'}</motion.h1>
+          <motion.p className="text-lg md:text-xl text-slate-200 max-w-3xl mx-auto leading-relaxed whitespace-pre-line">{hero?.subtitle || '서브타이틀'}</motion.p>
         </div>
       </section>
       <section className="py-24 bg-slate-50 px-4">
         <div className="max-w-7xl mx-auto text-center mb-16">
           <h2 className="text-4xl font-bold mb-4">Our Solutions</h2>
-          <div className="w-16 h-1 bg-blue-600 mx-auto"></div>
         </div>
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-          {solutions?.map((sol: any, idx: number) => (
-            <motion.div key={idx} whileHover={{ y: -10 }} onClick={() => { setSelectedSolution(idx); navigateTo('sol_detail'); }} className="bg-white rounded-2xl overflow-hidden shadow-lg cursor-pointer group">
-              <div className="h-60 overflow-hidden"><img src={sol.image} alt={sol.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" /></div>
+          {solutions?.length > 0 ? solutions.map((sol: any, idx: number) => (
+            <div key={idx} onClick={() => { setSelectedSolution(idx); navigateTo('sol_detail'); }} className="bg-white rounded-2xl overflow-hidden shadow-lg cursor-pointer group">
+              <div className="h-60 overflow-hidden"><img src={sol.image || 'https://via.placeholder.com/400x300'} alt={sol.title} className="w-full h-full object-cover" /></div>
               <div className="p-8">
                 <span className="text-blue-600 font-bold text-sm uppercase">{sol.category}</span>
                 <h3 className="text-2xl font-bold mt-2 mb-4">{sol.title}</h3>
-                <p className="text-slate-600 leading-relaxed">{sol.description}</p>
-                <div className="mt-6 text-blue-600 font-semibold flex items-center gap-2">
-                  자세히 보기 <span>&rarr;</span>
-                </div>
+                <p className="text-slate-600">{sol.description}</p>
               </div>
-            </motion.div>
-          ))}
+            </div>
+          )) : <div className="col-span-3 text-center py-10 text-slate-400">솔루션 데이터가 없습니다.</div>}
         </div>
       </section>
     </motion.div>
   );
 
-  const PageLayout = ({ title, content }: { title: string; content: React.ReactNode }) => (
-    <motion.div initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -20, opacity: 0 }} className="py-24 px-4">
-      <div className="max-w-5xl mx-auto">
-        <div className="flex items-center gap-4 mb-12">
-          <div className="w-2 h-8 bg-blue-600"></div>
-          <h2 className="text-4xl font-bold">{title}</h2>
-        </div>
-        <div className="bg-white p-8 md:p-16 rounded-3xl shadow-sm border border-slate-100">{content}</div>
-      </div>
-    </motion.div>
-  );
-
-  const SolutionDetail = () => {
-    const sol = solutions?.[selectedSolution || 0];
-    if (!sol) return <div className="py-24 text-center">솔루션 정보를 찾을 수 없습니다.</div>;
-    return (
-      <PageLayout title={sol.category}>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-16">
-          <img src={sol.image} alt={sol.title} className="rounded-2xl shadow-2xl w-full h-96 object-cover" />
-          <div>
-            <h3 className="text-3xl font-bold mb-6">{sol.title}</h3>
-            <p className="text-lg text-slate-600 leading-relaxed mb-8">{sol.description}</p>
-            <button onClick={() => navigateTo('cs')} className="px-8 py-4 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition-colors">문의하기</button>
-          </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {sol.detailedFeatures?.map((feat: any, idx: number) => (
-            <div key={idx} className="p-6 border border-slate-200 rounded-xl hover:border-blue-400 transition-colors">
-              <h4 className="text-xl font-bold mb-2">{feat.featureTitle}</h4>
-              <p className="text-slate-600">{feat.featureContent}</p>
-            </div>
-          ))}
-        </div>
-      </PageLayout>
-    );
-  };
-
   return (
     <div className="min-h-screen bg-white text-slate-900 font-sans">
+      {/* [디버그 영역] 실제 데이터 구조를 화면에 출력합니다. */}
+      <div className="bg-black text-green-400 p-4 text-[10px] overflow-auto max-h-40 font-mono">
+        <strong>DEBUG DATA:</strong><br/> {debugData}
+      </div>
+      
       <Navbar />
       <main>
         <AnimatePresence mode="wait">
           {activePage === 'main' && <MainHome key="main" />}
-          {activePage === 'ceo' && (
-            <PageLayout title="CEO 인사말" content={
-              <div className="flex flex-col md:flex-row gap-12 items-center">
-                <img src={corporateInfo?.ceoGreeting?.image || ''} className="w-64 h-80 object-cover rounded-2xl shadow-lg" />
-                <div>
-                  <h3 className="text-2xl font-bold mb-6">{corporateInfo?.ceoGreeting?.title || '인사말'}</h3>
-                  <p className="text-slate-600 leading-relaxed whitespace-pre-line">{corporateInfo?.ceoGreeting?.content || '내용을 입력해주세요.'}</p>
-                </div>
-              </div>
-            } />
-          )}
-          {activePage === 'mission' && (
-            <PageLayout title="미션 & 비전" content={
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="p-8 bg-blue-50 rounded-2xl border-l-8 border-blue-600">
-                  <h4 className="text-xl font-bold mb-4">Mission</h4>
-                  <p className="text-lg leading-relaxed">{corporateInfo?.missionVision?.mission || '미션 내용을 입력해주세요.'}</p>
-                </div>
-                <div className="p-8 bg-slate-50 rounded-2xl border-l-8 border-slate-600">
-                  <h4 className="text-xl font-bold mb-4">Vision</h4>
-                  <p className="text-lg leading-relaxed">{corporateInfo?.missionVision?.vision || '비전 내용을 입력해주세요.'}</p>
-                </div>
-              </div>
-            } />
-          )}
-          {activePage === 'sol_detail' && <SolutionDetail key="sol_detail" />}
-          {activePage === 'cs' && (
-            <PageLayout title="문의하기" content={
-              <div className="text-center space-y-8">
-                <p className="text-xl text-slate-600 leading-relaxed whitespace-pre-line">
-                  {data.csGuide || '문의 내용을 입력해주세요.'}
-                </p>
-                <div className="flex flex-col md:flex-row justify-center gap-4">
-                  {data.supportPhone && (
-                    <a href={`tel:${data.supportPhone}`} className="px-8 py-4 bg-slate-900 text-white font-bold rounded-xl hover:bg-slate-800 transition">📞 전화 상담: {data.supportPhone}</a>
-                  )}
-                  {data.kakaoLink && (
-                    <a href={data.kakaoLink} target="_blank" className="px-8 py-4 bg-yellow-400 text-slate-900 font-bold rounded-xl hover:bg-yellow-500 transition">💬 카카오톡 상담하기</a>
-                  )}
-                </div>
-              </div>
-            } />
-          )}
-          {activePage !== 'main' && activePage !== 'ceo' && activePage !== 'mission' && activePage !== 'sol_detail' && activePage !== 'cs' && (
-            <PageLayout title="준비 중인 페이지" content={<p>해당 콘텐츠는 현재 업데이트 중입니다.</p>} />
+          {activePage !== 'main' && (
+             <div className="py-24 text-center text-2xl font-bold">{activePage} 페이지 준비 중</div>
           )}
         </AnimatePresence>
       </main>
       <footer className="bg-slate-900 text-slate-400 py-16 px-4">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
-          <div>
-            <div className="text-2xl font-bold text-white mb-6">{company?.name || '회사명'}</div>
-            <p className="text-sm leading-relaxed mb-6">{footer?.address || ''}<br/>TEL: {data.supportPhone || ''}</p>
-            <p className="text-xs">COPYRIGHT Ⓒ {new Date().getFullYear()} {company?.name || 'Company'}. ALL RIGHTS RESERVED.</p>
-          </div>
-          <div>
-            <h4 className="text-white font-bold mb-6">Quick Links</h4>
-            <ul className="space-y-3 text-sm">
-              <li className="hover:text-white cursor-pointer" onClick={() => navigateTo('main')}>홈으로</li>
-              <li className="hover:text-white cursor-pointer" onClick={() => navigateTo('ceo')}>CEO 인사말</li>
-              <li className="hover:text-white cursor-pointer" onClick={() => navigateTo('sol_detail')}>사업소개</li>
-              <li className="hover:text-white cursor-pointer" onClick={() => navigateTo('cs')}>문의하기</li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="text-white font-bold mb-6">Customer Support</h4>
-            <p className="text-2xl font-bold text-white mb-2">{data.supportPhone || '전화번호 없음'}</p>
-            <p className="text-sm">{footer?.contactEmail || ''}</p>
-          </div>
+        <div className="max-w-7xl mx-auto text-center">
+          <div className="text-2xl font-bold text-white mb-4">{company?.name || '회사명'}</div>
+          <p>© {new Date().getFullYear()} {company?.name}. All rights reserved.</p>
         </div>
       </footer>
     </div>
