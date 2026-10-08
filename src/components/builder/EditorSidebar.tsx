@@ -180,24 +180,79 @@ export default function EditorSidebar({ data, setData, siteId, refreshSites, act
                 <button onClick={() => setActiveSection('sol_detail')} className="text-[10px] text-blue-600 underline">미리보기</button>
               </div>
               <div className="space-y-4">
-                {(data.solutions || []).map((sol, idx) => (
-                  <div key={idx} className="p-4 bg-slate-50 border-2 border-slate-200 rounded-xl space-y-3 relative group hover:border-blue-300 transition-colors">
-                    <div className="flex justify-between items-center mb-1">
-                      <span className="text-[10px] font-black text-blue-600">솔루션 #{idx + 1}</span>
-                      <button onClick={() => setData(prev => ({ ...prev, solutions: prev.solutions.filter((_, i) => i !== idx) }))} className="text-slate-400 hover:text-red-500 text-xs">삭제</button>
-                    </div>
-                    <div className="flex gap-2">
-                      <input type="text" value={sol.title} onChange={(e) => { const next = [...data.solutions]; next[idx].title = e.target.value; setData(prev => ({ ...prev, solutions: next })); }} className="flex-1 p-2 border rounded text-xs font-bold" placeholder="솔루션 제목" />
-                      <input type="number" value={(data as any).fontSizes?.solTitle || 24} onChange={(e) => updateFontSize('sol', 'title', parseInt(e.target.value))} className="w-16 p-2 border rounded text-xs" />
-                    </div>
-                    <input type="text" value={sol.category} onChange={(e) => { const next = [...data.solutions]; next[idx].category = e.//... (이하 동일 패턴으로 확장)
-                    <textarea rows={3} value={sol.description} onChange={(e) => { const next = [...data.solutions]; next[idx].description = e.target.value; setData(prev => ({ ...prev, solutions: next })); }} className="w-full p-2 border rounded text-xs" placeholder="상세 설명 입력" />
-                    <div className="flex items-center gap-2">
-                      <label className="text-[10px] text-slate-500 shrink-0">대표 이미지</label>
-                      <input type="file" onChange={(e) => handleImageUpload(e, (url) => { const next = [...data.solutions]; next[idx].image = url; setData(prev => ({ ...prev, solutions: next })); }, `sol-${idx}`)} className="text-[10px] flex-1" />
-                    </div>
-                  </div>
-                ))}
+{(data.solutions || []).map((sol, idx) => (
+  <div key={idx} className="p-4 bg-slate-50 border-2 border-slate-200 rounded-xl space-y-3 relative group hover:border-blue-300 transition-colors">
+    <div className="flex justify-between items-center mb-1">
+      <span className="text-[10px] font-black text-blue-600">솔루션 #{idx + 1}</span>
+      <button onClick={() => {
+        const next = [...data.solutions];
+        next.splice(idx, 1);
+        setData(prev => ({ ...prev, solutions: next }));
+      }} className="text-slate-400 hover:text-red-500 text-xs">삭제</button>
+    </div>
+
+    <div className="flex gap-2">
+      <input
+        type="text"
+        value={sol.title}
+        onChange={(e) => {
+          const next = [...data.solutions];
+          next[idx].title = e.target.value;
+          setData(prev => ({ ...prev, solutions: next }));
+        }}
+        className="flex-1 p-2 border rounded text-xs font-bold"
+        placeholder="솔루션 제목"
+      />
+      <input
+        type="number"
+        value={(data as any).fontSizes?.solTitle || 24}
+        onChange={(e) => {
+          // 폰트 사이즈 업데이트 예시
+          // updateFontSize('sol', 'title', parseInt(e.target.value))
+          // 필요한 경우 실제 함수로 교체
+        }}
+        className="w-16 p-2 border rounded text-xs"
+      />
+    </div>
+
+    <input
+      type="text"
+      value={sol.category}
+      onChange={(e) => {
+        const next = [...data.solutions];
+        next[idx].category = e.target.value;
+        setData(prev => ({ ...prev, solutions: next }));
+      }}
+      className="w-full p-2 border rounded text-xs"
+      placeholder="카테고리"
+    />
+
+    <textarea
+      rows={3}
+      value={sol.description}
+      onChange={(e) => {
+        const next = [...data.solutions];
+        next[idx].description = e.target.value;
+        setData(prev => ({ ...prev, solutions: next }));
+      }}
+      className="w-full p-2 border rounded text-xs"
+      placeholder="상세 설명 입력"
+    />
+
+    <div className="flex items-center gap-2">
+      <label className="text-[10px] text-slate-500 shrink-0">대표 이미지</label>
+      <input
+        type="file"
+        onChange={(e) => handleImageUpload(e, (url) => {
+          const next = [...data.solutions];
+          next[idx].image = url;
+          setData(prev => ({ ...prev, solutions: next }));
+        }, `sol-${idx}`)}
+        className="text-[10px] flex-1"
+      />
+    </div>
+  </div>
+))}
                 <button onClick={() => setData(prev => ({ ...prev, solutions: [...(prev.solutions || []), { title: '신규 솔루션', category: '분야', description: '설명을 입력하세요', image: '', detailedFeatures: [] }] }))} className="w-full py-3 bg-blue-600 text-white rounded-lg text-xs font-bold hover:bg-blue-700 transition shadow-md">+ 새로운 솔루션 추가</button>
               </div>
             </div>
