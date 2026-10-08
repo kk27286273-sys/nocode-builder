@@ -29,8 +29,9 @@ export default function GNB({ company, navigation, themeColor, activePage, navig
               <button 
                 className={`text-[15px] font-semibold transition-all duration-300 ${activePage === menu.targetId ? 'text-blue-600' : 'text-slate-700 hover:text-blue-600'}`}
 onClick={() => {
-  // 메뉴 이름이 '회사소개'면 무조건 'about'으로 보내고, 아니면 targetId 사용
-  const target = menu.label === '회사소개' ? 'about' : (menu.targetId || 'main');
+  // 메뉴 이름에 'CEO' 또는 '인사말' 또는 '회사소개'가 포함되어 있으면 'about'으로 연결
+  const isAboutPage = menu.label.includes('CEO') || menu.label.includes('인사말') || menu.label.includes('회사소개');
+  const target = isAboutPage ? 'about' : (menu.targetId || 'main');
   navigateTo(target);
 }}
               >
