@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { B2BTemplateData } from '@/data/templates';
 import { CorporateViewer } from './CorporateViewer';
 
@@ -11,59 +11,40 @@ interface LivePreviewProps {
 }
 
 export default function LivePreview({ data, zoom: propZoom, setZoom: propSetZoom }: LivePreviewProps) {
-  // 초기 줌을 100%가 아니라, 화면에 맞게 자동으로 조절될 수 있도록 설정
-  const [internalZoom, setInternalZoom] = useState(100);
-  const zoom = propZoom !== undefined ? propZoom : internalZoom;
-  const setZoom = propSetZoom || setInternalZoom;
+  const zoom = propZoom || 100;
+  const setZoom = propSetZoom || (() => {});
 
   return (
-    <div className="flex-1 flex flex-col w-full h-full bg-slate-200 overflow-hidden">
-      {/* 상단 컨트롤 바 */}
-      <div className="h-12 bg-white border-b border-slate-300 flex items-center justify-between px-6 z-30 shrink-0 shadow-sm">
-        <span className="text-xs font-bold text-slate-600 tracking-wider uppercase">
-          Preview Canvas ({zoom}%)
+    // 1. 최상위: h-full과 overflow-hidden을 제거하고, flex-col로 구조만 잡습니다.
+    <div className="flex-1 flex flex-col w-full h-full bg-slate-200 relative">
+      
+      {/* 2. 컨트롤 바: shrink-0로 높이 고정 */}
+      <div className="h-12 bg-white border-b border-slate-300 flex items-center justify-between px-6 z-50 shrink-0 shadow-sm">
+        <span className="text-xs font-bold text-slate-600 tracking-wider">
+          PREVIEW CANVAS ({zoom}%)
         </span>
         <div className="flex items-center gap-2">
-          <button 
-            type="button"
-            onClick={() => setZoom((prev) => Math.max(prev - 10, 30))} 
-            className="w-7 h-7 flex items-center justify-center text-sm font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded border border-slate-300 transition"
-          >
-            -
-          </button>
-          <span className="text-xs font-semibold text-slate-700 w-12 text-center">{zoom}%</span>
-          <button 
-            type="button"
-            onClick={() => setZoom((prev) => Math.min(prev + 10, 150))} 
-            className="w-7 h-7 flex items-center justify-center text-sm font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded border border-slate-300 transition"
-          >
-            +
-          </button>
-          <button 
-            type="button"
-            onClick={() => setZoom(100)} 
-            className="ml-2 px-2.5 py-1 text-xs text-slate-500 hover:text-slate-800 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded transition"
-          >
-            100%
-          </button>
+          <button onClick={() => setZoom((prev: any) => Math.max(prev - 10, 30))} className="w-7 h-7 bg-slate-100 border rounded text-xs font-bold">-</button>
+          <span className="text-xs font-semibold w-10 text-center">{zoom}%</span>
+          <button onClick={() => setZoom((prev: any) => Math.min(prev + 10, 150))} className="w-7 h-7 bg-slate-100 border rounded text-xs font-bold">+</button>
         </div>
       </div>
 
       {/* 
-        핵심 수정 영역: 
-        1. overflow-y-auto를 통해 세로 스크롤은 자유롭게 둡니다.
-        2. items-center를 통해 캔버스를 중앙에 배치합니다.
-        3. width를 '100%'로 잡고 max-width를 줌 수치에 따라 조절하여 
-           줌이 100% 이하일 때는 화면에 꽉 차게, 100% 이상일 때만 스크롤이 생기게 합니다.
+        3. 뷰포트: 여기가 핵심입니다. 
+        - min-h-0: flex 자식 요소가 부모 높이를 넘어갈 때 발생하는 버그 방지
+        - overflow-y-auto: 여기서 모든 세로 스크롤을 처리합니다.
+        - h-full: 남은 높이를 모두 차지하게 합니다.
       */}
-      <div className="flex-1 overflow-y-auto overflow-x-auto p-4 md:p-6 flex justify-center items-start bg-slate-200">
+      <div className="flex-1 min-h-0 overflow-y-auto overflow-x-auto p-4 md:p-10 flex justify-center items-start">
+        
+        {/* 4. 캔버스: 물리적 너비만 조절하고, 높이는 h-fit으로 콘텐츠만큼 늘어나게 합니다. */}
         <div 
           style={{ 
-            width: zoom === 100 ? '100%' : `${zoom}%`,
-            maxWidth: zoom === 100 ? '1280px' : `${1280 * (zoom / 100)}px`,
-            minWidth: '320px', // 모바일 최소 너비 보장
+            width: `${1280 * (zoom / 100)}px`,
+            maxWidth: '100%',
           }}
-          className="bg-white shadow-2xl border border-slate-300 rounded-lg overflow-hidden shrink-0 h-fit transition-all duration-200"
+          className="bg-white shadow-2xl border border-slate-300 rounded-lg overflow-hidden h-fit shrink-0"
         >
           <CorporateViewer data={data} />
         </div>
