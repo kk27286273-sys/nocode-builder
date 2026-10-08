@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { B2BTemplateData } from '@/types/template'; // 경로 수정
+import { B2BTemplateData } from '@/types/template'; 
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface CorporateViewerProps {
@@ -75,7 +75,7 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
                 <span className="text-blue-600 font-bold text-sm uppercase">{sol.category}</span>
                 <h3 className="text-2xl font-bold mt-2 mb-4">{sol.title}</h3>
                 <p className="text-slate-600 leading-relaxed">{sol.description}</p>
-                <div className="mt-6 text-blue-600 font-semibold flex items-center gap-2">자세히 보기 <span className="text-xl">→</span></div>
+                <div className="mt-6 text-blue-600 font-semibold flex items-center gap-2">자세히 보기 <span className="text-xl">→</</span></div>
               </div>
             </motion.div>
           ))}
@@ -200,3 +200,5 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
     </div>
   );
 };
+
+export default CorporateViewer;
