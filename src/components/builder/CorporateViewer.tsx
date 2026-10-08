@@ -11,7 +11,10 @@ interface CorporateViewerProps {
 }
 
 export const CorporateViewer = ({ data, activeSection: propSection, setActiveSection: propSetSection }: CorporateViewerProps) => {
-  const { company, navigation, corporateInfo, solutions, hero, themeColor, footer } = data;
+  // 데이터가 없을 경우를 대비해 기본값 설정
+  if (!data) return <div className="p-10 text-center">데이터를 불러오는 중입니다...</div>;
+
+  const { company = {}, navigation = {}, corporateInfo = {}, solutions = [], hero = {}, themeColor = '#000', footer = {} } = data;
   
   const [internalPage, setInternalPage] = useState('main');
   const activePage = propSection || internalPage;
@@ -28,18 +31,18 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
     <nav className="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
         <div className="cursor-pointer" onClick={() => navigateTo('main')}>
-          {company.logoUrl ? (
+          {company?.logoUrl ? (
             <img src={company.logoUrl} alt={company.name} className="h-10 object-contain" />
           ) : (
-            <span className="text-2xl font-bold" style={{ color: themeColor }}>{company.name}</span>
+            <span className="text-2xl font-bold" style={{ color: themeColor }}>{company?.name || '회사명'}</span>
           )}
         </div>
         <div className="hidden md:flex gap-8">
-          {navigation.menus.map((menu) => (
+          {navigation?.menus?.map((menu) => (
             <div key={menu.label} className="group relative py-7">
               <button className="font-medium text-slate-700 hover:text-blue-600 transition-colors">{menu.label}</button>
               <div className="absolute top-20 left-0 w-48 bg-white border border-slate-100 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 p-4">
-                {menu.children.map((child) => (
+                {menu.children?.map((child) => (
                   <button key={child.label} onClick={() => navigateTo(child.targetId)} className="block w-full text-left px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-blue-600 rounded">{child.label}</button>
                 ))}
               </div>
@@ -54,12 +57,12 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
       <section className="relative h-[700px] flex items-center justify-center text-white overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <img src={hero.mediaUrl} alt="hero" className="w-full h-full object-cover brightness-50" />
+          <img src={hero?.mediaUrl || ''} alt="hero" className="w-full h-full object-cover brightness-50" />
         </div>
         <div className="relative z-10 text-center px-4">
-          <motion.span initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="inline-block px-4 py-1 rounded-full bg-blue-600 text-sm font-bold mb-6">{hero.badge}</motion.span>
-          <motion.h1 initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }} className="text-5xl md:text-7xl font-extrabold mb-6 leading-tight whitespace-pre-line">{hero.title}</motion.h1>
-          <motion.p initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.4 }} className="text-lg md:text-xl text-slate-200 max-w-3xl mx-auto leading-relaxed whitespace-pre-line">{hero.subtitle}</motion.p>
+          <motion.span initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="inline-block px-4 py-1 rounded-full bg-blue-600 text-sm font-bold mb-6">{hero?.badge || '배지'}</motion.span>
+          <motion.h1 initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }} className="text-5xl md:text-7xl font-extrabold mb-6 leading-tight whitespace-pre-line">{hero?.title || '타이틀'}</motion.h1>
+          <motion.p initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.4 }} className="text-lg md:text-xl text-slate-200 max-w-3xl mx-auto leading-relaxed whitespace-pre-line">{hero?.subtitle || '서브타이틀'}</motion.p>
         </div>
       </section>
       <section className="py-24 bg-slate-50 px-4">
@@ -68,14 +71,14 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
           <div className="w-16 h-1 bg-blue-600 mx-auto"></div>
         </div>
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-          {solutions.map((sol, idx) => (
+          {solutions?.map((sol, idx) => (
             <motion.div key={idx} whileHover={{ y: -10 }} onClick={() => { setSelectedSolution(idx); navigateTo('sol_detail'); }} className="bg-white rounded-2xl overflow-hidden shadow-lg cursor-pointer group">
               <div className="h-60 overflow-hidden"><img src={sol.image} alt={sol.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" /></div>
               <div className="p-8">
                 <span className="text-blue-600 font-bold text-sm uppercase">{sol.category}</span>
                 <h3 className="text-2xl font-bold mt-2 mb-4">{sol.title}</h3>
                 <p className="text-slate-600 leading-relaxed">{sol.description}</p>
-                <div className="mt-6 text-blue-600 font-semibold flex items-center gap-2">자세히 보기 <span className="text-xl">→</span></div>
+                <div className="mt-6 text-blue-600 font-semibold flex items-center gap-2">자세히 보기 <span className="text-xl">→</</span></div>
               </div>
             </motion.div>
           ))}
@@ -97,7 +100,8 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
   );
 
   const SolutionDetail = () => {
-    const sol = solutions[selectedSolution || 0];
+    const sol = solutions?.[selectedSolution || 0];
+    if (!sol) return <div className="py-24 text-center">솔루션 정보를 찾을 수 없습니다.</div>;
     return (
       <PageLayout title={sol.category}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-16">
@@ -109,7 +113,7 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {sol.detailedFeatures.map((feat, idx) => (
+          {sol.detailedFeatures?.map((feat, idx) => (
             <div key={idx} className="p-6 border border-slate-200 rounded-xl hover:border-blue-400 transition-colors">
               <h4 className="text-xl font-bold mb-2">{feat.featureTitle}</h4>
               <p className="text-slate-600">{feat.featureContent}</p>
@@ -129,10 +133,10 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
           {activePage === 'ceo' && (
             <PageLayout title="CEO 인사말" content={
               <div className="flex flex-col md:flex-row gap-12 items-center">
-                <img src={corporateInfo.ceoGreeting.image} className="w-64 h-80 object-cover rounded-2xl shadow-lg" />
+                <img src={corporateInfo?.ceoGreeting?.image || ''} className="w-64 h-80 object-cover rounded-2xl shadow-lg" />
                 <div>
-                  <h3 className="text-2xl font-bold mb-6">{corporateInfo.ceoGreeting.title}</h3>
-                  <p className="text-slate-600 leading-relaxed whitespace-pre-line">{corporateInfo.ceoGreeting.content}</p>
+                  <h3 className="text-2xl font-bold mb-6">{corporateInfo?.ceoGreeting?.title || '인사말'}</h3>
+                  <p className="text-slate-600 leading-relaxed whitespace-pre-line">{corporateInfo?.ceoGreeting?.content || '내용을 입력해주세요.'}</p>
                 </div>
               </div>
             } />
@@ -142,11 +146,11 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="p-8 bg-blue-50 rounded-2xl border-l-8 border-blue-600">
                   <h4 className="text-xl font-bold mb-4">Mission</h4>
-                  <p className="text-lg leading-relaxed">{corporateInfo.missionVision.mission}</p>
+                  <p className="text-lg leading-relaxed">{corporateInfo?.missionVision?.mission || '미션 내용을 입력해주세요.'}</p>
                 </div>
                 <div className="p-8 bg-slate-50 rounded-2xl border-l-8 border-slate-600">
                   <h4 className="text-xl font-bold mb-4">Vision</h4>
-                  <p className="text-lg leading-relaxed">{corporateInfo.missionVision.vision}</p>
+                  <p className="text-lg leading-relaxed">{corporateInfo?.missionVision?.vision || '비전 내용을 입력해주세요.'}</p>
                 </div>
               </div>
             } />
@@ -177,9 +181,9 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
       <footer className="bg-slate-900 text-slate-400 py-16 px-4">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
           <div>
-            <div className="text-2xl font-bold text-white mb-6">{company.name}</div>
-            <p className="text-sm leading-relaxed mb-6">{footer.address}<br/>TEL: {data.supportPhone || corporateInfo.location.headOffice.tel}</p>
-            <p className="text-xs">COPYRIGHT Ⓒ {new Date().getFullYear()} {company.name}. ALL RIGHTS RESERVED.</p>
+            <div className="text-2xl font-bold text-white mb-6">{company?.name || '회사명'}</div>
+            <p className="text-sm leading-relaxed mb-6">{footer?.address || ''}<br/>TEL: {data.supportPhone || corporateInfo?.location?.headOffice?.tel || ''}</p>
+            <p className="text-xs">COPYRIGHT Ⓒ {new Date().getFullYear()} {company?.name || 'Company'}. ALL RIGHTS RESERVED.</p>
           </div>
           <div>
             <h4 className="text-white font-bold mb-6">Quick Links</h4>
@@ -193,7 +197,7 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
           <div>
             <h4 className="text-white font-bold mb-6">Customer Support</h4>
             <p className="text-2xl font-bold text-white mb-2">{data.supportPhone || '전화번호 없음'}</p>
-            <p className="text-sm">{footer.contactEmail}</p>
+            <p className="text-sm">{footer?.contactEmail || ''}</p>
           </div>
         </div>
       </footer>
