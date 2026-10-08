@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { B2BTemplateData } from '@/data/templates';
-import { CorporateViewer } from './CorporateViewer'; // 뷰어 컴포넌트 임포트
+import { CorporateViewer } from './CorporateViewer';
 
 interface LivePreviewProps {
   data: B2BTemplateData;
@@ -15,38 +15,62 @@ export default function LivePreview({ data, zoom: propZoom, setZoom: propSetZoom
   const zoom = propZoom !== undefined ? propZoom : internalZoom;
   const setZoom = propSetZoom || setInternalZoom;
 
+  const scale = zoom / 100;
+
   return (
-    <main className="flex-1 flex flex-col h-full bg-slate-100 overflow-hidden relative">
+    <div className="flex-1 flex flex-col w-full h-full min-h-0 bg-slate-200 overflow-hidden select-none">
       {/* 상단 줌 컨트롤 바 */}
-      <div className="h-12 bg-white/80 backdrop-blur border-b border-slate-200 flex items-center justify-between px-4 sm:px-6 z-10 shrink-0">
-        <span className="text-xs font-semibold text-slate-500 tracking-wider">미리보기 캔버스 ({zoom}%)</span>
-        <div className="flex items-center gap-1 sm:gap-2">
-          <button onClick={() => setZoom((prev) => Math.max(prev - 10, 50))} className="p-1 px-2.5 text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded border border-slate-300 cursor-pointer">-</button>
-          <span className="text-xs font-medium text-slate-600 w-10 sm:w-12 text-center">{zoom}%</span>
-          <button onClick={() => setZoom((prev) => Math.min(prev + 10, 150))} className="p-1 px-2.5 text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded border border-slate-300 cursor-pointer">+</button>
-          <button onClick={() => setZoom(100)} className="ml-1 sm:ml-2 text-xs text-slate-500 hover:text-slate-800 underline cursor-pointer">초기화</button>
+      <div className="h-12 bg-white border-b border-slate-300 flex items-center justify-between px-6 z-30 shrink-0 shadow-sm">
+        <span className="text-xs font-bold text-slate-600 tracking-wider uppercase">
+          Preview Canvas ({zoom}%)
+        </span>
+        <div className="flex items-center gap-2">
+          <button 
+            type="button"
+            onClick={() => setZoom((prev) => Math.max(prev - 10, 40))} 
+            className="w-7 h-7 flex items-center justify-center text-sm font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded border border-slate-300 transition"
+          >
+            -
+          </button>
+          <span className="text-xs font-semibold text-slate-700 w-12 text-center">{zoom}%</span>
+          <button 
+            type="button"
+            onClick={() => setZoom((prev) => Math.min(prev + 10, 150))} 
+            className="w-7 h-7 flex items-center justify-center text-sm font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded border border-slate-300 transition"
+          >
+            +
+          </button>
+          <button 
+            type="button"
+            onClick={() => setZoom(100)} 
+            className="ml-2 px-2.5 py-1 text-xs text-slate-500 hover:text-slate-800 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded transition"
+          >
+            100%
+          </button>
         </div>
       </div>
 
-      {/* 캔버스 영역: 스크롤 최적화 */}
-      <div className="flex-1 overflow-auto p-4 md:p-8 flex justify-center items-start relative bg-slate-200/50">
-        <div
+      {/* 무한 스크롤 가능한 캔버스 뷰포트 영역 */}
+      <div className="flex-1 w-full h-[calc(100%-3rem)] overflow-y-auto overflow-x-auto p-4 md:p-10 flex justify-center items-start">
+        {/* 스케일 보정 래퍼: scale 축소 시 줄어든 실제 높이를 보정 */}
+        <div 
+          className="relative transition-all duration-100 origin-top flex justify-center pb-20"
           style={{
-            width: '1200px',
-            transform: `scale(${zoom / 100})`,
-            transformOrigin: 'top center',
-            // scale로 인해 발생하는 하단 빈 공간을 제거하기 위한 동적 마진 계산
-            marginBottom: `${-1200 * (1 - zoom / 100)}px`, 
+            width: zoom === 100 ? '1280px' : `${1280 * scale}px`,
           }}
-          className="bg-white shadow-2xl border border-slate-300 transition-transform duration-75 relative h-fit"
         >
-          {/* 
-            핵심 수정: 내부의 하드코딩된 모든 섹션을 제거하고 
-            실제 렌더링 엔진인 CorporateViewer만 배치합니다.
-          */}
-          <CorporateViewer data={data} />
+          <div
+            style={{
+              width: '1280px',
+              transform: `scale(${scale})`,
+              transformOrigin: 'top left',
+            }}
+            className="bg-white shadow-2xl border border-slate-300 rounded-lg overflow-visible shrink-0"
+          >
+            <CorporateViewer data={data} />
+          </div>
         </div>
       </div>
-    </main>
+    </div>
   );
 }
