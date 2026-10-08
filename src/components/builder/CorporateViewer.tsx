@@ -9,21 +9,22 @@ interface CorporateViewerProps {
   setActiveSection?: (section: string) => void;
 }
 
-export const CorporateViewer = ({ data, activeSection: propSection, setActiveSection: propSetSection }: CorporateViewerProps) => {
-  if (!data) return <div className="p-10 text-center">데이터를 불러오는 중입니다...</div>;
-
-  // [검증용] 데이터 구조를 화면에 직접 출력하여 매핑 오류를 잡습니다.
-  // 실제 배포 후 이 부분의 텍스트를 보고 데이터 변수명을 수정하겠습니다.
-  const debugData = JSON.stringify(data, null, 2);
+export default function CorporateViewer({ data, activeSection: propSection, setActiveSection: propSetSection }: CorporateViewerProps) {
+  if (!data) return <div className="p-10 text-center text-slate-400">데이터를 불러오는 중입니다...</div>;
 
   const { 
     company = {}, 
     navigation = {}, 
     solutions = [], 
     hero = {}, 
-    themeColor = '#000', 
+    themeColor = '#0284C7', 
     footer = {},
-    corporateInfo = {} 
+    faqs = [],
+    stats = [],
+    reviews = [],
+    reviewsSection = {},
+    solutionsSection = {},
+    partnersSection = {}
   } = data;
   
   const [internalPage, setInternalPage] = useState('main');
@@ -37,25 +38,24 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
   };
 
   const Navbar = () => (
-    <nav className="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
-        <div className="cursor-pointer" onClick={() => navigateTo('main')}>
+    <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 shadow-sm">
+      <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+        <div className="cursor-pointer flex items-center gap-2" onClick={() => navigateTo('main')}>
           {company?.logoUrl ? (
             <img src={company.logoUrl} alt={company.name} className="h-10 object-contain" />
           ) : (
-            <span className="text-2xl font-bold" style={{ color: themeColor }}>{company?.name || '회사명'}</span>
+            <span className="text-2xl font-black tracking-tighter" style={{ color: themeColor }}>{company?.name || '회사명'}</span>
           )}
         </div>
         <div className="hidden md:flex gap-8">
-          {(navigation?.navLinks || navigation?.menus || []).map((menu: any) => (
-            <div key={menu.label} className="group relative py-7">
-              <button 
-                className="font-medium text-slate-700 hover:text-blue-600 transition-colors"
-                onClick={() => navigateTo(menu.targetId || 'main')}
-              >
-                {menu.label}
-              </button>
-            </div>
+          {(navigation?.navLinks || []).map((menu: any) => (
+            <button 
+              key={menu.label}
+              className={`text-sm font-bold transition-colors ${activePage === menu.targetId ? 'text-blue-600' : 'text-slate-600 hover:text-blue-500'}`}
+              onClick={() => navigateTo(menu.targetId)}
+            >
+              {menu.label}
+            </button>
           ))}
         </div>
       </div>
@@ -64,60 +64,125 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
 
   const MainHome = () => (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-      <section className="relative h-[700px] flex items-center justify-center text-white overflow-hidden bg-slate-800">
+      {/* Hero Section */}
+      <section className="relative h-[600px] flex items-center justify-center text-white overflow-hidden bg-slate-900">
         <div className="absolute inset-0 z-0">
           {hero?.mediaUrl && <img src={hero.mediaUrl} alt="hero" className="w-full h-full object-cover brightness-50" />}
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-slate-900/50" />
         </div>
-        <div className="relative z-10 text-center px-4">
-          <motion.span className="inline-block px-4 py-1 rounded-full bg-blue-600 text-sm font-bold mb-6">{hero?.badge || '배지'}</motion.span>
-          <motion.h1 className="text-5xl md:text-7xl font-extrabold mb-6 leading-tight whitespace-pre-line">{hero?.title || '타이틀'}</motion.h1>
-          <motion.p className="text-lg md:text-xl text-slate-200 max-w-3xl mx-auto leading-relaxed whitespace-pre-line">{hero?.subtitle || '서브타이틀'}</motion.p>
+        <div className="relative z-10 text-center px-6">
+          <motion.span 
+            initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }}
+            className="inline-block px-4 py-1.5 rounded-full bg-blue-600 text-white text-xs font-bold mb-6 shadow-lg"
+          >
+            {hero?.badge || 'Premium Service'}
+          </motion.span>
+          <motion.h1 
+            initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.1 }}
+            className="text-4xl md:text-6xl font-black mb-6 leading-tight whitespace-pre-line"
+          >
+            {hero?.title || '타이틀을 입력하세요'}
+          </motion.h1>
+          <motion.p 
+            initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }}
+            className="text-lg md:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed whitespace-pre-line"
+          >
+            {hero?.subtitle || '서브타이틀을 입력하세요'}
+          </motion.p>
         </div>
       </section>
-      <section className="py-24 bg-slate-50 px-4">
+
+      {/* Stats Section */}
+      <section className="py-12 bg-white border-b border-slate-100">
+        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
+          {stats.map((stat: any, idx: number) => (
+            <div key={idx} className="text-center">
+              <div className="text-3xl md:text-4xl font-black mb-2" style={{ color: themeColor }}>{stat.value}</div>
+              <div className="text-slate-500 text-sm font-medium">{stat.label}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Solutions Section */}
+      <section className="py-24 bg-slate-50 px-6">
         <div className="max-w-7xl mx-auto text-center mb-16">
-          <h2 className="text-4xl font-bold mb-4">Our Solutions</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-slate-900">{solutionsSection?.title || 'Our Solutions'}</h2>
+          <p className="text-slate-500 max-w-2xl mx-auto">{solutionsSection?.subtitle}</p>
         </div>
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-          {solutions?.length > 0 ? solutions.map((sol: any, idx: number) => (
-            <div key={idx} onClick={() => { setSelectedSolution(idx); navigateTo('sol_detail'); }} className="bg-white rounded-2xl overflow-hidden shadow-lg cursor-pointer group">
-              <div className="h-60 overflow-hidden"><img src={sol.image || 'https://via.placeholder.com/400x300'} alt={sol.title} className="w-full h-full object-cover" /></div>
+          {solutions.length > 0 ? solutions.map((sol: any, idx: number) => (
+            <div 
+              key={idx} 
+              onClick={() => { setSelectedSolution(idx); navigateTo('sol_detail'); }} 
+              className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer group border border-slate-200"
+            >
+              <div className="h-56 overflow-hidden bg-slate-200">
+                <img src={sol.image || 'https://via.placeholder.com/400x300'} alt={sol.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+              </div>
               <div className="p-8">
-                <span className="text-blue-600 font-bold text-sm uppercase">{sol.category}</span>
-                <h3 className="text-2xl font-bold mt-2 mb-4">{sol.title}</h3>
-                <p className="text-slate-600">{sol.description}</p>
+                <span className="text-blue-600 font-bold text-xs uppercase tracking-widest">{sol.category}</span>
+                <h3 className="text-2xl font-bold mt-2 mb-3 text-slate-900">{sol.title}</h3>
+                <p className="text-slate-600 text-sm leading-relaxed">{sol.description}</p>
               </div>
             </div>
-          )) : <div className="col-span-3 text-center py-10 text-slate-400">솔루션 데이터가 없습니다.</div>}
+          )) : <div className="col-span-3 text-center py-20 text-slate-400">솔루션 데이터가 없습니다.</div>}
+        </div>
+      </section>
+
+      {/* Reviews Section */}
+      <section className="py-24 bg-white px-6">
+        <div className="max-w-7xl mx-auto text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-slate-900">{reviewsSection?.title || 'Customer Reviews'}</h2>
+          <p className="text-slate-500 max-w-2xl mx-auto">{reviewsSection?.subtitle}</p>
+        </div>
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
+          {reviews.map((rev: any, idx: number) => (
+            <div key={idx} className="p-8 rounded-3xl bg-slate-50 border border-slate-100">
+              <p className="text-slate-700 text-lg italic mb-6 leading-relaxed">"{rev.content}"</p>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-slate-300" />
+                <div>
+                  <div className="font-bold text-slate-900">{rev.author}</div>
+                  <div className="text-xs text-slate-500">{rev.role}</div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
     </motion.div>
   );
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 font-sans">
-      {/* [디버그 영역] 실제 데이터 구조를 화면에 출력합니다. */}
-      <div className="bg-black text-green-400 p-4 text-[10px] overflow-auto max-h-40 font-mono">
-        <strong>DEBUG DATA:</strong><br/> {debugData}
-      </div>
-      
+    <div className="min-h-screen bg-white text-slate-900 font-sans selection:bg-blue-100">
       <Navbar />
       <main>
         <AnimatePresence mode="wait">
           {activePage === 'main' && <MainHome key="main" />}
           {activePage !== 'main' && (
-             <div className="py-24 text-center text-2xl font-bold">{activePage} 페이지 준비 중</div>
+             <div className="py-40 text-center">
+               <h2 className="text-3xl font-bold mb-4">{activePage} 페이지</h2>
+               <p className="text-slate-500">현재 준비 중인 페이지입니다.</p>
+               <button onClick={() => navigateTo('main')} className="mt-8 px-6 py-3 bg-slate-900 text-white rounded-full font-bold transition-transform hover:scale-105">홈으로 돌아가기</button>
+             </div>
           )}
         </AnimatePresence>
       </main>
-      <footer className="bg-slate-900 text-slate-400 py-16 px-4">
-        <div className="max-w-7xl mx-auto text-center">
-          <div className="text-2xl font-bold text-white mb-4">{company?.name || '회사명'}</div>
-          <p>© {new Date().getFullYear()} {company?.name}. All rights reserved.</p>
+      <footer className="bg-slate-900 text-slate-400 py-20 px-6">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
+          <div className="text-left">
+            <div className="text-2xl font-black text-white mb-6" style={{ color: themeColor }}>{company?.name || '회사명'}</div>
+            <p className="text-sm leading-relaxed mb-4">{footer?.address}</p>
+            <p className="text-sm font-medium text-white">{footer?.contactEmail}</p>
+          </div>
+          <div className="text-left md:text-right">
+            <div className="text-white font-bold mb-4">Customer Support</div>
+            <div className="text-2xl font-bold text-white mb-2">{data.supportPhone || '010-0000-0000'}</div>
+            <p className="text-xs text-slate-500">© {new Date().getFullYear()} {company?.name || 'TH SOFT'}. All rights reserved.</p>
+          </div>
         </div>
       </footer>
     </div>
   );
-};
-
-export default CorporateViewer;
+}
