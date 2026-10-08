@@ -11,8 +11,11 @@ export default function CorporateViewer({ data, activeSection, setActiveSection 
   // 네비게이션 데이터 보정: 배열 형태든 객체 형태든 menus 배열을 추출함
   const getMenus = () => {
     if (!safeData.navigation) return [];
-    if (Array.isArray(safeData.navigation)) return safeData.navigation; // 배열인 경우
-    if (safeData.navigation.menus) return safeData.navigation.menus; // 객체 내 menus인 경우
+    // 1. navigation 자체가 배열인 경우
+    if (Array.isArray(safeData.navigation)) return safeData.navigation; 
+    // 2. navigation.menus가 배열인 경우
+    if (safeData.navigation.menus && Array.isArray(safeData.navigation.menus)) return safeData.navigation.menus;
+    // 3. 그 외 모든 경우 빈 배열 반환
     return [];
   };
   const menus = getMenus();
@@ -49,8 +52,14 @@ export default function CorporateViewer({ data, activeSection, setActiveSection 
         <AnimatePresence mode="wait">
           {activeSection === 'main' && (
             <motion.div key="main" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-              <section className="relative h-[85vh] flex items-center justify-center text-center text-white" 
-                style={{ backgroundImage: `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(${safeData.hero?.mediaUrl || 'https://via.placeholder.com/1920x1080'})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+{/* 1. 배경이미지: h-[85vh] -> min-h-screen으로 변경하여 화면 꽉 채움 */}
+<section className="relative min-h-screen w-full flex items-center justify-center text-center text-white bg-cover bg-center bg-no-repeat" 
+  style={{ 
+    backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${safeData.hero?.mediaUrl || 'https://via.placeholder.com/1920x1080'})`,
+    backgroundSize: 'cover', 
+    backgroundPosition: 'center',
+    backgroundAttachment: 'fixed' // 패럴랙스 효과 추가로 더 고급스럽게 변경
+  }}>
                 <div className="max-w-4xl px-6">
                   {safeData.hero?.badge && <span className="inline-block px-3 py-1 bg-blue-600 text-white text-xs font-bold rounded-full mb-4">{safeData.hero.badge}</span>}
                   <h1 className="text-5xl md:text-7xl font-black mb-6 leading-tight">{safeData.hero?.title || '(메인 타이틀)'}</h1>

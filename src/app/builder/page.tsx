@@ -48,10 +48,9 @@ export default function BuilderPage() {
     if (error) {
       alert('발행 실패: ' + error.message);
     } else {
-      alert('사이트가 성공적으로 발행되었습니다!');
+      alert('🚀 사이트가 성공적으로 발행되었습니다! 이제 실제 URL에서 확인하실 수 있습니다.');
+      // 실제 서비스 URL이 있다면 여기서 window.open(`${process.env.NEXT_PUBLIC_SITE_URL}/${siteId}`) 등을 추가할 수 있습니다.
     }
-    setIsLoading(false);
-  }
 
   async function deleteSite() {
     if (!siteId || !confirm('정말 삭제하시겠습니까?')) return;
