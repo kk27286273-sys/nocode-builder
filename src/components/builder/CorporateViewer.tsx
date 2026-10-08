@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import { B2BTemplateData } from '@/types/template'; 
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface CorporateViewerProps {
@@ -13,14 +12,16 @@ interface CorporateViewerProps {
 export const CorporateViewer = ({ data, activeSection: propSection, setActiveSection: propSetSection }: CorporateViewerProps) => {
   if (!data) return <div className="p-10 text-center">데이터를 불러오는 중입니다...</div>;
 
+  // [수정] 실제 로그 구조에 맞게 최상위에서 직접 추출
   const { 
     company = {}, 
     navigation = {}, 
-    corporateInfo = {}, 
     solutions = [], 
     hero = {}, 
     themeColor = '#000', 
-    footer = {} 
+    footer = {},
+    // corporateInfo가 없을 경우를 대비해 기본값 설정
+    corporateInfo = {} 
   } = data;
   
   const [internalPage, setInternalPage] = useState('main');
@@ -45,7 +46,7 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
           )}
         </div>
         <div className="hidden md:flex gap-8">
-          {(navigation?.navLinks || navigation?.menus)?.map((menu: any) => (
+          {(navigation?.navLinks || navigation?.menus || []).map((menu: any) => (
             <div key={menu.label} className="group relative py-7">
               <button 
                 className="font-medium text-slate-700 hover:text-blue-600 transition-colors"
@@ -198,7 +199,7 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
           <div>
             <div className="text-2xl font-bold text-white mb-6">{company?.name || '회사명'}</div>
-            <p className="text-sm leading-relaxed mb-6">{footer?.address || ''}<br/>TEL: {data.supportPhone || corporateInfo?.location?.headOffice?.tel || ''}</p>
+            <p className="text-sm leading-relaxed mb-6">{footer?.address || ''}<br/>TEL: {data.supportPhone || ''}</p>
             <p className="text-xs">COPYRIGHT Ⓒ {new Date().getFullYear()} {company?.name || 'Company'}. ALL RIGHTS RESERVED.</p>
           </div>
           <div>
