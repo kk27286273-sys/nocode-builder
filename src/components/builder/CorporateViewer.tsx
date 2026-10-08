@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import GNB from './corporate/GNB';
 import MainPage from './corporate/pages/MainPage';
+import AboutPage from './corporate/pages/AboutPage';
 
 interface CorporateViewerProps {
   data: any; 
@@ -45,27 +46,27 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
       />
 
       <main className="w-full">
-        <AnimatePresence mode="wait">
-          {/* 분리한 MainPage 컴포넌트 연결 */}
-          {activePage === 'main' && (
-            <MainPage 
-              key="main" 
-              hero={hero} 
-              solutions={solutions} 
-              navigateTo={navigateTo} 
-            />
-          )}
-          
-          {/* 나머지 페이지들은 아직 분리 전이므로 기존 로직 유지 (순차적으로 분리 예정) */}
-          {activePage === 'sol_detail' && (
-            <div className="py-24 text-center">솔루션 상세 페이지 준비 중...</div>
-          )}
-          {activePage === 'cs' && (
-            <div className="py-24 text-center">고객센터 페이지 준비 중...</div>
-          )}
-          {activePage !== 'main' && activePage !== 'sol_detail' && activePage !== 'cs' && (
-            <div className="py-24 text-center text-slate-500">해당 콘텐츠는 현재 업데이트 중입니다.</div>
-          )}
+<AnimatePresence mode="wait">
+  {activePage === 'main' && (
+    <MainPage 
+      key="main" 
+      hero={hero} 
+      solutions={solutions} 
+      navigateTo={navigateTo} 
+    />
+  )}
+  
+  {/* 이 부분을 아래와 같이 수정하세요 */}
+  {activePage === 'about' && (
+    <AboutPage 
+      key="about" 
+      corporateInfo={corporateInfo} 
+    />
+  )}
+
+  {activePage === 'sol_detail' && (
+    <div className="py-24 text-center">솔루션 상세 페이지 준비 중...</div>
+  )}
         </AnimatePresence>
       </main>
 

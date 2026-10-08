@@ -17,17 +17,13 @@ export default function ViewerManager({ data, activeSection, setActiveSection }:
 
   const templateType = data.templateType || data.specifics?.templateType;
 
-  if (templateType === 'corporate') {
-    // [검증용] 화면 상단에 빨간색 띠를 추가해 CorporateViewer가 작동 중인지 확인합니다.
+ if (templateType === 'corporate') {
     return (
-      <>
-        <div className="bg-red-600 text-white text-center text-xs py-1 font-bold">CORPORATE VIEWER ACTIVE</div>
-        <CorporateViewer 
-          data={data} 
-          activeSection={activeSection} 
-          setActiveSection={setActiveSection} 
-        />
-      </>
+      <CorporateViewer 
+        data={data} 
+        activeSection={activeSection} 
+        setActiveSection={setActiveSection} 
+      />
     );
   }
 
