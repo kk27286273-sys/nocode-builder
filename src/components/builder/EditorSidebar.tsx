@@ -51,7 +51,6 @@ export default function EditorSidebar({ data, setData, siteId, refreshSites, act
     }
   };
 
-  // 폰트 크기 변경 핸들러
   const updateFontSize = (section: string, field: string, size: number) => {
     setData(prev => ({
       ...prev,
@@ -74,7 +73,6 @@ export default function EditorSidebar({ data, setData, siteId, refreshSites, act
 
       <div className="flex-1 overflow-y-auto p-5 space-y-10 text-sm custom-scrollbar">
         
-        {/* 0. 브랜드 기본 설정 */}
         <section className="space-y-4 pb-6 border-b-2 border-slate-200">
           <h3 className="font-black text-slate-800 text-xs uppercase tracking-widest">Brand Identity</h3>
           <div className="grid grid-cols-2 gap-2">
@@ -96,7 +94,6 @@ export default function EditorSidebar({ data, setData, siteId, refreshSites, act
         {data.templateType === 'corporate' && (
           <div className="space-y-12">
             
-            {/* 1. 메인 페이지 설정 */}
             <div id="edit-section-main" className="space-y-6">
               <h3 className="font-black text-blue-700 text-sm flex items-center gap-2 border-l-4 border-blue-700 pl-2">메인 페이지</h3>
               <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
@@ -105,11 +102,9 @@ export default function EditorSidebar({ data, setData, siteId, refreshSites, act
                   <button onClick={() => setActiveSection('main')} className="text-[10px] text-blue-600 underline">미리보기</button>
                 </div>
                 <div className="space-y-3">
-                  <div className="flex gap-2">
-                    <div className="flex-1">
-                      <label className="text-[11px] text-slate-500 block mb-1">상단 배지</label>
-                      <input type="text" value={data.hero?.badge || ''} onChange={(e) => setData(prev => ({ ...prev, hero: { ...prev.hero, badge: e.target.value } }))} className="w-full px-3 py-2 border rounded-lg text-xs" />
-                    </div>
+                  <div>
+                    <label className="text-[11px] text-slate-500 block mb-1">상단 배지</label>
+                    <input type="text" value={data.hero?.badge || ''} onChange={(e) => setData(prev => ({ ...prev, hero: { ...prev.hero, badge: e.target.value } }))} className="w-full px-3 py-2 border rounded-lg text-xs" />
                   </div>
                   <div className="space-y-1">
                     <label className="text-[11px] text-slate-500 block mb-1">메인 타이틀</label>
@@ -133,7 +128,6 @@ export default function EditorSidebar({ data, setData, siteId, refreshSites, act
               </div>
             </div>
 
-            {/* 2. 회사소개 설정 */}
             <div id="edit-section-about" className="space-y-6">
               <h3 className="font-black text-blue-700 text-sm flex items-center gap-2 border-l-4 border-blue-700 pl-2">회사소개</h3>
               <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-6">
@@ -172,7 +166,6 @@ export default function EditorSidebar({ data, setData, siteId, refreshSites, act
               </div>
             </div>
 
-            {/* 3. 사업소개 설정 */}
             <div id="edit-section-sol_detail" className="space-y-6">
               <h3 className="font-black text-blue-700 text-sm flex items-center gap-2 border-l-4 border-blue-700 pl-2">사업소개 (솔루션)</h3>
               <div className="flex justify-between items-center mb-2 px-1">
@@ -180,84 +173,28 @@ export default function EditorSidebar({ data, setData, siteId, refreshSites, act
                 <button onClick={() => setActiveSection('sol_detail')} className="text-[10px] text-blue-600 underline">미리보기</button>
               </div>
               <div className="space-y-4">
-{(data.solutions || []).map((sol, idx) => (
-  <div key={idx} className="p-4 bg-slate-50 border-2 border-slate-200 rounded-xl space-y-3 relative group hover:border-blue-300 transition-colors">
-    <div className="flex justify-between items-center mb-1">
-      <span className="text-[10px] font-black text-blue-600">솔루션 #{idx + 1}</span>
-      <button onClick={() => {
-        const next = [...data.solutions];
-        next.splice(idx, 1);
-        setData(prev => ({ ...prev, solutions: next }));
-      }} className="text-slate-400 hover:text-red-500 text-xs">삭제</button>
-    </div>
-
-    <div className="flex gap-2">
-      <input
-        type="text"
-        value={sol.title}
-        onChange={(e) => {
-          const next = [...data.solutions];
-          next[idx].title = e.target.value;
-          setData(prev => ({ ...prev, solutions: next }));
-        }}
-        className="flex-1 p-2 border rounded text-xs font-bold"
-        placeholder="솔루션 제목"
-      />
-      <input
-        type="number"
-        value={(data as any).fontSizes?.solTitle || 24}
-        onChange={(e) => {
-          // 폰트 사이즈 업데이트 예시
-          // updateFontSize('sol', 'title', parseInt(e.target.value))
-          // 필요한 경우 실제 함수로 교체
-        }}
-        className="w-16 p-2 border rounded text-xs"
-      />
-    </div>
-
-    <input
-      type="text"
-      value={sol.category}
-      onChange={(e) => {
-        const next = [...data.solutions];
-        next[idx].category = e.target.value;
-        setData(prev => ({ ...prev, solutions: next }));
-      }}
-      className="w-full p-2 border rounded text-xs"
-      placeholder="카테고리"
-    />
-
-    <textarea
-      rows={3}
-      value={sol.description}
-      onChange={(e) => {
-        const next = [...data.solutions];
-        next[idx].description = e.target.value;
-        setData(prev => ({ ...prev, solutions: next }));
-      }}
-      className="w-full p-2 border rounded text-xs"
-      placeholder="상세 설명 입력"
-    />
-
-    <div className="flex items-center gap-2">
-      <label className="text-[10px] text-slate-500 shrink-0">대표 이미지</label>
-      <input
-        type="file"
-        onChange={(e) => handleImageUpload(e, (url) => {
-          const next = [...data.solutions];
-          next[idx].image = url;
-          setData(prev => ({ ...prev, solutions: next }));
-        }, `sol-${idx}`)}
-        className="text-[10px] flex-1"
-      />
-    </div>
-  </div>
-))}
+                {(data.solutions || []).map((sol, idx) => (
+                  <div key={idx} className="p-4 bg-slate-50 border-2 border-slate-200 rounded-xl space-y-3 relative group hover:border-blue-300 transition-colors">
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="text-[10px] font-black text-blue-600">솔루션 #{idx + 1}</span>
+                      <button onClick={() => setData(prev => ({ ...prev, solutions: prev.solutions.filter((_, i) => i !== idx) }))} className="text-slate-400 hover:text-red-500 text-xs">삭제</button>
+                    </div>
+                    <div className="flex gap-2">
+                      <input type="text" value={sol.title} onChange={(e) => { const next = [...data.solutions]; next[idx].title = e.target.value; setData(prev => ({ ...prev, solutions: next })); }} className="flex-1 p-2 border rounded text-xs font-bold" placeholder="솔루션 제목" />
+                      <input type="number" value={(data as any).fontSizes?.solTitle || 24} onChange={(e) => updateFontSize('sol', 'title', parseInt(e.target.value))} className="w-16 p-2 border rounded text-xs" />
+                    </div>
+                    <input type="text" value={sol.category} onChange={(e) => { const next = [...data.solutions]; next[idx].category = e.target.value; setData(prev => ({ ...prev, solutions: next })); }} className="w-full p-2 border rounded text-xs" placeholder="카테고리" />
+                    <textarea rows={3} value={sol.description} onChange={(e) => { const next = [...data.solutions]; next[idx].description = e.target.value; setData(prev => ({ ...prev, solutions: next })); }} className="w-full p-2 border rounded text-xs" placeholder="상세 설명 입력" />
+                    <div className="flex items-center gap-2">
+                      <label className="text-[10px] text-slate-500 shrink-0">대표 이미지</label>
+                      <input type="file" onChange={(e) => handleImageUpload(e, (url) => { const next = [...data.solutions]; next[idx].image = url; setData(prev => ({ ...prev, solutions: next })); }, `sol-${idx}`)} className="text-[10px] flex-1" />
+                    </div>
+                  </div>
+                ))}
                 <button onClick={() => setData(prev => ({ ...prev, solutions: [...(prev.solutions || []), { title: '신규 솔루션', category: '분야', description: '설명을 입력하세요', image: '', detailedFeatures: [] }] }))} className="w-full py-3 bg-blue-600 text-white rounded-lg text-xs font-bold hover:bg-blue-700 transition shadow-md">+ 새로운 솔루션 추가</button>
               </div>
             </div>
 
-            {/* 4. 지속가능경영(ESG) 설정 */}
             <div id="edit-section-esg" className="space-y-6">
               <h3 className="font-black text-blue-700 text-sm flex items-center gap-2 border-l-4 border-blue-700 pl-2">지속가능경영 (ESG)</h3>
               <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-6">
@@ -279,7 +216,6 @@ export default function EditorSidebar({ data, setData, siteId, refreshSites, act
               </div>
             </div>
 
-            {/* 5. 공시정보 설정 */}
             <div id="edit-section-disclosure" className="space-y-6">
               <h3 className="font-black text-blue-700 text-sm flex items-center gap-2 border-l-4 border-blue-700 pl-2">공시정보</h3>
               <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-6">
@@ -312,7 +248,6 @@ export default function EditorSidebar({ data, setData, siteId, refreshSites, act
               </div>
             </div>
 
-            {/* 6. 홍보센터 설정 */}
             <div id="edit-section-pr" className="space-y-6">
               <h3 className="font-black text-blue-700 text-sm flex items-center gap-2 border-l-4 border-blue-700 pl-2">홍보센터</h3>
               <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-6">
@@ -346,7 +281,6 @@ export default function EditorSidebar({ data, setData, siteId, refreshSites, act
               </div>
             </div>
 
-            {/* 7. 인재경영 설정 */}
             <div id="edit-section-recruit" className="space-y-6">
               <h3 className="font-black text-blue-700 text-sm flex items-center gap-2 border-l-4 border-blue-700 pl-2">인재경영</h3>
               <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-6">
@@ -380,7 +314,6 @@ export default function EditorSidebar({ data, setData, siteId, refreshSites, act
               </div>
             </div>
 
-            {/* 8. 고객센터 설정 */}
             <div id="edit-section-cs" className="space-y-6">
               <h3 className="font-black text-blue-700 text-sm flex items-center gap-2 border-l-4 border-blue-700 pl-2">고객센터 (CS)</h3>
               <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-6">
@@ -413,7 +346,6 @@ export default function EditorSidebar({ data, setData, siteId, refreshSites, act
               </div>
             </div>
 
-            {/* 푸터 설정 */}
             <div id="edit-section-footer" className="space-y-6">
               <h3 className="font-black text-slate-800 text-sm flex items-center gap-2 border-l-4 border-slate-800 pl-2">푸터 정보</h3>
               <div className="grid grid-cols-2 gap-4">
