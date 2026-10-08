@@ -1,23 +1,30 @@
 'use client';
 
 import React, { useState } from 'react';
-import { B2BTemplateData } from '@/data/template';
+import { B2BTemplateData } from '@/types/template';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export const CorporateViewer = ({ data }: { data: B2BTemplateData }) => {
-  const { company, navigation, corporateInfo, solutions, irCenter, customerSupport, hero, themeColor, footer } = data;
+interface CorporateViewerProps {
+  data: B2BTemplateData;
+  activeSection?: string;
+  setActiveSection?: (section: string) => void;
+}
+
+export const CorporateViewer = ({ data, activeSection: propSection, setActiveSection: propSetSection }: CorporateViewerProps) => {
+  const { company, navigation, corporateInfo, solutions, hero, themeColor, footer } = data;
   
-  // 현재 활성화된 화면 상태 (main, ceo, mission, solutions, news, etc...)
-  const [activePage, setActivePage] = useState('main');
+  // 빌더에서 제어하는 activeSection이 있으면 그것을 쓰고, 없으면 내부 상태 사용
+  const [internalPage, setInternalPage] = useState('main');
+  const activePage = propSection || internalPage;
+  const setActivePage = propSetSection || setInternalPage;
+
   const [selectedSolution, setSelectedSolution] = useState<number | null>(null);
 
-  // 화면 전환 함수
   const navigateTo = (targetId: string) => {
     setActivePage(targetId);
     window.scrollTo(0, 0);
   };
 
-  // [컴포넌트] 상단 네비게이션 (메가 메뉴)
   const Navbar = () => (
     <nav className="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
@@ -35,7 +42,6 @@ export const CorporateViewer = ({ data }: { data: B2BTemplateData }) => {
               <button className="font-medium text-slate-700 hover:text-blue-600 transition-colors">
                 {menu.label}
               </button>
-              {/* 드롭다운 메뉴 */}
               <div className="absolute top-20 left-0 w-48 bg-white border border-slate-100 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 p-4">
                 {menu.children.map((child) => (
                   <button 
@@ -54,10 +60,8 @@ export const CorporateViewer = ({ data }: { data: B2BTemplateData }) => {
     </nav>
   );
 
-  // [컴포넌트] 메인 홈 화면
   const MainHome = () => (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-      {/* Hero Section */}
       <section className="relative h-[700px] flex items-center justify-center text-white overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img src={hero.mediaUrl} alt="hero" className="w-full h-full object-cover brightness-50" />
@@ -75,7 +79,6 @@ export const CorporateViewer = ({ data }: { data: B2BTemplateData }) => {
         </div>
       </section>
 
-      {/* Solution Grid (Main) */}
       <section className="py-24 bg-slate-50 px-4">
         <div className="max-w-7xl mx-auto text-center mb-16">
           <h2 className="text-4xl font-bold mb-4">Our Solutions</h2>
@@ -107,7 +110,6 @@ export const CorporateViewer = ({ data }: { data: B2BTemplateData }) => {
     </motion.div>
   );
 
-  // [컴포넌트] 회사소개/상세 페이지 (Generic Page)
   const PageLayout = ({ title, content }: { title: string; content: React.ReactNode }) => (
     <motion.div initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -20, opacity: 0 }} className="py-24 px-4">
       <div className="max-w-5xl mx-auto">
@@ -122,7 +124,6 @@ export const CorporateViewer = ({ data }: { data: B2BTemplateData }) => {
     </motion.div>
   );
 
-  // [컴포넌트] 솔루션 상세 뷰
   const SolutionDetail = () => {
     const sol = solutions[selectedSolution || 0];
     return (
@@ -132,7 +133,7 @@ export const CorporateViewer = ({ data }: { data: B2BTemplateData }) => {
           <div>
             <h3 className="text-3xl font-bold mb-6">{sol.title}</h3>
             <p className="text-lg text-slate-600 leading-relaxed mb-8">{sol.description}</p>
-            <button className="px-8 py-4 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition-colors">
+            <button onClick={() => navigateTo('cs')} className="px-8 py-4 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition-colors">
               문의하기
             </button>
           </div>
@@ -182,8 +183,28 @@ export const CorporateViewer = ({ data }: { data: B2BTemplateData }) => {
             } />
           )}
           {activePage === 'sol_detail' && <SolutionDetail key="sol_detail" />}
-          {/* 추가 페이지들(IR, 고객센터 등) 동일한 방식으로 확장 */}
-          {activePage !== 'main' && activePage !== 'ceo' && activePage !== 'mission' && activePage !== 'sol_detail' && (
+          {activePage === 'cs' && (
+            <PageLayout title="문의하기" content={
+              <div className="text-center space-y-8">
+                <p className="text-xl text-slate-600 leading-relaxed whitespace-pre-line">
+                  {data.csGuide || '문의 내용을 입력해주세요.'}
+                </p>
+                <div className="flex flex-col md:flex-row justify-center gap-4">
+                  {data.supportPhone && (
+                    <a href={`tel:${data.supportPhone}`} className="px-8 py-4 bg-slate-900 text-white font-bold rounded-xl hover:bg-slate-800 transition">
+                      📞 전화 상담: {data.supportPhone}
+                    </a>
+                  )}
+                  {(data as any).kakaoLink && (
+                    <a href={(data as any).kakaoLink} target="_blank" className="px-8 py-4 bg-yellow-400 text-slate-900 font-bold rounded-xl hover:bg-yellow-500 transition">
+                      💬 카카오톡 상담하기
+                    </a>
+                  )}
+                </div>
+              </div>
+            } />
+          )}
+          {activePage !== 'main' && activePage !== 'ceo' && activePage !== 'mission' && activePage !== 'sol_detail' && activePage !== 'cs' && (
             <PageLayout title="준비 중인 페이지" content={<p>해당 콘텐츠는 현재 업데이트 중입니다.</p>} />
           )}
         </AnimatePresence>
@@ -193,7 +214,7 @@ export const CorporateViewer = ({ data }: { data: B2BTemplateData }) => {
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
           <div>
             <div className="text-2xl font-bold text-white mb-6">{company.name}</div>
-            <p className="text-sm leading-relaxed mb-6">{footer.address}<br/>TEL: {corporateInfo.location.headOffice.tel}<br/>FAX: {corporateInfo.location.headOffice.fax}</p>
+            <p className="text-sm leading-relaxed mb-6">{footer.address}<br/>TEL: {data.supportPhone || corporateInfo.location.headOffice.tel}</p>
             <p className="text-xs">COPYRIGHT Ⓒ {new Date().getFullYear()} {company.name}. ALL RIGHTS RESERVED.</p>
           </div>
           <div>
@@ -202,12 +223,13 @@ export const CorporateViewer = ({ data }: { data: B2BTemplateData }) => {
               <li className="hover:text-white cursor-pointer" onClick={() => navigateTo('main')}>홈으로</li>
               <li className="hover:text-white cursor-pointer" onClick={() => navigateTo('ceo')}>CEO 인사말</li>
               <li className="hover:text-white cursor-pointer" onClick={() => navigateTo('sol_detail')}>사업소개</li>
+              <li className="hover:text-white cursor-pointer" onClick={() => navigateTo('cs')}>문의하기</li>
             </ul>
           </div>
           <div>
             <h4 className="text-white font-bold mb-6">Customer Support</h4>
-            <p className="text-2xl font-bold text-white mb-2">{customerSupport.phone}</p>
-            <p className="text-sm">{customerSupport.hours}</p>
+            <p className="text-2xl font-bold text-white mb-2">{data.supportPhone || '전화번호 없음'}</p>
+            <p className="text-sm">{footer.contactEmail}</p>
           </div>
         </div>
       </footer>
