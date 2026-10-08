@@ -6,7 +6,8 @@ interface GNBProps {
   navigation: any;
   themeColor: string;
   activePage: string;
-  navigateTo: (id: string) => void;
+  // ⬅️ 수정: index 인자를 선택적으로 받을 수 있게 변경
+  navigateTo: (id: string, index?: number) => void; 
 }
 
 export default function GNB({ company, navigation, themeColor, activePage, navigateTo }: GNBProps) {
@@ -28,12 +29,23 @@ export default function GNB({ company, navigation, themeColor, activePage, navig
             <div key={menu.label} className="group relative py-8">
               <button 
                 className={`text-[15px] font-semibold transition-all duration-300 ${activePage === menu.targetId ? 'text-blue-600' : 'text-slate-700 hover:text-blue-600'}`}
-onClick={() => {
-  // 메뉴 이름에 'CEO' 또는 '인사말' 또는 '회사소개'가 포함되어 있으면 'about'으로 연결
-  const isAboutPage = menu.label.includes('CEO') || menu.label.includes('인사말') || menu.label.includes('회사소개');
-  const target = isAboutPage ? 'about' : (menu.targetId || 'main');
-  navigateTo(target);
-}}
+                onClick={() => {
+                  // 1. 회사소개 관련 처리
+                  const isAboutPage = menu.label.includes('CEO') || menu.label.includes('인사말') || menu.label.includes('회사소개');
+                  if (isAboutPage) {
+                    navigateTo('about');
+                    return;
+                  }
+
+                  // 2. 사업소개(솔루션) 처리: '사업소개' 메뉴라면 첫 번째 솔루션(index 0)을 기본으로 보여줌
+                  if (menu.label.includes('사업소개') || menu.label.includes('솔루션')) {
+                    navigateTo('sol_detail', 0); 
+                    return;
+                  }
+
+                  // 3. 그 외 일반 이동
+                  navigateTo(menu.targetId || 'main');
+                }}
               >
                 {menu.label}
               </button>
