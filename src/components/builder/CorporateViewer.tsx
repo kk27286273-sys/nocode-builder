@@ -109,12 +109,11 @@ export default function CorporateViewer({ data, activeSection: propSection, setA
     </motion.div>
   );
 
-  const BusinessPage = () => (
+const BusinessPage = () => (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ padding: '80px 20px', maxWidth: '1200px', margin: '0 auto' }}>
       <h2 style={{ fontSize: '32px', fontWeight: 'bold', marginBottom: '40px', borderLeft: `6px solid ${themeColor}`, paddingLeft: '20px' }}>사업소개</h2>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px' }}>
         {solutions.map((sol: any, idx: number) => (
-          <div key={idx} style={{ border: '1px solid #eee', borderRadius: '15px', overflow: 'hidden', 
           <div key={idx} style={{ border: '1px solid #eee', borderRadius: '15px', overflow: 'hidden', transition: 'transform 0.2s' }}>
             <div style={{ height: '200px', backgroundColor: '#ddd' }}>
               <img src={sol.image || 'https://via.placeholder.com/400x200'} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
