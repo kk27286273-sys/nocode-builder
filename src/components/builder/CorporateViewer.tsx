@@ -4,23 +4,22 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface CorporateViewerProps {
-  data: any;
+  data: any; 
   activeSection?: string;
   setActiveSection?: (section: string) => void;
 }
 
-export default function CorporateViewer({ data, activeSection: propSection, setActiveSection: propSetSection }: CorporateViewerProps) {
-  if (!data) return <div style={{ padding: '40px', textAlign: 'center', color: '#94a3b8' }}>데이터를 불러오는 중입니다...</div>;
+export const CorporateViewer = ({ data, activeSection: propSection, setActiveSection: propSetSection }: CorporateViewerProps) => {
+  if (!data) return <div className="p-10 text-center">데이터를 불러오는 중입니다...</div>;
 
-  // 에디터(EditorSidebar)의 저장 구조인 corporateInfo를 최우선으로 참조하도록 설정
   const { 
     company = {}, 
     navigation = {}, 
-    themeColor = '#004a99', 
+    solutions = [], 
+    hero = {}, 
+    themeColor = '#003366', 
     footer = {},
-    hero = {},
-    solutions = [],
-    corporateInfo = {} // 에디터가 저장하는 핵심 데이터 상자
+    corporateInfo = {} 
   } = data;
   
   const [internalPage, setInternalPage] = useState('main');
@@ -28,182 +27,211 @@ export default function CorporateViewer({ data, activeSection: propSection, setA
   const setActivePage = propSetSection || setInternalPage;
 
   const navigateTo = (targetId: string) => {
-    if (!targetId) return;
     setActivePage(targetId);
     window.scrollTo(0, 0);
   };
 
+  // [에이텍 스타일] 정교한 상단 GNB
   const Navbar = () => (
-    <nav style={{ position: 'sticky', top: 0, zIndex: 100, backgroundColor: '#fff', borderBottom: '2px solid #eee', height: '80px', display: 'flex', alignItems: 'center' }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%', padding: '0 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }} onClick={() => navigateTo('main')}>
+    <nav className="sticky top-0 z-[100] w-full bg-white border-b border-slate-200 shadow-sm">
+      <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+        <div className="cursor-pointer flex items-center gap-3" onClick={() => navigateTo('main')}>
           {company?.logoUrl ? (
-            <img src={company.logoUrl} alt={company.name} style={{ height: '40px' }} />
+            <img src={company.logoUrl} alt={company.name} className="h-10 w-auto object-contain" />
           ) : (
-            <span style={{ fontSize: '24px', fontWeight: 'bold', color: themeColor }}>{company?.name || 'COMPANY'}</span>
+            <span className="text-2xl font-extrabold tracking-tight" style={{ color: themeColor }}>{company?.name || 'COMPANY'}</span>
           )}
         </div>
-        <div style={{ display: 'flex', gap: '25px' }}>
-          {(navigation?.navLinks || []).map((menu: any, idx: number) => (
-            <button 
-              key={idx}
-              onClick={() => navigateTo(menu.targetId)}
-              style={{ 
-                fontSize: '15px', 
-                fontWeight: activePage === menu.targetId ? 'bold' : 'medium', 
-                cursor: 'pointer', border: 'none', backgroundColor: 'transparent',
-                color: activePage === menu.targetId ? themeColor : '#333',
-                borderBottom: activePage === menu.targetId ? `3px solid ${themeColor}` : 'none',
-                paddingBottom: '5px'
-              }}
-            >
-              {menu.label}
-            </button>
+        
+        <div className="hidden md:flex items-center gap-10">
+          {(navigation?.navLinks || navigation?.menus || []).map((menu: any) => (
+            <div key={menu.label} className="group relative py-8">
+              <button 
+                className={`text-[15px] font-semibold transition-colors duration-200 ${activePage === menu.targetId ? 'text-blue-600' : 'text-slate-700 hover:text-blue-600'}`}
+                onClick={() => navigateTo(menu.targetId || 'main')}
+              >
+                {menu.label}
+              </button>
+              {menu.children && (
+                <div className="absolute top-20 left-0 w-56 bg-white border border-slate-100 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 p-4 rounded-b-lg">
+                  {menu.children.map((child: any) => (
+                    <button 
+                      key={child.label} 
+                      onClick={() => navigateTo(child.targetId)} 
+                      className="block w-full text-left px-4 py-3 text-sm text-slate-600 hover:bg-slate-50 hover:text-blue-600 rounded-md transition-colors"
+                    >
+                      {child.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           ))}
         </div>
       </div>
     </nav>
   );
 
-  const MainPage = () => (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ width: '100%' }}>
-      <section style={{ 
-        height: '600px', 
-        backgroundColor: '#f4f7fa', 
-        display: 'flex', 
-        alignItems: 'center', 
-        justifyContent: 'center', 
-        textAlign: 'center', 
-        backgroundImage: `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(${hero?.backgroundImage || hero?.mediaUrl || 'https://via.placeholder.com/1920x600'})`, 
-        backgroundSize: 'cover', 
-        backgroundPosition: 'center', 
-        color: 'white' 
-      }}>
-        <div style={{ padding: '0 20px' }}>
-          <span style={{ display: 'inline-block', padding: '5px 15px', backgroundColor: themeColor, borderRadius: '20px', fontSize: '14px', marginBottom: '20px' }}>{hero?.badge || 'Welcome'}</span>
-          <h1 style={{ fontSize: '56px', fontWeight: 'bold', marginBottom: '20px', lineHeight: '1.2' }}>{hero?.title || '회사명을 입력하세요'}</h1>
-          <p style={{ fontSize: '22px', opacity: 0.9 }}>{hero?.subtitle || '여기에 회사 슬로건을 입력하세요'}</p>
+  // [에이텍 스타일] 압도적인 메인 홈
+  const MainHome = () => (
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full">
+      {/* Hero Section: 에이텍 특유의 와이드한 비주얼 */}
+      <section className="relative h-[85vh] flex items-center justify-center text-white overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          {hero?.mediaUrl ? (
+            <img src={hero.mediaUrl} alt="hero" className="w-full h-full object-cover brightness-50" />
+          ) : (
+            <div className="w-full h-full bg-slate-900" />
+          )}
+        </div>
+        <div className="relative z-10 text-center px-4 max-w-5xl">
+          <motion.span 
+            initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} 
+            className="inline-block px-4 py-1.5 rounded-full bg-blue-600 text-sm font-bold mb-8 uppercase tracking-wider"
+          >
+            {hero?.badge || 'Global Standard'}
+          </motion.span>
+          <motion.h1 
+            initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }} 
+            className="text-5xl md:text-7xl font-black mb-8 leading-tight whitespace-pre-line tracking-tight"
+          >
+            {hero?.title || '미래를 선도하는 기술력'}
+          </motion.h1>
+          <motion.p 
+            initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.4 }} 
+            className="text-lg md:text-2xl text-slate-200 max-w-3xl mx-auto leading-relaxed whitespace-pre-line font-light"
+          >
+            {hero?.subtitle || '최고의 솔루션으로 고객의 가치를 실현합니다.'}
+          </motion.p>
+        </div>
+      </section>
+
+      {/* Solution Section: 전문적인 비즈니스 그리드 */}
+      <section className="py-32 bg-white px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-20">
+            <h2 className="text-4xl font-bold text-slate-900 mb-4 tracking-tight">Core Business</h2>
+            <div className="w-12 h-1 bg-blue-600 mx-auto"></div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+            {solutions?.map((sol: any, idx: number) => (
+              <motion.div 
+                key={idx} 
+                whileHover={{ y: -15 }}
+                onClick={() => navigateTo('sol_detail')}
+                className="bg-slate-50 rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 cursor-pointer group border border-slate-100"
+              >
+                <div className="h-64 overflow-hidden bg-slate-200">
+                  {sol.image ? (
+                    <img src={sol.image} alt={sol.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-slate-400">No Image</div>
+                  )}
+                </div>
+                <div className="p-10">
+                  <span className="text-blue-600 font-bold text-xs uppercase tracking-widest">{sol.category}</span>
+                  <h3 className="text-2xl font-bold mt-3 mb-4 text-slate-900">{sol.title}</h3>
+                  <p className="text-slate-600 leading-relaxed font-light">{sol.description}</p>
+                  <div className="mt-8 text-blue-600 font-bold flex items-center gap-2 group-hover:gap-4 transition-all">
+                    자세히 보기 <span className="text-xl">&rarr;</span>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
     </motion.div>
   );
 
-  const CompanyPage = () => (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ padding: '80px 20px', maxWidth: '1200px', margin: '0 auto' }}>
-      <h2 style={{ fontSize: '32px', fontWeight: 'bold', marginBottom: '40px', borderLeft: `6px solid ${themeColor}`, paddingLeft: '20px' }}>회사소개</h2>
-      <div style={{ marginBottom: '80px' }}>
-        <h3 style={{ fontSize: '24px', marginBottom: '20px' }}>CEO 인사말</h3>
-        <div style={{ display: 'flex', gap: '40px', alignItems: 'center', backgroundColor: '#f9f9f9', padding: '40px', borderRadius: '20px' }}>
-          <div style={{ width: '200px', height: '250px', backgroundColor: '#ddd', borderRadius: '10px', overflow: 'hidden' }}>
-            <img src={corporateInfo?.ceoGreeting?.image || 'https://via.placeholder.com/200x250'} style={{width:'100%', height:'100%', objectFit:'cover'}} />
+  // [에이텍 스타일] 전문 서브페이지 레이아웃
+  const PageLayout = ({ title, content }: { title: string; content: React.ReactNode }) => (
+    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="py-24 px-4 w-full bg-white">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex items-end gap-6 mb-16 border-b border-slate-200 pb-8">
+          <div className="w-2 h-12 bg-blue-600"></div>
+          <h2 className="text-5xl font-black text-slate-900 tracking-tight">{title}</h2>
+        </div>
+        <div className="w-full">{content}</div>
+      </div>
+    </motion.div>
+  );
+
+  // 솔루션 상세 (에이텍 스타일)
+  const SolutionDetail = () => {
+    const sol = solutions?.[0]; // 현재는 첫번째 예시
+    if (!sol) return <div className="py-24 text-center">정보를 찾을 수 없습니다.</div>;
+    return (
+      <PageLayout title={sol.category}>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center mb-24">
+          <div className="rounded-3xl overflow-hidden shadow-2xl bg-slate-200 aspect-video">
+            {sol.image ? <img src={sol.image} alt={sol.title} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-slate-400">No Image</div>}
           </div>
           <div>
-            <p style={{ fontSize: '18px', lineHeight: '1.8', color: '#444' }}>
-              {corporateInfo?.ceoGreeting?.content || 'CEO 인사말을 입력해주세요.'}
-            </p>
+            <h3 className="text-4xl font-bold mb-6 text-slate-900 leading-tight">{sol.title}</h3>
+            <p className="text-xl text-slate-600 leading-relaxed mb-10 font-light">{sol.description}</p>
+            <button onClick={() => navigateTo('cs')} className="px-10 py-4 bg-blue-600 text-white font-bold rounded-full hover:bg-blue-700 transition-all shadow-lg hover:shadow-blue-200">
+              솔루션 문의하기
+            </button>
           </div>
         </div>
-      </div>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '40px' }}>
-        <div style={{ padding: '30px', border: '1px solid #eee', borderRadius: '15px' }}>
-          <h3 style={{ color: themeColor, marginBottom: '15px' }}>미션 & 비전</h3>
-          <p>{corporateInfo?.missionVision?.mission || '미션과 비전 내용을 입력해주세요.'}</p>
-        </div>
-        <div style={{ padding: '30px', border: '1px solid #eee', borderRadius: '15px' }}>
-          <h3 style={{ color: themeColor, marginBottom: '15px' }}>CI 소개</h3>
-          <p>{corporateInfo?.ciDescription || 'CI 소개 내용을 입력해주세요.'}</p>
-        </div>
-      </div>
-    </motion.div>
-  );
-
-  const BusinessPage = () => (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ padding: '80px 20px', maxWidth: '1200px', margin: '0 auto' }}>
-      <h2 style={{ fontSize: '32px', fontWeight: 'bold', marginBottom: '40px', borderLeft: `6px solid ${themeColor}`, paddingLeft: '20px' }}>사업소개</h2>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px' }}>
-        {(solutions || []).map((sol: any, idx: number) => (
-          <div key={idx} style={{ border: '1px solid #eee', borderRadius: '15px', overflow: 'hidden' }}>
-            <div style={{ height: '200px', backgroundColor: '#ddd' }}>
-              <img src={sol?.image || 'https://via.placeholder.com/400x200'} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            </div>
-            <div style={{ padding: '25px' }}>
-              <h3 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '10px', color: themeColor }}>{sol?.title}</h3>
-              <p style={{ color: '#666', lineHeight: '1.6', fontSize: '15px' }}>{sol?.description}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-    </motion.div>
-  );
-
-  const PRPage = () => (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ padding: '80px 20px', maxWidth: '1200px', margin: '0 auto' }}>
-      <h2 style={{ fontSize: '32px', fontWeight: 'bold', marginBottom: '40px', borderLeft: `6px solid ${themeColor}`, paddingLeft: '20px' }}>홍보센터</h2>
-      <div style={{ marginBottom: '40px' }}>
-        <h3 style={{ fontSize: '22px', marginBottom: '20px' }}>회사 소식</h3>
-        <div style={{ padding: '20px', border: '1px solid #eee', borderRadius: '10px', backgroundColor: '#f9f9f9' }}>{data?.newsContent || '등록된 소식이 없습니다.'}</div>
-      </div>
-    </motion.div>
-  );
-
-  const RecruitPage = () => (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ padding: '80px 20px', maxWidth: '1200px', margin: '0 auto' }}>
-      <h2 style={{ fontSize: '32px', fontWeight: 'bold', marginBottom: '40px', borderLeft: `6px solid ${themeColor}`, paddingLeft: '20px' }}>인재경영</h2>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px' }}>
-        <div style={{ padding: '30px', backgroundColor: '#f4f7fa', borderRadius: '15px' }}>
-          <h3 style={{ color: themeColor, marginBottom: '15px', fontSize: '22px' }}>인재상</h3>
-          <p style={{ lineHeight: '1.8' }}>{data?.talentValue || '인재상 내용을 입력해주세요.'}</p>
-        </div>
-        <div style={{ padding: '30px', backgroundColor: '#f4f7fa', borderRadius: '15px' }}>
-          <h3 style={{ color: themeColor, marginBottom: '15px', fontSize: '22px' }}>복리후생</h3>
-          <p style={{ lineHeight: '1.8' }}>{data?.benefitInfo || '복리후생 내용을 입력해주세요.'}</p>
-        </div>
-      </div>
-    </motion.div>
-  );
-
-  const CSPage = () => (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ padding: '80px 20px', maxWidth: '1200px', margin: '0 auto', textAlign: 'center' }}>
-      <h2 style={{ fontSize: '32px', fontWeight: 'bold', marginBottom: '40px', borderLeft: `6px solid ${themeColor}`, paddingLeft: '20px', textAlign: 'left' }}>고객센터</h2>
-      <div style={{ backgroundColor: '#f9f9f9', padding: '50px', borderRadius: '20px', border: '1px solid #eee' }}>
-        <p style={{ fontSize: '20px', marginBottom: '30px', color: '#444' }}>{data?.csGuide || '문의 안내 문구입니다.'}</p>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '20px' }}>
-          <div style={{ padding: '20px', border: '1px solid #ddd', borderRadius: '10px', minWidth: '200px' }}>
-            <div style={{ fontSize: '14px', color: '#888', marginBottom: '5px' }}>대표 전화</div>
-            <div style={{ fontSize: '22px', fontWeight: 'bold' }}>{data?.supportPhone || '000-0000-0000'}</div>
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  );
+      </PageLayout>
+    );
+  };
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#fff', color: '#333', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+    <div className="min-h-screen w-full bg-white text-slate-900 font-sans">
       <Navbar />
-      <main>
+      <main className="w-full">
         <AnimatePresence mode="wait">
-          {['main'].includes(activePage) && <MainPage key="main" />}
-          {['about', 'ceo', 'company'].includes(activePage) && <CompanyPage key="about" />}
-          {['business', 'service', 'solution', 'sol'].includes(activePage) && <BusinessPage key="business" />}
-          {['pr', 'news'].includes(activePage) && <PRPage key="pr" />}
-          {['recruit', 'job', 'talent'].includes(activePage) && <RecruitPage key="recruit" />}
-          {['cs', 'contact'].includes(activePage) && <CSPage key="cs" />}
-          {!['main', 'about', 'ceo', 'company', 'business', 'service', 'solution', 'sol', 'pr', 'news', 'recruit', 'job', 'talent', 'cs', 'contact'].includes(activePage) && (
-            <div style={{ padding: '100px', textAlign: 'center' }}>준비 중인 페이지입니다. (ID: {activePage})</div>
+          {activePage === 'main' && <MainHome key="main" />}
+          {activePage === 'sol_detail' && <SolutionDetail key="sol_detail" />}
+          {activePage === 'cs' && (
+            <PageLayout title="고객센터" content={
+              <div className="text-center max-w-3xl mx-auto space-y-12 py-10">
+                <p className="text-2xl text-slate-600 leading-relaxed whitespace-pre-line font-light">
+                  {data.csGuide || '전문가와의 상담을 통해 최적의 솔루션을 제안해 드립니다.'}
+                </p>
+                <div className="flex flex-col md:flex-row justify-center gap-6">
+                  {data.supportPhone && (
+                    <a href={`tel:${data.supportPhone}`} className="px-10 py-5 bg-slate-900 text-white font-bold rounded-full hover:bg-slate-800 transition-all shadow-xl">📞 전화 상담: {data.supportPhone}</a>
+                  )}
+                  {data.kakaoLink && (
+                    <a href={data.kakaoLink} target="_blank" className="px-10 py-5 bg-yellow-400 text-slate-900 font-bold rounded-full hover:bg-yellow-500 transition-all shadow-xl">💬 카카오톡 상담</a>
+                  )}
+                </div>
+              </div>
+            } />
+          )}
+          {activePage !== 'main' && activePage !== 'sol_detail' && activePage !== 'cs' && (
+            <PageLayout title="준비 중인 페이지" content={<p className="text-center text-slate-500 py-20">해당 콘텐츠는 현재 업데이트 중입니다.</p>} />
           )}
         </AnimatePresence>
       </main>
-      <footer style={{ backgroundColor: '#222', color: '#aaa', padding: '60px 20px', marginTop: '100px' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '20px' }}>
-          <div style={{ color: '#fff' }}>
-            <div style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '10px' }}>{company?.name}</div>
-            <p style={{ fontSize: '14px', lineHeight: '1.6', color: '#aaa' }}>{footer?.address}<br/>대표자: {footer?.ownerName || footer?.ceoName} | 사업자번호: {footer?.businessNumber || footer?.bizNumber}</p>
+      <footer className="bg-slate-900 text-slate-400 py-20 px-6 w-full border-t border-slate-800">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-16">
+          <div>
+            <div className="text-2xl font-bold text-white mb-8 tracking-tight">{company?.name || 'COMPANY'}</div>
+            <p className="text-sm leading-relaxed mb-8 opacity-70">{footer?.address || ''}<br/>TEL: {data.supportPhone || ''}</p>
+            <p className="text-xs opacity-50">COPYRIGHT Ⓒ {new Date().getFullYear()} {company?.name || 'Company'}. ALL RIGHTS RESERVED.</p>
           </div>
-          <div style={{ textAlign: 'right', fontSize: '14px' }}>
-            <p>© {new Date().getFullYear()} {company?.name}. All rights reserved.</p>
+          <div>
+            <h4 className="text-white font-bold mb-8 uppercase tracking-widest text-sm">Quick Links</h4>
+            <ul className="space-y-4 text-sm">
+              <li className="hover:text-white cursor-pointer transition-colors" onClick={() => navigateTo('main')}>홈으로</li>
+              <li className="hover:text-white cursor-pointer transition-colors" onClick={() => navigateTo('sol_detail')}>사업소개</li>
+              <li className="hover:text-white cursor-pointer transition-colors" onClick={() => navigateTo('cs')}>고객센터</li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="text-white font-bold mb-8 uppercase tracking-widest text-sm">Customer Support</h4>
+            <p className="text-3xl font-bold text-white mb-4">{data.supportPhone || '000-0000-0000'}</p>
+            <p className="text-sm opacity-70">{footer?.contactEmail || ''}</p>
           </div>
         </div>
       </footer>
     </div>
   );
-}
+};
+
+export default CorporateViewer;
