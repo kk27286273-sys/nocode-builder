@@ -38,7 +38,6 @@ export default function BuilderPage() {
     if (error) {
       console.error("데이터 로드 에러:", error);
     } else if (siteData && siteData.data) {
-      // [임시 조치] DB 데이터가 원페이지형일 경우, 강제로 기업형 기본 구조를 씌웁니다.
       const currentData = siteData.data;
       
       if (currentData.templateType !== 'corporate') {
@@ -152,8 +151,14 @@ export default function BuilderPage() {
         </div>
       </div>
 
-      {/* 우측 뷰어 */}
-      <main className="flex-1 h-full overflow-hidden bg-slate-200 relative z-10">
+      {/* 우측 뷰어: overflow-hidden 제거하여 내부 스크롤 가능하게 수정 */}
+      <main className="flex-1 h-full min-h-0 bg-slate-200 relative z-10 overflow-hidden">
+        {/* 
+          주의: 여기서 overflow-hidden을 유지하더라도 
+          내부의 ViewerManager -> LivePreview -> 뷰포트 div가 
+          overflow-y-auto를 가지고 있다면 스크롤이 작동합니다.
+          단, h-full과 min-h-0가 반드시 함께 있어야 flex-item의 높이 계산 오류가 없습니다.
+        */}
         <ViewerManager data={data} activeSection={activeSection} setActiveSection={setActiveSection} />
       </main>
     </div>
