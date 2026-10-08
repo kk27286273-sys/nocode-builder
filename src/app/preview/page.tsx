@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { defaultB2BTemplateData, B2BTemplateData, B2B_PRESETS } from '@/data/templates';
+import { defaultB2BTemplateData, B2BTemplateData } from '@/data/templates';
 import { SHOWROOM_TEMPLATES } from '@/data/showroomTemplates';
 import LivePreview from '@/components/builder/LivePreview';
 import { supabase } from '@/lib/supabase/client';

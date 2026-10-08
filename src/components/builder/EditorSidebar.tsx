@@ -251,6 +251,7 @@ export default function EditorSidebar({ data, setData, siteId, refreshSites, act
           </div>
         )}
       </div>
+    </div>
     </aside>
   );
 }
