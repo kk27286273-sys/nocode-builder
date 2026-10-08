@@ -7,56 +7,81 @@ interface SolutionPageProps {
 }
 
 export default function SolutionPage({ solutionData }: SolutionPageProps) {
-  if (!solutionData) return <div className="py-32 text-center">솔루션 정보를 불러오는 중입니다...</div>;
+  if (!solutionData) return <div className="py-32 text-center text-slate-500 font-light">솔루션 정보를 불러오는 중입니다...</div>;
+
+  // 데이터 안전장치: features가 없을 경우 기본값 제공
+  const features = solutionData.features || [
+    { title: '효율적인 프로세스', description: '업무 최적화를 통해 비용을 절감하고 생산성을 극대화합니다.' },
+    { title: '강력한 보안성', description: '엔터프라이즈급 보안 표준을 적용하여 데이터를 안전하게 보호합니다.' },
+    { title: '유연한 확장성', description: '비즈니스 성장에 맞춰 자유롭게 기능을 확장하고 통합할 수 있습니다.' },
+  ];
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full">
-      {/* 1. 솔루션 히어로 섹션: 강렬한 첫인상 */}
-      <section className="py-32 px-4 bg-slate-900 text-white relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-1/2 h-full bg-blue-600/20 blur-[120px] rounded-full" />
+    <motion.div 
+      initial={{ opacity: 0 }} 
+      animate={{ opacity: 1 }} 
+      exit={{ opacity: 0 }} 
+      className="w-full bg-white"
+    >
+      {/* 1. Hero Section: Deep Navy & High Contrast */}
+      <section className="relative py-32 md:py-48 px-4 bg-[#0a192f] text-white overflow-hidden">
+        {/* 배경 장식 요소: 에이텍 스타일의 추상적 그라데이션 */}
+        <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[70%] bg-blue-600/20 blur-[120px] rounded-full" />
+        <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[60%] bg-indigo-900/30 blur-[100px] rounded-full" />
+        
         <div className="max-w-6xl mx-auto relative z-10">
-          <motion.span 
-            initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
-            className="text-blue-400 font-bold tracking-widest uppercase text-sm mb-6 block"
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
           >
-            Our Solution
-          </motion.span>
-          <motion.h1 
-            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-            className="text-4xl md:text-6xl font-black mb-8 leading-tight tracking-tighter"
-          >
-            {solutionData.title || '솔루션 제목을 입력하세요'}
-          </motion.h1>
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
-            className="text-lg md:text-xl text-slate-300 leading-relaxed max-w-3xl font-light"
-          >
-            {solutionData.description || '해당 솔루션이 제공하는 핵심 가치와 고객이 얻을 수 있는 이점을 상세히 기술합니다.'}
-          </motion.p>
+            <span className="inline-block text-blue-400 font-medium tracking-[0.2em] uppercase text-xs mb-6">
+              Enterprise Solution
+            </span>
+            <h1 className="text-4xl md:text-7xl font-bold mb-8 leading-[1.1] tracking-tighter">
+              {solutionData.title || '솔루션 제목을 입력하세요'}
+            </h1>
+            <p className="text-lg md:text-2xl text-slate-400 leading-relaxed max-w-3xl font-light break-keep">
+              {solutionData.description || '해당 솔루션이 제공하는 핵심 가치와 고객이 얻을 수 있는 이점을 상세히 기술합니다.'}
+            </p>
+          </motion.div>
         </div>
       </section>
 
-      {/* 2. 핵심 특징 섹션: 3단 그리드 레이아웃 */}
+      {/* 2. Core Features: Clean Grid with Subtle Borders */}
       <section className="py-32 px-4 bg-white">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-20">
-            <h2 className="text-3xl md:text-4xl font-black text-slate-900 mb-4 tracking-tighter">Core Features</h2>
-            <div className="w-12 h-1 bg-blue-600 mx-auto"></div>
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-6">
+            <div className="max-w-2xl">
+              <h2 className="text-3xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tighter">
+                핵심 역량과 <span className="text-blue-600">차별점</span>
+              </h2>
+              <p className="text-slate-500 text-lg font-light break-keep">
+                단순한 기능을 넘어 비즈니스의 본질적인 문제를 해결하는 최적의 메커니즘을 제공합니다.
+              </p>
+            </div>
+            <div className="hidden md:block w-24 h-[2px] bg-slate-200 mb-4" />
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[1, 2, 3].map((item) => (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {features.map((feature: any, idx: number) => (
               <motion.div 
-                key={item}
-                whileHover={{ y: -10 }}
-                className="p-10 bg-slate-50 rounded-3xl border border-slate-100 transition-all duration-300"
+                key={idx}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.1 }}
+                whileHover={{ y: -8 }}
+                className="group p-12 bg-slate-50 rounded-2xl border border-slate-100 hover:border-blue-200 hover:bg-white hover:shadow-2xl hover:shadow-blue-500/5 transition-all duration-300"
               >
-                <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold mb-6 text-xl">
-                  0{item}
+                <div className="w-10 h-10 bg-slate-200 group-hover:bg-blue-600 rounded-lg flex items-center justify-center text-slate-600 group-hover:text-white font-bold mb-8 transition-colors duration-300 text-sm">
+                  0{idx + 1}
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-4">핵심 강점 {item}</h3>
-                <p className="text-slate-600 leading-relaxed font-light">
-                  솔루션의 구체적인 기능이나 장점을 설명합니다. 고객이 왜 이 서비스를 선택해야 하는지 설득력 있게 작성합니다.
+                <h3 className="text-2xl font-bold text-slate-900 mb-4 tracking-tight">
+                  {feature.title}
+                </h3>
+                <p className="text-slate-500 leading-relaxed font-light break-keep">
+                  {feature.description}
                 </p>
               </motion.div>
             ))}
@@ -64,16 +89,32 @@ export default function SolutionPage({ solutionData }: SolutionPageProps) {
         </div>
       </section>
 
-      {/* 3. 하단 CTA 섹션: 문의 유도 */}
-      <section className="py-24 px-4 bg-slate-50 border-t border-slate-100">
+      {/* 3. Bottom CTA: High Conversion Area */}
+      <section className="py-32 px-4 bg-[#f8fafc] border-t border-slate-100">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl font-bold text-slate-900 mb-8">지금 바로 최적의 솔루션을 경험하세요</h2>
-          <button 
-            onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })}
-            className="px-10 py-4 bg-blue-600 text-white font-bold rounded-full hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/30"
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
           >
-            문의하기
-          </button>
+            <h2 className="text-3xl md:text-5xl font-bold text-slate-900 mb-10 tracking-tighter break-keep">
+              비즈니스의 새로운 기준,<br className="hidden md:block" /> 지금 바로 경험하십시오.
+            </h2>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button 
+                onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })}
+                className="px-12 py-5 bg-blue-600 text-white font-bold rounded-full hover:bg-blue-700 transition-all shadow-xl shadow-blue-600/20 text-lg"
+              >
+                무료 컨설팅 신청하기
+              </button>
+              <button 
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                className="px-12 py-5 bg-white text-slate-600 font-bold rounded-full border border-slate-200 hover:bg-slate-50 transition-all text-lg"
+              >
+                홈으로 돌아가기
+              </button>
+            </div>
+          </motion.div>
         </div>
       </section>
     </motion.div>
