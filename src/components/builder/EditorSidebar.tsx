@@ -216,12 +216,28 @@ export default function EditorSidebar({ data, setData, siteId, refreshSites, act
               </div>
             </div>
 
+            {/* CS/문의하기 설정 강화 */}
             <div id="edit-section-cs" className="space-y-6">
-              <h3 className="font-black text-blue-700 text-sm flex items-center gap-2 border-l-4 border-blue-700 pl-2">고객센터</h3>
-              <div className="p-4 bg-slate-50 rounded-xl border space-y-3">
-                <span className="text-xs font-bold block">문의하기 안내</span>
-                <textarea rows={3} value={(data as any).csGuide || ''} onChange={(e) => setData(prev => ({ ...prev, csGuide: e.target.value }))} className="w-full p-2 border rounded text-xs" />
-                <button onClick={() => setActiveSection('cs')} className="text-[10px] text-blue-600 underline">미리보기</button>
+              <h3 className="font-black text-blue-700 text-sm flex items-center gap-2 border-l-4 border-blue-700 pl-2">고객센터 (CS 페이지)</h3>
+              <div className="p-4 bg-slate-50 rounded-xl border space-y-4">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-xs font-bold text-slate-700">문의 채널 관리</span>
+                  <button onClick={() => setActiveSection('cs')} className="text-[10px] text-blue-600 underline">CS 페이지 미리보기</button>
+                </div>
+                <div className="space-y-3">
+                  <div>
+                    <label className="text-[11px] text-slate-500 block mb-1">대표 문의 전화번호</label>
+                    <input type="text" value={data.supportPhone || ''} onChange={(e) => setData(prev => ({ ...prev, supportPhone: e.target.value }))} className="w-full p-2 border rounded text-xs" placeholder="예: 02-123-4567" />
+                  </div>
+                  <div>
+                    <label className="text-[11px] text-slate-500 block mb-1">문의 안내 문구</label>
+                    <textarea rows={3} value={(data as any).csGuide || ''} onChange={(e) => setData(prev => ({ ...prev, csGuide: e.target.value }))} className="w-full p-2 border rounded text-xs" placeholder="문의 방법이나 안내 사항을 입력하세요" />
+                  </div>
+                  <div>
+                    <label className="text-[11px] text-slate-500 block mb-1">카카오톡 상담 링크 (URL)</label>
+                    <input type="text" value={(data as any).kakaoLink || ''} onChange={(e) => setData(prev => ({ ...prev, kakaoLink: e.target.value }))} className="w-full p-2 border rounded text-xs" placeholder="https://pf.kakao.com/..." />
+                  </div>
+                </div>
               </div>
             </div>
 
