@@ -38,8 +38,32 @@ export default function BuilderPage() {
     if (error) {
       console.error("데이터 로드 에러:", error);
     } else if (siteData && siteData.data) {
-      // 강제 지정 없이 DB에 저장된 데이터를 그대로 사용합니다.
-      setData(siteData.data);
+      // [임시 조치] DB 데이터가 원페이지형일 경우, 강제로 기업형 기본 구조를 씌웁니다.
+      const currentData = siteData.data;
+      
+      if (currentData.templateType !== 'corporate') {
+        setData({
+          ...currentData,
+          templateType: 'corporate',
+          company: { name: '태산금형', logoUrl: '' },
+          hero: { title: '모바일 최적화 실속형 홈페이지', subtitle: '기업 회사소개부터 매장 홍보까지', badge: '3~4일 신속 구축', mediaUrl: '' },
+          solutions: [
+            { title: 'B2B 기업 웹', category: '제조업', description: '신뢰도 높은 반응형 웹', image: '' },
+            { title: '매장 홍보 웹', category: '포트폴리오', description: '견적 요청 구조', image: '' },
+            { title: '1인 기업 랜딩', category: '전문직', description: '빠른 상담 연결', image: '' },
+          ],
+          navigation: {
+            navLinks: [
+              { label: '홈으로', targetId: 'main' },
+              { label: 'CEO 인사말', targetId: 'ceo' },
+              { label: '사업소개', targetId: 'sol_detail' },
+              { label: '문의하기', targetId: 'cs' },
+            ]
+          }
+        });
+      } else {
+        setData(currentData);
+      }
     }
     
     setIsLoading(false);
