@@ -5,6 +5,7 @@ import { AnimatePresence } from 'framer-motion';
 import GNB from './corporate/GNB';
 import MainPage from './corporate/pages/MainPage';
 import AboutPage from './corporate/pages/AboutPage';
+import SolutionPage from './corporate/pages/SolutionPage';
 
 interface CorporateViewerProps {
   data: any; 
@@ -26,51 +27,63 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
   } = data;
   
   const [internalPage, setInternalPage] = useState('main');
+  const [selectedSolutionId, setSelectedSolutionId] = useState<number | null>(null);
+
   const activePage = propSection || internalPage;
   const setActivePage = propSetSection || setInternalPage;
 
-  const navigateTo = (targetId: string) => {
+  const navigateTo = (targetId: string, solutionIndex?: number) => {
+    if (solutionIndex !== undefined) {
+      setSelectedSolutionId(solutionIndex);
+    }
     setActivePage(targetId);
     window.scrollTo(0, 0);
   };
 
+  const currentSolution = selectedSolutionId !== null ? solutions[selectedSolutionId] : null;
+
   return (
     <div className="min-h-screen w-full bg-white text-slate-900 font-sans">
-      {/* 분리한 GNB 컴포넌트 연결 */}
       <GNB 
         company={company} 
         navigation={navigation} 
         themeColor={themeColor} 
         activePage={activePage} 
-        navigateTo={navigateTo} 
+        // 🟢 수정: (id, index)를 모두 받아 navigateTo에 그대로 전달
+        navigateTo={(id, index) => navigateTo(id, index)} 
       />
 
       <main className="w-full">
-<AnimatePresence mode="wait">
-  {activePage === 'main' && (
-    <MainPage 
-      key="main" 
-      hero={hero} 
-      solutions={solutions} 
-      navigateTo={navigateTo} 
-    />
-  )}
-  
-  {/* 이 부분을 아래와 같이 수정하세요 */}
-  {activePage === 'about' && (
-    <AboutPage 
-      key="about" 
-      corporateInfo={corporateInfo} 
-    />
-  )}
+        <AnimatePresence mode="wait">
+          {activePage === 'main' && (
+            <MainPage 
+              key="main" 
+              hero={hero} 
+              solutions={solutions} 
+              navigateTo={(id, index) => navigateTo(id, index)} 
+            />
+          )}
+          
+          {activePage === 'about' && (
+            <AboutPage 
+              key="about" 
+              corporateInfo={corporateInfo} 
+            />
+          )}
 
-  {activePage === 'sol_detail' && (
-    <div className="py-24 text-center">솔루션 상세 페이지 준비 중...</div>
-  )}
+          {activePage === 'sol_detail' && (
+            <SolutionPage 
+              key={`sol-${selectedSolutionId}`} 
+              solutionData={currentSolution} 
+            />
+          )}
+
+          {activePage === 'cs' && (
+            <div className="py-32 text-center text-2xl">고객센터 페이지 준비 중...</div>
+          )}
         </AnimatePresence>
       </main>
 
-      {/* Footer는 나중에 분리 예정 */}
       <footer className="bg-slate-900 text-slate-400 py-20 px-6 w-full border-t border-slate-800">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-16">
           <div>
@@ -81,7 +94,7 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
             <h4 className="text-white font-bold mb-8 uppercase text-sm">Quick Links</h4>
             <ul className="space-y-4 text-sm">
               <li className="hover:text-white cursor-pointer" onClick={() => navigateTo('main')}>홈으로</li>
-              <li className="hover:text-white cursor-pointer" onClick={() => navigateTo('sol_detail')}>사업소개</li>
+              <li className="hover:text-white cursor-pointer" onClick={() => navigateTo('sol_detail', 0)}>사업소개</li>
               <li className="hover:text-white cursor-pointer" onClick={() => navigateTo('cs')}>고객센터</li>
             </ul>
           </div>
