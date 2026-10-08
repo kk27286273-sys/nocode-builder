@@ -48,7 +48,7 @@ export default function BuilderPage() {
     if (error) {
       alert('발행 실패: ' + error.message);
     } else {
-      alert('🚀 사이트가 성공적으로 발행되었습니다! 이제 실제 URL에서 확인하실 수 있습니다.');
+      window.open(`/site/${siteId}`, '_blank');
     }
     setIsLoading(false);
   }
