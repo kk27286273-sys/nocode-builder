@@ -12,8 +12,7 @@ interface CorporateViewerProps {
 }
 
 export const CorporateViewer = ({ data, activeSection: propSection, setActiveSection: propSetSection }: CorporateViewerProps) => {
-  if (!// 데이터가 없을 때의 처리
-  !data) return <div className="p-10 text-center">데이터를 불러오는 중입니다...</div>;
+  if (!data) return <div className="p-10 text-center">데이터를 불러오는 중입니다...</div>;
 
   const { 
     company = {}, 
