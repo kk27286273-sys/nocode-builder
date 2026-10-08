@@ -85,7 +85,7 @@ export default function EditorSidebar({ data, setData, siteId, refreshSites, act
         {data.templateType === 'corporate' && (
           <div className="space-y-12">
             
-            {/* 🚩 [복구] 메인 히어로 설정 - SOL 페이지로 가는 버튼 포함 */}
+            {/* 메인 히어로 설정 */}
             <div id="edit-section-main" className="space-y-6">
               <h3 className="font-black text-blue-700 text-sm flex items-center gap-2 border-l-4 border-blue-700 pl-2">메인 비주얼 설정</h3>
               <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
@@ -114,7 +114,7 @@ export default function EditorSidebar({ data, setData, siteId, refreshSites, act
               </div>
             </div>
 
-            {/* 🚩 [강화] SOL(사업 소개) 전용 에디터 - 여기가 핵심입니다 */}
+            {/* SOL(사업 소개) 에디터 */}
             <div id="edit-section-sol" className="space-y-6">
               <h3 className="font-black text-blue-700 text-sm flex items-center gap-2 border-l-4 border-blue-700 pl-2">사업 영역 (SOL 페이지)</h3>
               <div className="flex justify-between items-center mb-2 px-1">
@@ -128,8 +128,8 @@ export default function EditorSidebar({ data, setData, siteId, refreshSites, act
                       <span className="text-[10px] font-black text-blue-600">솔루션 #{idx + 1}</span>
                       <button onClick={() => setData(prev => ({ ...prev, solutions: prev.solutions.filter((_, i) => i !== idx) }))} className="text-slate-400 hover:text-red-500 text-xs">삭제</button>
                     </div>
-                    <input type="text" value={sol.title} onChange={(e) => { const next = [...data.solutions]; next[idx].title = e.target.value; setData(prev => ({ ...prev, solutions: next })); }} className="w-full p-2 border rounded text-xs font-bold" placeholder="솔루션 제목 (예: 통합 관제 시스템)" />
-                    <input type="text" value={sol.category} onChange={(e) => { const next = [...data.solutions]; next[idx].category = e.target.value; setData(prev => ({ ...prev, solutions: next })); }} className="w-full p-2 border rounded text-xs" placeholder="카테고리 (예: 스마트 시티)" />
+                    <input type="text" value={sol.title} onChange={(e) => { const next = [...data.solutions]; next[idx].title = e.target.value; setData(prev => ({ ...prev, solutions: next })); }} className="w-full p-2 border rounded text-xs font-bold" placeholder="솔루션 제목" />
+                    <input type="text" value={sol.category} onChange={(e) => { const next = [...data.solutions]; next[idx].category = e.target.value; setData(prev => ({ ...prev, solutions: next })); }} className="w-full p-2 border rounded text-xs" placeholder="카테고리" />
                     <textarea rows={3} value={sol.description} onChange={(e) => { const next = [...data.solutions]; next[idx].description = e.target.value; setData(prev => ({ ...prev, solutions: next })); }} className="w-full p-2 border rounded text-xs" placeholder="상세 설명 입력" />
                     <div className="flex items-center gap-2">
                       <label className="text-[10px] text-slate-500 shrink-0">대표 이미지</label>
@@ -141,7 +141,7 @@ export default function EditorSidebar({ data, setData, siteId, refreshSites, act
               </div>
             </div>
 
-            {/* 1. 회사 소개 섹션 */}
+            {/* 회사 소개 섹션 */}
             <div id="edit-section-company" className="space-y-6">
               <h3 className="font-black text-blue-700 text-sm flex items-center gap-2 border-l-4 border-blue-700 pl-2">회사 소개</h3>
               <div id="edit-section-ceo" className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
@@ -153,7 +153,6 @@ export default function EditorSidebar({ data, setData, siteId, refreshSites, act
                 <textarea rows={4} value={data.corporateInfo?.ceoGreeting?.content || ''} onChange={(e) => setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, ceoGreeting: { ...prev.corporateInfo.ceoGreeting, content: e.target.value } } }))} className="w-full p-2 border rounded text-xs" placeholder="인사말 본문" />
                 <input type="file" onChange={(e) => handleImageUpload(e, (url) => setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, ceoGreeting: { ...prev.corporateInfo.ceoGreeting, image: url } } })), 'ceo')} className="text-[10px]" />
               </div>
-              {/* 미션, 조직도, CI, 오시는길 폼들 그대로 유지... */}
               <div id="edit-section-mission" className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-xs font-bold text-slate-700">미션 & 비전</span>
@@ -185,7 +184,6 @@ export default function EditorSidebar({ data, setData, siteId, refreshSites, act
               </div>
             </div>
 
-            {/* 나머지 폼들 (홍보센터, 인재경영, 고객센터, 푸터) 그대로 유지 */}
             <div id="edit-section-pr" className="space-y-6">
               <h3 className="font-black text-blue-700 text-sm flex items-center gap-2 border-l-4 border-blue-700 pl-2">홍보 센터</h3>
               <div className="grid grid-cols-2 gap-4">
@@ -252,6 +250,5 @@ export default function EditorSidebar({ data, setData, siteId, refreshSites, act
         )}
       </div>
     </div>
-    </aside>
   );
 }
