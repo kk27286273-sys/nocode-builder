@@ -15,16 +15,8 @@ export default function CorporateViewer({ data, activeSection: propSection, setA
   const { 
     company = {}, 
     navigation = {}, 
-    solutions = [], 
-    hero = {}, 
     themeColor = '#0284C7', 
-    footer = {},
-    faqs = [],
-    stats = [],
-    reviews = [],
-    reviewsSection = {},
-    solutionsSection = {},
-    partnersSection = {}
+    footer = {}
   } = data;
   
   const [internalPage, setInternalPage] = useState('main');
@@ -36,30 +28,32 @@ export default function CorporateViewer({ data, activeSection: propSection, setA
     window.scrollTo(0, 0);
   };
 
+  // [상단 네비게이션] - 에이텍 스타일
   const Navbar = () => (
-    <nav style={{ position: 'sticky', top: 0, zIndex: 50, backgroundColor: 'rgba(255,255,255,0.8)', backdropFilter: 'blur(12px)', borderBottom: '1px solid #e2e8f0', boxShadow: '0 1px 2px 0 rgba(0,0,0,0.05)' }}>
-      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px', height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }} onClick={() => navigateTo('main')}>
+    <nav style={{ position: 'sticky', top: 0, zIndex: 100, backgroundColor: 'white', borderBottom: '1px solid #ddd', height: '80px', display: 'flex', alignItems: 'center' }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%', padding: '0 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }} onClick={() => navigateTo('main')}>
           {company?.logoUrl ? (
-            <img src={company.logoUrl} alt={company.name} style={{ height: '40px', objectFit: 'contain' }} />
+            <img src={company.logoUrl} alt={company.name} style={{ height: '40px' }} />
           ) : (
-            <span style={{ fontSize: '24px', fontWeight: '900', letterSpacing: '-0.02em', color: themeColor }}>{company?.name || '회사명'}</span>
+            <span style={{ fontSize: '24px', fontWeight: 'bold', color: themeColor }}>{company?.name || '회사명'}</span>
           )}
         </div>
-        <div style={{ display: 'flex', gap: '32px' }}>
+        <div style={{ display: 'flex', gap: '30px' }}>
           {(navigation?.navLinks || []).map((menu: any) => (
             <button 
               key={menu.label}
+              onClick={() => navigateTo(menu.targetId)}
               style={{ 
-                fontSize: '14px', 
-                fontWeight: '700', 
+                fontSize: '16px', 
+                fontWeight: '600', 
                 cursor: 'pointer', 
                 border: 'none', 
                 backgroundColor: 'transparent',
-                transition: 'color 0.2s',
-                color: activePage === menu.targetId ? themeColor : '#475569' 
+                color: activePage === menu.targetId ? themeColor : '#333',
+                borderBottom: activePage === menu.targetId ? `3px solid ${themeColor}` : 'none',
+                paddingBottom: '5px'
               }}
-              onClick={() => navigateTo(menu.targetId)}
             >
               {menu.label}
             </button>
@@ -69,106 +63,90 @@ export default function CorporateViewer({ data, activeSection: propSection, setA
     </nav>
   );
 
-  const MainHome = () => (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-      {/* Hero Section */}
-      <section style={{ position: 'relative', height: '600px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', backgroundColor: '#0f172a', overflow: 'hidden' }}>
-        <div style={{ position: 'relative', zIndex: 10, textAlign: 'center', padding: '0 24px' }}>
-          <span style={{ display: 'inline-block', padding: '6px 16px', borderRadius: '9999px', backgroundColor: themeColor, fontSize: '12px', fontWeight: 'bold', marginBottom: '24px', color: 'white' }}>
-            {hero?.badge || 'Premium Service'}
-          </span>
-          <h1 style={{ fontSize: '48px', fontWeight: '900', marginBottom: '24px', lineHeight: '1.2', whiteSpace: 'pre-line' }}>
-            {hero?.title || '타이틀을 입력하세요'}
-          </h1>
-          <p style={{ fontSize: '20px', color: '#cbd5e1', maxWidth: '800px', margin: '0 auto', lineHeight: '1.6', whiteSpace: 'pre-line' }}>
-            {hero?.subtitle || '서브타이틀을 입력하세요'}
-          </p>
-        </div>
-      </section>
-
-      {/* Stats Section */}
-      <section style={{ padding: '48px 0', backgroundColor: 'white', borderBottom: '1px solid #f1f5f9' }}>
-        <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '32px' }}>
-          {stats.map((stat: any, idx: number) => (
-            <div key={idx} style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '36px', fontWeight: '900', marginBottom: '8px', color: themeColor }}>{stat.value}</div>
-              <div style={{ fontSize: '14px', color: '#64748b', fontWeight: '500' }}>{stat.label}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Solutions Section */}
-      <section style={{ padding: '96px 0', backgroundColor: '#f8fafc' }}>
-        <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px', textAlign: 'center', marginBottom: '64px' }}>
-          <h2 style={{ fontSize: '36px', fontWeight: 'bold', marginBottom: '16px', color: '#0f172a' }}>{solutionsSection?.title || 'Our Solutions'}</h2>
-          <p style={{ fontSize: '16px', color: '#64748b', maxWidth: '640px', margin: '0 auto' }}>{solutionsSection?.subtitle}</p>
-        </div>
-        <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '32px' }}>
-          {solutions.map((sol: any, idx: number) => (
-            <div key={idx} onClick={() => { navigateTo('sol_detail'); }} style={{ backgroundColor: 'white', borderRadius: '24px', overflow: 'hidden', border: '1px solid #e2e8f0', cursor: 'pointer', transition: 'transform 0.3s', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}>
-              <div style={{ height: '224px', backgroundColor: '#e2e8f0' }}>
-                <img src={sol.image || 'https://via.placeholder.com/400x300'} alt={sol.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              </div>
-              <div style={{ padding: '32px' }}>
-                <span style={{ color: themeColor, fontWeight: 'bold', fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{sol.category}</span>
-                <h3 style={{ fontSize: '24px', fontWeight: 'bold', marginTop: '8px', marginBottom: '12px', color: '#0f172a' }}>{sol.title}</h3>
-                <p style={{ fontSize: '14px', color: '#475569', lineHeight: '1.6' }}>{sol.description}</p>
+  // [페이지별 콘텐츠]
+  const renderPage = () => {
+    switch (activePage) {
+      case 'main':
+        return (
+          <div style={{ textAlign: 'center', padding: '100px 20px' }}>
+            <h1 style={{ fontSize: '48px', fontWeight: 'bold', marginBottom: '20px' }}>{company?.name}에 오신 것을 환영합니다.</h1>
+            <p style={{ fontSize: '20px', color: '#666' }}>최고의 기술력으로 미래를 선도하는 기업입니다.</p>
+          </div>
+        );
+      case 'about': // 회사소개
+        return (
+          <div style={{ padding: '60px 20px', maxWidth: '1000px', margin: '0 auto' }}>
+            <h2 style={{ fontSize: '32px', fontWeight: 'bold', borderLeft: `6px solid ${themeColor}`, paddingLeft: '15px', marginBottom: '30px' }}>회사소개</h2>
+            <div style={{ lineHeight: '1.8', fontSize: '16px', color: '#444' }}>
+              <p>여기에 회사의 비전, 경영 철학, 연혁 등 상세 내용을 입력하세요.</p>
+              <div style={{ marginTop: '30px', padding: '20px', backgroundColor: '#f9f9f9', borderRadius: '10px' }}>
+                <strong>CEO 메시지:</strong> 고객의 가치를 최우선으로 생각하는 기업이 되겠습니다.
               </div>
             </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Reviews Section */}
-      <section style={{ padding: '96px 0', backgroundColor: 'white' }}>
-        <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px', textAlign: 'center', marginBottom: '64px' }}>
-          <h2 style={{ fontSize: '36px', fontWeight: 'bold', marginBottom: '16px', color: '#0f172a' }}>{reviewsSection?.title || 'Customer Reviews'}</h2>
-          <p style={{ fontSize: '16px', color: '#64748b', maxWidth: '640px', margin: '0 auto' }}>{reviewsSection?.subtitle}</p>
-        </div>
-        <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '24px' }}>
-          {reviews.map((rev: any, idx: number) => (
-            <div key={idx} style={{ padding: '32px', borderRadius: '24px', backgroundColor: '#f8fafc', border: '1px solid #f1f5f9' }}>
-              <p style={{ fontSize: '18px', color: '#334155', fontStyle: 'italic', marginBottom: '24px', lineHeight: '1.6' }}>"{rev.content}"</p>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: '#cbd5e1' }} />
-                <div>
-                  <div style={{ fontWeight: 'bold', color: '#0f172a' }}>{rev.author}</div>
-                  <div style={{ fontSize: '12px', color: '#64748b' }}>{rev.role}</div>
-                </div>
+          </div>
+        );
+      case 'business': // 사업소개
+        return (
+          <div style={{ padding: '60px 20px', maxWidth: '1000px', margin: '0 auto' }}>
+            <h2 style={{ fontSize: '32px', fontWeight: 'bold', borderLeft: `6px solid ${themeColor}`, paddingLeft: '15px', marginBottom: '30px' }}>사업소개</h2>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+              <div style={{ border: '1px solid #ddd', padding: '20px', borderRadius: '10px' }}>
+                <h3 style={{ color: themeColor, marginBottom: '10px' }}>핵심 솔루션 A</h3>
+                <p>사업 분야의 상세 설명이 들어갑니다.</p>
+              </div>
+              <div style={{ border: '1px solid #ddd', padding: '20px', borderRadius: '10px' }}>
+                <h3 style={{ color: themeColor, marginBottom: '10px' }}>핵심 솔루션 B</h3>
+                <p>사업 분야의 상세 설명이 들어갑니다.</p>
               </div>
             </div>
-          ))}
-        </div>
-      </section>
-    </motion.div>
-  );
+          </div>
+        );
+      case 'cs': // 고객센터/문의하기
+        return (
+          <div style={{ padding: '60px 20px', maxWidth: '600px', margin: '0 auto' }}>
+            <h2 style={{ fontSize: '32px', fontWeight: 'bold', textAlign: 'center', marginBottom: '30px' }}>고객센터 문의</h2>
+            <form style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+              <input type="text" placeholder="성함" style={{ padding: '12px', border: '1px solid #ddd', borderRadius: '5px' }} />
+              <input type="email" placeholder="이메일" style={{ padding: '12px', border: '1px solid #ddd', borderRadius: '5px' }} />
+              <textarea placeholder="문의내용" rows={5} style={{ padding: '12px', border: '1px solid #ddd', borderRadius: '5px' }}></textarea>
+              <button style={{ padding: '15px', backgroundColor: themeColor, color: 'white', border: 'none', borderRadius: '5px', fontWeight: 'bold', cursor: 'pointer' }}>문의하기 제출</button>
+            </form>
+          </div>
+        );
+      default:
+        return (
+          <div style={{ padding: '100px 20px', textAlign: 'center' }}>
+            <h2 style={{ fontSize: '24px' }}>{activePage} 페이지 준비 중입니다.</h2>
+            <button onClick={() => navigateTo('main')} style={{ marginTop: '20px', color: themeColor, cursor: 'pointer', border: 'none', background: 'none', textDecoration: 'underline' }}>홈으로 돌아가기</button>
+          </div>
+        );
+    }
+  };
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: 'white', color: '#0f172a', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+    <div style={{ minHeight: '100vh', backgroundColor: 'white', color: '#333', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
       <Navbar />
-      <main>
+      <main style={{ minHeight: 'calc(100vh - 240px)' }}>
         <AnimatePresence mode="wait">
-          {activePage === 'main' ? <MainHome key="main" /> : (
-             <div style={{ padding: '160px 0', textAlign: 'center' }}>
-               <h2 style={{ fontSize: '30px', fontWeight: 'bold', marginBottom: '16px' }}>{activePage} 페이지</h2>
-               <p style={{ color: '#64748b' }}>현재 준비 중인 페이지입니다.</p>
-               <button onClick={() => navigateTo('main')} style={{ marginTop: '32px', padding: '12px 24px', backgroundColor: '#0f172a', color: 'white', borderRadius: '9999px', fontWeight: 'bold', cursor: 'pointer', border: 'none' }}>홈으로 돌아가기</button>
-             </div>
-          )}
+          <motion.div 
+            key={activePage} 
+            initial={{ opacity: 0, y: 10 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            exit={{ opacity: 0, y: -10 }} 
+            transition={{ duration: 0.2 }}
+          >
+            {renderPage()}
+          </motion.div>
         </AnimatePresence>
       </main>
-      <footer style={{ backgroundColor: '#0f172a', color: '#94a3b8', padding: '80px 0' }}>
-        <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '48px' }}>
-          <div style={{ textAlign: 'left' }}>
-            <div style={{ fontSize: '24px', fontWeight: '900', color: 'white', marginBottom: '24px' }} style={{ color: themeColor }}>{company?.name || '회사명'}</div>
-            <p style={{ fontSize: '14px', lineHeight: '1.6', marginBottom: '16px' }}>{footer?.address}</p>
-            <p style={{ fontSize: '14px', fontWeight: '500', color: 'white' }}>{footer?.contactEmail}</p>
+      <footer style={{ backgroundColor: '#f4f4f4', color: '#666', padding: '40px 20px', borderTop: '1px solid #ddd' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div>
+            <div style={{ fontWeight: 'bold', color: '#333', marginBottom: '10px' }}>{company?.name}</div>
+            <p style={{ fontSize: '13px' }}>{footer?.address} | {footer?.contactEmail}</p>
           </div>
-          <div style={{ textAlign: 'right' }}>
-            <div style={{ color: 'white', fontWeight: 'bold', marginBottom: '16px' }}>Customer Support</div>
-            <div style={{ fontSize: '24px', fontWeight: 'bold', color: 'white', marginBottom: '8px' }}>{data.supportPhone || '010-0000-0000'}</div>
-            <p style={{ fontSize: '12px', color: '#64748b' }}>© {new Date().getFullYear()} {company?.name || 'TH SOFT'}. All rights reserved.</p>
+          <div style={{ fontSize: '13px' }}>
+            © {new Date().getFullYear()} {company?.name}. All rights reserved.
           </div>
         </div>
       </footer>
