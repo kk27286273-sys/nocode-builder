@@ -65,36 +65,20 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
       </div>
 
       {/* Main Page Content */}
-      <main className="w-full flex-1 shrink-0">
-        <AnimatePresence mode="wait">
-          {activePage === 'main' && (
-            <MainPage 
-              key="main" 
-              hero={hero} 
-              solutions={solutions} 
-              navigateTo={(id, index) => navigateTo(id, index)} 
-            />
-          )}
-          
-          {activePage === 'about' && (
-            <AboutPage 
-              key="about" 
-              corporateInfo={corporateInfo} 
-            />
-          )}
-
-          {activePage === 'sol_detail' && (
-            <SolutionPage 
-              key={`sol-${selectedSolutionId}`} 
-              solutionData={currentSolution} 
-            />
-          )}
-
-          {activePage === 'cs' && (
-            <div className="py-32 text-center text-2xl font-bold text-slate-600">고객센터 페이지 준비 중...</div>
-          )}
-        </AnimatePresence>
-      </main>
+<main className="w-full flex-1 shrink-0">
+  <AnimatePresence mode="wait">
+    {activePage === 'main' && <MainPage key="main" hero={hero} solutions={solutions} navigateTo={navigateTo} />}
+    {activePage === 'about' && <AboutPage key="about" corporateInfo={corporateInfo} />}
+    {activePage === 'sol_detail' && <SolutionPage key={`sol-${selectedSolutionId}`} solutionData={currentSolution} />}
+    
+    {/* 신규 추가 페이지들 */}
+    {activePage === 'esg' && <div className="py-32 text-center text-2xl font-bold">지속가능경영 페이지 구현 중...</div>}
+    {activePage === 'disclosure' && <div className="py-32 text-center text-2xl font-bold">공시정보 페이지 구현 중...</div>}
+    {activePage === 'pr' && <div className="py-32 text-center text-2xl font-bold">홍보센터 페이지 구현 중...</div>}
+    {activePage === 'recruit' && <div className="py-32 text-center text-2xl font-bold">인재경영 페이지 구현 중...</div>}
+    {activePage === 'cs' && <div className="py-32 text-center text-2xl font-bold">고객센터 페이지 구현 중...</div>}
+  </AnimatePresence>
+</main>
 
       {/* Footer Section */}
       <footer className="w-full bg-slate-900 text-slate-400 py-20 px-6 shrink-0 border-t border-slate-800">
