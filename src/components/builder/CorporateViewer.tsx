@@ -34,7 +34,8 @@ export default function CorporateViewer({ data, activeSection: propSection, setA
   const setActivePage = propSetSection || setInternalPage;
 
   const navigateTo = (targetId: string) => {
-    setActivePage(targetId);
+    const id = targetId || 'main'; 
+    setActivePage(id);
     window.scrollTo(0, 0);
   };
 
@@ -178,19 +179,21 @@ const BusinessPage = () => (
     </motion.div>
   );
 
-  return (
+ return (
     <div style={{ minHeight: '100vh', backgroundColor: '#fff', color: '#333', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
       <Navbar />
       <main>
         <AnimatePresence mode="wait">
-          {activePage === 'main' && <MainPage key="main" />}
-          {activePage === 'about' && <CompanyPage key="about" />}
-          {activePage === 'business' && <BusinessPage key="business" />}
-          {activePage === 'pr' && <PRPage key="pr" />}
-          {activePage === 'recruit' && <RecruitPage key="recruit" />}
-          {activePage === 'cs' && <CSPage key="cs" />}
-          {!['main', 'about', 'business', 'pr', 'recruit', 'cs'].includes(activePage) && (
-            <div style={{ padding: '100px', textAlign: 'center' }}>준비 중인 페이지입니다.</div>
+          {/* targetId가 'about' 또는 'ceo' 또는 'company'인 경우 모두 CompanyPage 렌더링 */}
+          {['main'].includes(activePage) && <MainPage key="main" />}
+          {['about', 'ceo', 'company'].includes(activePage) && <CompanyPage key="about" />}
+          {['business', 'service', 'solution'].includes(activePage) && <BusinessPage key="business" />}
+          {['pr', 'news', '홍보'].includes(activePage) && <PRPage key="pr" />}
+          {['recruit', 'job', '인재'].includes(activePage) && <RecruitPage key="recruit" />}
+          {['cs', 'contact', '문의'].includes(activePage) && <CSPage key="cs" />}
+          
+          {!['main', 'about', 'ceo', 'company', 'business', 'service', 'solution', 'pr', 'news', '홍보', 'recruit', 'job', '인재', 'cs', 'contact', '문의'].includes(activePage) && (
+            <div style={{ padding: '100px', textAlign: 'center' }}>준비 중인 페이지입니다. (ID: {activePage})</div>
           )}
         </AnimatePresence>
       </main>
