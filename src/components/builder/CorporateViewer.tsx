@@ -5,7 +5,7 @@ import { B2BTemplateData } from '@/types/template';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface CorporateViewerProps {
-  data: B2BTemplateData;
+  data: any; // 데이터 구조 유연성을 위해 any로 설정
   activeSection?: string;
   setActiveSection?: (section: string) => void;
 }
@@ -13,7 +13,16 @@ interface CorporateViewerProps {
 export const CorporateViewer = ({ data, activeSection: propSection, setActiveSection: propSetSection }: CorporateViewerProps) => {
   if (!data) return <div className="p-10 text-center">데이터를 불러오는 중입니다...</div>;
 
-  const { company = {}, navigation = {}, corporateInfo = {}, solutions = [], hero = {}, themeColor = '#000', footer = {} } = data;
+  // 로그에서 확인된 실제 데이터 경로로 매핑
+  const { 
+    company = {}, 
+    navigation = {}, 
+    corporateInfo = {}, 
+    solutions = [], 
+    hero = {}, 
+    themeColor = '#000', 
+    footer = {} 
+  } = data;
   
   const [internalPage, setInternalPage] = useState('main');
   const activePage = propSection || internalPage;
@@ -37,14 +46,22 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
           )}
         </div>
         <div className="hidden md:flex gap-8">
-          {navigation?.menus?.map((menu) => (
+          {/* [수정] menus -> navLinks로 변경 */}
+          {(navigation?.navLinks || navigation?.menus)?.map((menu: any) => (
             <div key={menu.label} className="group relative py-7">
-              <button className="font-medium text-slate-700 hover:text-blue-600 transition-colors">{menu.label}</button>
-              <div className="absolute top-20 left-0 w-48 bg-white border border-slate-100 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 p-4">
-                {menu.children?.map((child) => (
-                  <button key={child.label} onClick={() => navigateTo(child.targetId)} className="block w-full text-left px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-blue-600 rounded">{child.label}</button>
-                ))}
-              </div>
+              <button 
+                className="font-medium text-slate-700 hover:text-blue-600 transition-colors"
+                onClick={() => navigateTo(menu.targetId || 'main')}
+              >
+                {menu.label}
+              </button>
+              {menu.children && (
+                <div className="absolute top-20 left-0 w-48 bg-white border border-slate-100 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 p-4">
+                  {menu.children.map((child: any) => (
+                    <button key={child.label} onClick={() => navigateTo(child.targetId)} className="block w-full text-left px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-blue-600 rounded">{child.label}</button>
+                  ))}
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -70,14 +87,14 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
           <div className="w-16 h-1 bg-blue-600 mx-auto"></div>
         </div>
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-          {solutions?.map((sol, idx) => (
+          {solutions?.map((sol: any, idx: number) => (
             <motion.div key={idx} whileHover={{ y: -10 }} onClick={() => { setSelectedSolution(idx); navigateTo('sol_detail'); }} className="bg-white rounded-2xl overflow-hidden shadow-lg cursor-pointer group">
               <div className="h-60 overflow-hidden"><img src={sol.image} alt={sol.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" /></div>
               <div className="p-8">
                 <span className="text-blue-600 font-bold text-sm uppercase">{sol.category}</span>
                 <h3 className="text-2xl font-bold mt-2 mb-4">{sol.title}</h3>
                 <p className="text-slate-600 leading-relaxed">{sol.description}</p>
-                <div className="mt-6 text-blue-600 font-semibold flex items-center gap-2">자세히 보기 <span className="text-xl">→</span></div>
+                <div className="mt-6 text-blue-600 font-semibold flex items-center gap-2">자세히 보기 <span className="text-xl">→</</span></div>
               </div>
             </motion.div>
           ))}
@@ -112,7 +129,7 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {sol.detailedFeatures?.map((feat, idx) => (
+          {sol.detailedFeatures?.map((feat: any, idx: number) => (
             <div key={idx} className="p-6 border border-slate-200 rounded-xl hover:border-blue-400 transition-colors">
               <h4 className="text-xl font-bold mb-2">{feat.featureTitle}</h4>
               <p className="text-slate-600">{feat.featureContent}</p>
