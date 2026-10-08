@@ -49,8 +49,9 @@ export default function BuilderPage() {
       alert('발행 실패: ' + error.message);
     } else {
       alert('🚀 사이트가 성공적으로 발행되었습니다! 이제 실제 URL에서 확인하실 수 있습니다.');
-      // 실제 서비스 URL이 있다면 여기서 window.open(`${process.env.NEXT_PUBLIC_SITE_URL}/${siteId}`) 등을 추가할 수 있습니다.
     }
+    setIsLoading(false);
+  }
 
   async function deleteSite() {
     if (!siteId || !confirm('정말 삭제하시겠습니까?')) return;
@@ -69,7 +70,7 @@ export default function BuilderPage() {
       {/* 좌측 패널 전체: 상단 제어바 + 에디터 */}
       <div className="w-[430px] h-full flex flex-col shrink-0 bg-white border-r border-slate-300 shadow-2xl relative z-20">
         
-        {/* 상단 제어바: 화면 맨 위에 고정 */}
+        {/* 상단 제어바 */}
         <div className="h-14 px-4 bg-slate-900 flex items-center justify-between shrink-0 border-b border-slate-800">
           <div className="flex items-center gap-2">
             <span className="text-[11px] font-black text-slate-400 uppercase tracking-wider">Site</span>
