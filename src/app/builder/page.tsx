@@ -24,50 +24,72 @@ export default function BuilderPage() {
     }
   }
 
-  async function loadSiteData(id: string) {
-    if (!id) return;
-    setSiteId(id);
-    setIsLoading(true);
+async function loadSiteData(id: string) {
+  if (!id) return;
+  setSiteId(id);
+  setIsLoading(true);
+  
+  const { data: siteData, error } = await supabase
+    .from('sites')
+    .select('data')
+    .eq('id', id)
+    .single();
+  
+  if (error) {
+    console.error("데이터 로드 에러:", error);
+  } else if (siteData && siteData.data) {
+    const currentData = siteData.data;
     
-    const { data: siteData, error } = await supabase
-      .from('sites')
-      .select('data')
-      .eq('id', id)
-      .single();
-    
-    if (error) {
-      console.error("데이터 로드 에러:", error);
-    } else if (siteData && siteData.data) {
-      const currentData = siteData.data;
-      
-      if (currentData.templateType !== 'corporate') {
-        setData({
-          ...currentData,
-          templateType: 'corporate',
-          company: { name: '태산금형', logoUrl: '' },
-          hero: { title: '모바일 최적화 실속형 홈페이지', subtitle: '기업 회사소개부터 매장 홍보까지', badge: '3~4일 신속 구축', mediaUrl: '' },
-          solutions: [
-            { title: 'B2B 기업 웹', category: '제조업', description: '신뢰도 높은 반응형 웹', image: '' },
-            { title: '매장 홍보 웹', category: '포트폴리오', description: '견적 요청 구조', image: '' },
-            { title: '1인 기업 랜딩', category: '전문직', description: '빠른 상담 연결', image: '' },
-          ],
-          navigation: {
-            navLinks: [
-              { label: '홈으로', targetId: 'main' },
-              { label: 'CEO 인사말', targetId: 'ceo' },
-              { label: '사업소개', targetId: 'sol_detail' },
-              { label: '문의하기', targetId: 'cs' },
-            ]
-          }
-        });
-      } else {
-        setData(currentData);
-      }
-    }
-    
-    setIsLoading(false);
-  }
+    // 타입 정의에 맞춘 완벽한 기본값 구조
+    const defaultCorporateData: B2BTemplateData = {
+      templateType: 'corporate',
+      themeColor: '#2563eb',
+      company: { name: '태산금형', logoUrl: '' },
+      hero: { title: '최고의 정밀 기술로 산업의 표준을 제시합니다', subtitle: '글로벌 시장을 선도하는 정밀 금형 솔루션 기업', badge: 'Since 1990', mediaUrl: '' },
+      solutions: [
+        { title: '정밀 금형 설계', category: '핵심기술', description: '초정밀 설계를 통한 완벽한 품질 구현', image: '', detailedFeatures: [{ featureTitle: '특징 1', featureContent: '상세 내용입니다.' }] },
+      ],
+      corporateInfo: {
+        ceoGreeting: { title: '신뢰와 기술로 보답하겠습니다', content: 'CEO 인사말 내용이 들어갑니다.', image: '' },
+        missionVision: { mission: '인류 산업 발전에 기여하는 기술력', vision: '2030 글로벌 톱 10 정밀금형 기업' },
+        history: [{ year: '2024', event: '글로벌 시장 진출 및 확장' }],
+        orgChart: '',
+        ciImage: '',
+        location: { headOffice: { address: '서울시 강남구...', tel: '02-000-0000', fax: '02-000-0000' } },
+        esg: {
+          environmental: { title: '환경경영', content: '친환경 공정 도입', image: '' },
+          social: { title: '사회공헌', content: '지역사회 상생', image: '' },
+          governance: { title: '투명경영', content: '윤리경영 실천', image: '' },
+        },
+        disclosure: { certifications: [], reports: [] },
+      },
+      navigation: {
+        menus: [
+          { label: '회사소개', children: [{ label: 'CEO인사말', targetId: 'ceo' }, { label: '연혁', targetId: 'history' }] },
+          { label: '사업소개', children: [{ label: '솔루션', targetId: 'sol_detail' }] },
+        ]
+      },
+      prCenter: { news: [], notice: [] },
+      recruit: { talentValue: '도전하는 인재', benefitInfo: '최고의 복지', openPositions: [] },
+      csCenter: { faq: [], contactInfo: { email: 'help@company.com', phone: '02-000-0000', address: '서울시...' } },
+      supportPhone: '02-000-0000',
+      csGuide: '평일 09:00 ~ 18:00',
+      kakaoLink: '',
+      newsContent: '',
+      videoUrl: '',
+      talentValue: '열정적인 인재',
+      benefitInfo: '자유로운 연차 사용',
+      footer: { address: '서울시...', ownerName: '대표자명', businessNumber: '000-00-00000', contactEmail: 'info@company.com', companyName: '태산금형' },
+    };
 
+    if (currentData.templateType !== 'corporate') {
+      setData({ ...defaultCorporateData, ...currentData, templateType: 'corporate' });
+    } else {
+      setData(currentData);
+    }
+  }
+  setIsLoading(false);
+}
   async function handlePublish() {
     if (!siteId || !data) return alert('사이트를 먼저 선택해주세요.');
     setIsLoading(true);
