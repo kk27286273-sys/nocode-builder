@@ -1,138 +1,202 @@
 'use client';
-import React from 'react';
-import { B2BTemplateData } from '@/types/template';
+
+import React, { useState } from 'react';
+import { B2BTemplateData } from '@/types/template'; // 경로 수정
 import { motion, AnimatePresence } from 'framer-motion';
 
-export default function CorporateViewer({ data, activeSection, setActiveSection }: any) {
-  // 🚩 [방어 로직] 데이터 구조가 깨져도 렌더링되지 않도록 기본값 설정
-  const safeData = data || {};
-  const companyName = safeData.company?.name || '회사명을 입력하세요';
+interface CorporateViewerProps {
+  data: B2BTemplateData;
+  activeSection?: string;
+  setActiveSection?: (section: string) => void;
+}
+
+export const CorporateViewer = ({ data, activeSection: propSection, setActiveSection: propSetSection }: CorporateViewerProps) => {
+  const { company, navigation, corporateInfo, solutions, hero, themeColor, footer } = data;
   
-  // 네비게이션 데이터 보정: 배열 형태든 객체 형태든 menus 배열을 추출함
-  const getMenus = () => {
-    if (!safeData.navigation) return [];
-    // 1. navigation 자체가 배열인 경우
-    if (Array.isArray(safeData.navigation)) return safeData.navigation; 
-    // 2. navigation.menus가 배열인 경우
-    if (safeData.navigation.menus && Array.isArray(safeData.navigation.menus)) return safeData.navigation.menus;
-    // 3. 그 외 모든 경우 빈 배열 반환
-    return [];
+  const [internalPage, setInternalPage] = useState('main');
+  const activePage = propSection || internalPage;
+  const setActivePage = propSetSection || setInternalPage;
+
+  const [selectedSolution, setSelectedSolution] = useState<number | null>(null);
+
+  const navigateTo = (targetId: string) => {
+    setActivePage(targetId);
+    window.scrollTo(0, 0);
   };
-  const menus = getMenus();
+
+  const Navbar = () => (
+    <nav className="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
+      <div className="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
+        <div className="cursor-pointer" onClick={() => navigateTo('main')}>
+          {company.logoUrl ? (
+            <img src={company.logoUrl} alt={company.name} className="h-10 object-contain" />
+          ) : (
+            <span className="text-2xl font-bold" style={{ color: themeColor }}>{company.name}</span>
+          )}
+        </div>
+        <div className="hidden md:flex gap-8">
+          {navigation.menus.map((menu) => (
+            <div key={menu.label} className="group relative py-7">
+              <button className="font-medium text-slate-700 hover:text-blue-600 transition-colors">{menu.label}</button>
+              <div className="absolute top-20 left-0 w-48 bg-white border border-slate-100 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 p-4">
+                {menu.children.map((child) => (
+                  <button key={child.label} onClick={() => navigateTo(child.targetId)} className="block w-full text-left px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-blue-600 rounded">{child.label}</button>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </nav>
+  );
+
+  const MainHome = () => (
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+      <section className="relative h-[700px] flex items-center justify-center text-white overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <img src={hero.mediaUrl} alt="hero" className="w-full h-full object-cover brightness-50" />
+        </div>
+        <div className="relative z-10 text-center px-4">
+          <motion.span initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="inline-block px-4 py-1 rounded-full bg-blue-600 text-sm font-bold mb-6">{hero.badge}</motion.span>
+          <motion.h1 initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }} className="text-5xl md:text-7xl font-extrabold mb-6 leading-tight whitespace-pre-line">{hero.title}</motion.h1>
+          <motion.p initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.4 }} className="text-lg md:text-xl text-slate-200 max-w-3xl mx-auto leading-relaxed whitespace-pre-line">{hero.subtitle}</motion.p>
+        </div>
+      </section>
+      <section className="py-24 bg-slate-50 px-4">
+        <div className="max-w-7xl mx-auto text-center mb-16">
+          <h2 className="text-4xl font-bold mb-4">Our Solutions</h2>
+          <div className="w-16 h-1 bg-blue-600 mx-auto"></div>
+        </div>
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+          {solutions.map((sol, idx) => (
+            <motion.div key={idx} whileHover={{ y: -10 }} onClick={() => { setSelectedSolution(idx); navigateTo('sol_detail'); }} className="bg-white rounded-2xl overflow-hidden shadow-lg cursor-pointer group">
+              <div className="h-60 overflow-hidden"><img src={sol.image} alt={sol.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" /></div>
+              <div className="p-8">
+                <span className="text-blue-600 font-bold text-sm uppercase">{sol.category}</span>
+                <h3 className="text-2xl font-bold mt-2 mb-4">{sol.title}</h3>
+                <p className="text-slate-600 leading-relaxed">{sol.description}</p>
+                <div className="mt-6 text-blue-600 font-semibold flex items-center gap-2">자세히 보기 <span className="text-xl">→</span></div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+    </motion.div>
+  );
+
+  const PageLayout = ({ title, content }: { title: string; content: React.ReactNode }) => (
+    <motion.div initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -20, opacity: 0 }} className="py-24 px-4">
+      <div className="max-w-5xl mx-auto">
+        <div className="flex items-center gap-4 mb-12">
+          <div className="w-2 h-8 bg-blue-600"></div>
+          <h2 className="text-4xl font-bold">{title}</h2>
+        </div>
+        <div className="bg-white p-8 md:p-16 rounded-3xl shadow-sm border border-slate-100">{content}</div>
+      </div>
+    </motion.div>
+  );
+
+  const SolutionDetail = () => {
+    const sol = solutions[selectedSolution || 0];
+    return (
+      <PageLayout title={sol.category}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-16">
+          <img src={sol.image} alt={sol.title} className="rounded-2xl shadow-2xl w-full h-96 object-cover" />
+          <div>
+            <h3 className="text-3xl font-bold mb-6">{sol.title}</h3>
+            <p className="text-lg text-slate-600 leading-relaxed mb-8">{sol.description}</p>
+            <button onClick={() => navigateTo('cs')} className="px-8 py-4 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition-colors">문의하기</button>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {sol.detailedFeatures.map((feat, idx) => (
+            <div key={idx} className="p-6 border border-slate-200 rounded-xl hover:border-blue-400 transition-colors">
+              <h4 className="text-xl font-bold mb-2">{feat.featureTitle}</h4>
+              <p className="text-slate-600">{feat.featureContent}</p>
+            </div>
+          ))}
+        </div>
+      </PageLayout>
+    );
+  };
 
   return (
-    <div className="flex flex-col min-h-screen bg-white font-sans text-gray-900 overflow-x-hidden relative">
-      {/* 🚩 [수정] sticky 제거 및 z-index 강화: 뷰포트 밖으로 밀려나는 현상 방지 */}
-      <header className="relative w-full bg-white border-b z-[100]">
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-          <div className="text-2xl font-black cursor-pointer text-blue-900" onClick={() => setActiveSection('main')}>
-            {companyName}
-          </div>
-          <nav className="flex items-center gap-6">
-            {menus.length > 0 ? (
-              menus.map((menu: any, idx: number) => (
-                <div key={idx} className="relative group cursor-pointer">
-                  <span className="font-bold text-gray-700 group-hover:text-blue-700 transition-colors">{menu.label}</span>
-                  <div className="absolute left-0 top-full hidden group-hover:block w-48 bg-white border-t-2 border-blue-700 shadow-xl z-[110]">
-                    {menu.children?.map((child: any, cIdx: number) => (
-                      <div key={cIdx} onClick={() => setActiveSection(child.targetId)} className="px-4 py-3 text-sm text-gray-600 hover:bg-gray-100 hover:text-blue-700">{child.label}</div>
-                    ))}
-                  </div>
-                </div>
-              ))
-            ) : (
-              <span className="text-xs text-slate-400">메뉴를 설정해주세요.</span>
-            )}
-            <button onClick={() => setActiveSection('cs')} className="bg-blue-700 text-white px-5 py-2 rounded-full text-sm font-bold hover:bg-blue-800 transition-all">문의하기</button>
-          </nav>
-        </div>
-      </header>
-
-      <main className="flex-1 relative">
+    <div className="min-h-screen bg-white text-slate-900 font-sans">
+      <Navbar />
+      <main>
         <AnimatePresence mode="wait">
-          {activeSection === 'main' && (
-            <motion.div key="main" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-{/* 1. 배경이미지: h-[85vh] -> min-h-screen으로 변경하여 화면 꽉 채움 */}
-<section className="relative min-h-screen w-full flex items-center justify-center text-center text-white bg-cover bg-center bg-no-repeat" 
-  style={{ 
-    backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${safeData.hero?.mediaUrl || 'https://via.placeholder.com/1920x1080'})`,
-    backgroundSize: 'cover', 
-    backgroundPosition: 'center',
-    backgroundAttachment: 'fixed' // 패럴랙스 효과 추가로 더 고급스럽게 변경
-  }}>
-                <div className="max-w-4xl px-6">
-                  {safeData.hero?.badge && <span className="inline-block px-3 py-1 bg-blue-600 text-white text-xs font-bold rounded-full mb-4">{safeData.hero.badge}</span>}
-                  <h1 className="text-5xl md:text-7xl font-black mb-6 leading-tight">{safeData.hero?.title || '(메인 타이틀)'}</h1>
-                  <p className="text-xl md:text-2xl opacity-90 mb-10">{safeData.hero?.subtitle || '(서브 타이틀)'}</p>
-                  <button onClick={() => setActiveSection('sol')} className="bg-white text-blue-900 px-8 py-4 rounded-full font-bold text-lg hover:bg-gray-100 transition-all">사업영역 살펴보기</button>
+          {activePage === 'main' && <MainHome key="main" />}
+          {activePage === 'ceo' && (
+            <PageLayout title="CEO 인사말" content={
+              <div className="flex flex-col md:flex-row gap-12 items-center">
+                <img src={corporateInfo.ceoGreeting.image} className="w-64 h-80 object-cover rounded-2xl shadow-lg" />
+                <div>
+                  <h3 className="text-2xl font-bold mb-6">{corporateInfo.ceoGreeting.title}</h3>
+                  <p className="text-slate-600 leading-relaxed whitespace-pre-line">{corporateInfo.ceoGreeting.content}</p>
                 </div>
-              </section>
-            </motion.div>
-          )}
-
-          {activeSection === 'sol' && (
-            <motion.div key="sol" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="py-20 max-w-7xl mx-auto px-6">
-              <div className="text-center mb-16">
-                <h2 className="text-4xl font-black text-blue-900 mb-4">사업 영역</h2>
-                <p className="text-gray-600">우리가 제공하는 최첨단 솔루션을 소개합니다.</p>
               </div>
-              <div className="grid md:grid-cols-3 gap-8">
-                {safeData.solutions && safeData.solutions.length > 0 ? (
-                  safeData.solutions.map((sol: any, idx: number) => (
-                    <div key={idx} className="bg-white border rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all group">
-                      <div className="h-48 bg-slate-200 overflow-hidden"><img src={sol.image || 'https://via.placeholder.com/400x300'} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" /></div>
-                      <div className="p-6">
-                        <span className="text-[10px] font-bold text-blue-600 uppercase">{sol.category}</span>
-                        <h3 className="text-xl font-bold text-slate-900 mt-1 mb-3">{sol.title}</h3>
-                        <p className="text-sm text-gray-600 leading-relaxed">{sol.description}</p>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <div className="col-span-3 py-20 text-center text-gray-400 border-2 border-dashed rounded-3xl">에디터에서 솔루션을 추가해 주세요.</div>
-                )}
-              </div>
-            </motion.div>
+            } />
           )}
-
-          {activeSection === 'ceo' && (
-            <motion.div key="ceo" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="py-20 max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
-              <div className="aspect-square bg-gray-100 rounded-2xl overflow-hidden border shadow-xl"><img src={safeData.corporateInfo?.ceoGreeting?.image || 'https://via.placeholder.com/600'} className="w-full h-full object-cover" /></div>
-              <div className="space-y-6">
-                <h2 className="text-4xl font-black text-blue-900 leading-tight">{safeData.corporateInfo?.ceoGreeting?.title || '(인사말 제목)'}</h2>
-                <p className="text-lg leading-relaxed text-gray-600 whitespace-pre-line">{safeData.corporateInfo?.ceoGreeting?.content || '(인사말 내용)'}</p>
+          {activePage === 'mission' && (
+            <PageLayout title="미션 & 비전" content={
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="p-8 bg-blue-50 rounded-2xl border-l-8 border-blue-600">
+                  <h4 className="text-xl font-bold mb-4">Mission</h4>
+                  <p className="text-lg leading-relaxed">{corporateInfo.missionVision.mission}</p>
+                </div>
+                <div className="p-8 bg-slate-50 rounded-2xl border-l-8 border-slate-600">
+                  <h4 className="text-xl font-bold mb-4">Vision</h4>
+                  <p className="text-lg leading-relaxed">{corporateInfo.missionVision.vision}</p>
+                </div>
               </div>
-            </motion.div>
+            } />
           )}
-
-          {activeSection !== 'main' && activeSection !== 'ceo' && activeSection !== 'sol' && (
-            <motion.div key="other" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="py-32 px-6 text-center">
-               <div className="max-w-4xl mx-auto p-16 bg-slate-50 border rounded-3xl shadow-sm">
-                  <h2 className="text-3xl font-black text-blue-900 mb-6 uppercase">{activeSection} 페이지</h2>
-                  <p className="text-gray-500 text-lg">에디터에서 내용을 입력하면 에이텍 스타일의 레이아웃으로 출력됩니다.</p>
-               </div>
-            </motion.div>
+          {activePage === 'sol_detail' && <SolutionDetail key="sol_detail" />}
+          {activePage === 'cs' && (
+            <PageLayout title="문의하기" content={
+              <div className="text-center space-y-8">
+                <p className="text-xl text-slate-600 leading-relaxed whitespace-pre-line">
+                  {data.csGuide || '문의 내용을 입력해주세요.'}
+                </p>
+                <div className="flex flex-col md:flex-row justify-center gap-4">
+                  {data.supportPhone && (
+                    <a href={`tel:${data.supportPhone}`} className="px-8 py-4 bg-slate-900 text-white font-bold rounded-xl hover:bg-slate-800 transition">📞 전화 상담: {data.supportPhone}</a>
+                  )}
+                  {data.kakaoLink && (
+                    <a href={data.kakaoLink} target="_blank" className="px-8 py-4 bg-yellow-400 text-slate-900 font-bold rounded-xl hover:bg-yellow-500 transition">💬 카카오톡 상담하기</a>
+                  )}
+                </div>
+              </div>
+            } />
+          )}
+          {activePage !== 'main' && activePage !== 'ceo' && activePage !== 'mission' && activePage !== 'sol_detail' && activePage !== 'cs' && (
+            <PageLayout title="준비 중인 페이지" content={<p>해당 콘텐츠는 현재 업데이트 중입니다.</p>} />
           )}
         </AnimatePresence>
       </main>
-
-      {/* 🚩 [수정] 푸터 강제 노출 및 z-index 설정 */}
-      <footer className="relative bg-slate-900 text-white py-12 border-t border-slate-800 w-full z-[100]">
-        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between gap-8 text-xs text-slate-400">
-          <div className="space-y-3">
-            <div className="text-xl font-bold text-white">{companyName}</div>
-            <p className="leading-relaxed">주소: {safeData.footer?.address || '(주소)'}<br />대표: {safeData.footer?.ownerName || '(대표자)'} | 사업자번호: {safeData.footer?.businessNumber || '(번호)'}</p>
+      <footer className="bg-slate-900 text-slate-400 py-16 px-4">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
+          <div>
+            <div className="text-2xl font-bold text-white mb-6">{company.name}</div>
+            <p className="text-sm leading-relaxed mb-6">{footer.address}<br/>TEL: {data.supportPhone || corporateInfo.location.headOffice.tel}</p>
+            <p className="text-xs">COPYRIGHT Ⓒ {new Date().getFullYear()} {company.name}. ALL RIGHTS RESERVED.</p>
           </div>
-          <div className="text-right space-y-2">
-            <div className="text-sm font-bold text-white mb-2">Contact</div>
-            <p className="text-2xl font-bold text-sky-400">{safeData.supportPhone || '(전화번호)'}</p>
-            <p>Email: {safeData.footer?.contactEmail || '(이메일)'}</p>
+          <div>
+            <h4 className="text-white font-bold mb-6">Quick Links</h4>
+            <ul className="space-y-3 text-sm">
+              <li className="hover:text-white cursor-pointer" onClick={() => navigateTo('main')}>홈으로</li>
+              <li className="hover:text-white cursor-pointer" onClick={() => navigateTo('ceo')}>CEO 인사말</li>
+              <li className="hover:text-white cursor-pointer" onClick={() => navigateTo('sol_detail')}>사업소개</li>
+              <li className="hover:text-white cursor-pointer" onClick={() => navigateTo('cs')}>문의하기</li>
+            </ul>
           </div>
-        </div>
-        <div className="max-w-7xl mx-auto px-6 mt-12 pt-6 border-t border-slate-800 text-center text-gray-500 text-[10px]">
-          © {new Date().getFullYear()} {companyName}. All rights reserved.
+          <div>
+            <h4 className="text-white font-bold mb-6">Customer Support</h4>
+            <p className="text-2xl font-bold text-white mb-2">{data.supportPhone || '전화번호 없음'}</p>
+            <p className="text-sm">{footer.contactEmail}</p>
+          </div>
         </div>
       </footer>
     </div>
   );
-}
+};
