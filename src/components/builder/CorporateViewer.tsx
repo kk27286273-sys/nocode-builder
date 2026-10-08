@@ -64,33 +64,50 @@ export default function CorporateViewer({ data, activeSection: propSection, setA
 
   const MainHome = () => (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-      {/* Hero Section */}
-      <section className="relative h-[600px] flex items-center justify-center text-white overflow-hidden bg-slate-900">
-        <div className="absolute inset-0 z-0">
-          {hero?.mediaUrl && <img src={hero.mediaUrl} alt="hero" className="w-full h-full object-cover brightness-50" />}
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-slate-900/50" />
-        </div>
-        <div className="relative z-10 text-center px-6">
-          <motion.span 
-            initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }}
-            className="inline-block px-4 py-1.5 rounded-full bg-blue-600 text-white text-xs font-bold mb-6 shadow-lg"
-          >
-            {hero?.badge || 'Premium Service'}
-          </motion.span>
-          <motion.h1 
-            initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.1 }}
-            className="text-4xl md:text-6xl font-black mb-6 leading-tight whitespace-pre-line"
-          >
-            {hero?.title || '타이틀을 입력하세요'}
-          </motion.h1>
-          <motion.p 
-            initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }}
-            className="text-lg md:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed whitespace-pre-line"
-          >
-            {hero?.subtitle || '서브타이틀을 입력하세요'}
-          </motion.p>
-        </div>
-      </section>
+{/* Hero Section */}
+<section style={{ 
+  position: 'relative', 
+  height: '600px', 
+  display: 'flex', 
+  alignItems: 'center', 
+  justifyContent: 'center', 
+  color: 'white', 
+  backgroundColor: '#0f172a', // slate-900
+  overflow: 'hidden' 
+}}>
+  <div style={{ position: 'relative', zIndex: 10, textAlign: 'center', padding: '0 24px' }}>
+    <span style={{ 
+      display: 'inline-block', 
+      padding: '6px 16px', 
+      borderRadius: '9999px', 
+      backgroundColor: '#2563eb', 
+      fontSize: '12px', 
+      fontWeight: 'bold', 
+      marginBottom: '24px' 
+    }}>
+      {hero?.badge || 'Premium Service'}
+    </span>
+    <h1 style={{ 
+      fontSize: '48px', 
+      fontWeight: '900', 
+      marginBottom: '24px', 
+      lineHeight: '1.2', 
+      whiteSpace: 'pre-line' 
+    }}>
+      {hero?.title || '타이틀을 입력하세요'}
+    </h1>
+    <p style={{ 
+      fontSize: '20px', 
+      color: '#cbd5e1', 
+      maxWidth: '800px', 
+      margin: '0 auto', 
+      lineHeight: '1.6', 
+      whiteSpace: 'pre-line' 
+    }}>
+      {hero?.subtitle || '서브타이틀을 입력하세요'}
+    </p>
+  </div>
+</section>
 
       {/* Stats Section */}
       <section className="py-12 bg-white border-b border-slate-100">
