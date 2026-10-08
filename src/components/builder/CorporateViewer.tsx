@@ -6,6 +6,14 @@ import GNB from './corporate/GNB';
 import MainPage from './corporate/pages/MainPage';
 import AboutPage from './corporate/pages/AboutPage';
 import SolutionPage from './corporate/pages/SolutionPage';
+import ESGPage from './corporate/pages/ESGPage';
+// 아래 페이지들은 앞으로 하나씩 구현하며 완성해 나갈 것입니다.
+// 현재는 파일이 없어도 에러가 나지 않도록 임시 컴포넌트로 처리하거나 
+// 파일 생성 후 임포트하시면 됩니다.
+// import DisclosurePage from './corporate/pages/DisclosurePage'; 
+// import PRPage from './corporate/pages/PRPage';
+// import RecruitPage from './corporate/pages/RecruitPage';
+// import CSPage from './corporate/pages/CSPage';
 
 interface CorporateViewerProps {
   data: any; 
@@ -38,7 +46,6 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
     }
     setActivePage(targetId);
     
-    // 부모 컨테이너가 스크롤되는 경우와 윈도우 스크롤 모두 대응
     if (typeof window !== 'undefined') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
       const mainContainer = document.getElementById('corporate-viewer-root');
@@ -53,7 +60,6 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
       id="corporate-viewer-root"
       className="w-full min-h-screen h-auto overflow-y-auto overflow-x-hidden bg-white text-slate-900 font-sans flex flex-col justify-between"
     >
-      {/* GNB Navigation */}
       <div className="w-full shrink-0">
         <GNB 
           company={company} 
@@ -64,23 +70,41 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
         />
       </div>
 
-      {/* Main Page Content */}
-<main className="w-full flex-1 shrink-0">
-  <AnimatePresence mode="wait">
-    {activePage === 'main' && <MainPage key="main" hero={hero} solutions={solutions} navigateTo={navigateTo} />}
-    {activePage === 'about' && <AboutPage key="about" corporateInfo={corporateInfo} />}
-    {activePage === 'sol_detail' && <SolutionPage key={`sol-${selectedSolutionId}`} solutionData={currentSolution} />}
-    
-    {/* 신규 추가 페이지들 */}
-    {activePage === 'esg' && <div className="py-32 text-center text-2xl font-bold">지속가능경영 페이지 구현 중...</div>}
-    {activePage === 'disclosure' && <div className="py-32 text-center text-2xl font-bold">공시정보 페이지 구현 중...</div>}
-    {activePage === 'pr' && <div className="py-32 text-center text-2xl font-bold">홍보센터 페이지 구현 중...</div>}
-    {activePage === 'recruit' && <div className="py-32 text-center text-2xl font-bold">인재경영 페이지 구현 중...</div>}
-    {activePage === 'cs' && <div className="py-32 text-center text-2xl font-bold">고객센터 페이지 구현 중...</div>}
-  </AnimatePresence>
-</main>
+      <main className="w-full flex-1 shrink-0">
+        <AnimatePresence mode="wait">
+          {activePage === 'main' && (
+            <MainPage key="main" hero={hero} solutions={solutions} navigateTo={navigateTo} />
+          )}
+          
+          {activePage === 'about' && (
+            <AboutPage key="about" corporateInfo={corporateInfo} />
+          )}
 
-      {/* Footer Section */}
+          {activePage === 'sol_detail' && (
+            <SolutionPage key={`sol-${selectedSolutionId}`} solutionData={currentSolution} />
+          )}
+
+          {/* 🟢 ESG 페이지 연결 완료 */}
+          {activePage === 'esg' && (
+            <ESGPage key="esg" esgData={corporateInfo.esg} />
+          )}
+
+          {/* 나머지 페이지들: 컴포넌트 제작 완료 전까지는 안내 문구 출력 */}
+          {activePage === 'disclosure' && (
+            <div className="py-32 text-center text-2xl font-bold text-slate-400">공시정보 페이지 제작 중...</div>
+          )}
+          {activePage === 'pr' && (
+            <div className="py-32 text-center text-2xl font-bold text-slate-400">홍보센터 페이지 제작 중...</div>
+          )}
+          {activePage === 'recruit' && (
+            <div className="py-32 text-center text-2xl font-bold text-slate-400">인재경영 페이지 제작 중...</div>
+          )}
+          {activePage === 'cs' && (
+            <div className="py-32 text-center text-2xl font-bold text-slate-400">고객센터 페이지 제작 중...</div>
+          )}
+        </AnimatePresence>
+      </main>
+
       <footer className="w-full bg-slate-900 text-slate-400 py-20 px-6 shrink-0 border-t border-slate-800">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-16">
           <div>
