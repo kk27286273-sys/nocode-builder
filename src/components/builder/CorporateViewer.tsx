@@ -10,7 +10,7 @@ interface CorporateViewerProps {
 }
 
 export default function CorporateViewer({ data, activeSection: propSection, setActiveSection: propSetSection }: CorporateViewerProps) {
-  if (!data) return <div className="p-10 text-center text-slate-400">데이터를 불러오는 중입니다...</div>;
+  if (!data) return <div style={{ padding: '40px', textAlign: 'center', color: '#94a3b8' }}>데이터를 불러오는 중입니다...</div>;
 
   const { 
     company = {}, 
@@ -30,7 +30,6 @@ export default function CorporateViewer({ data, activeSection: propSection, setA
   const [internalPage, setInternalPage] = useState('main');
   const activePage = propSection || internalPage;
   const setActivePage = propSetSection || setInternalPage;
-  const [selectedSolution, setSelectedSolution] = useState<number | null>(null);
 
   const navigateTo = (targetId: string) => {
     setActivePage(targetId);
@@ -38,20 +37,28 @@ export default function CorporateViewer({ data, activeSection: propSection, setA
   };
 
   const Navbar = () => (
-    <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 shadow-sm">
-      <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-        <div className="cursor-pointer flex items-center gap-2" onClick={() => navigateTo('main')}>
+    <nav style={{ position: 'sticky', top: 0, zIndex: 50, backgroundColor: 'rgba(255,255,255,0.8)', backdropFilter: 'blur(12px)', borderBottom: '1px solid #e2e8f0', boxShadow: '0 1px 2px 0 rgba(0,0,0,0.05)' }}>
+      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px', height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }} onClick={() => navigateTo('main')}>
           {company?.logoUrl ? (
-            <img src={company.logoUrl} alt={company.name} className="h-10 object-contain" />
+            <img src={company.logoUrl} alt={company.name} style={{ height: '40px', objectFit: 'contain' }} />
           ) : (
-            <span className="text-2xl font-black tracking-tighter" style={{ color: themeColor }}>{company?.name || '회사명'}</span>
+            <span style={{ fontSize: '24px', fontWeight: '900', letterSpacing: '-0.02em', color: themeColor }}>{company?.name || '회사명'}</span>
           )}
         </div>
-        <div className="hidden md:flex gap-8">
+        <div style={{ display: 'flex', gap: '32px' }}>
           {(navigation?.navLinks || []).map((menu: any) => (
             <button 
               key={menu.label}
-              className={`text-sm font-bold transition-colors ${activePage === menu.targetId ? 'text-blue-600' : 'text-slate-600 hover:text-blue-500'}`}
+              style={{ 
+                fontSize: '14px', 
+                fontWeight: '700', 
+                cursor: 'pointer', 
+                border: 'none', 
+                backgroundColor: 'transparent',
+                transition: 'color 0.2s',
+                color: activePage === menu.targetId ? themeColor : '#475569' 
+              }}
               onClick={() => navigateTo(menu.targetId)}
             >
               {menu.label}
@@ -64,104 +71,70 @@ export default function CorporateViewer({ data, activeSection: propSection, setA
 
   const MainHome = () => (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-{/* Hero Section */}
-<section style={{ 
-  position: 'relative', 
-  height: '600px', 
-  display: 'flex', 
-  alignItems: 'center', 
-  justifyContent: 'center', 
-  color: 'white', 
-  backgroundColor: '#0f172a', // slate-900
-  overflow: 'hidden' 
-}}>
-  <div style={{ position: 'relative', zIndex: 10, textAlign: 'center', padding: '0 24px' }}>
-    <span style={{ 
-      display: 'inline-block', 
-      padding: '6px 16px', 
-      borderRadius: '9999px', 
-      backgroundColor: '#2563eb', 
-      fontSize: '12px', 
-      fontWeight: 'bold', 
-      marginBottom: '24px' 
-    }}>
-      {hero?.badge || 'Premium Service'}
-    </span>
-    <h1 style={{ 
-      fontSize: '48px', 
-      fontWeight: '900', 
-      marginBottom: '24px', 
-      lineHeight: '1.2', 
-      whiteSpace: 'pre-line' 
-    }}>
-      {hero?.title || '타이틀을 입력하세요'}
-    </h1>
-    <p style={{ 
-      fontSize: '20px', 
-      color: '#cbd5e1', 
-      maxWidth: '800px', 
-      margin: '0 auto', 
-      lineHeight: '1.6', 
-      whiteSpace: 'pre-line' 
-    }}>
-      {hero?.subtitle || '서브타이틀을 입력하세요'}
-    </p>
-  </div>
-</section>
+      {/* Hero Section */}
+      <section style={{ position: 'relative', height: '600px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', backgroundColor: '#0f172a', overflow: 'hidden' }}>
+        <div style={{ position: 'relative', zIndex: 10, textAlign: 'center', padding: '0 24px' }}>
+          <span style={{ display: 'inline-block', padding: '6px 16px', borderRadius: '9999px', backgroundColor: themeColor, fontSize: '12px', fontWeight: 'bold', marginBottom: '24px', color: 'white' }}>
+            {hero?.badge || 'Premium Service'}
+          </span>
+          <h1 style={{ fontSize: '48px', fontWeight: '900', marginBottom: '24px', lineHeight: '1.2', whiteSpace: 'pre-line' }}>
+            {hero?.title || '타이틀을 입력하세요'}
+          </h1>
+          <p style={{ fontSize: '20px', color: '#cbd5e1', maxWidth: '800px', margin: '0 auto', lineHeight: '1.6', whiteSpace: 'pre-line' }}>
+            {hero?.subtitle || '서브타이틀을 입력하세요'}
+          </p>
+        </div>
+      </section>
 
       {/* Stats Section */}
-      <section className="py-12 bg-white border-b border-slate-100">
-        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
+      <section style={{ padding: '48px 0', backgroundColor: 'white', borderBottom: '1px solid #f1f5f9' }}>
+        <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '32px' }}>
           {stats.map((stat: any, idx: number) => (
-            <div key={idx} className="text-center">
-              <div className="text-3xl md:text-4xl font-black mb-2" style={{ color: themeColor }}>{stat.value}</div>
-              <div className="text-slate-500 text-sm font-medium">{stat.label}</div>
+            <div key={idx} style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '36px', fontWeight: '900', marginBottom: '8px', color: themeColor }}>{stat.value}</div>
+              <div style={{ fontSize: '14px', color: '#64748b', fontWeight: '500' }}>{stat.label}</div>
             </div>
           ))}
         </div>
       </section>
 
       {/* Solutions Section */}
-      <section className="py-24 bg-slate-50 px-6">
-        <div className="max-w-7xl mx-auto text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-slate-900">{solutionsSection?.title || 'Our Solutions'}</h2>
-          <p className="text-slate-500 max-w-2xl mx-auto">{solutionsSection?.subtitle}</p>
+      <section style={{ padding: '96px 0', backgroundColor: '#f8fafc' }}>
+        <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px', textAlign: 'center', marginBottom: '64px' }}>
+          <h2 style={{ fontSize: '36px', fontWeight: 'bold', marginBottom: '16px', color: '#0f172a' }}>{solutionsSection?.title || 'Our Solutions'}</h2>
+          <p style={{ fontSize: '16px', color: '#64748b', maxWidth: '640px', margin: '0 auto' }}>{solutionsSection?.subtitle}</p>
         </div>
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-          {solutions.length > 0 ? solutions.map((sol: any, idx: number) => (
-            <div 
-              key={idx} 
-              onClick={() => { setSelectedSolution(idx); navigateTo('sol_detail'); }} 
-              className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer group border border-slate-200"
-            >
-              <div className="h-56 overflow-hidden bg-slate-200">
-                <img src={sol.image || 'https://via.placeholder.com/400x300'} alt={sol.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+        <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '32px' }}>
+          {solutions.map((sol: any, idx: number) => (
+            <div key={idx} onClick={() => { navigateTo('sol_detail'); }} style={{ backgroundColor: 'white', borderRadius: '24px', overflow: 'hidden', border: '1px solid #e2e8f0', cursor: 'pointer', transition: 'transform 0.3s', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}>
+              <div style={{ height: '224px', backgroundColor: '#e2e8f0' }}>
+                <img src={sol.image || 'https://via.placeholder.com/400x300'} alt={sol.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               </div>
-              <div className="p-8">
-                <span className="text-blue-600 font-bold text-xs uppercase tracking-widest">{sol.category}</span>
-                <h3 className="text-2xl font-bold mt-2 mb-3 text-slate-900">{sol.title}</h3>
-                <p className="text-slate-600 text-sm leading-relaxed">{sol.description}</p>
+              <div style={{ padding: '32px' }}>
+                <span style={{ color: themeColor, fontWeight: 'bold', fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{sol.category}</span>
+                <h3 style={{ fontSize: '24px', fontWeight: 'bold', marginTop: '8px', marginBottom: '12px', color: '#0f172a' }}>{sol.title}</h3>
+                <p style={{ fontSize: '14px', color: '#475569', lineHeight: '1.6' }}>{sol.description}</p>
               </div>
             </div>
-          )) : <div className="col-span-3 text-center py-20 text-slate-400">솔루션 데이터가 없습니다.</div>}
+          ))}
         </div>
       </section>
 
       {/* Reviews Section */}
-      <section className="py-24 bg-white px-6">
-        <div className="max-w-7xl mx-auto text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-slate-900">{reviewsSection?.title || 'Customer Reviews'}</h2>
-          <p className="text-slate-500 max-w-2xl mx-auto">{reviewsSection?.subtitle}</p>
+      <section style={{ padding: '96px 0', backgroundColor: 'white' }}>
+        <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px', textAlign: 'center', marginBottom: '64px' }}>
+          <h2 style={{ fontSize: '36px', fontWeight: 'bold', marginBottom: '16px', color: '#0f172a' }}>{reviewsSection?.title || 'Customer Reviews'}</h2>
+          <p style={{ fontSize: '16px', color: '#64748b', maxWidth: '640px', margin: '0 auto' }}>{reviewsSection?.subtitle}</p>
         </div>
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '24px' }}>
           {reviews.map((rev: any, idx: number) => (
-            <div key={idx} className="p-8 rounded-3xl bg-slate-50 border border-slate-100">
-              <p className="text-slate-700 text-lg italic mb-6 leading-relaxed">"{rev.content}"</p>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-slate-300" />
+            <div key={idx} style={{ padding: '32px', borderRadius: '24px', backgroundColor: '#f8fafc', border: '1px solid #f1f5f9' }}>
+              <p style={{ fontSize: '18px', color: '#334155', fontStyle: 'italic', marginBottom: '24px', lineHeight: '1.6' }}>"{rev.content}"</p>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: '#cbd5e1' }} />
                 <div>
-                  <div className="font-bold text-slate-900">{rev.author}</div>
-                  <div className="text-xs text-slate-500">{rev.role}</div>
+                  <div style={{ fontWeight: 'bold', color: '#0f172a' }}>{rev.author}</div>
+                  <div style={{ fontSize: '12px', color: '#64748b' }}>{rev.role}</div>
                 </div>
               </div>
             </div>
@@ -172,31 +145,30 @@ export default function CorporateViewer({ data, activeSection: propSection, setA
   );
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 font-sans selection:bg-blue-100">
+    <div style={{ minHeight: '100vh', backgroundColor: 'white', color: '#0f172a', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
       <Navbar />
       <main>
         <AnimatePresence mode="wait">
-          {activePage === 'main' && <MainHome key="main" />}
-          {activePage !== 'main' && (
-             <div className="py-40 text-center">
-               <h2 className="text-3xl font-bold mb-4">{activePage} 페이지</h2>
-               <p className="text-slate-500">현재 준비 중인 페이지입니다.</p>
-               <button onClick={() => navigateTo('main')} className="mt-8 px-6 py-3 bg-slate-900 text-white rounded-full font-bold transition-transform hover:scale-105">홈으로 돌아가기</button>
+          {activePage === 'main' ? <MainHome key="main" /> : (
+             <div style={{ padding: '160px 0', textAlign: 'center' }}>
+               <h2 style={{ fontSize: '30px', fontWeight: 'bold', marginBottom: '16px' }}>{activePage} 페이지</h2>
+               <p style={{ color: '#64748b' }}>현재 준비 중인 페이지입니다.</p>
+               <button onClick={() => navigateTo('main')} style={{ marginTop: '32px', padding: '12px 24px', backgroundColor: '#0f172a', color: 'white', borderRadius: '9999px', fontWeight: 'bold', cursor: 'pointer', border: 'none' }}>홈으로 돌아가기</button>
              </div>
           )}
         </AnimatePresence>
       </main>
-      <footer className="bg-slate-900 text-slate-400 py-20 px-6">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
-          <div className="text-left">
-            <div className="text-2xl font-black text-white mb-6" style={{ color: themeColor }}>{company?.name || '회사명'}</div>
-            <p className="text-sm leading-relaxed mb-4">{footer?.address}</p>
-            <p className="text-sm font-medium text-white">{footer?.contactEmail}</p>
+      <footer style={{ backgroundColor: '#0f172a', color: '#94a3b8', padding: '80px 0' }}>
+        <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '48px' }}>
+          <div style={{ textAlign: 'left' }}>
+            <div style={{ fontSize: '24px', fontWeight: '900', color: 'white', marginBottom: '24px' }} style={{ color: themeColor }}>{company?.name || '회사명'}</div>
+            <p style={{ fontSize: '14px', lineHeight: '1.6', marginBottom: '16px' }}>{footer?.address}</p>
+            <p style={{ fontSize: '14px', fontWeight: '500', color: 'white' }}>{footer?.contactEmail}</p>
           </div>
-          <div className="text-left md:text-right">
-            <div className="text-white font-bold mb-4">Customer Support</div>
-            <div className="text-2xl font-bold text-white mb-2">{data.supportPhone || '010-0000-0000'}</div>
-            <p className="text-xs text-slate-500">© {new Date().getFullYear()} {company?.name || 'TH SOFT'}. All rights reserved.</p>
+          <div style={{ textAlign: 'right' }}>
+            <div style={{ color: 'white', fontWeight: 'bold', marginBottom: '16px' }}>Customer Support</div>
+            <div style={{ fontSize: '24px', fontWeight: 'bold', color: 'white', marginBottom: '8px' }}>{data.supportPhone || '010-0000-0000'}</div>
+            <p style={{ fontSize: '12px', color: '#64748b' }}>© {new Date().getFullYear()} {company?.name || 'TH SOFT'}. All rights reserved.</p>
           </div>
         </div>
       </footer>
