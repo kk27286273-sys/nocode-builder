@@ -7,13 +7,9 @@ import MainPage from './corporate/pages/MainPage';
 import AboutPage from './corporate/pages/AboutPage';
 import SolutionPage from './corporate/pages/SolutionPage';
 import ESGPage from './corporate/pages/ESGPage';
-// 아래 페이지들은 앞으로 하나씩 구현하며 완성해 나갈 것입니다.
-// 현재는 파일이 없어도 에러가 나지 않도록 임시 컴포넌트로 처리하거나 
-// 파일 생성 후 임포트하시면 됩니다.
-// import DisclosurePage from './corporate/pages/DisclosurePage'; 
-// import PRPage from './corporate/pages/PRPage';
-// import RecruitPage from './corporate/pages/RecruitPage';
-// import CSPage from './corporate/pages/CSPage';
+import DisclosurePage from './corporate/pages/DisclosurePage';
+import PRPage from './corporate/pages/PRPage';
+import RecruitPage from './corporate/pages/RecruitPage';
 
 interface CorporateViewerProps {
   data: any; 
@@ -72,33 +68,42 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
 
       <main className="w-full flex-1 shrink-0">
         <AnimatePresence mode="wait">
+          {/* 1. 메인 페이지 */}
           {activePage === 'main' && (
             <MainPage key="main" hero={hero} solutions={solutions} navigateTo={navigateTo} />
           )}
           
+          {/* 2. 회사소개 페이지 */}
           {activePage === 'about' && (
             <AboutPage key="about" corporateInfo={corporateInfo} />
           )}
 
+          {/* 3. 사업소개(솔루션) 상세 페이지 */}
           {activePage === 'sol_detail' && (
             <SolutionPage key={`sol-${selectedSolutionId}`} solutionData={currentSolution} />
           )}
 
-          {/* 🟢 ESG 페이지 연결 완료 */}
+          {/* 4. 지속가능경영(ESG) 페이지 */}
           {activePage === 'esg' && (
             <ESGPage key="esg" esgData={corporateInfo.esg} />
           )}
 
-          {/* 나머지 페이지들: 컴포넌트 제작 완료 전까지는 안내 문구 출력 */}
+          {/* 5. 공시정보 페이지 (연결 확인) */}
           {activePage === 'disclosure' && (
-            <div className="py-32 text-center text-2xl font-bold text-slate-400">공시정보 페이지 제작 중...</div>
+            <DisclosurePage key="disclosure" disclosureData={corporateInfo.disclosure} />
           )}
+
+          {/* 6. 홍보센터 페이지 (연결 확인) */}
           {activePage === 'pr' && (
-            <div className="py-32 text-center text-2xl font-bold text-slate-400">홍보센터 페이지 제작 중...</div>
+            <PRPage key="pr" prData={data.prCenter} />
           )}
+
+          {/* 7. 인재경영 페이지 (연결 확인) */}
           {activePage === 'recruit' && (
-            <div className="py-32 text-center text-2xl font-bold text-slate-400">인재경영 페이지 제작 중...</div>
+            <RecruitPage key="recruit" recruitData={data.recruit} />
           )}
+
+          {/* 8. 고객센터 페이지 (구현 예정) */}
           {activePage === 'cs' && (
             <div className="py-32 text-center text-2xl font-bold text-slate-400">고객센터 페이지 제작 중...</div>
           )}
