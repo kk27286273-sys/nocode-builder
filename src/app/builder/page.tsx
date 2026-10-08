@@ -28,16 +28,20 @@ export default function BuilderPage() {
     if (!id) return;
     setSiteId(id);
     setIsLoading(true);
-    const { data: siteData, error } = await supabase.from('sites').select('data').eq('id', id).single();
+    
+    const { data: siteData, error } = await supabase
+      .from('sites')
+      .select('data')
+      .eq('id', id)
+      .single();
     
     if (error) {
       console.error("데이터 로드 에러:", error);
     } else if (siteData && siteData.data) {
-      setData({
-        ...siteData.data,
-        templateType: 'corporate'
-      });
+      // 강제 지정 없이 DB에 저장된 데이터를 그대로 사용합니다.
+      setData(siteData.data);
     }
+    
     setIsLoading(false);
   }
 
