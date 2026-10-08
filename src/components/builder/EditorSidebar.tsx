@@ -149,9 +149,52 @@ export default function EditorSidebar({ data, setData, siteId, refreshSites, act
                   <span className="text-xs font-bold text-slate-700">CEO 인사말</span>
                   <button onClick={() => setActiveSection('ceo')} className="text-[10px] text-blue-600 underline">미리보기</button>
                 </div>
-                <input type="text" value={data.corporateInfo?.ceoGreeting?.title || ''} onChange={(e) => setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, ceoGreeting: { ...prev.corporateInfo.ceoGreeting, title: e.target.value } } }))} className="w-full p-2 border rounded text-xs" placeholder="인사말 제목" />
-                <textarea rows={4} value={data.corporateInfo?.ceoGreeting?.content || ''} onChange={(e) => setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, ceoGreeting: { ...prev.corporateInfo.ceoGreeting, content: e.target.value } } }))} className="w-full p-2 border rounded text-xs" placeholder="인사말 본문" />
-                <input type="file" onChange={(e) => handleImageUpload(e, (url) => setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, ceoGreeting: { ...prev.corporateInfo.ceoGreeting, image: url } } })), 'ceo')} className="text-[10px]" />
+<input 
+  type="text" 
+  value={data.corporateInfo?.ceoGreeting?.title || ''} 
+  onChange={(e) => setData(prev => ({ 
+    ...prev, 
+    corporateInfo: { 
+      ...(prev.corporateInfo || {}), 
+      ceoGreeting: { 
+        ...(prev.corporateInfo?.ceoGreeting || {}), 
+        title: e.target.value 
+      } 
+    } 
+  }))} 
+  className="w-full p-2 border rounded text-xs" 
+  placeholder="인사말 제목" 
+/>
+<textarea 
+  rows={4} 
+  value={data.corporateInfo?.ceoGreeting?.content || ''} 
+  onChange={(e) => setData(prev => ({ 
+    ...prev, 
+    corporateInfo: { 
+      ...(prev.corporateInfo || {}), 
+      ceoGreeting: { 
+        ...(prev.corporateInfo?.ceoGreeting || {}), 
+        content: e.target.value 
+      } 
+    } 
+  }))} 
+  className="w-full p-2 border rounded text-xs" 
+  placeholder="인사말 본문" 
+/>
+<input 
+  type="file" 
+  onChange={(e) => handleImageUpload(e, (url) => setData(prev => ({ 
+    ...prev, 
+    corporateInfo: { 
+      ...(prev.corporateInfo || {}), 
+      ceoGreeting: { 
+        ...(prev.corporateInfo?.ceoGreeting || {}), 
+        image: url 
+      } 
+    } 
+  })), 'ceo')} 
+  className="text-[10px]" 
+/>
               </div>
               <div id="edit-section-mission" className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
                 <div className="flex justify-between items-center mb-2">
