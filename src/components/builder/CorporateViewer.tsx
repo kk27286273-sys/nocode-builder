@@ -5,7 +5,7 @@ import { B2BTemplateData } from '@/types/template';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface CorporateViewerProps {
-  data: any; // 데이터 구조 유연성을 위해 any로 설정
+  data: any; 
   activeSection?: string;
   setActiveSection?: (section: string) => void;
 }
@@ -13,7 +13,6 @@ interface CorporateViewerProps {
 export const CorporateViewer = ({ data, activeSection: propSection, setActiveSection: propSetSection }: CorporateViewerProps) => {
   if (!data) return <div className="p-10 text-center">데이터를 불러오는 중입니다...</div>;
 
-  // 로그에서 확인된 실제 데이터 경로로 매핑
   const { 
     company = {}, 
     navigation = {}, 
@@ -46,7 +45,6 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
           )}
         </div>
         <div className="hidden md:flex gap-8">
-          {/* [수정] menus -> navLinks로 변경 */}
           {(navigation?.navLinks || navigation?.menus)?.map((menu: any) => (
             <div key={menu.label} className="group relative py-7">
               <button 
@@ -94,7 +92,9 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
                 <span className="text-blue-600 font-bold text-sm uppercase">{sol.category}</span>
                 <h3 className="text-2xl font-bold mt-2 mb-4">{sol.title}</h3>
                 <p className="text-slate-600 leading-relaxed">{sol.description}</p>
-                <div className="mt-6 text-blue-600 font-semibold flex items-center gap-2">자세히 보기 <span className="text-xl">→</</span></div>
+                <div className="mt-6 text-blue-600 font-semibold flex items-center gap-2">
+                  자세히 보기 <span>&rarr;</span>
+                </div>
               </div>
             </motion.div>
           ))}
