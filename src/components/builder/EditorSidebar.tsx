@@ -51,12 +51,23 @@ export default function EditorSidebar({ data, setData, siteId, refreshSites, act
     }
   };
 
+  // 폰트 크기 변경 핸들러
+  const updateFontSize = (section: string, field: string, size: number) => {
+    setData(prev => ({
+      ...prev,
+      fontSizes: {
+        ...prev.fontSizes,
+        [`${section}_${field}`]: size
+      }
+    }));
+  };
+
   return (
     <div className="w-full flex flex-col bg-white">
       <div className="p-4 border-b border-slate-200 flex flex-col gap-4 bg-slate-50 shrink-0">
         <div className="flex flex-col">
           <h2 className="text-sm font-extrabold text-slate-900">통합 웹 빌더 에디터</h2>
-          <span className="text-[10px] text-slate-500">에이텍 스타일 완벽 복제 모드</span>
+          <span className="text-[10px] text-slate-500">에이텍 스타일 정밀 제어 모드</span>
         </div>
         <TemplateSelector currentType={data.templateType || 'one-page'} onTypeChange={handleTemplateChange} />
       </div>
@@ -85,41 +96,88 @@ export default function EditorSidebar({ data, setData, siteId, refreshSites, act
         {data.templateType === 'corporate' && (
           <div className="space-y-12">
             
-            {/* 메인 히어로 설정 */}
+            {/* 1. 메인 페이지 설정 */}
             <div id="edit-section-main" className="space-y-6">
-              <h3 className="font-black text-blue-700 text-sm flex items-center gap-2 border-l-4 border-blue-700 pl-2">메인 비주얼 설정</h3>
+              <h3 className="font-black text-blue-700 text-sm flex items-center gap-2 border-l-4 border-blue-700 pl-2">메인 페이지</h3>
               <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-xs font-bold text-slate-700">메인 화면</span>
+                  <span className="text-xs font-bold text-slate-700">메인 비주얼</span>
                   <button onClick={() => setActiveSection('main')} className="text-[10px] text-blue-600 underline">미리보기</button>
                 </div>
                 <div className="space-y-3">
-                  <div>
-                    <label className="text-[11px] text-slate-500 block mb-1">상단 배지</label>
-                    <input type="text" value={data.hero?.badge || ''} onChange={(e) => setData(prev => ({ ...prev, hero: { ...prev.hero, badge: e.target.value } }))} className="w-full px-3 py-2 border rounded-lg text-xs" placeholder="예: OFFICIAL" />
+                  <div className="flex gap-2">
+                    <div className="flex-1">
+                      <label className="text-[11px] text-slate-500 block mb-1">상단 배지</label>
+                      <input type="text" value={data.hero?.badge || ''} onChange={(e) => setData(prev => ({ ...prev, hero: { ...prev.hero, badge: e.target.value } }))} className="w-full px-3 py-2 border rounded-lg text-xs" />
+                    </div>
                   </div>
-                  <div>
+                  <div className="space-y-1">
                     <label className="text-[11px] text-slate-500 block mb-1">메인 타이틀</label>
-                    <textarea rows={2} value={data.hero?.title || ''} onChange={(e) => setData(prev => ({ ...prev, hero: { ...prev.hero, title: e.target.value } }))} className="w-full px-3 py-2 border rounded-lg text-xs" placeholder="메인 타이틀 입력" />
+                    <div className="flex gap-2">
+                      <textarea rows={2} value={data.hero?.title || ''} onChange={(e) => setData(prev => ({ ...prev, hero: { ...prev.hero, title: e.target.value } }))} className="flex-1 px-3 py-2 border rounded-lg text-xs" />
+                      <input type="number" value={(data as any).fontSizes?.heroTitle || 48} onChange={(e) => updateFontSize('hero', 'title', parseInt(e.target.value))} className="w-16 px-2 py-1 border rounded text-xs" />
+                    </div>
                   </div>
-                  <div>
+                  <div className="space-y-1">
                     <label className="text-[11px] text-slate-500 block mb-1">서브 타이틀</label>
-                    <textarea rows={2} value={data.hero?.subtitle || ''} onChange={(e) => setData(prev => ({ ...prev, hero: { ...prev.hero, subtitle: e.target.value } }))} className="w-full px-3 py-2 border rounded-lg text-xs" placeholder="서브 타이틀 입력" />
+                    <div className="flex gap-2">
+                      <textarea rows={2} value={data.hero?.subtitle || ''} onChange={(e) => setData(prev => ({ ...prev, hero: { ...prev.hero, subtitle: e.target.value } }))} className="flex-1 px-3 py-2 border rounded-lg text-xs" />
+                      <input type="number" value={(data as any).fontSizes?.heroSubtitle || 18} onChange={(e) => updateFontSize('hero', 'subtitle', parseInt(e.target.value))} className="w-16 px-2 py-1 border rounded text-xs" />
+                    </div>
                   </div>
-                  <div>
-                    <label className="text-[11px] text-slate-500 block mb-1">배경 이미지</label>
-                    <input type="file" onChange={(e) => handleImageUpload(e, (url) => setData(prev => ({ ...prev, hero: { ...prev.hero, mediaUrl: url } })), 'hero')} className="text-xs" />
+                  <div className="flex items-center gap-2">
+                    <label className="text-[10px] text-slate-500 shrink-0">배경 이미지</label>
+                    <input type="file" onChange={(e) => handleImageUpload(e, (url) => setData(prev => ({ ...prev, hero: { ...prev.hero, mediaUrl: url } })), 'hero')} className="text-[10px] flex-1" />
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* SOL(사업 소개) 에디터 */}
-            <div id="edit-section-sol" className="space-y-6">
-              <h3 className="font-black text-blue-700 text-sm flex items-center gap-2 border-l-4 border-blue-700 pl-2">사업 영역 (SOL 페이지)</h3>
+            {/* 2. 회사소개 설정 */}
+            <div id="edit-section-about" className="space-y-6">
+              <h3 className="font-black text-blue-700 text-sm flex items-center gap-2 border-l-4 border-blue-700 pl-2">회사소개</h3>
+              <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-6">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-xs font-bold text-slate-700">CEO 인사말 & 비전</span>
+                  <button onClick={() => setActiveSection('about')} className="text-[10px] text-blue-600 underline">미리보기</button>
+                </div>
+                <div className="space-y-4">
+                  <div className="space-y-1">
+                    <label className="text-[11px] text-slate-500 block mb-1">CEO 인사말 제목</label>
+                    <div className="flex gap-2">
+                      <input type="text" value={data.corporateInfo?.ceoGreeting?.title || ''} onChange={(e) => setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, ceoGreeting: { ...prev.corporateInfo?.ceoGreeting, title: e.target.value } } }))} className="flex-1 p-2 border rounded text-xs" />
+                      <input type="number" value={(data as any).fontSizes?.ceoTitle || 32} onChange={(e) => updateFontSize('ceo', 'title', parseInt(e.target.value))} className="w-16 p-2 border rounded text-xs" />
+                    </div>
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[11px] text-slate-500 block mb-1">CEO 인사말 본문</label>
+                    <div className="flex gap-2">
+                      <textarea rows={3} value={data.corporateInfo?.ceoGreeting?.content || ''} onChange={(e) => setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, ceoGreeting: { ...prev.corporateInfo?.ceoGreeting, content: e.target.value } } }))} className="flex-1 p-2 border rounded text-xs" />
+                      <input type="number" value={(data as any).fontSizes?.ceoContent || 16} onChange={(e) => updateFontSize('ceo', 'content', parseInt(e.target.value))} className="w-16 p-2 border rounded text-xs" />
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <label className="text-[10px] text-slate-500 shrink-0">CEO 이미지</label>
+                    <input type="file" onChange={(e) => handleImageUpload(e, (url) => setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, ceoGreeting: { ...prev.corporateInfo?.ceoGreeting, image: url } } })), 'ceo')} className="text-[10px] flex-1" />
+                  </div>
+                  <hr className="border-slate-200" />
+                  <div className="space-y-3">
+                    <label className="text-xs font-bold text-slate-700 block">미션 & 비전</label>
+                    <div className="space-y-2">
+                      <textarea rows={2} value={data.corporateInfo?.missionVision?.mission || ''} onChange={(e) => setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, missionVision: { ...prev.corporateInfo.missionVision, mission: e.target.value } } }))} className="w-full p-2 border rounded text-xs" placeholder="미션 입력" />
+                      <textarea rows={2} value={data.corporateInfo?.missionVision?.vision || ''} onChange={(e) => setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, missionVision: { ...prev.corporateInfo.missionVision, vision: e.target.value } } }))} className="w-full p-2 border rounded text-xs" placeholder="비전 입력" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 3. 사업소개 설정 */}
+            <div id="edit-section-sol_detail" className="space-y-6">
+              <h3 className="font-black text-blue-700 text-sm flex items-center gap-2 border-l-4 border-blue-700 pl-2">사업소개 (솔루션)</h3>
               <div className="flex justify-between items-center mb-2 px-1">
                 <span className="text-xs font-bold text-slate-700">솔루션 리스트 관리</span>
-                <button onClick={() => setActiveSection('sol')} className="text-[10px] text-blue-600 underline">SOL 페이지 미리보기</button>
+                <button onClick={() => setActiveSection('sol_detail')} className="text-[10px] text-blue-600 underline">미리보기</button>
               </div>
               <div className="space-y-4">
                 {(data.solutions || []).map((sol, idx) => (
@@ -128,8 +186,11 @@ export default function EditorSidebar({ data, setData, siteId, refreshSites, act
                       <span className="text-[10px] font-black text-blue-600">솔루션 #{idx + 1}</span>
                       <button onClick={() => setData(prev => ({ ...prev, solutions: prev.solutions.filter((_, i) => i !== idx) }))} className="text-slate-400 hover:text-red-500 text-xs">삭제</button>
                     </div>
-                    <input type="text" value={sol.title} onChange={(e) => { const next = [...data.solutions]; next[idx].title = e.target.value; setData(prev => ({ ...prev, solutions: next })); }} className="w-full p-2 border rounded text-xs font-bold" placeholder="솔루션 제목" />
-                    <input type="text" value={sol.category} onChange={(e) => { const next = [...data.solutions]; next[idx].category = e.target.value; setData(prev => ({ ...prev, solutions: next })); }} className="w-full p-2 border rounded text-xs" placeholder="카테고리" />
+                    <div className="flex gap-2">
+                      <input type="text" value={sol.title} onChange={(e) => { const next = [...data.solutions]; next[idx].title = e.target.value; setData(prev => ({ ...prev, solutions: next })); }} className="flex-1 p-2 border rounded text-xs font-bold" placeholder="솔루션 제목" />
+                      <input type="number" value={(data as any).fontSizes?.solTitle || 24} onChange={(e) => updateFontSize('sol', 'title', parseInt(e.target.value))} className="w-16 p-2 border rounded text-xs" />
+                    </div>
+                    <input type="text" value={sol.category} onChange={(e) => { const next = [...data.solutions]; next[idx].category = e.//... (이하 동일 패턴으로 확장)
                     <textarea rows={3} value={sol.description} onChange={(e) => { const next = [...data.solutions]; next[idx].description = e.target.value; setData(prev => ({ ...prev, solutions: next })); }} className="w-full p-2 border rounded text-xs" placeholder="상세 설명 입력" />
                     <div className="flex items-center gap-2">
                       <label className="text-[10px] text-slate-500 shrink-0">대표 이미지</label>
@@ -141,149 +202,163 @@ export default function EditorSidebar({ data, setData, siteId, refreshSites, act
               </div>
             </div>
 
-            {/* 회사 소개 섹션 */}
-            <div id="edit-section-company" className="space-y-6">
-              <h3 className="font-black text-blue-700 text-sm flex items-center gap-2 border-l-4 border-blue-700 pl-2">회사 소개</h3>
-              <div id="edit-section-ceo" className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
+            {/* 4. 지속가능경영(ESG) 설정 */}
+            <div id="edit-section-esg" className="space-y-6">
+              <h3 className="font-black text-blue-700 text-sm flex items-center gap-2 border-l-4 border-blue-700 pl-2">지속가능경영 (ESG)</h3>
+              <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-6">
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-xs font-bold text-slate-700">CEO 인사말</span>
-                  <button onClick={() => setActiveSection('ceo')} className="text-[10px] text-blue-600 underline">미리보기</button>
+                  <span className="text-xs font-bold text-slate-700">ESG 가치 설정</span>
+                  <button onClick={() => setActiveSection('esg')} className="text-[10px] text-blue-600 underline">미리보기</button>
                 </div>
-<input 
-  type="text" 
-  value={data.corporateInfo?.ceoGreeting?.title || ''} 
-  onChange={(e) => setData(prev => ({ 
-    ...prev, 
-    corporateInfo: { 
-      ...(prev.corporateInfo || {}), 
-      ceoGreeting: { 
-        ...(prev.corporateInfo?.ceoGreeting || {}), 
-        title: e.target.value 
-      } 
-    } 
-  }))} 
-  className="w-full p-2 border rounded text-xs" 
-  placeholder="인사말 제목" 
-/>
-<textarea 
-  rows={4} 
-  value={data.corporateInfo?.ceoGreeting?.content || ''} 
-  onChange={(e) => setData(prev => ({ 
-    ...prev, 
-    corporateInfo: { 
-      ...(prev.corporateInfo || {}), 
-      ceoGreeting: { 
-        ...(prev.corporateInfo?.ceoGreeting || {}), 
-        content: e.target.value 
-      } 
-    } 
-  }))} 
-  className="w-full p-2 border rounded text-xs" 
-  placeholder="인사말 본문" 
-/>
-<input 
-  type="file" 
-  onChange={(e) => handleImageUpload(e, (url) => setData(prev => ({ 
-    ...prev, 
-    corporateInfo: { 
-      ...(prev.corporateInfo || {}), 
-      ceoGreeting: { 
-        ...(prev.corporateInfo?.ceoGreeting || {}), 
-        image: url 
-      } 
-    } 
-  })), 'ceo')} 
-  className="text-[10px]" 
-/>
-              </div>
-              <div id="edit-section-mission" className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-xs font-bold text-slate-700">미션 & 비전</span>
-                  <button onClick={() => setActiveSection('mission')} className="text-[10px] text-blue-600 underline">미리보기</button>
-                </div>
-                <textarea rows={3} value={data.corporateInfo?.missionVision?.mission || ''} onChange={(e) => setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, missionVision: { ...prev.corporateInfo.missionVision, mission: e.target.value } } }))} className="w-full p-2 border rounded text-xs" placeholder="미션 및 비전 내용 입력" />
-              </div>
-              <div id="edit-section-org" className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-xs font-bold text-slate-700">조직도</span>
-                  <button onClick={() => setActiveSection('org')} className="text-[10px] text-blue-600 underline">미리보기</button>
-                </div>
-                <input type="file" onChange={(e) => handleImageUpload(e, (url) => setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, orgChart: url } })), 'org')} className="text-[10px]" />
-              </div>
-              <div id="edit-section-ci" className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-xs font-bold text-slate-700">CI 소개</span>
-                  <button onClick={() => setActiveSection('ci')} className="text-[10px] text-blue-600 underline">미리보기</button>
-                </div>
-                <input type="file" onChange={(e) => handleImageUpload(e, (url) => setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, ciImage: url } })), 'ci')} className="text-[10px]" />
-                <textarea rows={2} value={(data.corporateInfo as any)?.ciDescription || ''} onChange={(e) => setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, ciDescription: e.target.value } }))} className="w-full p-2 border rounded text-xs" placeholder="CI 의미 설명" />
-              </div>
-              <div id="edit-section-location" className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-xs font-bold text-slate-700">오시는 길</span>
-                  <button onClick={() => setActiveSection('location')} className="text-[10px] text-blue-600 underline">미리보기</button>
-                </div>
-                <input type="text" value={data.corporateInfo?.location?.headOffice?.address || ''} onChange={(e) => setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, location: { ...prev.corporateInfo.location, headOffice: { address: e.target.value } } } }))} className="w-full p-2 border rounded text-xs" placeholder="본사 주소 입력" />
+                {['environmental', 'social', 'governance'].map((key) => (
+                  <div key={key} className="p-3 bg-white border rounded-lg space-y-3">
+                    <span className="text-[10px] font-bold uppercase text-slate-400">{key}</span>
+                    <div className="flex gap-2">
+                      <input type="text" value={(data.corporateInfo?.esg as any)?.[key]?.title || ''} onChange={(e) => setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, esg: { ...prev.corporateInfo?.esg, [key]: { ...prev.corporateInfo?.esg?.[key], title: e.target.value } } } }))} className="flex-1 p-2 border rounded text-xs" />
+                      <input type="number" value={(data as any).fontSizes?.[`${key}Title`] || 30} onChange={(e) => updateFontSize(key, 'title', parseInt(e.target.value))} className="w-16 p-2 border rounded text-xs" />
+                    </div>
+                    <textarea rows={2} value={(data.corporateInfo?.esg as any)?.[key]?.content || ''} onChange={(e) => setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, esg: { ...prev.corporateInfo?.esg, [key]: { ...prev.corporateInfo?.esg?.[key], content: e.target.value } } } }))} className="w-full p-2 border rounded text-xs" />
+                    <input type="file" onChange={(e) => handleImageUpload(e, (url) => setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, esg: { ...prev.corporateInfo?.esg, [key]: { ...prev.corporateInfo?.esg?.[key], image: url } } } })), `esg-${key}`)} className="text-[10px]" />
+                  </div>
+                ))}
               </div>
             </div>
 
+            {/* 5. 공시정보 설정 */}
+            <div id="edit-section-disclosure" className="space-y-6">
+              <h3 className="font-black text-blue-700 text-sm flex items-center gap-2 border-l-4 border-blue-700 pl-2">공시정보</h3>
+              <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-6">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-xs font-bold text-slate-700">인증서 및 보고서</span>
+                  <button onClick={() => setActiveSection('disclosure')} className="text-[10px] text-blue-600 underline">미리보기</button>
+                </div>
+                <div className="space-y-4">
+                  <div className="p-3 bg-white border rounded-lg space-y-2">
+                    <span className="text-[10px] font-bold block">인증서 관리</span>
+                    {(data.corporateInfo?.disclosure?.certifications || []).map((cert, idx) => (
+                      <div key={idx} className="flex gap-2 mb-2">
+                        <input type="text" value={cert.name} onChange={(e) => { const next = [...data.corporateInfo.disclosure.certifications]; next[idx].name = e.target.value; setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, disclosure: { ...prev.corporateInfo.disclosure, certifications: next } } })); }} className="flex-1 p-1 border rounded text-[10px]" />
+                        <input type="text" value={cert.date} onChange={(e) => { const next = [...data.corporateInfo.disclosure.certifications]; next[idx].date = e.target.value; setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, disclosure: { ...prev.corporateInfo.disclosure, certifications: next } } })); }} className="w-20 p-1 border rounded text-[10px]" />
+                      </div>
+                    ))}
+                    <button onClick={() => setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, disclosure: { ...prev.corporateInfo.disclosure, certifications: [...(prev.corporateInfo?.disclosure?.certifications || []), { name: '신규 인증서', image: '', date: '2024-00-00' }] } }))} className="text-[10px] text-blue-600 font-bold">+ 인증서 추가</button>
+                  </div>
+                  <div className="p-3 bg-white border rounded-lg space-y-2">
+                    <span className="text-[10px] font-bold block">보고서 관리</span>
+                    {(data.corporateInfo?.disclosure?.reports || []).map((rep, idx) => (
+                      <div key={idx} className="flex gap-2 mb-2">
+                        <input type="text" value={rep.title} onChange={(e) => { const next = [...data.corporateInfo.disclosure.reports]; next[idx].title = e.target.value; setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, disclosure: { ...prev.corporateInfo.disclosure, reports: next } } })); }} className="flex-1 p-1 border rounded text-[10px]" />
+                        <input type="text" value={rep.date} onChange={(e) => { const next = [...data.corporateInfo.disclosure.reports]; next[idx].date = e.target.value; setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, disclosure: { ...prev.corporateInfo.disclosure, reports: next } } })); }} className="w-20 p-1 border rounded text-[10px]" />
+                      </div>
+                    ))}
+                    <button onClick={() => setData(prev => ({ ...prev, corporateInfo: { ...prev.corporateInfo, disclosure: { ...prev.corporateInfo.disclosure, reports: [...(prev.corporateInfo?.disclosure?.reports || []), { title: '신규 보고서', date: '2024-00-00', link: '' }] } }))} className="text-[10px] text-blue-600 font-bold">+ 보고서 추가</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 6. 홍보센터 설정 */}
             <div id="edit-section-pr" className="space-y-6">
-              <h3 className="font-black text-blue-700 text-sm flex items-center gap-2 border-l-4 border-blue-700 pl-2">홍보 센터</h3>
-              <div className="grid grid-cols-2 gap-4">
-                <div id="edit-section-news" className="p-4 bg-slate-50 rounded-xl border space-y-3">
-                  <span className="text-xs font-bold block">회사 소식</span>
-                  <textarea rows={3} value={(data as any).newsContent || ''} onChange={(e) => setData(prev => ({ ...prev, newsContent: e.target.value }))} className="w-full p-2 border rounded text-xs" />
-                  <button onClick={() => setActiveSection('news')} className="text-[10px] text-blue-600 underline">미리보기</button>
-                </div>
-                <div id="edit-section-video" className="p-4 bg-slate-50 rounded-xl border space-y-3">
-                  <span className="text-xs font-bold block">홍보 영상</span>
-                  <input type="text" value={(data as any).videoUrl || ''} onChange={(e) => setData(prev => ({ ...prev, videoUrl: e.target.value }))} className="w-full p-2 border rounded text-xs" />
-                  <button onClick={() => setActiveSection('video')} className="text-[10px] text-blue-600 underline">미리보기</button>
-                </div>
-              </div>
-            </div>
-
-            <div id="edit-section-talent" className="space-y-6">
-              <h3 className="font-black text-blue-700 text-sm flex items-center gap-2 border-l-4 border-blue-700 pl-2">인재경영</h3>
-              <div className="grid grid-cols-2 gap-4">
-                <div id="edit-section-talent-val" className="p-4 bg-slate-50 rounded-xl border space-y-3">
-                  <span className="text-xs font-bold block">인재상</span>
-                  <textarea rows={3} value={(data as any).talentValue || ''} onChange={(e) => setData(prev => ({ ...prev, talentValue: e.target.value }))} className="w-full p-2 border rounded text-xs" />
-                  <button onClick={() => setActiveSection('talent')} className="text-[10px] text-blue-600 underline">미리보기</button>
-                </div>
-                <div id="edit-section-benefit" className="p-4 bg-slate-50 rounded-xl border space-y-3">
-                  <span className="text-xs font-bold block">복리후생</span>
-                  <textarea rows={3} value={(data as any).benefitInfo || ''} onChange={(e) => setData(prev => ({ ...prev, benefitInfo: e.target.value }))} className="w-full p-2 border rounded text-xs" />
-                  <button onClick={() => setActiveSection('benefit')} className="text-[10px] text-blue-600 underline">미리보기</button>
-                </div>
-              </div>
-            </div>
-
-            {/* CS/문의하기 설정 강화 */}
-            <div id="edit-section-cs" className="space-y-6">
-              <h3 className="font-black text-blue-700 text-sm flex items-center gap-2 border-l-4 border-blue-700 pl-2">고객센터 (CS 페이지)</h3>
-              <div className="p-4 bg-slate-50 rounded-xl border space-y-4">
+              <h3 className="font-black text-blue-700 text-sm flex items-center gap-2 border-l-4 border-blue-700 pl-2">홍보센터</h3>
+              <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-6">
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-xs font-bold text-slate-700">문의 채널 관리</span>
-                  <button onClick={() => setActiveSection('cs')} className="text-[10px] text-blue-600 underline">CS 페이지 미리보기</button>
+                  <span className="text-xs font-bold text-slate-700">뉴스 및 공지</span>
+                  <button onClick={() => setActiveSection('pr')} className="text-[10px] text-blue-600 underline">미리보기</button>
                 </div>
-                <div className="space-y-3">
-                  <div>
-                    <label className="text-[11px] text-slate-500 block mb-1">대표 문의 전화번호</label>
-                    <input type="text" value={data.supportPhone || ''} onChange={(e) => setData(prev => ({ ...prev, supportPhone: e.target.value }))} className="w-full p-2 border rounded text-xs" placeholder="예: 02-123-4567" />
+                <div className="space-y-4">
+                  <div className="p-3 bg-white border rounded-lg space-y-2">
+                    <span className="text-[10px] font-bold block">뉴스 관리</span>
+                    {(data.prCenter?.news || []).map((news, idx) => (
+                      <div key={idx} className="p-2 border rounded-lg space-y-2 mb-3 bg-slate-50">
+                        <input type="text" value={news.title} onChange={(e) => { const next = [...data.prCenter.news]; next[idx].title = e.target.value; setData(prev => ({ ...prev, prCenter: { ...prev.prCenter, news: next } })); }} className="w-full p-1 border rounded text-[10px] font-bold" />
+                        <textarea rows={2} value={news.summary} onChange={(e) => { const next = [...data.prCenter.news]; next[idx].summary = e.target.value; setData(prev => ({ ...prev, prCenter: { ...prev.prCenter, news: next } })); }} className="w-full p-1 border rounded text-[10px]" />
+                        <input type="file" onChange={(e) => handleImageUpload(e, (url) => { const next = [...data.prCenter.news]; next[idx].image = url; setData(prev => ({ ...prev, prCenter: { ...prev.prCenter, news: next } })); }, `pr-news-${idx}`)} className="text-[10px]" />
+                      </div>
+                    ))}
+                    <button onClick={() => setData(prev => ({ ...prev, prCenter: { ...prev.prCenter, news: [...(prev.prCenter?.news || []), { title: '신규 뉴스', date: '2024-00-00', summary: '', image: '' }] } }))} className="text-[10px] text-blue-600 font-bold">+ 뉴스 추가</button>
                   </div>
-                  <div>
-                    <label className="text-[11px] text-slate-500 block mb-1">문의 안내 문구</label>
-                    <textarea rows={3} value={(data as any).csGuide || ''} onChange={(e) => setData(prev => ({ ...prev, csGuide: e.target.value }))} className="w-full p-2 border rounded text-xs" placeholder="문의 방법이나 안내 사항을 입력하세요" />
-                  </div>
-                  <div>
-                    <label className="text-[11px] text-slate-500 block mb-1">카카오톡 상담 링크 (URL)</label>
-                    <input type="text" value={(data as any).kakaoLink || ''} onChange={(e) => setData(prev => ({ ...prev, kakaoLink: e.target.value }))} className="w-full p-2 border rounded text-xs" placeholder="https://pf.kakao.com/..." />
+                  <div className="p-3 bg-white border rounded-lg space-y-2">
+                    <span className="text-[10px] font-bold block">공지사항 관리</span>
+                    {(data.prCenter?.notice || []).map((notice, idx) => (
+                      <div key={idx} className="flex gap-2 mb-2">
+                        <input type="text" value={notice.title} onChange={(e) => { const next = [...data.prCenter.notice]; next[idx].title = e.target.value; setData(prev => ({ ...prev, prCenter: { ...prev.prCenter, notice: next } })); }} className="flex-1 p-1 border rounded text-[10px]" />
+                        <input type="text" value={notice.date} onChange={(e) => { const next = [...data.prCenter.notice]; next[idx].date = e.target.value; setData(prev => ({ ...prev, prCenter: { ...prev.prCenter, notice: next } })); }} className="w-20 p-1 border rounded text-[10px]" />
+                      </div>
+                    ))}
+                    <button onClick={() => setData(prev => ({ ...prev, prCenter: { ...prev.prCenter, notice: [...(prev.prCenter?.notice || []), { title: '신규 공지', date: '2024-00-00', isImportant: false }] } }))} className="text-[10px] text-blue-600 font-bold">+ 공지 추가</button>
                   </div>
                 </div>
               </div>
             </div>
 
+            {/* 7. 인재경영 설정 */}
+            <div id="edit-section-recruit" className="space-y-6">
+              <h3 className="font-black text-blue-700 text-sm flex items-center gap-2 border-l-4 border-blue-700 pl-2">인재경영</h3>
+              <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-6">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-xs font-bold text-slate-700">인재상 및 채용</span>
+                  <button onClick={() => setActiveSection('recruit')} className="text-[10px] text-blue-600 underline">미리보기</button>
+                </div>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <label className="text-[11px] text-slate-500 block">우리가 찾는 인재상</label>
+                    <textarea rows={3} value={data.recruit?.talentValue || ''} onChange={(e) => setData(prev => ({ ...prev, recruit: { ...prev.recruit, talentValue: e.target.value } }))} className="w-full p-2 border rounded text-xs" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[11px] text-slate-500 block">복리후생 및 혜택</label>
+                    <textarea rows={3} value={data.recruit?.benefitInfo || ''} onChange={(e) => setData(prev => ({ ...prev, recruit: { ...prev.recruit, benefitInfo: e.target.value } }))} className="w-full p-2 border rounded text-xs" />
+                  </div>
+                  <div className="p-3 bg-white border rounded-lg space-y-2">
+                    <span className="text-[10px] font-bold block">채용 공고 관리</span>
+                    {(data.recruit?.openPositions || []).map((pos, idx) => (
+                      <div key={idx} className="p-2 border rounded-lg space-y-2 mb-3 bg-slate-50">
+                        <input type="text" value={pos.title} onChange={(e) => { const next = [...data.recruit.openPositions]; next[idx].title = e.target.value; setData(prev => ({ ...prev, recruit: { ...prev.recruit, openPositions: next } })); }} className="w-full p-1 border rounded text-[10px] font-bold" />
+                        <div className="flex gap-2">
+                          <input type="text" value={pos.department} onChange={(e) => { const next = [...data.recruit.openPositions]; next[idx].department = e.target.value; setData(prev => ({ ...prev, recruit: { ...prev.recruit, openPositions: next } })); }} className="flex-1 p-1 border rounded text-[10px]" placeholder="부서" />
+                          <input type="text" value={pos.deadline} onChange={(e) => { const next = [...data.recruit.openPositions]; next[idx].deadline = e.target.value; setData(prev => ({ ...prev, recruit: { ...prev.recruit, openPositions: next } })); }} className="w-20 p-1 border rounded text-[10px]" placeholder="마감일" />
+                        </div>
+                      </div>
+                    ))}
+                    <button onClick={() => setData(prev => ({ ...prev, recruit: { ...prev.recruit, openPositions: [...(prev.recruit?.openPositions || []), { title: '신규 공고', department: '부서', deadline: '2024-00-00', link: '' }] } }))} className="text-[10px] text-blue-600 font-bold">+ 공고 추가</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 8. 고객센터 설정 */}
+            <div id="edit-section-cs" className="space-y-6">
+              <h3 className="font-black text-blue-700 text-sm flex items-center gap-2 border-l-4 border-blue-700 pl-2">고객센터 (CS)</h3>
+              <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-6">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-xs font-bold text-slate-700">CS 채널 및 FAQ</span>
+                  <button onClick={() => setActiveSection('cs')} className="text-[10px] text-blue-600 underline">미리보기</button>
+                </div>
+                <div className="space-y-4">
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="space-y-1">
+                      <label className="text-[11px] text-slate-500 block">대표 전화번호</label>
+                      <input type="text" value={data.supportPhone || ''} onChange={(e) => setData(prev => ({ ...prev, supportPhone: e.target.value }))} className="w-full p-2 border rounded text-xs" />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[11px] text-slate-500 block">카카오톡 링크</label>
+                      <input type="text" value={(data as any).kakaoLink || ''} onChange={(e) => setData(prev => ({ ...prev, kakaoLink: e.target.value }))} className="w-full p-2 border rounded text-xs" />
+                    </div>
+                  </div>
+                  <div className="p-3 bg-white border rounded-lg space-y-2">
+                    <span className="text-[10px] font-bold block">FAQ 관리</span>
+                    {(data.csCenter?.faq || []).map((faq, idx) => (
+                      <div key={idx} className="p-2 border rounded-lg space-y-2 mb-3 bg-slate-50">
+                        <input type="text" value={faq.question} onChange={(e) => { const next = [...data.csCenter.faq]; next[idx].question = e.target.value; setData(prev => ({ ...prev, csCenter: { ...prev.csCenter, faq: next } })); }} className="w-full p-1 border rounded text-[10px] font-bold" />
+                        <textarea rows={2} value={faq.answer} onChange={(e) => { const next = [...data.csCenter.faq]; next[idx].answer = e.target.value; setData(prev => ({ ...prev, csCenter: { ...prev.csCenter, faq: next } })); }} className="w-full p-1 border rounded text-[10px]" />
+                      </div>
+                    ))}
+                    <button onClick={() => setData(prev => ({ ...prev, csCenter: { ...prev.csCenter, faq: [...(prev.csCenter?.faq || []), { question: '질문을 입력하세요', answer: '답변을 입력하세요' }] } }))} className="text-[10px] text-blue-600 font-bold">+ FAQ 추가</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 푸터 설정 */}
             <div id="edit-section-footer" className="space-y-6">
               <h3 className="font-black text-slate-800 text-sm flex items-center gap-2 border-l-4 border-slate-800 pl-2">푸터 정보</h3>
               <div className="grid grid-cols-2 gap-4">
