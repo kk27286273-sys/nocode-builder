@@ -7,9 +7,10 @@ interface SolutionPageProps {
 }
 
 export default function SolutionPage({ solutionData }: SolutionPageProps) {
-  if (!solutionData) return <div className="py-32 text-center text-slate-500 font-light">솔루션 정보를 불러오는 중입니다...</div>;
+  // 데이터가 아예 없을 때의 렌더링 방지
+  if (!solutionData) return <div className="py-32 text-center text-slate-500 font-light">데이터를 불러오는 중입니다...</div>;
 
-  // 데이터 안전장치: features가 없을 경우 기본값 제공
+  // 에디터에서 추가/삭제한 features 배열을 그대로 사용, 없으면 기본값
   const features = solutionData.features || [
     { title: '효율적인 프로세스', description: '업무 최적화를 통해 비용을 절감하고 생산성을 극대화합니다.' },
     { title: '강력한 보안성', description: '엔터프라이즈급 보안 표준을 적용하여 데이터를 안전하게 보호합니다.' },
@@ -23,9 +24,8 @@ export default function SolutionPage({ solutionData }: SolutionPageProps) {
       exit={{ opacity: 0 }} 
       className="w-full bg-white"
     >
-      {/* 1. Hero Section: Deep Navy & High Contrast */}
+      {/* 1. Hero Section */}
       <section className="relative py-32 md:py-48 px-4 bg-[#0a192f] text-white overflow-hidden">
-        {/* 배경 장식 요소: 에이텍 스타일의 추상적 그라데이션 */}
         <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[70%] bg-blue-600/20 blur-[120px] rounded-full" />
         <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[60%] bg-indigo-900/30 blur-[100px] rounded-full" />
         
@@ -48,7 +48,7 @@ export default function SolutionPage({ solutionData }: SolutionPageProps) {
         </div>
       </section>
 
-      {/* 2. Core Features: Clean Grid with Subtle Borders */}
+      {/* 2. Core Features */}
       <section className="py-32 px-4 bg-white">
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-6">
@@ -89,7 +89,7 @@ export default function SolutionPage({ solutionData }: SolutionPageProps) {
         </div>
       </section>
 
-      {/* 3. Bottom CTA: High Conversion Area */}
+      {/* 3. Bottom CTA */}
       <section className="py-32 px-4 bg-[#f8fafc] border-t border-slate-100">
         <div className="max-w-4xl mx-auto text-center">
           <motion.div

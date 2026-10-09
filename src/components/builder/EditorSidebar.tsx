@@ -54,7 +54,7 @@ export default function EditorSidebar({ data, setData, activeSection, setActiveS
         ))}
       </div>
 
-      {/* 1. 회사 소개 */}
+      {/* 1. 회사 소개 (AboutPage 매칭) */}
       {activeSection === 'corporateInfo' && (
         <div className="space-y-4">
           <div className="p-3 bg-white border rounded-lg space-y-3">
@@ -65,9 +65,14 @@ export default function EditorSidebar({ data, setData, activeSection, setActiveS
             <input type="text" value={data.company.name} onChange={(e) => updateDeep('company.name', e.target.value)} className="w-full p-2 border rounded text-sm" />
           </div>
           <div className="p-3 bg-white border rounded-lg space-y-3">
-            <span className="text-xs font-bold block text-blue-600">메인 헤드라인 (연동 확인)</span>
-            <input type="text" value={(data as any).corporateInfo.intro?.mainTitle || ''} onChange={(e) => updateDeep('corporateInfo.intro.mainTitle', e.target.value)} className="w-full p-2 border rounded text-sm" placeholder="신뢰와 기술로..." />
-            <input type="text" value={(data as any).corporateInfo.intro?.subTitle || ''} onChange={(e) => updateDeep('corporateInfo.intro.subTitle', e.target.value)} className="w-full p-2 border rounded text-sm" placeholder="주식회사 회사명" />
+            <span className="text-xs font-bold block text-blue-600">메인 헤드라인 (intro)</span>
+            <input type="text" value={(data as any).corporateInfo.intro?.mainTitle || ''} onChange={(e) => updateDeep('corporateInfo.intro.mainTitle', e.target.value)} className="w-full p-2 border rounded text-sm" placeholder="메인 제목" />
+            <input type="text" value={(data as any).corporateInfo.intro?.subTitle || ''} onChange={(e) => updateDeep('corporateInfo.intro.subTitle', e.target.value)} className="w-full p-2 border rounded text-sm" placeholder="서브 제목" />
+          </div>
+          <div className="p-3 bg-white border rounded-lg space-y-3">
+            <span className="text-xs font-bold block text-blue-600">미션 & 비전 (missionVision 매칭)</span>
+            <input type="text" value={(data as any).corporateInfo.missionVision?.mission || ''} onChange={(e) => updateDeep('corporateInfo.missionVision.mission', e.target.value)} className="w-full p-2 border rounded text-sm" placeholder="미션 입력" />
+            <input type="text" value={(data as any).corporateInfo.missionVision?.vision || ''} onChange={(e) => updateDeep('corporateInfo.missionVision.vision', e.target.value)} className="w-full p-2 border rounded text-sm" placeholder="비전 입력" />
           </div>
           <div className="p-3 bg-white border rounded-lg space-y-3">
             <span className="text-xs font-bold block text-blue-600">CEO 정보</span>
@@ -75,7 +80,7 @@ export default function EditorSidebar({ data, setData, activeSection, setActiveS
             <textarea value={data.corporateInfo.ceoGreeting.content} onChange={(e) => updateDeep('corporateInfo.ceoGreeting.content', e.target.value)} className="w-full p-2 border rounded text-sm h-24" />
           </div>
           <div className="p-3 bg-white border rounded-lg space-y-3">
-            <span className="text-xs font-bold block text-blue-600">연혁 관리</span>
+            <span className="text-xs font-bold block text-blue-600">연혁 관리 (aboutUs.history 매칭)</span>
             {((data as any).corporateInfo.aboutUs?.history || []).map((item: any, idx: number) => (
               <div key={idx} className="p-2 border rounded bg-slate-50 space-y-2 mb-2 relative group">
                 <button onClick={() => removeDeep('corporateInfo.aboutUs.history', idx)} className="absolute top-2 right-2 text-red-500 opacity-0 group-hover:opacity-100 text-xs">삭제</button>
@@ -99,151 +104,168 @@ export default function EditorSidebar({ data, setData, activeSection, setActiveS
         </div>
       )}
 
-      {/* 2. 사업 소개 */}
+      {/* 2. 사업 소개 (SolutionPage 매칭) */}
       {activeSection === 'solutions' && (
         <div className="space-y-4">
           <div className="p-3 bg-white border rounded-lg space-y-3">
-            <span className="text-xs font-bold block text-blue-600">마케팅 문구 (연동 확인)</span>
-            <input type="text" value={(data as any).solutionsMarketing?.title || ''} onChange={(e) => updateDeep('solutionsMarketing.title', e.target.value)} className="w-full p-2 border rounded text-sm" placeholder="Enterprise Solution" />
-            <textarea value={(data as any).solutionsMarketing?.subTitle || ''} onChange={(e) => updateDeep('solutionsMarketing.subTitle', e.target.value)} className="w-full p-2 border rounded text-sm h-20" placeholder="B2B 기업·제조업 전용 웹..." />
-            <input type="text" value={(data as any).solutionsMarketing?.ctaText || ''} onChange={(e) => updateDeep('solutionsMarketing.ctaText', e.target.value)} className="w-full p-2 border rounded text-sm" placeholder="무료 컨설팅 신청하기" />
-            <input type="text" value={(data as any).solutionsMarketing?.homeButtonText || ''} onChange={(e) => updateDeep('solutionsMarketing.homeButtonText', e.target.value)} className="w-full p-2 border rounded text-sm" placeholder="홈으로 돌아가기" />
+            <span className="text-xs font-bold block text-blue-600">솔루션 메인 (solutionData 매칭)</span>
+            <input type="text" value={(data as any).solutionData?.title || ''} onChange={(e) => updateDeep('solutionData.title', e.target.value)} className="w-full p-2 border rounded text-sm" placeholder="솔루션 제목" />
+            <textarea value={(data as any).solutionData?.description || ''} onChange={(e) => updateDeep('solutionData.description', e.target.value)} className="w-full p-2 border rounded text-sm h-20" placeholder="솔루션 설명" />
           </div>
           <div className="p-3 bg-white border rounded-lg space-y-3">
-            <span className="text-xs font-bold block text-blue-600">핵심 역량 (연동 확인)</span>
-            {((data as any).coreCompetencies || []).map((comp: any, idx: number) => (
+            <span className="text-xs font-bold block text-blue-600">핵심 역량 (solutionData.features 매칭)</span>
+            {((data as any).solutionData?.features || []).map((feat: any, idx: number) => (
               <div key={idx} className="p-2 border rounded bg-slate-50 space-y-2 mb-2 relative group">
-                <button onClick={() => removeDeep('coreCompetencies', idx)} className="absolute top-2 right-2 text-red-500 opacity-0 group-hover:opacity-100 text-xs">삭제</button>
-                <input type="text" value={comp.title || ''} onChange={(e) => {
-                  const next = [...((data as any).coreCompetencies)];
+                <button onClick={() => removeDeep('solutionData.features', idx)} className="absolute top-2 right-2 text-red-500 opacity-0 group-hover:opacity-100 text-xs">삭제</button>
+                <input type="text" value={feat.title || ''} onChange={(e) => {
+                  const next = [...((data as any).solutionData.features)];
                   next[idx].title = e.target.value;
-                  updateDeep('coreCompetencies', next);
+                  updateDeep('solutionData.features', next);
                 }} className="w-full p-1 border rounded text-xs font-bold" />
-                <textarea value={comp.description || ''} onChange={(e) => {
-                  const next = [...((data as any).coreCompetencies)];
+                <textarea value={feat.description || ''} onChange={(e) => {
+                  const next = [...((data as any).solutionData.features)];
                   next[idx].description = e.target.value;
-                  updateDeep('coreCompetencies', next);
+                  updateDeep('solutionData.features', next);
                 }} className="w-full p-1 border rounded text-xs h-12" />
               </div>
             ))}
             <button onClick={() => {
-              const next = [...((data as any).coreCompetencies || []), { title: '핵심 역량', description: '내용을 입력하세요' }];
-              updateDeep('coreCompetencies', next);
+              const current = (data as any).solutionData?.features || [];
+              const next = [...current, { title: '핵심 역량', description: '내용을 입력하세요' }];
+              updateDeep('solutionData.features', next);
             }} className="w-full py-2 text-xs bg-blue-50 text-blue-600 border border-blue-200 rounded-md font-bold">+ 역량 추가</button>
           </div>
         </div>
       )}
 
-      {/* 3. 지속가능경영 (ESG) */}
+      {/* 3. 지속가능경영 (ESGPage 매칭) */}
       {activeSection === 'sustainability' && (
         <div className="space-y-4">
           <div className="p-3 bg-white border rounded-lg space-y-3">
-            <span className="text-xs font-bold block text-blue-600">ESG 메인 (연동 확인)</span>
-            <input type="text" value={(data as any).sustainability?.title || ''} onChange={(e) => updateDeep('sustainability.title', e.target.value)} className="w-full p-2 border rounded text-sm" />
-            <input type="text" value={(data as any).sustainability?.subTitle || ''} onChange={(e) => updateDeep('sustainability.subTitle', e.target.value)} className="w-full p-2 border rounded text-sm" />
-            <textarea value={(data as any).sustainability?.description || ''} onChange={(e) => updateDeep('sustainability.description', e.target.value)} className="w-full p-2 border rounded text-sm h-20" />
+            <span className="text-xs font-bold block text-blue-600">ESG 메인 (esgData 매칭)</span>
+            <input type="text" value={(data as any).esgData?.mainTitle || '지속가능한 미래를 위한 약속'} onChange={(e) => updateDeep('esgData.mainTitle', e.target.value)} className="w-full p-2 border rounded text-sm" />
+            <textarea value={(data as any).esgData?.mainDesc || ''} onChange={(e) => updateDeep('esgData.mainDesc', e.target.value)} className="w-full p-2 border rounded text-sm h-20" />
           </div>
           <div className="p-3 bg-white border rounded-lg space-y-3">
-            <span className="text-xs font-bold block text-blue-600">ESG 세부 항목 (연동 확인)</span>
-            {((data as any).sustainability?.items || []).map((item: any, idx: number) => (
-              <div key={idx} className="p-2 border rounded bg-slate-50 space-y-2 mb-2 relative group">
-                <button onClick={() => removeDeep('sustainability.items', idx)} className="absolute top-2 right-2 text-red-500 opacity-0 group-hover:opacity-100 text-xs">삭제</button>
-                <input type="text" value={item.category || ''} onChange={(e) => {
-                  const next = [...((data as any).sustainability.items)];
-                  next[idx].category = e.target.value;
-                  updateDeep('sustainability.items', next);
-                }} className="w-full p-1 border rounded text-xs font-bold" />
-                <input type="text" value={item.title || ''} onChange={(e) => {
-                  const next = [...((data as any).sustainability.items)];
-                  next[idx].title = e.target.value;
-                  updateDeep('sustainability.items', next);
-                }} className="w-full p-1 border rounded text-xs" />
-                <textarea value={item.description || ''} onChange={(e) => {
-                  const next = [...((data as any).sustainability.items)];
-                  next[idx].description = e.target.value;
-                  updateDeep('sustainability.items', next);
-                }} className="w-full p-1 border rounded text-xs h-12" />
+            <span className="text-xs font-bold block text-blue-600">ESG 세부 항목 (E, S, G)</span>
+            {['environmental', 'social', 'governance'].map((key) => (
+              <div key={key} className="p-3 border rounded bg-slate-50 space-y-2 mb-4">
+                <span className="text-[10px] font-bold uppercase text-slate-400">{key}</span>
+                <input type="text" value={(data as any).esgData?.[key]?.title || ''} onChange={(e) => updateDeep(`esgData.${key}.title`, e.target.value)} className="w-full p-1 border rounded text-xs font-bold" />
+                <textarea value={(data as any).esgData?.[key]?.content || ''} onChange={(e) => updateDeep(`esgData.${key}.content`, e.target.value)} className="w-full p-1 border rounded text-xs h-12" />
+                <input type="text" value={(data as any).esgData?.[key]?.image || ''} onChange={(e) => updateDeep(`esgData.${key}.image`, e.target.value)} className="w-full p-1 border rounded text-xs" placeholder="이미지 URL" />
               </div>
             ))}
-            <button onClick={() => {
-              const next = [...((data as any).sustainability?.items || []), { category: 'Environment', title: '새 항목', description: '내용' }];
-              updateDeep('sustainability.items', next);
-            }} className="w-full py-2 text-xs bg-blue-50 text-blue-600 border border-blue-200 rounded-md font-bold">+ ESG 항목 추가</button>
           </div>
         </div>
       )}
 
-      {/* 4. 홍보 센터 */}
+      {/* 4. 홍보 센터 (PRPage 매칭) */}
       {activeSection === 'pr' && (
         <div className="space-y-4">
           <div className="p-3 bg-white border rounded-lg space-y-3">
-            <span className="text-xs font-bold block text-blue-600">뉴스/공지사항</span>
-            {(data.prCenter.news || []).map((n, idx) => (
+            <span className="text-xs font-bold block text-blue-600">최신 뉴스 (prData.news 매칭)</span>
+            {( (data as any).prData?.news || []).map((n: any, idx: number) => (
               <div key={idx} className="p-2 border rounded bg-slate-50 space-y-2 mb-2 relative group">
-                <button onClick={() => removeDeep('prCenter.news', idx)} className="absolute top-2 right-2 text-red-500 opacity-0 group-hover:opacity-100 text-xs">삭제</button>
+                <button onClick={() => removeDeep('prData.news', idx)} className="absolute top-2 right-2 text-red-500 opacity-0 group-hover:opacity-100 text-xs">삭제</button>
                 <input type="text" value={n.title} onChange={(e) => {
-                  const next = [...data.prCenter.news];
+                  const next = [...((data as any).prData.news)];
                   next[idx].title = e.target.value;
-                  updateDeep('prCenter.news', next);
-                }} className="w-full p-1 border rounded text-xs" />
+                  updateDeep('prData.news', next);
+                }} className="w-full p-1 border rounded text-xs font-bold" />
                 <input type="text" value={n.date} onChange={(e) => {
-                  const next = [...data.prCenter.news];
+                  const next = [...((data as any).prData.news)];
                   next[idx].date = e.target.value;
-                  updateDeep('prCenter.news', next);
+                  updateDeep('prData.news', next);
                 }} className="w-full p-1 border rounded text-xs" />
                 <textarea value={n.summary} onChange={(e) => {
-                  const next = [...data.prCenter.news];
+                  const next = [...((data as any).prData.news)];
                   next[idx].summary = e.target.value;
-                  updateDeep('prCenter.news', next);
+                  updateDeep('prData.news', next);
                 }} className="w-full p-1 border rounded text-xs h-12" />
+                <input type="text" value={n.image} onChange={(e) => {
+                  const next = [...((data as any).prData.news)];
+                  next[idx].image = e.target.value;
+                  updateDeep('prData.news', next);
+                }} className="w-full p-1 border rounded text-xs" placeholder="이미지 URL" />
               </div>
             ))}
             <button onClick={() => {
-              const next = [...(data.prCenter.news || []), { title: '신규 뉴스', date: '2024-00-00', summary: '', image: '' }];
-              updateDeep('prCenter.news', next);
+              const current = (data as any).prData?.news || [];
+              const next = [...current, { title: '신규 뉴스', date: '2024-00-00', summary: '', image: '' }];
+              updateDeep('prData.news', next);
             }} className="w-full py-2 text-xs bg-blue-50 text-blue-600 border border-blue-200 rounded-md font-bold">+ 뉴스 추가</button>
+          </div>
+          <div className="p-3 bg-white border rounded-lg space-y-3">
+            <span className="text-xs font-bold block text-blue-600">공지사항 (prData.notice 매칭)</span>
+            {((data as any).prData?.notice || []).map((item: any, idx: number) => (
+              <div key={idx} className="p-2 border rounded bg-slate-50 space-y-2 mb-2 relative group">
+                <button onClick={() => removeDeep('prData.notice', idx)} className="absolute top-2 right-2 text-red-500 opacity-0 group-hover:opacity-100 text-xs">삭제</button>
+                <input type="text" value={item.title} onChange={(e) => {
+                  const next = [...((data as any).prData.notice)];
+                  next[idx].title = e.target.value;
+                  updateDeep('prData.notice', next);
+                }} className="w-full p-1 border rounded text-xs font-bold" />
+                <input type="text" value={item.date} onChange={(e) => {
+                  const next = [...((data as any).prData.notice)];
+                  next[idx].date = e.target.value;
+                  updateDeep('prData.notice', next);
+                }} className="w-full p-1 border rounded text-xs" />
+              </div>
+            ))}
+            <button onClick={() => {
+              const current = (data as any).prData?.notice || [];
+              const next = [...current, { title: '신규 공지', date: '2024-00-00', isImportant: false }];
+              updateDeep('prData.notice', next);
+            }} className="w-full py-2 text-xs bg-blue-50 text-blue-600 border border-blue-200 rounded-md font-bold">+ 공지 추가</button>
           </div>
         </div>
       )}
 
-      {/* 5. 인재 경영 */}
+      {/* 5. 인재 경영 (RecruitPage 매칭) */}
       {activeSection === 'recruit' && (
         <div className="space-y-4">
           <div className="p-3 bg-white border rounded-lg space-y-3">
-            <span className="text-xs font-bold block text-blue-600">기본 정보</span>
-            <input type="text" value={data.recruit.talentValue} onChange={(e) => updateDeep('recruit.talentValue', e.target.value)} className="w-full p-2 border rounded text-sm" placeholder="인재상" />
-            <textarea value={data.recruit.benefitInfo} onChange={(e) => updateDeep('recruit.benefitInfo', e.target.value)} className="w-full p-2 border rounded text-sm h-24" placeholder="복지 혜택" />
+            <span className="text-xs font-bold block text-blue-600">기본 정보 (recruitData 매칭)</span>
+            <input type="text" value={(data as any).recruitData?.talentValue || ''} onChange={(e) => updateDeep('recruitData.talentValue', e.target.value)} className="w-full p-2 border rounded text-sm" placeholder="인재상" />
+            <textarea value={(data as any).recruitData?.benefitInfo || ''} onChange={(e) => updateDeep('recruitData.benefitInfo', e.target.value)} className="w-full p-2 border rounded text-sm h-24" placeholder="복지 혜택" />
           </div>
           <div className="p-3 bg-white border rounded-lg space-y-3">
-            <span className="text-xs font-bold block text-blue-600">채용 중인 포지션 (연동 확인)</span>
-            {((data as any).recruit.positions || []).map((pos: any, idx: number) => (
+            <span className="text-xs font-bold block text-blue-600">채용 포지션 (recruitData.openPositions 매칭)</span>
+            {((data as any).recruitData?.openPositions || []).map((pos: any, idx: number) => (
               <div key={idx} className="p-2 border rounded bg-slate-50 space-y-2 mb-2 relative group">
-                <button onClick={() => removeDeep('recruit.positions', idx)} className="absolute top-2 right-2 text-red-500 opacity-0 group-hover:opacity-100 text-xs">삭제</button>
+                <button onClick={() => removeDeep('recruitData.openPositions', idx)} className="absolute top-2 right-2 text-red-500 opacity-0 group-hover:opacity-100 text-xs">삭제</button>
                 <input type="text" value={pos.title} onChange={(e) => {
-                  const next = [...((data as any).recruit.positions)];
+                  const next = [...((data as any).recruitData.openPositions)];
                   next[idx].title = e.target.value;
-                  updateDeep('recruit.positions', next);
+                  updateDeep('recruitData.openPositions', next);
                 }} className="w-full p-1 border rounded text-xs font-bold" />
-                <input type="text" value={pos.desc} onChange={(e) => {
-                  const next = [...((data as any).recruit.positions)];
-                  next[idx].desc = e.target.value;
-                  updateDeep('recruit.positions', next);
-                }} className="w-full p-1 border rounded text-xs" />
+                <input type="text" value={pos.department} onChange={(e) => {
+                  const next = [...((data as any).recruitData.openPositions)];
+                  next[idx].department = e.target.value;
+                  updateDeep('recruitData.openPositions', next);
+                }} className="w-full p-1 border rounded text-xs" placeholder="부서" />
+                <input type="text" value={pos.deadline} onChange={(e) => {
+                  const next = [...((data as any).recruitData.openPositions)];
+                  next[idx].deadline = e.target.value;
+                  updateDeep('recruitData.openPositions', next);
+                }} className="w-full p-1 border rounded text-xs" placeholder="마감일" />
               </div>
             ))}
             <button onClick={() => {
-              const next = [...((data as any).recruit.positions || []), { title: '신규 포지션', desc: '', type: '경력' }];
-              updateDeep('recruit.positions', next);
+              const current = (data as any).recruitData?.openPositions || [];
+              const next = [...current, { title: '신규 포지션', department: '부서', deadline: '2024-00-00', link: '' }];
+              updateDeep('recruitData.openPositions', next);
             }} className="w-full py-2 text-xs bg-blue-50 text-blue-600 border border-blue-200 rounded-md font-bold">+ 포지션 추가</button>
           </div>
         </div>
       )}
 
-      {/* 6. 고객 센터 */}
+      {/* 6. 고객 센터 (CustomerPage 매칭) */}
       {activeSection === 'cs' && (
         <div className="space-y-4">
           <div className="p-3 bg-white border rounded-lg space-y-3">
-            <span className="text-xs font-bold block text-blue-600">문의처 정보 (연동 확인)</span>
+            <span className="text-xs font-bold block text-blue-600">문의처 정보</span>
             <textarea value={data.csGuide} onChange={(e) => updateDeep('csGuide', e.target.value)} className="w-full p-2 border rounded text-sm h-20" placeholder="가이드 문구" />
             <input type="text" value={data.csCenter.contactInfo.email} onChange={(e) => updateDeep('csCenter.contactInfo.email', e.target.value)} className="w-full p-2 border rounded text-sm" placeholder="이메일" />
             <input type="text" value={data.csCenter.contactInfo.phone} onChange={(e) => updateDeep('csCenter.contactInfo.phone', e.target.value)} className="w-full p-2 border rounded text-sm" placeholder="전화번호" />
