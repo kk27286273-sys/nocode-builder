@@ -20,11 +20,12 @@ interface CorporateViewerProps {
 export const CorporateViewer = ({ data, activeSection: propSection, setActiveSection: propSetSection }: CorporateViewerProps) => {
   if (!data) return <div className="p-10 text-center">데이터를 불러오는 중입니다...</div>;
 
+  // [에디터 구조와 1:1 매칭]
   const { 
     company = {}, 
     navigation = {}, 
-    solutions = [], 
-    hero = {}, 
+    solutions = {}, // 이제 배열이 아니라 { sectionTitle, sectionDesc, list: [] } 구조
+    solutionMain = {}, // 메인 히어로 데이터
     themeColor = '#003366', 
     footer = {},
     corporateInfo = {} 
@@ -49,7 +50,10 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
     }
   };
 
-  const currentSolution = selectedSolutionId !== null ? solutions[selectedSolutionId] : null;
+  // solutions.list 배열에서 선택된 항목 추출
+  const currentSolution = selectedSolutionId !== null && solutions.list 
+    ? solutions.list[selectedSolutionId] 
+    : null;
 
   return (
     <div 
@@ -68,9 +72,14 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
 
       <main className="w-full flex-1 shrink-0">
         <AnimatePresence mode="wait">
-          {/* 1. 메인 페이지 */}
+          {/* 1. 메인 페이지: hero 대신 solutionMain 전달, solutions 배열 대신 solutions.list 전달 */}
           {activePage === 'main' && (
-            <MainPage key="main" hero={hero} solutions={solutions} navigateTo={navigateTo} />
+            <MainPage 
+              key="main" 
+              hero={solutionMain} 
+              solutions={solutions.list || []} 
+              navigateTo={navigateTo} 
+            />
           )}
           
           {/* 2. 회사소개 페이지 */}
@@ -86,36 +95,36 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
             />
           )}
 
-          {/* 4. 지속가능경영(ESG) 페이지 - 초기값 문자열''로 통일 */}
+          {/* 4. 지속가능경영(ESG) 페이지: data.esg 구조로 매칭 */}
           {activePage === 'esg' && (
             <ESGPage 
               key="esg" 
-              esgData={data.esgData || { mainTitle: '', mainDesc: '', environmental: '', social: '', governance: '' }} 
+              esgData={data.esg || { message: '', goal: '' }} 
             />
           )}
 
-          {/* 5. 홍보센터 페이지 */}
+          {/* 5. 홍보센터 페이지: data.pr 구조로 매칭 */}
           {activePage === 'pr' && (
             <PRPage 
               key="pr" 
-              prData={data.prData || { news: [], notice: [] }} 
+              prData={data.pr || { content: '', imageUrl: '' }} 
             />
           )}
 
-          {/* 6. 인재경영 페이지 */}
+          {/* 6. 인재경영 페이지: data.hr 구조로 매칭 */}
           {activePage === 'recruit' && (
             <RecruitPage 
               key="recruit" 
-              recruitData={data.recruitData || { talentValue: '', benefitInfo: '', openPositions: [] }} 
+              recruitData={data.hr || { talent: '', process: '' }} 
             />
           )}
 
-          {/* 7. 고객센터 페이지 */}
+          {/* 7. 고객센터 페이지: data.cs 및 data.public 구조로 매칭 */}
           {activePage === 'cs' && (
             <CSPage 
               key="cs" 
-              guide={data.csGuide} 
-              contactInfo={data.csCenter?.contactInfo} 
+              guide={data.public?.notice} 
+              contactInfo={data.cs || { phone: '', email: '' }} 
             />
           )}
         </AnimatePresence>
@@ -127,7 +136,7 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
             <div className="text-2xl font-bold text-white mb-8">{company?.name || 'COMPANY'}</div>
             <p className="text-sm opacity-70 leading-relaxed">
               {footer?.address || '주소 정보가 등록되지 않았습니다.'}<br/>
-              TEL: {data.supportPhone || data.csCenter?.contactInfo?.phone || '연락처 미등록'}
+              TEL: {data.cs?.phone || '연락처 미등록'}
             </p>
           </div>
           <div className="space-y-4">
@@ -140,8 +149,8 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
           </div>
           <div className="space-y-4">
             <h4 className="text-white font-bold mb-8 uppercase text-sm tracking-wider">Customer Support</h4>
-            <p className="text-3xl font-bold text-white mb-4">{data.supportPhone || data.csCenter?.contactInfo?.phone || '000-0000-0000'}</p>
-            <p className="text-sm opacity-70">{footer?.contactEmail || data.csCenter?.contactInfo?.email || ''}</p>
+            <p className="text-3xl font-bold text-white mb-4">{data.cs?.phone || '000-0000-0000'}</p>
+            <p className="text-sm opacity-70">{data.cs?.email || ''}</p>
           </div>
         </div>
       </footer>
