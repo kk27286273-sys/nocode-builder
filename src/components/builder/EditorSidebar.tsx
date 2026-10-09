@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useSearchParams } from "next/navigation";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createClient } from "@supabase/supabase-js";
 
 interface SolutionItem {
   title: string;
@@ -31,9 +31,13 @@ export default function EditorSidebar({
   setData: React.Dispatch<React.SetStateAction<TemplateData>>; 
 }) {
   const searchParams = useSearchParams();
-  const supabase = createClientComponentClient();
+  
+  // [수정] 최신 표준 방식으로 Supabase 클라이언트 생성
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+  );
 
-  // 깊은 단계의 데이터 수정 함수
   const updateDeep = (path: string, value: any) => {
     setData((prev) => {
       const next = { ...prev };
@@ -49,7 +53,6 @@ export default function EditorSidebar({
     });
   };
 
-  // 리스트 항목 삭제 함수
   const removeDeep = (path: string, index: number) => {
     setData((prev) => {
       const next = { ...prev };
@@ -60,37 +63,32 @@ export default function EditorSidebar({
     });
   };
 
-  // [핵심 수정] 발행 및 저장 함수
   const handlePublish = async () => {
     try {
-      // 1. 현재 상태의 데이터 강제 로깅 (디버깅용)
       console.log("🚀 [저장 시도] 현재 전송할 데이터:", data);
 
-      // 2. 빈 데이터 전송 방지
       if (!data || Object.keys(data).length === 0) {
         alert("저장할 내용이 없습니다. 내용을 입력해주세요.");
         return;
       }
 
-      // 3. 사이트 ID 확인
       const siteId = searchParams.get('id');
       if (!siteId) {
-        alert("사이트 ID가 주소창에 없습니다. (id=... 확인 필요)");
+        alert("사이트 ID가 주소창에 없습니다.");
         return;
       }
 
-      // 4. Supabase 업데이트 실행
       const { error } = await supabase
         .from('sites')
         .update({ 
-          data: data, // 객체 그대로 전달 (SDK가 JSON 변환)
+          data: data,
           updated_at: new Date().toISOString() 
         })
         .eq('id', siteId);
 
       if (error) throw error;
 
-      alert("✅ 성공적으로 발행되었습니다! 뷰어에서 확인하세요.");
+      alert("✅ 성공적으로 발행되었습니다!");
       console.log("✅ DB 저장 완료");
 
     } catch (error) {
@@ -111,7 +109,6 @@ export default function EditorSidebar({
         </button>
       </div>
 
-      {/* 회사 기본 정보 */}
       <div className="p-3 bg-white border rounded-lg space-y-3 shadow-sm">
         <div className="text-[10px] font-bold text-blue-600 uppercase">Company Info</div>
         <div className="space-y-2">
@@ -132,7 +129,6 @@ export default function EditorSidebar({
         </div>
       </div>
 
-      {/* 상단 대표 정보 (Solution Main) */}
       <div className="p-3 bg-white border rounded-lg space-y-3 shadow-sm">
         <div className="text-[10px] font-bold text-blue-600 uppercase">Page Hero Section</div>
         <div className="space-y-2">
@@ -164,7 +160,6 @@ export default function EditorSidebar({
         </div>
       </div>
 
-      {/* 하단 솔루션 리스트 (Solution Cards) */}
       <div className="p-3 bg-white border rounded-lg space-y-4 shadow-sm">
         <div className="flex justify-between items-center border-b pb-2">
           <div className="text-[10px] font-bold text-blue-600 uppercase">Solution Cards</div>
