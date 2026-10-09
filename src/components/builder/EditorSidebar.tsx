@@ -23,14 +23,12 @@ interface TemplateData {
   solutions: SolutionItem[];
 }
 
-export default function EditorSidebar({ 
-  data, 
-  setData 
-}: { 
-  data: TemplateData; 
-  setData: React.Dispatch<React.SetStateAction<TemplateData>>; 
-}) {
+export default function EditorSidebar({ data, setData }: { data: TemplateData; setData: React.Dispatch<React.SetStateAction<TemplateData>>; }) {
+  console.log("🔥 에디터 사이드바 컴포넌트 로드됨!"); // <-- 이 줄을 추가하십시오.
+  alert("최신 코드가 적용되었습니다!"); // <-- 이 줄을 추가하십시오.
+  
   const searchParams = useSearchParams();
+  // ... 이하 기존 코드
   
   // [수정] 최신 표준 방식으로 Supabase 클라이언트 생성
   const supabase = createClient(
