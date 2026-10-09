@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { supabase } from "@/lib/supabase/client";
 
-// [포커스 유지] 컴포넌트를 외부로 분리하여 리렌더링 시 입력창 포커스 유실 방지
 const InputField = ({ label, value, onChange, type = "text", placeholder = "" }: any) => (
   <div className="space-y-1">
     <label className="text-[11px] text-slate-500 font-medium">{label}</label>
@@ -38,17 +37,14 @@ interface EditorSidebarProps {
 export default function EditorSidebar({ data, setData, siteId }: EditorSidebarProps) {
   const [activeSection, setActiveSection] = useState("main");
 
-  // 깊은 경로 업데이트 함수
   const updateDeep = (path: string, value: any) => {
     setData((prev: any) => {
-      const next = { ...prev };
+      const next = JSON.parse(JSON.stringify(prev)); // 완전한 불변성 유지로 리렌더링 보장
       const keys = path.split('.');
       let current: any = next;
       for (let i = 0; i < keys.length - 1; i++) {
         const key = keys[i];
-        current[key] = Array.isArray(current[key]) 
-          ? [...current[key]] 
-          : { ...(current[key] || {}) };
+        if (!current[key]) current[key] = {};
         current = current[key];
       }
       current[keys[keys.length - 1]] = value;
@@ -56,21 +52,17 @@ export default function EditorSidebar({ data, setData, siteId }: EditorSidebarPr
     });
   };
 
-  // 배열 요소 삭제 함수
   const removeDeep = (path: string, index: number) => {
     setData((prev: any) => {
-      const next = { ...prev };
+      const next = JSON.parse(JSON.stringify(prev));
       const keys = path.split('.');
       let current: any = next;
       for (let i = 0; i < keys.length - 1; i++) {
-        current[keys[i]] = { ...current[keys[i]] };
         current = current[keys[i]];
       }
       const array = current[keys[keys.length - 1]];
       if (Array.isArray(array)) {
-        const newArray = [...array];
-        newArray.splice(index, 1);
-        current[keys[keys.length - 1]] = newArray;
+        array.splice(index, 1);
       }
       return next;
     });
@@ -108,7 +100,6 @@ export default function EditorSidebar({ data, setData, siteId }: EditorSidebarPr
 
   return (
     <div className="flex w-full h-full bg-white overflow-hidden">
-      {/* 좌측 탭 네비게이션 */}
       <div className="w-48 bg-slate-100 border-r border-slate-200 flex flex-col">
         <div className="p-4 border-b border-slate-200">
           <h2 className="font-black text-slate-800 text-sm italic">NEXIA Builder</h2>
@@ -133,7 +124,6 @@ export default function EditorSidebar({ data, setData, siteId }: EditorSidebarPr
         </div>
       </div>
 
-      {/* 우측 편집 영역 */}
       <div className="flex-1 overflow-y-auto p-6 bg-slate-50">
         <div className="max-w-xl mx-auto space-y-6">
           <div className="flex items-center justify-between mb-4">
@@ -143,32 +133,33 @@ export default function EditorSidebar({ data, setData, siteId }: EditorSidebarPr
             <span className="text-[10px] text-slate-400 font-mono">ID: {siteId}</span>
           </div>
 
-          {/* 1. 메인 화면 (복구) */}
+          {/* 1. 메인 화면: solutionMain으로 경로 완전 고정 */}
           {activeSection === "main" && (
             <div className="space-y-4 bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
               <div className="font-bold text-xs text-blue-600 mb-2">메인 히어로 설정</div>
+              <InputField label="메인 배지 (예: BRAND NEW)" value={getValue('solutionMain.badge')} onChange={(v: any) => updateDeep('solutionMain.badge', v)} />
               <InputField label="메인 타이틀" value={getValue('solutionMain.title')} onChange={(v: any) => updateDeep('solutionMain.title', v)} />
               <TextAreaField label="메인 서브 타이틀" value={getValue('solutionMain.description')} onChange={(v: any) => updateDeep('solutionMain.description', v)} h="h-24" />
               <InputField label="CTA 버튼 문구" value={getValue('solutionMain.ctaText')} onChange={(v: any) => updateDeep('solutionMain.ctaText', v)} />
             </div>
           )}
 
-          {/* 2. 회사 소개 */}
+          {/* 2. 회사 소개: corporateInfo로 경로 고정 */}
           {activeSection === "corporateInfo" && (
             <div className="space-y-4 bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
               <InputField label="회사명" value={getValue('company.name')} onChange={(v: any) => updateDeep('company.name', v)} />
               <InputField label="로고 URL" value={getValue('company.logoUrl')} onChange={(v: any) => updateDeep('company.logoUrl', v)} />
-              <TextAreaField label="회사 소개글" value={getValue('corporateInfo.about')} onChange={(v: any) => updateDeep('corporateInfo.about', v)} h="h-32" />
+              <TextAreaField label="회사 소개글 (CEO 인사말)" value={getValue('corporateInfo.about')} onChange={(v: any) => updateDeep('corporateInfo.about', v)} h="h-32" />
               <InputField label="핵심 비전" value={getValue('corporateInfo.vision')} onChange={(v: any) => updateDeep('corporateInfo.vision', v)} />
               <InputField label="설립 연도" value={getValue('corporateInfo.since')} onChange={(v: any) => updateDeep('corporateInfo.since', v)} />
             </div>
           )}
 
-          {/* 3. 사업 소개 (복구: solutions.list 경로 사용) */}
+          {/* 3. 사업 소개: solutions.list 경로 및 중복 제거 */}
           {activeSection === "solutions" && (
             <div className="space-y-6">
               <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
-                <div className="font-bold text-xs text-blue-600 mb-2">솔루션 섹션 헤더</div>
+                <div className="font-bold text-xs text-blue-600 mb-2">솔루션 섹션 헤더 (메인 하단)</div>
                 <InputField label="섹션 제목" value={getValue('solutions.sectionTitle')} onChange={(v: any) => updateDeep('solutions.sectionTitle', v)} />
                 <TextAreaField label="섹션 설명" value={getValue('solutions.sectionDesc')} onChange={(v: any) => updateDeep('solutions.sectionDesc', v)} />
               </div>
@@ -187,15 +178,15 @@ export default function EditorSidebar({ data, setData, siteId }: EditorSidebarPr
                       className="absolute top-2 right-2 text-slate-300 hover:text-rose-500 text-xs"
                     >✕</button>
                     <InputField label={`솔루션 ${idx+1} 제목`} value={getValue(`solutions.list.${idx}.title`)} onChange={(v: any) => updateDeep(`solutions.list.${idx}.title`, v)} />
-                    <InputField label="요약 설명" value={getValue(`solutions.list.${idx}.description`)} onChange={(v: any) => updateDeep(`solutions.list.${idx}.description`, v)} />
-                    <TextAreaField label="상세 내용" value={getValue(`solutions.list.${idx}.detailContent`)} onChange={(v: any) => updateDeep(`solutions.list.${idx}.detailContent`, v)} />
+                    <InputField label="요약 설명 (메인카드 노출)" value={getValue(`solutions.list.${idx}.description`)} onChange={(v: any) => updateDeep(`solutions.list.${idx}.description`, v)} />
+                    <TextAreaField label="상세 내용 (상세페이지 노출)" value={getValue(`solutions.list.${idx}.detailContent`)} onChange={(v: any) => updateDeep(`solutions.list.${idx}.detailContent`, v)} h="h-32" />
                   </div>
                 ))}
               </div>
             </div>
           )}
 
-          {/* 4. 지속가능경영 */}
+          {/* 4. 지속가능경영: esg 경로 고정 */}
           {activeSection === "sustainability" && (
             <div className="space-y-4 bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
               <TextAreaField label="ESG 경영 메시지" value={getValue('esg.message')} onChange={(v: any) => updateDeep('esg.message', v)} h="h-32" />
@@ -203,7 +194,7 @@ export default function EditorSidebar({ data, setData, siteId }: EditorSidebarPr
             </div>
           )}
 
-          {/* 5. 홍보 센터 */}
+          {/* 5. 홍보 센터: pr 경로 고정 */}
           {activeSection === "pr" && (
             <div className="space-y-4 bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
               <TextAreaField label="홍보 문구 / 보도자료" value={getValue('pr.content')} onChange={(v: any) => updateDeep('pr.content', v)} h="h-40" />
@@ -211,7 +202,7 @@ export default function EditorSidebar({ data, setData, siteId }: EditorSidebarPr
             </div>
           )}
 
-          {/* 6. 인재 경영 */}
+          {/* 6. 인재 경영: hr 경로 고정 */}
           {activeSection === "recruit" && (
             <div className="space-y-4 bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
               <TextAreaField label="인재상" value={getValue('hr.talent')} onChange={(v: any) => updateDeep('hr.talent', v)} h="h-32" />
@@ -219,7 +210,7 @@ export default function EditorSidebar({ data, setData, siteId }: EditorSidebarPr
             </div>
           )}
 
-          {/* 7. 고객 센터 */}
+          {/* 7. 고객 센터: cs 및 public 경로 고정 */}
           {activeSection === "cs" && (
             <div className="space-y-4 bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
               <InputField label="고객센터 전화번호" value={getValue('cs.phone')} onChange={(v: any) => updateDeep('cs.phone', v)} />
@@ -228,7 +219,7 @@ export default function EditorSidebar({ data, setData, siteId }: EditorSidebarPr
             </div>
           )}
 
-          {/* 8. 하단 정보 */}
+          {/* 8. 하단 정보: footer 경로 고정 */}
           {activeSection === "footer" && (
             <div className="space-y-4 bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
               <InputField label="사업자 등록번호" value={getValue('footer.bizNumber')} onChange={(v: any) => updateDeep('footer.bizNumber', v)} />
