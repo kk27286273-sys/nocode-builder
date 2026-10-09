@@ -1,4 +1,5 @@
 'use client';
+
 import React from 'react';
 import { motion } from 'framer-motion';
 
@@ -11,7 +12,6 @@ interface GNBProps {
 }
 
 export default function GNB({ company, navigation, themeColor, activePage, navigateTo }: GNBProps) {
-  // '공시정보' 항목을 제거한 6대 카테고리로 수정
   const mainMenus = [
     { label: '회사소개', id: 'about' },
     { label: '사업소개', id: 'sol_detail' },
@@ -40,7 +40,11 @@ export default function GNB({ company, navigation, themeColor, activePage, navig
         {mainMenus.map((menu) => (
           <button
             key={menu.id}
-            onClick={() => navigateTo(menu.id, 0)} // 기본적으로 첫 번째 항목으로 이동
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              navigateTo(menu.id, 0);
+            }}
             className={`text-sm font-bold transition-all relative py-2 ${
               activePage === menu.id ? 'text-blue-600' : 'text-slate-600 hover:text-slate-900'
             }`}
@@ -58,7 +62,11 @@ export default function GNB({ company, navigation, themeColor, activePage, navig
 
       <div className="flex items-center gap-4">
         <button 
-          onClick={() => navigateTo('cs')}
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            navigateTo('cs');
+          }}
           style={{ backgroundColor: themeColor }} 
           className="text-white text-xs font-bold px-4 py-2 rounded-full shadow-sm hover:opacity-90 transition"
         >
