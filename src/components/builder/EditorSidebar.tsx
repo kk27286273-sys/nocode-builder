@@ -63,7 +63,7 @@ export default function EditorSidebar({
   };
 
   const handlePublish = async (e: React.MouseEvent) => {
-    e.preventDefault(); // 새로고침 완전 차단
+    e.preventDefault();
     
     try {
       console.log("🚀 [저장 시도] 현재 전송할 데이터:", data);
@@ -128,7 +128,7 @@ export default function EditorSidebar({
             onChange={(e) => updateDeep('company.logoUrl', e.target.value)}
             className="w-full p-2 border rounded text-xs outline-none focus:ring-1 focus:ring-blue-500"
           />
-        </div}
+        </div>
       </div>
 
       <div className="p-3 bg-white border rounded-lg space-y-3 shadow-sm">
