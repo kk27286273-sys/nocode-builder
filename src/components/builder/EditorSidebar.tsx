@@ -99,12 +99,16 @@ export default function EditorSidebar({ data, setData }: { data: TemplateData; s
     <div className="w-80 h-screen bg-slate-100 border-l overflow-y-auto p-4 space-y-6">
       <div className="flex justify-between items-center pb-4 border-b">
         <h2 className="font-black text-slate-800">Nexia Builder</h2>
-        <button 
-          onClick={handlePublish} 
-          className="px-4 py-2 bg-blue-600 text-white text-xs font-bold rounded-lg hover:bg-blue-700 transition-colors shadow-sm"
-        >
-          발행하기
-        </button>
+<button 
+  type="button"  // <-- 이 부분을 반드시 추가하십시오.
+  onClick={(e) => {
+    e.preventDefault(); // <-- 기본 동작(새로고침) 강제 차단
+    handlePublish();
+  }} 
+  className="..."
+>
+  발행하기
+</button>
       </div>
 
       <div className="p-3 bg-white border rounded-lg space-y-3 shadow-sm">
