@@ -16,10 +16,16 @@ export default function EditorSidebar({ data, setData, activeSection, setActiveS
       const next = { ...prev };
       const keys = path.split('.');
       let current: any = next;
+
       for (let i = 0; i < keys.length - 1; i++) {
-        current[keys[i]] = { ...current[keys[i]] };
-        current = current[keys[i]];
+        const key = keys[i];
+        // 대상이 배열이면 배열로 복제, 객체면 객체로 복제
+        current[key] = Array.isArray(current[key]) 
+          ? [...current[key]] 
+          : { ...current[key] };
+        current = current[key];
       }
+
       current[keys[keys.length - 1]] = value;
       return next;
     });
