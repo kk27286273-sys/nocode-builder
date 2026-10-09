@@ -18,14 +18,24 @@ export interface B2BTemplateData {
     mediaUrl: string;
   };
 
-  // [사업소개] - 기존 구조 유지 및 확장
+// [사업소개] - 구조 분리 및 최적화
+export interface TemplateData {
+  // ... 다른 타입들
+
+  // 1. 페이지 최상단에 고정될 대표 정보 (단일 객체)
+  solutionMain: {
+    title: string;          // 상단 제목
+    description: string;    // 메인화면 요약
+    detailContent: string;  // 상세페이지 내용
+  };
+
+  // 2. 하단 '상세 소개' 섹션에 나열될 카드 리스트 (배열)
   solutions: {
-    title: string;
-    category: string;
-    description: string;
-    image: string;
-    detailedFeatures: { featureTitle: string; featureContent: string }[];
+    title: string;          // 솔루션 제목
+    description: string;    // 솔루션 요약
+    detailContent: string;  // 솔루션 상세 내용
   }[];
+}
 
   // [회사소개 & 지속가능경영 & 공시정보]를 포함한 기업 정보 확장
   corporateInfo: {

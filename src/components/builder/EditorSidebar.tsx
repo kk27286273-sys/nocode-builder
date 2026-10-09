@@ -168,85 +168,110 @@ export default function EditorSidebar({ data, setData, activeSection, setActiveS
       )}
 
       {/* 2. 사업 소개 (SolutionPage 매칭) */}
-      {activeSection === 'solutions' && (
-        <div className="space-y-4">
-          <div className="p-3 bg-white border rounded-lg space-y-4">
-            <div className="flex justify-between items-center">
-              <span className="text-xs font-bold block text-blue-600">상세소개 관리</span>
-              <button 
-                onClick={() => {
-                  const current = data.solutions || [];
-                  const next = [...current, { title: '', description: '', detailContent: '' }];
+{activeSection === 'solutions' && (
+  <div className="space-y-6">
+    {/* [PART 1] 상단 대표 정보 (단일) */}
+    <div className="p-3 bg-white border rounded-lg space-y-4 shadow-sm">
+      <div className="flex items-center gap-2 border-b pb-2">
+        <span className="text-xs font-bold text-blue-600">📌 페이지 대표 정보</span>
+      </div>
+      <div className="space-y-3">
+        <div className="space-y-1">
+          <label className="text-[10px] font-black text-slate-500 uppercase">상단 제목</label>
+          <input 
+            type="text" 
+            value={data.solutionMain?.title || ''} 
+            onChange={(e) => updateDeep('solutionMain.title', e.target.value)} 
+            className="w-full p-2 border rounded bg-white text-xs font-bold outline-none focus:ring-1 focus:ring-blue-500" 
+            placeholder="예: B2B 기업·제조업 전용 웹" 
+          />
+        </div>
+        <div className="space-y-1">
+          <label className="text-[10px] font-black text-slate-500 uppercase">메인화면 요약</label>
+          <textarea 
+            value={data.solutionMain?.description || ''} 
+            onChange={(e) => updateDeep('solutionMain.description', e.target.value)} 
+            className="w-full p-2 border rounded bg-white text-xs h-12 resize-none outline-none focus:ring-1 focus:ring-blue-500" 
+            placeholder="예: Solution Detail" 
+          />
+        </div>
+        <div className="space-y-1">
+          <label className="text-[10px] font-black text-slate-500 uppercase">상세페이지 내용</label>
+          <textarea 
+            value={data.solutionMain?.detailContent || ''} 
+            onChange={(e) => updateDeep('solutionMain.detailContent', e.target.value)} 
+            className="w-full p-2 border rounded bg-white text-xs h-20 resize-none outline-none focus:ring-1 focus:ring-blue-500" 
+            placeholder="예: 거래처 미팅 전 회사소개서 대신 전달하는..." 
+          />
+        </div>
+      </div>
+    </div>
+
+    {/* [PART 2] 하단 상세 소개 (리스트) */}
+    <div className="p-3 bg-white border rounded-lg space-y-4 shadow-sm">
+      <div className="flex justify-between items-center border-b pb-2">
+        <span className="text-xs font-bold text-blue-600">📦 상세 소개 (카드 리스트)</span>
+        <button 
+          onClick={() => {
+            const current = data.solutions || [];
+            updateDeep('solutions', [...current, { title: '', description: '', detailContent: '' }]);
+          }} 
+          className="px-2 py-1 text-[10px] bg-blue-600 text-white rounded font-bold hover:bg-blue-700"
+        >
+          + 항목 추가
+        </button>
+      </div>
+      
+      <div className="space-y-4">
+        {(data.solutions || []).map((sol: any, idx: number) => (
+          <div key={idx} className="p-3 border rounded-lg bg-slate-50 relative group space-y-3">
+            <button 
+              onClick={() => removeDeep('solutions', idx)} 
+              className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white rounded-full text-[10px] opacity-0 group-hover:opacity-100 transition-opacity"
+            >
+              ✕
+            </button>
+            <div className="text-[10px] font-bold text-slate-400 mb-1">솔루션 {idx + 1}</div>
+            <div className="space-y-2">
+              <input 
+                type="text" 
+                value={sol.title || ''} 
+                onChange={(e) => {
+                  const next = [...(data.solutions || [])];
+                  next[idx].title = e.target.value;
                   updateDeep('solutions', next);
                 }} 
-                className="px-2 py-1 text-[10px] bg-blue-600 text-white rounded hover:bg-blue-700 transition font-bold"
-              >
-                + 항목 추가
-              </button>
-            </div>
-            <p className="text-[10px] text-slate-400 mb-2">각 솔루션의 상단 제목, 요약, 상세 내용을 입력하세요.</p>
-            
-            <div className="grid grid-cols-1 gap-4">
-              {(data.solutions || []).map((sol: any, idx: number) => (
-                <div key={idx} className="p-4 border rounded-xl bg-slate-50 relative group flex flex-col gap-4 shadow-sm">
-                  <button 
-                    onClick={() => removeDeep('solutions', idx)} 
-                    className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full text-[10px] font-bold opacity-0 group-hover:opacity-100 transition-opacity"
-                  >
-                    ✕
-                  </button>
-                  
-                  {/* 세로형 3등분 입력 구조 */}
-                  <div className="space-y-3">
-                    <div className="space-y-1">
-                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-tight">상단 제목</label>
-                      <input 
-                        type="text" 
-                        value={sol.title || ''} 
-                        onChange={(e) => {
-                          const next = [...(data.solutions || [])];
-                          next[idx].title = e.target.value;
-                          updateDeep('solutions', next);
-                        }} 
-                        className="w-full p-2 border rounded bg-white text-xs font-bold focus:ring-1 focus:ring-blue-500 outline-none" 
-                        placeholder="예: Nexia 노코드 빌더" 
-                      />
-                    </div>
-
-                    <div className="space-y-1">
-                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-tight">메인화면 요약</label>
-                      <textarea 
-                        value={sol.description || ''} 
-                        onChange={(e) => {
-                          const next = [...(data.solutions || [])];
-                          next[idx].description = e.target.value;
-                          updateDeep('solutions', next);
-                        }} 
-                        className="w-full p-2 border rounded bg-white text-xs h-16 resize-none focus:ring-1 focus:ring-blue-500 outline-none" 
-                        placeholder="메인 페이지 카드에 노출될 요약" 
-                      />
-                    </div>
-
-                    <div className="space-y-1">
-                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-tight">상세페이지 내용</label>
-                      <textarea 
-                        value={sol.detailContent || ''} 
-                        onChange={(e) => {
-                          const next = [...(data.solutions || [])];
-                          next[idx].detailContent = e.target.value;
-                          updateDeep('solutions', next);
-                        }} 
-                        className="w-full p-2 border rounded bg-white text-xs h-24 resize-none focus:ring-1 focus:ring-blue-500 outline-none" 
-                        placeholder="상세 페이지에서 보여줄 구체적인 내용" 
-                      />
-                    </div>
-                  </div>
-                </div>
-              ))}
+                className="w-full p-2 border rounded bg-white text-xs outline-none" 
+                placeholder="제목" 
+              />
+              <input 
+                type="text" 
+                value={sol.description || ''} 
+                onChange={(e) => {
+                  const next = [...(data.solutions || [])];
+                  next[idx].description = e.target.value;
+                  updateDeep('solutions', next);
+                }} 
+                className="w-full p-2 border rounded bg-white text-xs outline-none" 
+                placeholder="요약" 
+              />
+              <textarea 
+                value={sol.detailContent || ''} 
+                onChange={(e) => {
+                  const next = [...(data.solutions || [])];
+                  next[idx].detailContent = e.target.value;
+                  updateDeep('solutions', next);
+                }} 
+                className="w-full p-2 border rounded bg-white text-xs h-16 resize-none outline-none" 
+                placeholder="내용" 
+              />
             </div>
           </div>
-        </div>
-      )}
+        ))}
+      </div>
+    </div>
+  </div>
+)}
 
       {/* 3. 지속가능경영 (ESG) */}
       {/* 3. 지속가능경영 (ESGPage 매칭) */}
