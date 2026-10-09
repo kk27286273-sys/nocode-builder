@@ -78,24 +78,36 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
             <AboutPage key="about" corporateInfo={corporateInfo} />
           )}
 
-          {/* 3. 사업소개(솔루션) 상세 페이지 */}
-          {activePage === 'sol_detail' && (
-            <SolutionPage key={`sol-${selectedSolutionId}`} solutionData={currentSolution} />
-          )}
+{/* 3. 사업소개(솔루션) 상세 페이지 */}
+{activePage === 'sol_detail' && (
+  <SolutionPage 
+    key={`sol-${selectedSolutionId}`} 
+    solutionData={currentSolution || { title: '', description: '', detailContent: '' }} 
+  />
+)}
 
           {/* 4. 지속가능경영(ESG) 페이지 */}
           {activePage === 'esg' && (
-            <ESGPage key="esg" esgData={data.esgData || corporateInfo.esg} />
+            <ESGPage 
+              key="esg" 
+              esgData={data.esgData || { mainTitle: '', mainDesc: '', environmental: {}, social: {}, governance: {} }} 
+            />
           )}
 
           {/* 5. 홍보센터 페이지 */}
           {activePage === 'pr' && (
-            <PRPage key="pr" prData={data.prData || data.prCenter} />
+            <PRPage 
+              key="pr" 
+              prData={data.prData || { news: [], notice: [] }} 
+            />
           )}
 
           {/* 6. 인재경영 페이지 */}
           {activePage === 'recruit' && (
-            <RecruitPage key="recruit" recruitData={data.recruitData || data.recruit} />
+            <RecruitPage 
+              key="recruit" 
+              recruitData={data.recruitData || { talentValue: '', benefitInfo: '', openPositions: [] }} 
+            />
           )}
 
           {/* 7. 고객센터 페이지 */}
