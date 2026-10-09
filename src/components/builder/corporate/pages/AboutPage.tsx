@@ -4,12 +4,15 @@ import { motion } from 'framer-motion';
 
 interface AboutPageProps {
   corporateInfo: any;
+  company: any; // 회사명 연결을 위해 추가
 }
 
-export default function AboutPage({ corporateInfo }: AboutPageProps) {
+export default function AboutPage({ corporateInfo, company }: AboutPageProps) {
   if (!corporateInfo) return <div className="py-32 text-center text-slate-500">회사 정보를 불러오는 중입니다...</div>;
 
   const { ceoGreeting, missionVision, aboutUs } = corporateInfo;
+  const intro = corporateInfo.intro || {}; // 메인 헤드라인/서브타이틀 추출
+
   // Template.ts 확장안에 따른 history 데이터 사용 (없을 시 기본값)
   const history = aboutUs?.history || [
     { year: '2024', event: '글로벌 시장 진출 및 사업 영역 확장' },
@@ -26,13 +29,13 @@ export default function AboutPage({ corporateInfo }: AboutPageProps) {
             initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
             className="text-blue-600 font-bold tracking-widest uppercase text-xs mb-4 block"
           >
-            Company Introduction
+            {intro.subTitle || 'Company Introduction'}
           </motion.span>
           <motion.h1 
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
             className="text-4xl md:text-6xl font-bold text-slate-900 mb-6 tracking-tighter"
           >
-            신뢰를 바탕으로 <br className="hidden md:block" /> 미래를 설계하는 기업
+            {intro.mainTitle || '신뢰를 바탕으로 미래를 설계하는 기업'}
           </motion.h1>
         </div>
       </section>
@@ -49,7 +52,7 @@ export default function AboutPage({ corporateInfo }: AboutPageProps) {
             </div>
             <div className="absolute -bottom-6 -right-6 bg-blue-600 text-white p-6 rounded-xl shadow-xl hidden md:block">
               <p className="text-sm font-medium opacity-80">Representative</p>
-              <p className="text-xl font-bold">대표이사 OOO</p>
+              <p className="text-xl font-bold">{corporateInfo.ceo?.title || '대표이사 OOO'}</p>
             </div>
           </motion.div>
           <motion.div 
@@ -60,11 +63,11 @@ export default function AboutPage({ corporateInfo }: AboutPageProps) {
               {ceoGreeting?.title || '최고의 기술력으로 고객의 가치를 실현하겠습니다.'}
             </h2>
             <p className="text-lg text-slate-600 leading-relaxed font-light break-keep">
-              {ceoGreeting?.content || '회사의 철학과 비전을 담은 인사말이 들어가는 자리입니다. 고객에게 주는 신뢰와 앞으로의 방향성을 상세히 기술하십시오.'}
+              {ceoGreeting?.content || '회사의 철학과 비전을 담은 인사말이 들어가는 자리입니다.'}
             </p>
             <div className="pt-4">
               <div className="w-12 h-1 bg-blue-600 mb-4"></div>
-              <p className="text-xl font-bold text-slate-900">주식회사 {corporateInfo?.company?.name || '회사명'}</p>
+              <p className="text-xl font-bold text-slate-900">주식회사 {company?.name || corporateInfo?.company?.name || '회사명'}</p>
             </div>
           </motion.div>
         </div>
