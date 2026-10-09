@@ -11,14 +11,24 @@ interface CorporateViewerProps {
 }
 
 export const CorporateViewer = ({ data, activeSection: propSection, setActiveSection: propSetSection }: CorporateViewerProps) => {
-  const { company, navigation, corporateInfo, solutions, hero, themeColor, footer } = data;
+  const { company, corporateInfo, solutions, hero, themeColor, footer } = data;
   
-  // 빌더에서 제어하는 activeSection이 있으면 그것을 쓰고, 없으면 내부 상태 사용
   const [internalPage, setInternalPage] = useState('main');
   const activePage = propSection || internalPage;
   const setActivePage = propSetSection || setInternalPage;
 
   const [selectedSolution, setSelectedSolution] = useState<number | null>(null);
+
+  // 표준 7개 메뉴 정의 (에디터 섹션 ID와 일치시킴)
+  const STANDARD_MENUS = [
+    { id: 'main', label: '홈' },
+    { id: 'corporateInfo', label: '기업 소개' },
+    { id: 'solutions', label: '사업 소개' },
+    { id: 'disclosure', label: '공시 정보' },
+    { id: 'pr', label: '홍보 센터' },
+    { id: 'recruit', label: '인재 경영' },
+    { id: 'cs', label: '고객 센터' },
+  ];
 
   const navigateTo = (targetId: string) => {
     setActivePage(targetId);
@@ -36,24 +46,15 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
           )}
         </div>
         
-        <div className="hidden md:flex gap-8">
-          {navigation.menus.map((menu) => (
-            <div key={menu.label} className="group relative py-7">
-              <button className="font-medium text-slate-700 hover:text-blue-600 transition-colors">
-                {menu.label}
-              </button>
-              <div className="absolute top-20 left-0 w-48 bg-white border border-slate-100 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 p-4">
-                {menu.children.map((child) => (
-                  <button 
-                    key={child.label} 
-                    onClick={() => navigateTo(child.targetId)}
-                    className="block w-full text-left px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-blue-600 rounded"
-                  >
-                    {child.label}
-                  </button>
-                ))}
-              </div>
-            </div>
+        <div className="hidden md:flex gap-6">
+          {STANDARD_MENUS.map((menu) => (
+            <button 
+              key={menu.id} 
+              onClick={() => navigateTo(menu.id)}
+              className={`text-sm font-medium transition-colors ${activePage === menu.id ? 'text-blue-600 font-bold' : 'text-slate-700 hover:text-blue-600'}`}
+            >
+              {menu.label}
+            </button>
           ))}
         </div>
       </div>
@@ -157,56 +158,118 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
       <main>
         <AnimatePresence mode="wait">
           {activePage === 'main' && <MainHome key="main" />}
-          {activePage === 'ceo' && (
-            <PageLayout title="CEO 인사말" content={
-              <div className="flex flex-col md:flex-row gap-12 items-center">
-                <img src={corporateInfo.ceoGreeting.image} className="w-64 h-80 object-cover rounded-2xl shadow-lg" />
-                <div>
-                  <h3 className="text-2xl font-bold mb-6">{corporateInfo.ceoGreeting.title}</h3>
-                  <p className="text-slate-600 leading-relaxed whitespace-pre-line">{corporateInfo.ceoGreeting.content}</p>
+          
+          {activePage === 'corporateInfo' && (
+            <PageLayout title="기업 소개" content={
+              <div className="space-y-16">
+                <div className="flex flex-col md:flex-row gap-12 items-center">
+                  <img src={corporateInfo.ceoGreeting.image} className="w-64 h-80 object-cover rounded-2xl shadow-lg" />
+                  <div>
+                    <h3 className="text-2xl font-bold mb-6">{corporateInfo.ceoGreeting.title}</h3>
+                    <p className="text-slate-600 leading-relaxed whitespace-pre-line">{corporateInfo.ceoGreeting.content}</p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="p-8 bg-blue-50 rounded-2xl border-l-8 border-blue-600">
+                    <h4 className="text-xl font-bold mb-4">Mission</h4>
+                    <p className="text-lg leading-relaxed">{corporateInfo.missionVision.mission}</p>
+                  </div>
+                  <div className="p-8 bg-slate-50 rounded-2xl border-l-8 border-slate-600">
+                    <h4 className="text-xl font-bold mb-4">Vision</h4>
+                    <p className="text-lg leading-relaxed">{corporateInfo.missionVision.vision}</p>
+                  </div>
                 </div>
               </div>
             } />
           )}
-          {activePage === 'mission' && (
-            <PageLayout title="미션 & 비전" content={
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="p-8 bg-blue-50 rounded-2xl border-l-8 border-blue-600">
-                  <h4 className="text-xl font-bold mb-4">Mission</h4>
-                  <p className="text-lg leading-relaxed">{corporateInfo.missionVision.mission}</p>
+
+          {activePage === 'solutions' && (
+            <PageLayout title="사업 소개" content={
+              <div className="grid grid-cols-1 gap-8">
+                {solutions.map((sol, idx) => (
+                  <div key={idx} className="p-8 border rounded-2xl flex flex-col md:flex-row gap-8 items-center">
+                    <img src={sol.image} className="w-full md:w-64 h-40 object-cover rounded-xl" />
+                    <div>
+                      <span className="text-blue-600 font-bold text-sm">{sol.category}</span>
+                      <h4 className="text-2xl font-bold mb-2">{sol.title}</h4>
+                      <p className="text-slate-600 mb-4">{sol.description}</p>
+                      <button onClick={() => { setSelectedSolution(idx); navigateTo('sol_detail'); }} className="text-blue-600 font-bold hover:underline">상세보기 →</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            } />
+          )}
+
+          {activePage === 'disclosure' && (
+            <PageLayout title="공시 정보" content={
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {corporateInfo.disclosure.certifications.map((cert, idx) => (
+                  <div key={idx} className="p-6 border rounded-xl text-center space-y-4">
+                    <img src={cert.image} className="w-full h-40 object-contain mb-4" />
+                    <h4 className="font-bold">{cert.name}</h4>
+                    <p className="text-sm text-slate-500">{cert.date}</p>
+                  </div>
+                ))}
+              </div>
+            } />
+          )}
+
+          {activePage === 'pr' && (
+            <PageLayout title="홍보 센터" content={
+              <div className="space-y-6">
+                {data.prCenter.news.map((news, idx) => (
+                  <div key={idx} className="p-6 border-b flex flex-col md:flex-row gap-6">
+                    <img src={news.image} className="w-full md:w-48 h-32 object-cover rounded-lg" />
+                    <div className="flex-1">
+                      <span className="text-xs text-slate-400">{news.date}</span>
+                      <h4 className="text-xl font-bold my-2">{news.title}</h4>
+                      <p className="text-slate-600">{news.summary}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            } />
+          )}
+
+          {activePage === 'recruit' && (
+            <PageLayout title="인재 경영" content={
+              <div className="space-y-12">
+                <div className="p-10 bg-slate-900 text-white rounded-3xl text-center">
+                  <h3 className="text-3xl font-bold mb-6">우리가 찾는 인재</h3>
+                  <p className="text-xl text-slate-300 leading-relaxed">{data.recruit.talentValue}</p>
                 </div>
-                <div className="p-8 bg-slate-50 rounded-2xl border-l-8 border-slate-600">
-                  <h4 className="text-xl font-bold mb-4">Vision</h4>
-                  <p className="text-lg leading-relaxed">{corporateInfo.missionVision.vision}</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="p-8 bg-blue-50 rounded-2xl">
+                    <h4 className="text-xl font-bold mb-4">복지 혜택</h4>
+                    <p className="text-slate-600 whitespace-pre-line">{data.recruit.benefitInfo}</p>
+                  </div>
                 </div>
               </div>
             } />
           )}
-          {activePage === 'sol_detail' && <SolutionDetail key="sol_detail" />}
+
           {activePage === 'cs' && (
-            <PageLayout title="문의하기" content={
+            <PageLayout title="고객 센터" content={
               <div className="text-center space-y-8">
                 <p className="text-xl text-slate-600 leading-relaxed whitespace-pre-line">
                   {data.csGuide || '문의 내용을 입력해주세요.'}
                 </p>
                 <div className="flex flex-col md:flex-row justify-center gap-4">
-                  {data.supportPhone && (
-                    <a href={`tel:${data.supportPhone}`} className="px-8 py-4 bg-slate-900 text-white font-bold rounded-xl hover:bg-slate-800 transition">
-                      📞 전화 상담: {data.supportPhone}
-                    </a>
-                  )}
-                  {(data as any).kakaoLink && (
-                    <a href={(data as any).kakaoLink} target="_blank" className="px-8 py-4 bg-yellow-400 text-slate-900 font-bold rounded-xl hover:bg-yellow-500 transition">
-                      💬 카카오톡 상담하기
-                    </a>
-                  )}
+                  <div className="p-6 border rounded-2xl space-y-2">
+                    <p className="text-sm text-slate-500">이메일 문의</p>
+                    <p className="text-lg font-bold">{data.csCenter.contactInfo.email}</p>
+                  </div>
+                  <div className="p-6 border rounded-2xl space-y-2">
+                    <p className="text-sm text-slate-500">전화 상담</p>
+                    <p className="text-lg font-bold">{data.csCenter.contactInfo.phone}</p>
+                  </div>
                 </div>
               </div>
             } />
           )}
-          {activePage !== 'main' && activePage !== 'ceo' && activePage !== 'mission' && activePage !== 'sol_detail' && activePage !== 'cs' && (
-            <PageLayout title="준비 중인 페이지" content={<p>해당 콘텐츠는 현재 업데이트 중입니다.</p>} />
-          )}
+
+          {activePage === 'sol_detail' && <SolutionDetail key="sol_detail" />}
         </AnimatePresence>
       </main>
 
@@ -220,10 +283,9 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
           <div>
             <h4 className="text-white font-bold mb-6">Quick Links</h4>
             <ul className="space-y-3 text-sm">
-              <li className="hover:text-white cursor-pointer" onClick={() => navigateTo('main')}>홈으로</li>
-              <li className="hover:text-white cursor-pointer" onClick={() => navigateTo('ceo')}>CEO 인사말</li>
-              <li className="hover:text-white cursor-pointer" onClick={() => navigateTo('sol_detail')}>사업소개</li>
-              <li className="hover:text-white cursor-pointer" onClick={() => navigateTo('cs')}>문의하기</li>
+              {STANDARD_MENUS.map(menu => (
+                <li key={menu.id} className="hover:text-white cursor-pointer" onClick={() => navigateTo(menu.id)}>{menu.label}</li>
+              ))}
             </ul>
           </div>
           <div>
