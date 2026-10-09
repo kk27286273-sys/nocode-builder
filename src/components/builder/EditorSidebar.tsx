@@ -43,110 +43,185 @@ export default function EditorSidebar({ data, setData, siteId }: EditorSidebarPr
     }
   };
 
-  // 섹션별 렌더링 헬퍼
-  const renderInput = (label: string, path: string, placeholder: string) => (
+  // 공통 입력 컴포넌트
+  const InputField = ({ label, path, type = "text", placeholder = "" }: any) => (
     <div className="space-y-1">
-      <label className="text-[9px] text-slate-400 font-bold">{label}</label>
+      <label className="text-[10px] text-slate-500 font-semibold">{label}</label>
       <input 
-        type="text" 
+        type={type} 
         value={(data as any) === undefined ? '' : (path.split('.').reduce((o, i) => (o as any)?.[i], data) || '')} 
         onChange={(e) => updateDeep(path, e.target.value)}
         placeholder={placeholder}
-        className="w-full p-2 border border-slate-200 rounded text-xs outline-none focus:ring-1 focus:ring-blue-500"
+        className="w-full p-2 border border-slate-200 rounded text-xs outline-none focus:ring-1 focus:ring-blue-500 bg-white"
       />
     </div>
   );
 
-  const renderTextarea = (label: string, path: string, placeholder: string, h = "h-12") => (
+  const TextAreaField = ({ label, path, placeholder = "", h = "h-16" }: any) => (
     <div className="space-y-1">
-      <label className="text-[9px] text-slate-400 font-bold">{label}</label>
+      <label className="text-[10px] text-slate-500 font-semibold">{label}</label>
       <textarea 
         value={(data as any) === undefined ? '' : (path.split('.').reduce((o, i) => (o as any)?.[i], data) || '')} 
         onChange={(e) => updateDeep(path, e.target.value)}
         placeholder={placeholder}
-        className={`w-full p-2 border border-slate-200 rounded text-xs ${h} resize-none outline-none focus:ring-1 focus:ring-blue-500`}
+        className={`w-full p-2 border border-slate-200 rounded text-xs ${h} resize-none outline-none focus:ring-1 focus:ring-blue-500 bg-white`}
       />
     </div>
   );
 
+  const SelectField = ({ label, path, options }: any) => (
+    <div className="space-y-1">
+      <label className="text-[10px] text-slate-500 font-semibold">{label}</label>
+      <select 
+        value={(data as any) === undefined ? '' : (path.split('.').reduce((o, i) => (o as any)?.[i], data) || '')} 
+        onChange={(e) => updateDeep(path, e.target.value)}
+        className="w-full p-2 border border-slate-200 rounded text-xs outline-none focus:ring-1 focus:ring-blue-500 bg-white"
+      >
+        {options.map((opt: any) => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
+      </select>
+    </div>
+  );
+
   return (
-    <div className="w-full h-full bg-slate-100 overflow-y-auto p-4 space-y-6">
-      <div className="flex justify-between items-center pb-4 border-b border-slate-200">
-        <h2 className="font-black text-slate-800 text-sm">Nexia Full Builder</h2>
-        <button onClick={handlePublish} className="px-4 py-2 bg-blue-600 text-white text-xs font-bold rounded-lg hover:bg-blue-700 transition shadow-sm">
+    <div className="w-full h-full bg-slate-50 overflow-y-auto p-5 space-y-8 custom-scrollbar">
+      {/* Header */}
+      <div className="flex justify-between items-center pb-6 border-b border-slate-200">
+        <div>
+          <h2 className="font-black text-slate-900 text-lg leading-none">Nexia Builder</h2>
+          <p className="text-[10px] text-slate-400 mt-1">Enterprise Edition v1.2</p>
+        </div>
+        <button onClick={handlePublish} className="px-5 py-2.5 bg-blue-600 text-white text-xs font-bold rounded-full hover:bg-blue-700 transition-all shadow-md active:scale-95">
           발행하기
         </button>
       </div>
 
-      {/* 1. 기본 회사 정보 */}
-      <section className="p-3 bg-white border border-slate-200 rounded-lg space-y-3 shadow-sm">
-        <div className="text-[10px] font-bold text-blue-600 uppercase">Basic Info</div>
-        {renderInput("회사명", "company.name", "회사명 입력")}
-        {renderInput("로고 URL", "company.logoUrl", "로고 이미지 주소")}
+      {/* 1. Global Style & Brand */}
+      <section className="space-y-4">
+        <div className="flex items-center gap-2 text-blue-600">
+          <div className="w-1 h-4 bg-blue-600 rounded-full" />
+          <h3 className="text-xs font-bold uppercase tracking-wider">Brand & Global Style</h3>
+        </div>
+        <div className="p-4 bg-white border border-slate-200 rounded-xl shadow-sm space-y-4">
+          <InputField label="회사명" path="company.name" />
+          <InputField label="로고 이미지 URL" path="company.logoUrl" />
+          <div className="grid grid-cols-2 gap-3">
+            <InputField label="대표 색상 (Hex)" path="style.primaryColor" type="color" />
+            <InputField label="포인트 색상 (Hex)" path="style.accentColor" type="color" />
+          </div>
+          <SelectField 
+            label="기본 폰트 스타일" 
+            path="style.fontFamily" 
+            options={[
+              { label: "Pretendard (Modern)", value: "font-pretendard" },
+              { label: "Noto Sans (Standard)", value: "font-noto" },
+              { label: "Nanum Myeongjo (Classic)", value: "font-nanum" },
+            ]} 
+          />
+        </div>
       </section>
 
-      {/* 2. 메인 히어로 (솔루션 메인) */}
-      <section className="p-3 bg-white border border-slate-200 rounded-lg space-y-3 shadow-sm">
-        <div className="text-[10px] font-bold text-blue-600 uppercase">Hero Section</div>
-        {renderInput("메인 제목", "solutionMain.title", "메인 제목")}
-        {renderTextarea("메인 요약", "solutionMain.description", "메인 요약", "h-14")}
-        {renderTextarea("상세 내용", "solutionMain.detailContent", "상세 내용", "h-20")}
+      {/* 2. Hero Section (Solution Main) */}
+      <section className="space-y-4">
+        <div className="flex items-center gap-2 text-blue-600">
+          <div className="w-1 h-4 bg-blue-600 rounded-full" />
+          <h3 className="text-xs font-bold uppercase tracking-wider">Hero Section</h3>
+        </div>
+        <div className="p-4 bg-white border border-slate-200 rounded-xl shadow-sm space-y-4">
+          <InputField label="메인 캐치프레이즈" path="solutionMain.title" />
+          <TextAreaField label="서브 요약 문구" path="solutionMain.description" h="h-20" />
+          <TextAreaField label="상세 설명 (본문)" path="solutionMain.detailContent" h="h-32" />
+          <div className="grid grid-cols-2 gap-3">
+            <SelectField label="텍스트 정렬" path="solutionMain.align" options={[
+              { label: "왼쪽", value: "left" }, { label: "중앙", value: "center" }, { label: "오른쪽", value: "right" }
+            ]} />
+            <SelectField label="배경 타입" path="solutionMain.bgType" options={[
+              { label: "단색", value: "solid" }, { label: "그라데이션", value: "gradient" }, { label: "이미지", value: "image" }
+            ]} />
+          </div>
+        </div>
       </section>
 
-      {/* 3. 기업 소개 / 비전 / 연혁 (Corporate) */}
-      <section className="p-3 bg-white border border-slate-200 rounded-lg space-y-3 shadow-sm">
-        <div className="text-[10px] font-bold text-blue-600 uppercase">Corporate Info</div>
-        {renderTextarea("회사 소개", "corporateInfo.about", "회사 소개글")}
-        {renderInput("비전", "corporateInfo.vision", "기업 비전")}
-        {renderInput("설립연도", "corporateInfo.since", "Since 1990")}
+      {/* 3. Corporate Identity */}
+      <section className="space-y-4">
+        <div className="flex items-center gap-2 text-blue-600">
+          <div className="w-1 h-4 bg-blue-600 rounded-full" />
+          <h3 className="text-xs font-bold uppercase tracking-wider">Corporate Identity</h3>
+        </div>
+        <div className="p-4 bg-white border border-slate-200 rounded-xl shadow-sm space-y-4">
+          <TextAreaField label="회사 소개글" path="corporateInfo.about" h="h-32" />
+          <InputField label="핵심 비전" path="corporateInfo.vision" />
+          <InputField label="설립 연도" path="corporateInfo.since" placeholder="예: 1990" />
+          <InputField label="업력/성과 수치" path="corporateInfo.achievement" placeholder="예: 2,850건" />
+        </div>
       </section>
 
-      {/* 4. 인재 경영 / 지속가능경영 (HR & ESG) */}
-      <section className="p-3 bg-white border border-slate-200 rounded-lg space-y-3 shadow-sm">
-        <div className="text-[10px] font-bold text-blue-600 uppercase">HR & ESG</div>
-        {renderTextarea("인재상", "hr.talent", "원하는 인재상", "h-20")}
-        {renderTextarea("지속가능경영", "esg.message", "ESG 경영 메시지", "h-20")}
+      {/* 4. HR & ESG Management */}
+      <section className="space-y-4">
+        <div className="flex items-center gap-2 text-blue-600">
+          <div className="w-1 h-4 bg-blue-600 rounded-full" />
+          <h3 className="text-xs font-bold uppercase tracking-wider">HR & ESG</h3>
+        </div>
+        <div className="p-4 bg-white border border-slate-200 rounded-xl shadow-sm space-y-4">
+          <TextAreaField label="인재상 / 채용 철학" path="hr.talent" h="h-24" />
+          <TextAreaField label="ESG 경영 메시지" path="esg.message" h="h-24" />
+          <InputField label="지속가능경영 목표" path="esg.goal" />
+        </div>
       </section>
 
-      {/* 5. 고객센터 / 공시정보 (CS & Public) */}
-      <section className="p-3 bg-white border border-slate-200 rounded-lg space-y-3 shadow-sm">
-        <div className="text-[10px] font-bold text-blue-600 uppercase">CS & Disclosure</div>
-        {renderInput("고객센터 전화번호", "cs.phone", "02-xxx-xxxx")}
-        {renderInput("이메일", "cs.email", "contact@company.com")}
-        {renderTextarea("공시 정보", "public.notice", "최신 공시 내용", "h-20")}
+      {/* 5. Customer Support & Disclosure */}
+      <section className="space-y-4">
+        <div className="flex items-center gap-2 text-blue-600">
+          <div className="w-1 h-4 bg-blue-600 rounded-full" />
+          <h3 className="text-xs font-bold uppercase tracking-wider">CS & Disclosure</h3>
+        </div>
+        <div className="p-4 bg-white border border-slate-200 rounded-xl shadow-sm space-y-4">
+          <InputField label="대표 전화번호" path="cs.phone" />
+          <InputField label="대표 이메일" path="cs.email" />
+          <InputField label="사업자 등록번호" path="public.bizNumber" />
+          <TextAreaField label="최신 공시/안내 사항" path="public.notice" h="h-24" />
+        </div>
       </section>
 
-      {/* 6. 솔루션 카드 리스트 (Dynamic) */}
-      <section className="p-3 bg-white border border-slate-200 rounded-lg space-y-4 shadow-sm">
-        <div className="flex justify-between items-center border-b border-slate-100 pb-2">
-          <div className="text-[10px] font-bold text-blue-600 uppercase">Solution Cards</div>
+      {/* 6. Solution Card Manager */}
+      <section className="space-y-4 pb-10">
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-2 text-blue-600">
+            <div className="w-1 h-4 bg-blue-600 rounded-full" />
+            <h3 className="text-xs font-bold uppercase tracking-wider">Solution Cards</h3>
+          </div>
           <button 
             onClick={() => {
               const current = data.solutions || [];
-              updateDeep('solutions', [...current, { title: '', description: '', detailContent: '' }]);
+              updateDeep('solutions', [...current, { title: '', description: '', detailContent: '', icon: '', color: '#3b82f6' }]);
             }} 
-            className="px-2 py-1 text-[10px] bg-blue-600 text-white rounded font-bold"
+            className="px-3 py-1.5 bg-slate-900 text-white text-[10px] font-bold rounded-lg hover:bg-black transition shadow-sm"
           >
-            + 추가
+            + 카드 추가
           </button>
         </div>
         <div className="space-y-4">
           {(data.solutions || []).map((sol: any, idx: number) => (
-            <div key={idx} className="p-3 border border-slate-200 rounded-lg bg-slate-50 relative group space-y-2">
+            <div key={idx} className="p-4 border border-slate-200 rounded-xl bg-white relative group shadow-sm space-y-4">
               <button 
                 onClick={() => {
                   const next = [...(data.solutions || [])];
                   next.splice(idx, 1);
                   updateDeep('solutions', next);
                 }} 
-                className="absolute -top-2 -right-2 w-5 h-5 bg-rose-500 text-white rounded-full text-[10px] flex items-center justify-center shadow"
+                className="absolute -top-2 -right-2 w-6 h-6 bg-rose-500 text-white rounded-full text-xs flex items-center justify-center shadow-lg hover:bg-rose-600 transition"
               >
                 ✕
               </button>
-              <div className="text-[10px] font-bold text-slate-400">솔루션 {idx + 1}</div>
-              {renderInput("제목", `solutions.${idx}.title`, "제목")}
-              {renderInput("요약", `solutions.${idx}.description`, "요약")}
-              {renderTextarea("상세 내용", `solutions.${idx}.detailContent`, "상세 내용", "h-16")}
+              <div className="flex items-center gap-2 mb-2">
+                <span className="px-2 py-0.5 bg-slate-100 text-slate-500 text-[9px] font-bold rounded">CARD {idx + 1}</span>
+              </div>
+              <InputField label="솔루션 제목" path={`solutions.${idx}.title`} />
+              <InputField label="요약 문구" path={`solutions.${idx}.description`} />
+              <TextAreaField label="상세 설명" path={`solutions.${idx}.detailContent`} h="h-20" />
+              <div className="grid grid-cols-2 gap-3">
+                <InputField label="아이콘 URL" path={`solutions.${idx}.icon`} />
+                <InputField label="카드 포인트 색상" path={`solutions.${idx}.color`} type="color" />
+              </div>
             </div>
           ))}
         </div>
