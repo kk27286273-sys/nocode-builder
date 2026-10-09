@@ -38,13 +38,25 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
   const Navbar = () => (
     <nav className="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
-        <div className="cursor-pointer" onClick={() => navigateTo('main')}>
-          {company.logoUrl ? (
-            <img src={company.logoUrl} alt={company.name} className="h-10 object-contain" />
-          ) : (
-            <span className="text-2xl font-bold" style={{ color: themeColor }}>{company.name}</span>
-          )}
-        </div>
+<div className="cursor-pointer" onClick={() => navigateTo('main')}>
+  {/* 1. 로고 URL이 있고, 빈 문자열이 아닐 때만 이미지 출력 */}
+  {company.logoUrl && company.logoUrl !== "" ? (
+    <img 
+      src={company.logoUrl} 
+      alt={company.name} 
+      className="h-10 object-contain" 
+      onError={(e) => {
+        // 이미지 로드 실패 시 텍스트로 대체 (에러 방지)
+        e.currentTarget.style.display = 'none';
+      }}
+    />
+  ) : (
+    /* 2. 로고 이미지가 없으면 회사 이름을 테마 컬러로 출력 */
+    <span className="text-2xl font-bold" style={{ color: themeColor || '#2563eb' }}>
+      {company.name || 'Company Name'}
+    </span>
+  )}
+</div>
         
         <div className="hidden md:flex gap-6">
           {STANDARD_MENUS.map((menu) => (
