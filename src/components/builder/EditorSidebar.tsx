@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { supabase } from "@/lib/supabase/client";
 
 interface EditorSidebarProps {
@@ -10,7 +10,8 @@ interface EditorSidebarProps {
 }
 
 export default function EditorSidebar({ data, setData, siteId }: EditorSidebarProps) {
-  
+  const [activeTab, setActiveTab] = useState("company"); // 기본 탭: 회사소개
+
   const updateDeep = (path: string, value: any) => {
     setData((prev: any) => {
       const next = { ...prev };
@@ -28,10 +29,7 @@ export default function EditorSidebar({ data, setData, siteId }: EditorSidebarPr
   const handlePublish = async (e: React.MouseEvent) => {
     e.preventDefault();
     try {
-      if (!siteId) {
-        alert("사이트 ID가 없습니다.");
-        return;
-      }
+      if (!siteId) { alert("사이트 ID가 없습니다."); return; }
       const { error } = await supabase
         .from('sites')
         .update({ data: data, updated_at: new Date().toISOString() })
@@ -43,13 +41,13 @@ export default function EditorSidebar({ data, setData, siteId }: EditorSidebarPr
     }
   };
 
-  // 공통 입력 컴포넌트
-  const InputField = ({ label, path, type = "text", placeholder = "" }: any) => (
+  // 입력 필드 컴포넌트
+  const Input = ({ label, path, type = "text", placeholder = "" }) => (
     <div className="space-y-1">
-      <label className="text-[10px] text-slate-500 font-semibold">{label}</label>
+      <label className="text-[11px] text-slate-500 font-medium">{label}</label>
       <input 
         type={type} 
-        value={(data as any) === undefined ? '' : (path.split('.').reduce((o, i) => (o as any)?.[i], data) || '')} 
+        value={(path.split('.').reduce((o, i) => (o as any)?.[i], data) || '')} 
         onChange={(e) => updateDeep(path, e.target.value)}
         placeholder={placeholder}
         className="w-full p-2 border border-slate-200 rounded text-xs outline-none focus:ring-1 focus:ring-blue-500 bg-white"
@@ -57,11 +55,11 @@ export default function EditorSidebar({ data, setData, siteId }: EditorSidebarPr
     </div>
   );
 
-  const TextAreaField = ({ label, path, placeholder = "", h = "h-16" }: any) => (
+  const TextArea = ({ label, path, placeholder = "", h = "h-20" }) => (
     <div className="space-y-1">
-      <label className="text-[10px] text-slate-500 font-semibold">{label}</label>
+      <label className="text-[11px] text-slate-500 font-medium">{label}</label>
       <textarea 
-        value={(data as any) === undefined ? '' : (path.split('.').reduce((o, i) => (o as any)?.[i], data) || '')} 
+        value={(path.split('.').reduce((o, i) => (o as any)?.[i], data) || '')} 
         onChange={(e) => updateDeep(path, e.target.value)}
         placeholder={placeholder}
         className={`w-full p-2 border border-slate-200 rounded text-xs ${h} resize-none outline-none focus:ring-1 focus:ring-blue-500 bg-white`}
@@ -69,163 +67,129 @@ export default function EditorSidebar({ data, setData, siteId }: EditorSidebarPr
     </div>
   );
 
-  const SelectField = ({ label, path, options }: any) => (
-    <div className="space-y-1">
-      <label className="text-[10px] text-slate-500 font-semibold">{label}</label>
-      <select 
-        value={(data as any) === undefined ? '' : (path.split('.').reduce((o, i) => (o as any)?.[i], data) || '')} 
-        onChange={(e) => updateDeep(path, e.target.value)}
-        className="w-full p-2 border border-slate-200 rounded text-xs outline-none focus:ring-1 focus:ring-blue-500 bg-white"
-      >
-        {options.map((opt: any) => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
-      </select>
-    </div>
-  );
+  // 탭 메뉴 정의
+  const tabs = [
+    { id: "company", label: "회사소개" },
+    { id: "solution", label: "사업소개" },
+    { id: "esg", label: "지속가능경영" },
+    { id: "pr", label: "홍보센터" },
+    { id: "hr", label: "인재경영" },
+    { id: "cs", label: "고객센터" },
+  ];
 
   return (
-    <div className="w-full h-full bg-slate-50 overflow-y-auto p-5 space-y-8 custom-scrollbar">
-      {/* Header */}
-      <div className="flex justify-between items-center pb-6 border-b border-slate-200">
-        <div>
-          <h2 className="font-black text-slate-900 text-lg leading-none">Nexia Builder</h2>
-          <p className="text-[10px] text-slate-400 mt-1">Enterprise Edition v1.2</p>
+    <div className="flex w-full h-full bg-white overflow-hidden">
+      {/* 좌측 탭 네비게이션 */}
+      <div className="w-48 bg-slate-100 border-r border-slate-200 flex flex-col">
+        <div className="p-4 border-b border-slate-200">
+          <h2 className="font-black text-slate-800 text-sm italic">NEXIA Builder</h2>
         </div>
-        <button onClick={handlePublish} className="px-5 py-2.5 bg-blue-600 text-white text-xs font-bold rounded-full hover:bg-blue-700 transition-all shadow-md active:scale-95">
-          발행하기
-        </button>
-      </div>
-
-      {/* 1. Global Style & Brand */}
-      <section className="space-y-4">
-        <div className="flex items-center gap-2 text-blue-600">
-          <div className="w-1 h-4 bg-blue-600 rounded-full" />
-          <h3 className="text-xs font-bold uppercase tracking-wider">Brand & Global Style</h3>
-        </div>
-        <div className="p-4 bg-white border border-slate-200 rounded-xl shadow-sm space-y-4">
-          <InputField label="회사명" path="company.name" />
-          <InputField label="로고 이미지 URL" path="company.logoUrl" />
-          <div className="grid grid-cols-2 gap-3">
-            <InputField label="대표 색상 (Hex)" path="style.primaryColor" type="color" />
-            <InputField label="포인트 색상 (Hex)" path="style.accentColor" type="color" />
-          </div>
-          <SelectField 
-            label="기본 폰트 스타일" 
-            path="style.fontFamily" 
-            options={[
-              { label: "Pretendard (Modern)", value: "font-pretendard" },
-              { label: "Noto Sans (Standard)", value: "font-noto" },
-              { label: "Nanum Myeongjo (Classic)", value: "font-nanum" },
-            ]} 
-          />
-        </div>
-      </section>
-
-      {/* 2. Hero Section (Solution Main) */}
-      <section className="space-y-4">
-        <div className="flex items-center gap-2 text-blue-600">
-          <div className="w-1 h-4 bg-blue-600 rounded-full" />
-          <h3 className="text-xs font-bold uppercase tracking-wider">Hero Section</h3>
-        </div>
-        <div className="p-4 bg-white border border-slate-200 rounded-xl shadow-sm space-y-4">
-          <InputField label="메인 캐치프레이즈" path="solutionMain.title" />
-          <TextAreaField label="서브 요약 문구" path="solutionMain.description" h="h-20" />
-          <TextAreaField label="상세 설명 (본문)" path="solutionMain.detailContent" h="h-32" />
-          <div className="grid grid-cols-2 gap-3">
-            <SelectField label="텍스트 정렬" path="solutionMain.align" options={[
-              { label: "왼쪽", value: "left" }, { label: "중앙", value: "center" }, { label: "오른쪽", value: "right" }
-            ]} />
-            <SelectField label="배경 타입" path="solutionMain.bgType" options={[
-              { label: "단색", value: "solid" }, { label: "그라데이션", value: "gradient" }, { label: "이미지", value: "image" }
-            ]} />
-          </div>
-        </div>
-      </section>
-
-      {/* 3. Corporate Identity */}
-      <section className="space-y-4">
-        <div className="flex items-center gap-2 text-blue-600">
-          <div className="w-1 h-4 bg-blue-600 rounded-full" />
-          <h3 className="text-xs font-bold uppercase tracking-wider">Corporate Identity</h3>
-        </div>
-        <div className="p-4 bg-white border border-slate-200 rounded-xl shadow-sm space-y-4">
-          <TextAreaField label="회사 소개글" path="corporateInfo.about" h="h-32" />
-          <InputField label="핵심 비전" path="corporateInfo.vision" />
-          <InputField label="설립 연도" path="corporateInfo.since" placeholder="예: 1990" />
-          <InputField label="업력/성과 수치" path="corporateInfo.achievement" placeholder="예: 2,850건" />
-        </div>
-      </section>
-
-      {/* 4. HR & ESG Management */}
-      <section className="space-y-4">
-        <div className="flex items-center gap-2 text-blue-600">
-          <div className="w-1 h-4 bg-blue-600 rounded-full" />
-          <h3 className="text-xs font-bold uppercase tracking-wider">HR & ESG</h3>
-        </div>
-        <div className="p-4 bg-white border border-slate-200 rounded-xl shadow-sm space-y-4">
-          <TextAreaField label="인재상 / 채용 철학" path="hr.talent" h="h-24" />
-          <TextAreaField label="ESG 경영 메시지" path="esg.message" h="h-24" />
-          <InputField label="지속가능경영 목표" path="esg.goal" />
-        </div>
-      </section>
-
-      {/* 5. Customer Support & Disclosure */}
-      <section className="space-y-4">
-        <div className="flex items-center gap-2 text-blue-600">
-          <div className="w-1 h-4 bg-blue-600 rounded-full" />
-          <h3 className="text-xs font-bold uppercase tracking-wider">CS & Disclosure</h3>
-        </div>
-        <div className="p-4 bg-white border border-slate-200 rounded-xl shadow-sm space-y-4">
-          <InputField label="대표 전화번호" path="cs.phone" />
-          <InputField label="대표 이메일" path="cs.email" />
-          <InputField label="사업자 등록번호" path="public.bizNumber" />
-          <TextAreaField label="최신 공시/안내 사항" path="public.notice" h="h-24" />
-        </div>
-      </section>
-
-      {/* 6. Solution Card Manager */}
-      <section className="space-y-4 pb-10">
-        <div className="flex justify-between items-center">
-          <div className="flex items-center gap-2 text-blue-600">
-            <div className="w-1 h-4 bg-blue-600 rounded-full" />
-            <h3 className="text-xs font-bold uppercase tracking-wider">Solution Cards</h3>
-          </div>
-          <button 
-            onClick={() => {
-              const current = data.solutions || [];
-              updateDeep('solutions', [...current, { title: '', description: '', detailContent: '', icon: '', color: '#3b82f6' }]);
-            }} 
-            className="px-3 py-1.5 bg-slate-900 text-white text-[10px] font-bold rounded-lg hover:bg-black transition shadow-sm"
-          >
-            + 카드 추가
+        <nav className="flex-1 p-2 space-y-1">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`w-full text-left px-3 py-2.5 rounded-md text-xs font-bold transition-all ${
+                activeTab === tab.id 
+                ? "bg-blue-600 text-white shadow-sm" 
+                : "text-slate-500 hover:bg-slate-200"
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </nav>
+        <div className="p-4 border-t border-slate-200">
+          <button onClick={handlePublish} className="w-full py-2 bg-slate-800 text-white text-xs font-bold rounded-lg hover:bg-black transition">
+            발행하기
           </button>
         </div>
-        <div className="space-y-4">
-          {(data.solutions || []).map((sol: any, idx: number) => (
-            <div key={idx} className="p-4 border border-slate-200 rounded-xl bg-white relative group shadow-sm space-y-4">
-              <button 
-                onClick={() => {
-                  const next = [...(data.solutions || [])];
-                  next.splice(idx, 1);
-                  updateDeep('solutions', next);
-                }} 
-                className="absolute -top-2 -right-2 w-6 h-6 bg-rose-500 text-white rounded-full text-xs flex items-center justify-center shadow-lg hover:bg-rose-600 transition"
-              >
-                ✕
-              </button>
-              <div className="flex items-center gap-2 mb-2">
-                <span className="px-2 py-0.5 bg-slate-100 text-slate-500 text-[9px] font-bold rounded">CARD {idx + 1}</span>
+      </div>
+
+      {/* 우측 편집 영역 */}
+      <div className="flex-1 overflow-y-auto p-6 bg-slate-50">
+        <div className="max-w-xl mx-auto space-y-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-bold text-slate-800">{tabs.find(t => t.id === activeTab)?.label} 설정</h3>
+            <span className="text-[10px] text-slate-400 font-mono">ID: {siteId}</span>
+          </div>
+
+          {/* 탭별 컨텐츠 렌더링 */}
+          {activeTab === "company" && (
+            <div className="space-y-4 bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+              <Input label="회사명" path="company.name" />
+              <Input label="로고 URL" path="company.logoUrl" />
+              <TextArea label="회사 소개글" path="corporateInfo.about" h="h-32" />
+              <Input label="핵심 비전" path="corporateInfo.vision" />
+              <Input label="설립 연도" path="corporateInfo.since" />
+            </div>
+          )}
+
+          {activeTab === "solution" && (
+            <div className="space-y-6">
+              <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
+                <div className="font-bold text-xs text-blue-600 mb-2">메인 히어로</div>
+                <Input label="메인 제목" path="solutionMain.title" />
+                <TextArea label="서브 요약" path="solutionMain.description" />
               </div>
-              <InputField label="솔루션 제목" path={`solutions.${idx}.title`} />
-              <InputField label="요약 문구" path={`solutions.${idx}.description`} />
-              <TextAreaField label="상세 설명" path={`solutions.${idx}.detailContent`} h="h-20" />
-              <div className="grid grid-cols-2 gap-3">
-                <InputField label="아이콘 URL" path={`solutions.${idx}.icon`} />
-                <InputField label="카드 포인트 색상" path={`solutions.${idx}.color`} type="color" />
+              
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <div className="font-bold text-xs text-slate-600">솔루션 리스트</div>
+                  <button 
+                    onClick={() => updateDeep('solutions', [...(data.solutions || []), { title: '', description: '', detailContent: '' }])}
+                    className="text-[10px] bg-blue-600 text-white px-2 py-1 rounded"
+                  >+ 추가</button>
+                </div>
+                {(data.solutions || []).map((sol: any, idx: number) => (
+                  <div key={idx} className="p-4 bg-white border border-slate-200 rounded-xl space-y-3 relative group">
+                    <button 
+                      onClick={() => {
+                        const next = [...(data.solutions || [])];
+                        next.splice(idx, 1);
+                        updateDeep('solutions', next);
+                      }}
+                      className="absolute top-2 right-2 text-slate-300 hover:text-rose-500 text-xs"
+                    >✕</button>
+                    <Input label={`솔루션 ${idx+1} 제목`} path={`solutions.${idx}.title`} />
+                    <Input label="요약" path={`solutions.${idx}.description`} />
+                    <TextArea label="상세내용" path={`solutions.${idx}.detailContent`} />
+                  </div>
+                ))}
               </div>
             </div>
-          ))}
+          )}
+
+          {activeTab === "esg" && (
+            <div className="space-y-4 bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+              <TextArea label="ESG 경영 메시지" path="esg.message" h="h-32" />
+              <Input label="지속가능경영 목표" path="esg.goal" />
+            </div>
+          )}
+
+          {activeTab === "pr" && (
+            <div className="space-y-4 bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+              <TextArea label="홍보 문구 / 보도자료" path="pr.content" h="h-40" />
+              <Input label="홍보 이미지 URL" path="pr.imageUrl" />
+            </div>
+          )}
+
+          {activeTab === "hr" && (
+            <div className="space-y-4 bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+              <TextArea label="인재상" path="hr.talent" h="h-32" />
+              <TextArea label="채용 절차 안내" path="hr.process" h="h-32" />
+            </div>
+          )}
+
+          {activeTab === "cs" && (
+            <div className="space-y-4 bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+              <Input label="고객센터 전화번호" path="cs.phone" />
+              <Input label="이메일" path="cs.email" />
+              <TextArea label="공시 정보 / 공지사항" path="public.notice" h="h-32" />
+            </div>
+          )}
         </div>
-      </section>
+      </div>
     </div>
   );
 }
