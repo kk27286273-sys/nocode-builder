@@ -43,16 +43,57 @@ export default function EditorSidebar({ data, setData, activeSection, setActiveS
   return (
     <div className="w-full h-full overflow-y-auto bg-slate-50 border-r border-slate-200 p-4 space-y-6">
       <div className="grid grid-cols-2 gap-2 mb-6">
-        {['corporateInfo', 'solutions', 'sustainability', 'pr', 'recruit', 'cs', 'footer'].map(section => (
-          <button
-            key={section}
-            onClick={() => setActiveSection(section)}
-            className={`px-3 py-2 text-xs rounded-md transition-all ${activeSection === section ? 'bg-blue-600 text-white shadow-md' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-100'}`}
-          >
-            {section === 'corporateInfo' ? '회사 소개' : section === 'solutions' ? '사업 소개' : section === 'sustainability' ? '지속가능경영' : section === 'pr' ? '홍보 센터' : section === 'recruit' ? '인재 경영' : section === 'cs' ? '고객 센터' : '하단 정보'}
-          </button>
-        ))}
+{['main', 'corporateInfo', 'solutions', 'sustainability', 'pr', 'recruit', 'cs', 'footer'].map(section => (
+  <button
+    key={section}
+    onClick={() => setActiveSection(section)}
+    className={`px-3 py-2 text-xs rounded-md transition-all ${activeSection === section ? 'bg-blue-600 text-white shadow-md' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-100'}`}
+  >
+    {section === 'main' ? '메인 화면' : section === 'corporateInfo' ? '회사 소개' : ... (이하 동일)}
+  </button>
+))}
       </div>
+
+{/* 메인 화면 설정 (MainPage 매칭) */}
+{activeSection === 'main' && (
+  <div className="space-y-4">
+    <div className="p-3 bg-white border rounded-lg space-y-3">
+      <span className="text-xs font-bold block text-blue-600">히어로 섹션 (hero 매칭)</span>
+      <label className="text-[10px] text-slate-400">배지 문구 (예: BRAND NEW)</label>
+      <input type="text" value={data.hero?.badge || ''} onChange={(e) => updateDeep('hero.badge', e.target.value)} className="w-full p-2 border rounded text-sm" />
+      <label className="text-[10px] text-slate-400">메인 타이틀</label>
+      <input type="text" value={data.hero?.title || ''} onChange={(e) => updateDeep('hero.title', e.target.value)} className="w-full p-2 border rounded text-sm" />
+      <label className="text-[10px] text-slate-400">서브 타이틀</label>
+      <textarea value={data.hero?.subtitle || ''} onChange={(e) => updateDeep('hero.subtitle', e.target.value)} className="w-full p-2 border rounded text-sm h-20" />
+    </div>
+
+    <div className="p-3 bg-white border rounded-lg space-y-3">
+      <span className="text-xs font-bold block text-blue-600">메인 솔루션 요약 (solutions 매칭)</span>
+      <p className="text-[10px] text-slate-400 mb-2">* 여기서 수정하는 내용은 메인 화면의 카드에 반영됩니다.</p>
+      {(data.solutions || []).map((sol: any, idx: number) => (
+        <div key={idx} className="p-2 border rounded bg-slate-50 space-y-2 mb-2 relative group">
+          <button onClick={() => removeDeep('solutions', idx)} className="absolute top-2 right-2 text-red-500 opacity-0 group-hover:opacity-100 text-xs">삭제</button>
+          <div className="text-[10px] font-bold text-slate-500">솔루션 0{idx + 1}</div>
+          <input type="text" value={sol.title || ''} onChange={(e) => {
+            const next = [...data.solutions];
+            next[idx].title = e.target.value;
+            updateDeep('solutions', next);
+          }} className="w-full p-1 border rounded text-xs font-bold" placeholder="솔루션 제목" />
+          <textarea value={sol.description || ''} onChange={(e) => {
+            const next = [...data.solutions];
+            next[idx].description = e.target.value;
+            updateDeep('solutions', next);
+          }} className="w-full p-1 border rounded text-xs h-12" placeholder="요약 설명" />
+        </div>
+      ))}
+      <button onClick={() => {
+        const current = data.solutions || [];
+        const next = [...current, { title: '신규 솔루션', description: '상세 설명을 입력하세요' }];
+        updateDeep('solutions', next);
+      }} className="w-full py-2 text-xs bg-blue-50 text-blue-600 border border-blue-200 rounded-md font-bold">+ 솔루션 추가</button>
+    </div>
+  </div>
+)}
 
       {/* 1. 회사 소개 (AboutPage 매칭) */}
       {activeSection === 'corporateInfo' && (
