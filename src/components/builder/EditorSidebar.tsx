@@ -23,14 +23,15 @@ interface TemplateData {
   solutions: SolutionItem[];
 }
 
-export default function EditorSidebar({ data, setData }: { data: TemplateData; setData: React.Dispatch<React.SetStateAction<TemplateData>>; }) {
-  console.log("🔥 에디터 사이드바 컴포넌트 로드됨!"); // <-- 이 줄을 추가하십시오.
-  alert("최신 코드가 적용되었습니다!"); // <-- 이 줄을 추가하십시오.
-  
+export default function EditorSidebar({ 
+  data, 
+  setData 
+}: { 
+  data: TemplateData; 
+  setData: React.Dispatch<React.SetStateAction<TemplateData>>; 
+}) {
   const searchParams = useSearchParams();
-  // ... 이하 기존 코드
   
-  // [수정] 최신 표준 방식으로 Supabase 클라이언트 생성
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL || '',
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
@@ -61,18 +62,20 @@ export default function EditorSidebar({ data, setData }: { data: TemplateData; s
     });
   };
 
-  const handlePublish = async () => {
+  const handlePublish = async (e: React.MouseEvent) => {
+    e.preventDefault(); // 새로고침 완전 차단
+    
     try {
       console.log("🚀 [저장 시도] 현재 전송할 데이터:", data);
 
       if (!data || Object.keys(data).length === 0) {
-        alert("저장할 내용이 없습니다. 내용을 입력해주세요.");
+        alert("저장할 내용이 없습니다.");
         return;
       }
 
       const siteId = searchParams.get('id');
       if (!siteId) {
-        alert("사이트 ID가 주소창에 없습니다.");
+        alert("사이트 ID가 없습니다.");
         return;
       }
 
@@ -91,7 +94,7 @@ export default function EditorSidebar({ data, setData }: { data: TemplateData; s
 
     } catch (error) {
       console.error("❌ 저장 중 에러 발생:", error);
-      alert("발행 중 오류가 발생했습니다. 콘솔창을 확인하세요.");
+      alert("발행 중 오류가 발생했습니다.");
     }
   };
 
@@ -99,16 +102,13 @@ export default function EditorSidebar({ data, setData }: { data: TemplateData; s
     <div className="w-80 h-screen bg-slate-100 border-l overflow-y-auto p-4 space-y-6">
       <div className="flex justify-between items-center pb-4 border-b">
         <h2 className="font-black text-slate-800">Nexia Builder</h2>
-<button 
-  type="button"  // <-- 이 부분을 반드시 추가하십시오.
-  onClick={(e) => {
-    e.preventDefault(); // <-- 기본 동작(새로고침) 강제 차단
-    handlePublish();
-  }} 
-  className="..."
->
-  발행하기
-</button>
+        <button 
+          type="button" 
+          onClick={handlePublish} 
+          className="px-4 py-2 bg-blue-600 text-white text-xs font-bold rounded-lg hover:bg-blue-700 transition-colors shadow-sm"
+        >
+          발행하기
+        </button>
       </div>
 
       <div className="p-3 bg-white border rounded-lg space-y-3 shadow-sm">
@@ -128,7 +128,7 @@ export default function EditorSidebar({ data, setData }: { data: TemplateData; s
             onChange={(e) => updateDeep('company.logoUrl', e.target.value)}
             className="w-full p-2 border rounded text-xs outline-none focus:ring-1 focus:ring-blue-500"
           />
-        </div>
+        </div}
       </div>
 
       <div className="p-3 bg-white border rounded-lg space-y-3 shadow-sm">
@@ -166,6 +166,7 @@ export default function EditorSidebar({ data, setData }: { data: TemplateData; s
         <div className="flex justify-between items-center border-b pb-2">
           <div className="text-[10px] font-bold text-blue-600 uppercase">Solution Cards</div>
           <button 
+            type="button"
             onClick={() => {
               const current = data.solutions || [];
               updateDeep('solutions', [...current, { title: '', description: '', detailContent: '' }]);
@@ -180,6 +181,7 @@ export default function EditorSidebar({ data, setData }: { data: TemplateData; s
           {(data.solutions || []).map((sol: any, idx: number) => (
             <div key={idx} className="p-3 border rounded-lg bg-slate-50 relative group space-y-2">
               <button 
+                type="button"
                 onClick={() => removeDeep('solutions', idx)} 
                 className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white rounded-full text-[10px] opacity-0 group-hover:opacity-100 transition-opacity"
               >
