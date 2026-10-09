@@ -78,19 +78,19 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
             <AboutPage key="about" corporateInfo={corporateInfo} />
           )}
 
-{/* 3. 사업소개(솔루션) 상세 페이지 */}
-{activePage === 'sol_detail' && (
-  <SolutionPage 
-    key={`sol-${selectedSolutionId}`} 
-    solutionData={currentSolution || { title: '', description: '', detailContent: '' }} 
-  />
-)}
+          {/* 3. 사업소개(솔루션) 상세 페이지 */}
+          {activePage === 'sol_detail' && (
+            <SolutionPage 
+              key={`sol-${selectedSolutionId}`} 
+              solutionData={currentSolution || { title: '', description: '', detailContent: '' }} 
+            />
+          )}
 
-          {/* 4. 지속가능경영(ESG) 페이지 */}
+          {/* 4. 지속가능경영(ESG) 페이지 - 초기값 문자열''로 통일 */}
           {activePage === 'esg' && (
             <ESGPage 
               key="esg" 
-              esgData={data.esgData || { mainTitle: '', mainDesc: '', environmental: {}, social: {}, governance: {} }} 
+              esgData={data.esgData || { mainTitle: '', mainDesc: '', environmental: '', social: '', governance: '' }} 
             />
           )}
 
@@ -123,14 +123,14 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
 
       <footer className="w-full bg-slate-900 text-slate-400 py-20 px-6 shrink-0 border-t border-slate-800">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-16">
-          <div>
+          <div className="space-y-4">
             <div className="text-2xl font-bold text-white mb-8">{company?.name || 'COMPANY'}</div>
             <p className="text-sm opacity-70 leading-relaxed">
               {footer?.address || '주소 정보가 등록되지 않았습니다.'}<br/>
               TEL: {data.supportPhone || data.csCenter?.contactInfo?.phone || '연락처 미등록'}
             </p>
           </div>
-          <div>
+          <div className="space-y-4">
             <h4 className="text-white font-bold mb-8 uppercase text-sm tracking-wider">Quick Links</h4>
             <ul className="space-y-4 text-sm">
               <li className="hover:text-white cursor-pointer transition-colors" onClick={() => navigateTo('main')}>홈으로</li>
@@ -138,7 +138,7 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
               <li className="hover:text-white cursor-pointer transition-colors" onClick={() => navigateTo('cs')}>고객센터</li>
             </ul>
           </div>
-          <div>
+          <div className="space-y-4">
             <h4 className="text-white font-bold mb-8 uppercase text-sm tracking-wider">Customer Support</h4>
             <p className="text-3xl font-bold text-white mb-4">{data.supportPhone || data.csCenter?.contactInfo?.phone || '000-0000-0000'}</p>
             <p className="text-sm opacity-70">{footer?.contactEmail || data.csCenter?.contactInfo?.email || ''}</p>
