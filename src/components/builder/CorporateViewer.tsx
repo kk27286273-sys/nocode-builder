@@ -81,8 +81,8 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
           {/* 3. 사업소개(솔루션) 상세 페이지 */}
           {activePage === 'sol_detail' && (
             <SolutionPage 
-              key={`sol-${selectedSolutionId}`} 
-              solutionData={currentSolution || { title: '', description: '', detailContent: '' }} 
+              key="sol_detail" 
+              data={data} 
             />
           )}
 

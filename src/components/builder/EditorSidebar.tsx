@@ -274,8 +274,7 @@ export default function EditorSidebar({ data, setData, activeSection, setActiveS
 )}
 
       {/* 3. 지속가능경영 (ESG) */}
-      {/* 3. 지속가능경영 (ESGPage 매칭) */}
-      {activeSection === 'esg' && (
+      {activeSection === 'sustainability' && (
         <div className="space-y-4">
           <div className="p-3 bg-white border rounded-lg space-y-4">
             <span className="text-xs font-bold block text-green-600">ESG 경영 관리</span>
