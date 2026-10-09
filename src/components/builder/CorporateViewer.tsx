@@ -7,9 +7,9 @@ import MainPage from './corporate/pages/MainPage';
 import AboutPage from './corporate/pages/AboutPage';
 import SolutionPage from './corporate/pages/SolutionPage';
 import ESGPage from './corporate/pages/ESGPage';
-import DisclosurePage from './corporate/pages/DisclosurePage';
 import PRPage from './corporate/pages/PRPage';
 import RecruitPage from './corporate/pages/RecruitPage';
+import CSPage from './corporate/pages/CSPage';
 
 interface CorporateViewerProps {
   data: any; 
@@ -85,27 +85,26 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
 
           {/* 4. 지속가능경영(ESG) 페이지 */}
           {activePage === 'esg' && (
-            <ESGPage key="esg" esgData={corporateInfo.esg} />
+            <ESGPage key="esg" esgData={data.esgData || corporateInfo.esg} />
           )}
 
-          {/* 5. 공시정보 페이지 (연결 확인) */}
-          {activePage === 'disclosure' && (
-            <DisclosurePage key="disclosure" disclosureData={corporateInfo.disclosure} />
-          )}
-
-          {/* 6. 홍보센터 페이지 (연결 확인) */}
+          {/* 5. 홍보센터 페이지 */}
           {activePage === 'pr' && (
-            <PRPage key="pr" prData={data.prCenter} />
+            <PRPage key="pr" prData={data.prData || data.prCenter} />
           )}
 
-          {/* 7. 인재경영 페이지 (연결 확인) */}
+          {/* 6. 인재경영 페이지 */}
           {activePage === 'recruit' && (
-            <RecruitPage key="recruit" recruitData={data.recruit} />
+            <RecruitPage key="recruit" recruitData={data.recruitData || data.recruit} />
           )}
 
-          {/* 8. 고객센터 페이지 (구현 예정) */}
+          {/* 7. 고객센터 페이지 */}
           {activePage === 'cs' && (
-            <div className="py-32 text-center text-2xl font-bold text-slate-400">고객센터 페이지 제작 중...</div>
+            <CSPage 
+              key="cs" 
+              guide={data.csGuide} 
+              contactInfo={data.csCenter?.contactInfo} 
+            />
           )}
         </AnimatePresence>
       </main>
@@ -116,7 +115,7 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
             <div className="text-2xl font-bold text-white mb-8">{company?.name || 'COMPANY'}</div>
             <p className="text-sm opacity-70 leading-relaxed">
               {footer?.address || '주소 정보가 등록되지 않았습니다.'}<br/>
-              TEL: {data.supportPhone || '연락처 미등록'}
+              TEL: {data.supportPhone || data.csCenter?.contactInfo?.phone || '연락처 미등록'}
             </p>
           </div>
           <div>
@@ -129,8 +128,8 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
           </div>
           <div>
             <h4 className="text-white font-bold mb-8 uppercase text-sm tracking-wider">Customer Support</h4>
-            <p className="text-3xl font-bold text-white mb-4">{data.supportPhone || '000-0000-0000'}</p>
-            <p className="text-sm opacity-70">{footer?.contactEmail || ''}</p>
+            <p className="text-3xl font-bold text-white mb-4">{data.supportPhone || data.csCenter?.contactInfo?.phone || '000-0000-0000'}</p>
+            <p className="text-sm opacity-70">{footer?.contactEmail || data.csCenter?.contactInfo?.email || ''}</p>
           </div>
         </div>
       </footer>

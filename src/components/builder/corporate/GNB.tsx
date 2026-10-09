@@ -11,12 +11,11 @@ interface GNBProps {
 }
 
 export default function GNB({ company, navigation, themeColor, activePage, navigateTo }: GNBProps) {
-  // 에이텍 기준 7대 카테고리 정의
+  // '공시정보' 항목을 제거한 6대 카테고리로 수정
   const mainMenus = [
     { label: '회사소개', id: 'about' },
     { label: '사업소개', id: 'sol_detail' },
     { label: '지속가능경영', id: 'esg' },
-    { label: '공시정보', id: 'disclosure' },
     { label: '홍보센터', id: 'pr' },
     { label: '인재경영', id: 'recruit' },
     { label: '고객센터', id: 'cs' },
