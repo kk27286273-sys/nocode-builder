@@ -8,7 +8,6 @@ import LivePreview from '@/components/builder/LivePreview';
 
 // 업종별 기본 데이터를 매칭하기 위한 헬퍼 함수
 function getPresetData(id: string): B2BTemplateData {
-  // 여기서 id는 'legal', 'fitness', 'counseling', 'rental' 등이 들어옵니다.
   if (id.includes('legal')) {
     return {
       ...defaultB2BTemplateData,
@@ -63,7 +62,6 @@ function getPresetData(id: string): B2BTemplateData {
     };
   }
 
-  // 기본값은 기존 B2B(렌탈/시공) 데이터 사용
   return defaultB2BTemplateData;
 }
 
@@ -75,45 +73,72 @@ export interface ViewerClientProps {
 export default function ViewerClient({ data: initialData, siteId: propSiteId }: ViewerClientProps) {
   const params = useParams();
   const siteId = propSiteId || (params?.id as string);
-  const pageId = params?.pageId as string | undefined; 
+  const pageId = params?.pageId as string | undefined;
 
-  // 초기 데이터 설정: initialData -> ID 기반 프리셋 데이터 -> 기본 B2B 데이터 순으로 적용
   const [data, setData] = useState<B2BTemplateData>(() => {
     if (initialData) return initialData;
     if (siteId) return getPresetData(siteId);
     return defaultB2BTemplateData;
   });
-  
+
   const [loading, setLoading] = useState<boolean>(!initialData && !!siteId);
 
   useEffect(() => {
-    if (initialData) { setData(initialData); setLoading(false); return; }
+    if (initialData) {
+      setData(initialData);
+      setLoading(false);
+      return;
+    }
+
     if (siteId) {
       setLoading(true);
-      supabase.from('sites').select('content').eq('id', siteId).single().then(({ data: siteRecord }) => {
-        if (siteRecord?.content) {
-          const content = siteRecord.content;
+      supabase
+        .from('sites')
+        .select('content')
+        .eq('id', siteId)
+        .single()
+        .then(({ data: siteRecord }) => {
+          if (siteRecord?.content) {
+            const content = siteRecord.content;
 
-          // [구조 보정 로직] solutionMain이 없는 구버전 데이터일 경우 처리
-          if (!content.solutionMain && content.solutions && content.solutions.length > 0) {
-            const firstSol = content.solutions[0];
-            content.solutionMain = {
-              title: firstSol.title || '사업 소개',
-              description: firstSol.description || '솔루션 상세 안내',
-              detailContent: firstSol.detailContent || '상세 내용을 확인하세요.',
-            };
+            // solutionMain이 없는 구버전 데이터 구조를 보정합니다.
+            if (!content.solutionMain && content.solutions && content.solutions.length > 0) {
+              const firstSol = content.solutions[0];
+              content.solutionMain = {
+                title: firstSol.title || '사업 소개',
+                description: firstSol.description || '솔루션 상세 안내',
+                detailContent: firstSol.detailContent || '상세 내용을 확인하세요.',
+              };
+            }
+
+            setData(content);
+          } else {
+            setData(getPresetData(siteId));
           }
 
-          setData(content);
-        } else {
-          setData(getPresetData(siteId));
-        }
-        setLoading(false);
-      });
+          setLoading(false);
+        });
     }
   }, [initialData, siteId]);
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center bg-white"><div className="text-slate-500 text-sm font-semibold animate-pulse">페이지를 불러오는 중입니다...</div></div>;
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="text-slate-500 text-sm font-semibold animate-pulse">
+          페이지를 불러오는 중입니다...
+        </div>
+      </div>
+    );
+  }
 
-  return <div className="min-h-screen bg-white"><LivePreview data={data} zoom={100} currentPageId={pageId || 'main'} /></div>;
+  return (
+    <div className="min-h-screen w-full bg-white">
+      <LivePreview
+        data={data}
+        zoom={100}
+        currentPageId={pageId || 'main'}
+        published
+      />
+    </div>
+  );
 }
