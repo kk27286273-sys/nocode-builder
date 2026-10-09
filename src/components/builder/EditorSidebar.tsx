@@ -40,60 +40,73 @@ export default function EditorSidebar({ data, setData, activeSection, setActiveS
     });
   };
 
+  const getSectionLabel = (section: string) => {
+    switch (section) {
+      case 'main': return '메인 화면';
+      case 'corporateInfo': return '회사 소개';
+      case 'solutions': return '사업 소개';
+      case 'sustainability': return '지속가능경영';
+      case 'pr': return '홍보 센터';
+      case 'recruit': return '인재 경영';
+      case 'cs': return '고객 센터';
+      case 'footer': return '하단 정보';
+      default: return section;
+    }
+  };
+
   return (
     <div className="w-full h-full overflow-y-auto bg-slate-50 border-r border-slate-200 p-4 space-y-6">
       <div className="grid grid-cols-2 gap-2 mb-6">
-{['main', 'corporateInfo', 'solutions', 'sustainability', 'pr', 'recruit', 'cs', 'footer'].map(section => (
-  <button
-    key={section}
-    onClick={() => setActiveSection(section)}
-    className={`px-3 py-2 text-xs rounded-md transition-all ${activeSection === section ? 'bg-blue-600 text-white shadow-md' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-100'}`}
-  >
-    {section === 'main' ? '메인 화면' : section === 'corporateInfo' ? '회사 소개' : ... (이하 동일)}
-  </button>
-))}
+        {['main', 'corporateInfo', 'solutions', 'sustainability', 'pr', 'recruit', 'cs', 'footer'].map(section => (
+          <button
+            key={section}
+            onClick={() => setActiveSection(section)}
+            className={`px-3 py-2 text-xs rounded-md transition-all ${activeSection === section ? 'bg-blue-600 text-white shadow-md' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-100'}`}
+          >
+            {getSectionLabel(section)}
+          </button>
+        ))}
       </div>
 
-{/* 메인 화면 설정 (MainPage 매칭) */}
-{activeSection === 'main' && (
-  <div className="space-y-4">
-    <div className="p-3 bg-white border rounded-lg space-y-3">
-      <span className="text-xs font-bold block text-blue-600">히어로 섹션 (hero 매칭)</span>
-      <label className="text-[10px] text-slate-400">배지 문구 (예: BRAND NEW)</label>
-      <input type="text" value={data.hero?.badge || ''} onChange={(e) => updateDeep('hero.badge', e.target.value)} className="w-full p-2 border rounded text-sm" />
-      <label className="text-[10px] text-slate-400">메인 타이틀</label>
-      <input type="text" value={data.hero?.title || ''} onChange={(e) => updateDeep('hero.title', e.target.value)} className="w-full p-2 border rounded text-sm" />
-      <label className="text-[10px] text-slate-400">서브 타이틀</label>
-      <textarea value={data.hero?.subtitle || ''} onChange={(e) => updateDeep('hero.subtitle', e.target.value)} className="w-full p-2 border rounded text-sm h-20" />
-    </div>
+      {/* 0. 메인 화면 (MainPage 매칭) */}
+      {activeSection === 'main' && (
+        <div className="space-y-4">
+          <div className="p-3 bg-white border rounded-lg space-y-3">
+            <span className="text-xs font-bold block text-blue-600">히어로 섹션 (hero 매칭)</span>
+            <label className="text-[10px] text-slate-400">배지 문구</label>
+            <input type="text" value={data.hero?.badge || ''} onChange={(e) => updateDeep('hero.badge', e.target.value)} className="w-full p-2 border rounded text-sm" />
+            <label className="text-[10px] text-slate-400">메인 타이틀</label>
+            <input type="text" value={data.hero?.title || ''} onChange={(e) => updateDeep('hero.title', e.target.value)} className="w-full p-2 border rounded text-sm" />
+            <label className="text-[10px] text-slate-400">서브 타이틀</label>
+            <textarea value={data.hero?.subtitle || ''} onChange={(e) => updateDeep('hero.subtitle', e.target.value)} className="w-full p-2 border rounded text-sm h-20" />
+          </div>
 
-    <div className="p-3 bg-white border rounded-lg space-y-3">
-      <span className="text-xs font-bold block text-blue-600">메인 솔루션 요약 (solutions 매칭)</span>
-      <p className="text-[10px] text-slate-400 mb-2">* 여기서 수정하는 내용은 메인 화면의 카드에 반영됩니다.</p>
-      {(data.solutions || []).map((sol: any, idx: number) => (
-        <div key={idx} className="p-2 border rounded bg-slate-50 space-y-2 mb-2 relative group">
-          <button onClick={() => removeDeep('solutions', idx)} className="absolute top-2 right-2 text-red-500 opacity-0 group-hover:opacity-100 text-xs">삭제</button>
-          <div className="text-[10px] font-bold text-slate-500">솔루션 0{idx + 1}</div>
-          <input type="text" value={sol.title || ''} onChange={(e) => {
-            const next = [...data.solutions];
-            next[idx].title = e.target.value;
-            updateDeep('solutions', next);
-          }} className="w-full p-1 border rounded text-xs font-bold" placeholder="솔루션 제목" />
-          <textarea value={sol.description || ''} onChange={(e) => {
-            const next = [...data.solutions];
-            next[idx].description = e.target.value;
-            updateDeep('solutions', next);
-          }} className="w-full p-1 border rounded text-xs h-12" placeholder="요약 설명" />
+          <div className="p-3 bg-white border rounded-lg space-y-3">
+            <span className="text-xs font-bold block text-blue-600">메인 솔루션 요약 (solutions 매칭)</span>
+            {(data.solutions || []).map((sol: any, idx: number) => (
+              <div key={idx} className="p-2 border rounded bg-slate-50 space-y-2 mb-2 relative group">
+                <button onClick={() => removeDeep('solutions', idx)} className="absolute top-2 right-2 text-red-500 opacity-0 group-hover:opacity-100 text-xs">삭제</button>
+                <div className="text-[10px] font-bold text-slate-500">솔루션 0{idx + 1}</div>
+                <input type="text" value={sol.title || ''} onChange={(e) => {
+                  const next = [...data.solutions];
+                  next[idx].title = e.target.value;
+                  updateDeep('solutions', next);
+                }} className="w-full p-1 border rounded text-xs font-bold" placeholder="솔루션 제목" />
+                <textarea value={sol.description || ''} onChange={(e) => {
+                  const next = [...data.solutions];
+                  next[idx].description = e.target.value;
+                  updateDeep('solutions', next);
+                }} className="w-full p-1 border rounded text-xs h-12" placeholder="요약 설명" />
+              </div>
+            ))}
+            <button onClick={() => {
+              const current = data.solutions || [];
+              const next = [...current, { title: '신규 솔루션', description: '상세 설명을 입력하세요' }];
+              updateDeep('solutions', next);
+            }} className="w-full py-2 text-xs bg-blue-50 text-blue-600 border border-blue-200 rounded-md font-bold">+ 솔루션 추가</button>
+          </div>
         </div>
-      ))}
-      <button onClick={() => {
-        const current = data.solutions || [];
-        const next = [...current, { title: '신규 솔루션', description: '상세 설명을 입력하세요' }];
-        updateDeep('solutions', next);
-      }} className="w-full py-2 text-xs bg-blue-50 text-blue-600 border border-blue-200 rounded-md font-bold">+ 솔루션 추가</button>
-    </div>
-  </div>
-)}
+      )}
 
       {/* 1. 회사 소개 (AboutPage 매칭) */}
       {activeSection === 'corporateInfo' && (
@@ -101,28 +114,28 @@ export default function EditorSidebar({ data, setData, activeSection, setActiveS
           <div className="p-3 bg-white border rounded-lg space-y-3">
             <span className="text-xs font-bold block text-blue-600">기본 설정</span>
             <label className="text-[10px] text-slate-400">로고 URL</label>
-            <input type="text" value={data.company.logoUrl} onChange={(e) => updateDeep('company.logoUrl', e.target.value)} className="w-full p-2 border rounded text-sm" />
+            <input type="text" value={data.company?.logoUrl || ''} onChange={(e) => updateDeep('company.logoUrl', e.target.value)} className="w-full p-2 border rounded text-sm" />
             <label className="text-[10px] text-slate-400">회사명</label>
-            <input type="text" value={data.company.name} onChange={(e) => updateDeep('company.name', e.target.value)} className="w-full p-2 border rounded text-sm" />
+            <input type="text" value={data.company?.name || ''} onChange={(e) => updateDeep('company.name', e.target.value)} className="w-full p-2 border rounded text-sm" />
           </div>
           <div className="p-3 bg-white border rounded-lg space-y-3">
             <span className="text-xs font-bold block text-blue-600">메인 헤드라인 (intro)</span>
-            <input type="text" value={(data as any).corporateInfo.intro?.mainTitle || ''} onChange={(e) => updateDeep('corporateInfo.intro.mainTitle', e.target.value)} className="w-full p-2 border rounded text-sm" placeholder="메인 제목" />
-            <input type="text" value={(data as any).corporateInfo.intro?.subTitle || ''} onChange={(e) => updateDeep('corporateInfo.intro.subTitle', e.target.value)} className="w-full p-2 border rounded text-sm" placeholder="서브 제목" />
+            <input type="text" value={(data as any).corporateInfo?.intro?.mainTitle || ''} onChange={(e) => updateDeep('corporateInfo.intro.mainTitle', e.target.value)} className="w-full p-2 border rounded text-sm" placeholder="메인 제목" />
+            <input type="text" value={(data as any).corporateInfo?.intro?.subTitle || ''} onChange={(e) => updateDeep('corporateInfo.intro.subTitle', e.target.value)} className="w-full p-2 border rounded text-sm" placeholder="서브 제목" />
           </div>
           <div className="p-3 bg-white border rounded-lg space-y-3">
             <span className="text-xs font-bold block text-blue-600">미션 & 비전 (missionVision 매칭)</span>
-            <input type="text" value={(data as any).corporateInfo.missionVision?.mission || ''} onChange={(e) => updateDeep('corporateInfo.missionVision.mission', e.target.value)} className="w-full p-2 border rounded text-sm" placeholder="미션 입력" />
-            <input type="text" value={(data as any).corporateInfo.missionVision?.vision || ''} onChange={(e) => updateDeep('corporateInfo.missionVision.vision', e.target.value)} className="w-full p-2 border rounded text-sm" placeholder="비전 입력" />
+            <input type="text" value={(data as any).corporateInfo?.missionVision?.mission || ''} onChange={(e) => updateDeep('corporateInfo.missionVision.mission', e.target.value)} className="w-full p-2 border rounded text-sm" placeholder="미션 입력" />
+            <input type="text" value={(data as any).corporateInfo?.missionVision?.vision || ''} onChange={(e) => updateDeep('corporateInfo.missionVision.vision', e.target.value)} className="w-full p-2 border rounded text-sm" placeholder="비전 입력" />
           </div>
           <div className="p-3 bg-white border rounded-lg space-y-3">
             <span className="text-xs font-bold block text-blue-600">CEO 정보</span>
-            <input type="text" value={(data as any).corporateInfo.ceo?.title || ''} onChange={(e) => updateDeep('corporateInfo.ceo.title', e.target.value)} className="w-full p-2 border rounded text-sm" />
-            <textarea value={data.corporateInfo.ceoGreeting.content} onChange={(e) => updateDeep('corporateInfo.ceoGreeting.content', e.target.value)} className="w-full p-2 border rounded text-sm h-24" />
+            <input type="text" value={(data as any).corporateInfo?.ceo?.title || ''} onChange={(e) => updateDeep('corporateInfo.ceo.title', e.target.value)} className="w-full p-2 border rounded text-sm" />
+            <textarea value={data.corporateInfo?.ceoGreeting?.content || ''} onChange={(e) => updateDeep('corporateInfo.ceoGreeting.content', e.target.value)} className="w-full p-2 border rounded text-sm h-24" />
           </div>
           <div className="p-3 bg-white border rounded-lg space-y-3">
             <span className="text-xs font-bold block text-blue-600">연혁 관리 (aboutUs.history 매칭)</span>
-            {((data as any).corporateInfo.aboutUs?.history || []).map((item: any, idx: number) => (
+            {((data as any).corporateInfo?.aboutUs?.history || []).map((item: any, idx: number) => (
               <div key={idx} className="p-2 border rounded bg-slate-50 space-y-2 mb-2 relative group">
                 <button onClick={() => removeDeep('corporateInfo.aboutUs.history', idx)} className="absolute top-2 right-2 text-red-500 opacity-0 group-hover:opacity-100 text-xs">삭제</button>
                 <input type="text" value={item.year} onChange={(e) => {
@@ -138,7 +151,8 @@ export default function EditorSidebar({ data, setData, activeSection, setActiveS
               </div>
             ))}
             <button onClick={() => {
-              const next = [...((data as any).corporateInfo.aboutUs?.history || []), { year: '2024', event: '새로운 연혁' }];
+              const current = (data as any).corporateInfo?.aboutUs?.history || [];
+              const next = [...current, { year: '2024', event: '새로운 연혁' }];
               updateDeep('corporateInfo.aboutUs.history', next);
             }} className="w-full py-2 text-xs bg-blue-50 text-blue-600 border border-blue-200 rounded-md font-bold">+ 연혁 추가</button>
           </div>
@@ -206,7 +220,7 @@ export default function EditorSidebar({ data, setData, activeSection, setActiveS
         <div className="space-y-4">
           <div className="p-3 bg-white border rounded-lg space-y-3">
             <span className="text-xs font-bold block text-blue-600">최신 뉴스 (prData.news 매칭)</span>
-            {( (data as any).prData?.news || []).map((n: any, idx: number) => (
+            {((data as any).prData?.news || []).map((n: any, idx: number) => (
               <div key={idx} className="p-2 border rounded bg-slate-50 space-y-2 mb-2 relative group">
                 <button onClick={() => removeDeep('prData.news', idx)} className="absolute top-2 right-2 text-red-500 opacity-0 group-hover:opacity-100 text-xs">삭제</button>
                 <input type="text" value={n.title} onChange={(e) => {
@@ -307,9 +321,9 @@ export default function EditorSidebar({ data, setData, activeSection, setActiveS
         <div className="space-y-4">
           <div className="p-3 bg-white border rounded-lg space-y-3">
             <span className="text-xs font-bold block text-blue-600">문의처 정보</span>
-            <textarea value={data.csGuide} onChange={(e) => updateDeep('csGuide', e.target.value)} className="w-full p-2 border rounded text-sm h-20" placeholder="가이드 문구" />
-            <input type="text" value={data.csCenter.contactInfo.email} onChange={(e) => updateDeep('csCenter.contactInfo.email', e.target.value)} className="w-full p-2 border rounded text-sm" placeholder="이메일" />
-            <input type="text" value={data.csCenter.contactInfo.phone} onChange={(e) => updateDeep('csCenter.contactInfo.phone', e.target.value)} className="w-full p-2 border rounded text-sm" placeholder="전화번호" />
+            <textarea value={data.csGuide || ''} onChange={(e) => updateDeep('csGuide', e.target.value)} className="w-full p-2 border rounded text-sm h-20" placeholder="가이드 문구" />
+            <input type="text" value={data.csCenter?.contactInfo?.email || ''} onChange={(e) => updateDeep('csCenter.contactInfo.email', e.target.value)} className="w-full p-2 border rounded text-sm" placeholder="이메일" />
+            <input type="text" value={data.csCenter?.contactInfo?.phone || ''} onChange={(e) => updateDeep('csCenter.contactInfo.phone', e.target.value)} className="w-full p-2 border rounded text-sm" placeholder="전화번호" />
           </div>
         </div>
       )}
@@ -319,9 +333,9 @@ export default function EditorSidebar({ data, setData, activeSection, setActiveS
         <div className="space-y-4">
           <div className="p-3 bg-white border rounded-lg space-y-3">
             <span className="text-xs font-bold block text-blue-600">푸터 상세 정보</span>
-            <input type="text" value={data.footer.address} onChange={(e) => updateDeep('footer.address', e.target.value)} className="w-full p-2 border rounded text-sm" />
-            <input type="text" value={data.footer.contactEmail} onChange={(e) => updateDeep('footer.contactEmail', e.target.value)} className="w-full p-2 border rounded text-sm" />
-            <input type="text" value={data.supportPhone} onChange={(e) => updateDeep('supportPhone', e.target.value)} className="w-full p-2 border rounded text-sm" />
+            <input type="text" value={data.footer?.address || ''} onChange={(e) => updateDeep('footer.address', e.target.value)} className="w-full p-2 border rounded text-sm" />
+            <input type="text" value={data.footer?.contactEmail || ''} onChange={(e) => updateDeep('footer.contactEmail', e.target.value)} className="w-full p-2 border rounded text-sm" />
+            <input type="text" value={data.supportPhone || ''} onChange={(e) => updateDeep('supportPhone', e.target.value)} className="w-full p-2 border rounded text-sm" />
           </div>
         </div>
       )}
