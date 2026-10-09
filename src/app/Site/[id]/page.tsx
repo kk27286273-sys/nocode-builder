@@ -54,18 +54,20 @@ export default function PublicSitePage() {
     );
   }
 
-  const templateType = data.templateType || 'corporate';
+  // [핵심 수정] templateType에 의존하지 않고, 
+  // 데이터 구조에 'solutionMain'이 있으면 솔루션 뷰어(LivePreview)를 강제 적용합니다.
+  const isSolutionType = data.solutionMain !== undefined;
 
   return (
     <div className="min-h-screen w-full bg-white">
-      {templateType === 'corporate' ? (
+      {isSolutionType ? (
+        <LivePreview data={data} />
+      ) : (
         <CorporateViewer
           data={data}
           activeSection={activeSection}
           setActiveSection={setActiveSection}
         />
-      ) : (
-        <LivePreview data={data} />
       )}
     </div>
   );
