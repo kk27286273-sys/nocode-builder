@@ -44,7 +44,10 @@ async function loadSiteData(id: string) {
     const defaultCorporateData: B2BTemplateData = {
       templateType: 'corporate',
       themeColor: '#2563eb',
-      company: { name: '태산금형', logoUrl: '' },
+company: { 
+  name: '회사명을 입력해주세요', // '태산금형' -> 가이드 문구로 변경
+  logoUrl: '/images/default-logo.png' // 빈 값 -> 기본 로고 이미지 경로 또는 placeholder URL
+},
       hero: { title: '최고의 정밀 기술로 산업의 표준을 제시합니다', subtitle: '글로벌 시장을 선도하는 정밀 금형 솔루션 기업', badge: 'Since 1990', mediaUrl: '' },
       solutions: [
         { title: '정밀 금형 설계', category: '핵심기술', description: '초정밀 설계를 통한 완벽한 품질 구현', image: '', detailedFeatures: [{ featureTitle: '특징 1', featureContent: '상세 내용입니다.' }] },

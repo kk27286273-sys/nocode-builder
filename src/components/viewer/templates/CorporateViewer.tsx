@@ -171,29 +171,44 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
         <AnimatePresence mode="wait">
           {activePage === 'main' && <MainHome key="main" />}
           
-          {activePage === 'corporateInfo' && (
-            <PageLayout title="기업 소개" content={
-              <div className="space-y-16">
-                <div className="flex flex-col md:flex-row gap-12 items-center">
-                  <img src={corporateInfo.ceoGreeting.image} className="w-64 h-80 object-cover rounded-2xl shadow-lg" />
-                  <div>
-                    <h3 className="text-2xl font-bold mb-6">{corporateInfo.ceoGreeting.title}</h3>
-                    <p className="text-slate-600 leading-relaxed whitespace-pre-line">{corporateInfo.ceoGreeting.content}</p>
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div className="p-8 bg-blue-50 rounded-2xl border-l-8 border-blue-600">
-                    <h4 className="text-xl font-bold mb-4">Mission</h4>
-                    <p className="text-lg leading-relaxed">{corporateInfo.missionVision.mission}</p>
-                  </div>
-                  <div className="p-8 bg-slate-50 rounded-2xl border-l-8 border-slate-600">
-                    <h4 className="text-xl font-bold mb-4">Vision</h4>
-                    <p className="text-lg leading-relaxed">{corporateInfo.missionVision.vision}</p>
-                  </div>
-                </div>
-              </div>
-            } />
-          )}
+{activePage === 'corporateInfo' && (
+  <PageLayout title={(data as any).corporateInfo.intro?.subTitle || 'Company Introduction'} content={
+    <div className="space-y-16">
+      <div className="text-center mb-12">
+        <h3 className="text-3xl font-bold mb-4">{(data as any).corporateInfo.intro?.mainTitle}</h3>
+        <p className="text-slate-600">{data.company.name}</p>
+      </div>
+      <div className="flex flex-col md:flex-row gap-12 items-center">
+        <img src={corporateInfo.ceoGreeting.image} className="w-64 h-80 object-cover rounded-2xl shadow-lg" />
+        <div>
+          <h3 className="text-2xl font-bold mb-6">{(data as any).corporateInfo.ceo?.title}</h3>
+          <p className="text-slate-600 leading-relaxed whitespace-pre-line">{corporateInfo.ceoGreeting.content}</p>
+        </div>
+      </div>
+      {/* 미션/비전 부분 동일하게 연결 */}
+    </div>
+  } />
+)}
+
+{activePage === 'sustainability' && (
+  <PageLayout title={(data as any).sustainability?.title || 'Sustainability'} content={
+    <div className="space-y-12 text-center">
+      <div>
+        <h3 className="text-3xl font-bold mb-4">{(data as any).sustainability?.subTitle}</h3>
+        <p className="text-slate-600 max-w-2xl mx-auto">{(data as any).sustainability?.description}</p>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {(data as any).sustainability?.items?.map((item: any, idx: number) => (
+          <div key={idx} className="p-8 border rounded-3xl space-y-4">
+            <span className="text-blue-600 font-bold">{item.category}</span>
+            <h4 className="text-2xl font-bold">{item.title}</h4>
+            <p className="text-slate-600">{item.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  } />
+)}
 
           {activePage === 'solutions' && (
             <PageLayout title="사업 소개" content={
