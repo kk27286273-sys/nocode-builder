@@ -24,75 +24,33 @@ export default function BuilderPage() {
     }
   }
 
-async function loadSiteData(id: string) {
-  if (!id) return;
-  setSiteId(id);
-  setIsLoading(true);
-  
-  const { data: siteData, error } = await supabase
-    .from('sites')
-    .select('data')
-    .eq('id', id)
-    .single();
-  
-  if (error) {
-    console.error("데이터 로드 에러:", error);
-  } else if (siteData && siteData.data) {
-    const currentData = siteData.data;
+  async function loadSiteData(id: string) {
+    if (!id) return;
+    setSiteId(id);
+    setIsLoading(true);
     
-    // 타입 정의에 맞춘 완벽한 기본값 구조
-    const defaultCorporateData: B2BTemplateData = {
-      templateType: 'corporate',
-      themeColor: '#2563eb',
-company: { 
-  name: '회사명을 입력해주세요', // '태산금형' -> 가이드 문구로 변경
-  logoUrl: '/images/default-logo.png' // 빈 값 -> 기본 로고 이미지 경로 또는 placeholder URL
-},
-      hero: { title: '최고의 정밀 기술로 산업의 표준을 제시합니다', subtitle: '글로벌 시장을 선도하는 정밀 금형 솔루션 기업', badge: 'Since 1990', mediaUrl: '' },
-      solutions: [
-        { title: '정밀 금형 설계', category: '핵심기술', description: '초정밀 설계를 통한 완벽한 품질 구현', image: '', detailedFeatures: [{ featureTitle: '특징 1', featureContent: '상세 내용입니다.' }] },
-      ],
-      corporateInfo: {
-        ceoGreeting: { title: '신뢰와 기술로 보답하겠습니다', content: 'CEO 인사말 내용이 들어갑니다.', image: '' },
-        missionVision: { mission: '인류 산업 발전에 기여하는 기술력', vision: '2030 글로벌 톱 10 정밀금형 기업' },
-        history: [{ year: '2024', event: '글로벌 시장 진출 및 확장' }],
-        orgChart: '',
-        ciImage: '',
-        location: { headOffice: { address: '서울시 강남구...', tel: '02-000-0000', fax: '02-000-0000' } },
-        esg: {
-          environmental: { title: '환경경영', content: '친환경 공정 도입', image: '' },
-          social: { title: '사회공헌', content: '지역사회 상생', image: '' },
-          governance: { title: '투명경영', content: '윤리경영 실천', image: '' },
-        },
-        disclosure: { certifications: [], reports: [] },
-      },
-      navigation: {
-        menus: [
-          { label: '회사소개', children: [{ label: 'CEO인사말', targetId: 'ceo' }, { label: '연혁', targetId: 'history' }] },
-          { label: '사업소개', children: [{ label: '솔루션', targetId: 'sol_detail' }] },
-        ]
-      },
-      prCenter: { news: [], notice: [] },
-      recruit: { talentValue: '도전하는 인재', benefitInfo: '최고의 복지', openPositions: [] },
-      csCenter: { faq: [], contactInfo: { email: 'help@company.com', phone: '02-000-0000', address: '서울시...' } },
-      supportPhone: '02-000-0000',
-      csGuide: '평일 09:00 ~ 18:00',
-      kakaoLink: '',
-      newsContent: '',
-      videoUrl: '',
-      talentValue: '열정적인 인재',
-      benefitInfo: '자유로운 연차 사용',
-      footer: { address: '서울시...', ownerName: '대표자명', businessNumber: '000-00-00000', contactEmail: 'info@company.com', companyName: '태산금형' },
-    };
-
-    if (currentData.templateType !== 'corporate') {
-      setData({ ...defaultCorporateData, ...currentData, templateType: 'corporate' });
-    } else {
-      setData(currentData);
+    const { data: siteData, error } = await supabase
+      .from('sites')
+      .select('data')
+      .eq('id', id)
+      .single();
+    
+    if (error) {
+      console.error("데이터 로드 에러:", error);
+    } else if (siteData && siteData.data) {
+      // [핵심 수정] 구버전 기본값으로 덮어씌우는 로직을 완전히 제거했습니다.
+      // DB에 있는 데이터를 있는 그대로 사용하며, 최소한의 필수 구조만 보장합니다.
+      const currentData = siteData.data;
+      
+      setData({
+        ...currentData,
+        company: currentData.company || { name: '', logoUrl: '' },
+        solutions: currentData.solutions || [],
+      });
     }
+    setIsLoading(false);
   }
-  setIsLoading(false);
-}
+
   async function handlePublish() {
     if (!siteId || !data) return alert('사이트를 먼저 선택해주세요.');
     setIsLoading(true);
@@ -119,10 +77,7 @@ company: {
 
   return (
     <div className="fixed inset-0 z-[9999] w-screen h-screen flex overflow-hidden bg-slate-100">
-      {/* 좌측 패널 전체: 상단 제어바 + 에디터 */}
       <div className="w-[430px] h-full flex flex-col shrink-0 bg-white border-r border-slate-300 shadow-2xl relative z-20">
-        
-        {/* 상단 제어바 */}
         <div className="h-14 px-4 bg-slate-900 flex items-center justify-between shrink-0 border-b border-slate-800">
           <div className="flex items-center gap-2">
             <span className="text-[11px] font-black text-slate-400 uppercase tracking-wider">Site</span>
@@ -163,7 +118,6 @@ company: {
           </div>
         </div>
 
-        {/* 하단 에디터 영역 */}
         <div className="flex-1 overflow-y-auto">
           <EditorSidebar 
             data={data} 
@@ -176,14 +130,7 @@ company: {
         </div>
       </div>
 
-      {/* 우측 뷰어: overflow-hidden 제거하여 내부 스크롤 가능하게 수정 */}
       <main className="flex-1 h-full min-h-0 bg-slate-200 relative z-10 overflow-hidden">
-        {/* 
-          주의: 여기서 overflow-hidden을 유지하더라도 
-          내부의 ViewerManager -> LivePreview -> 뷰포트 div가 
-          overflow-y-auto를 가지고 있다면 스크롤이 작동합니다.
-          단, h-full과 min-h-0가 반드시 함께 있어야 flex-item의 높이 계산 오류가 없습니다.
-        */}
         <ViewerManager data={data} activeSection={activeSection} setActiveSection={setActiveSection} />
       </main>
     </div>
