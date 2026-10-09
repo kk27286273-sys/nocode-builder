@@ -300,30 +300,137 @@ export default function EditorSidebar({
           )}
 
           {/* 4. 지속가능경영 */}
-          {active === 'esg' && (
-            <div className="space-y-4 bg-white p-4 rounded-xl border border-slate-200">
-              <InputField
-                label="환경경영 제목"
-                value={getValue('corporateInfo.esg.environmental.title')}
-                onChange={(val: string) => updateDeep('corporateInfo.esg.environmental.title', val)}
-              />
-              <TextAreaField
-                label="환경경영 내용"
-                value={getValue('corporateInfo.esg.environmental.content')}
-                onChange={(val: string) => updateDeep('corporateInfo.esg.environmental.content', val)}
-              />
-              <InputField
-                label="사회공헌 제목"
-                value={getValue('corporateInfo.esg.social.title')}
-                onChange={(val: string) => updateDeep('corporateInfo.esg.social.title', val)}
-              />
-              <TextAreaField
-                label="사회공헌 내용"
-                value={getValue('corporateInfo.esg.social.content')}
-                onChange={(val: string) => updateDeep('corporateInfo.esg.social.content', val)}
-              />
-            </div>
-          )}
+{active === 'esg' && (
+  <div className="space-y-4 bg-white p-4 rounded-xl border border-slate-200">
+    <InputField
+      label="페이지 제목"
+      value={getValue('corporateInfo.esg.mainTitle')}
+      onChange={(val: string) =>
+        updateDeep('corporateInfo.esg.mainTitle', val)
+      }
+    />
+
+    <TextAreaField
+      label="페이지 설명"
+      value={getValue('corporateInfo.esg.mainDesc')}
+      onChange={(val: string) =>
+        updateDeep('corporateInfo.esg.mainDesc', val)
+      }
+      h="h-20"
+    />
+
+    <InputField
+      label="환경경영 영문 라벨"
+      value={
+        getValue('corporateInfo.esg.goals.0.label') ||
+        getValue('corporateInfo.esg.environmental.label') ||
+        'Environmental'
+      }
+      onChange={(val: string) => {
+        updateDeep('corporateInfo.esg.goals.0.label', val);
+        updateDeep('corporateInfo.esg.environmental.label', val);
+      }}
+    />
+
+    <InputField
+      label="환경경영 제목"
+      value={
+        getValue('corporateInfo.esg.goals.0.title') ||
+        getValue('corporateInfo.esg.environmental.title')
+      }
+      onChange={(val: string) => {
+        updateDeep('corporateInfo.esg.goals.0.title', val);
+        updateDeep('corporateInfo.esg.environmental.title', val);
+      }}
+    />
+
+    <TextAreaField
+      label="환경경영 내용"
+      value={
+        getValue('corporateInfo.esg.goals.0.content') ||
+        getValue('corporateInfo.esg.environmental.content')
+      }
+      onChange={(val: string) => {
+        updateDeep('corporateInfo.esg.goals.0.content', val);
+        updateDeep('corporateInfo.esg.environmental.content', val);
+      }}
+    />
+
+    <InputField
+      label="사회공헌 영문 라벨"
+      value={
+        getValue('corporateInfo.esg.goals.1.label') ||
+        getValue('corporateInfo.esg.social.label') ||
+        'Social'
+      }
+      onChange={(val: string) => {
+        updateDeep('corporateInfo.esg.goals.1.label', val);
+        updateDeep('corporateInfo.esg.social.label', val);
+      }}
+    />
+
+    <InputField
+      label="사회공헌 제목"
+      value={
+        getValue('corporateInfo.esg.goals.1.title') ||
+        getValue('corporateInfo.esg.social.title')
+      }
+      onChange={(val: string) => {
+        updateDeep('corporateInfo.esg.goals.1.title', val);
+        updateDeep('corporateInfo.esg.social.title', val);
+      }}
+    />
+
+    <TextAreaField
+      label="사회공헌 내용"
+      value={
+        getValue('corporateInfo.esg.goals.1.content') ||
+        getValue('corporateInfo.esg.social.content')
+      }
+      onChange={(val: string) => {
+        updateDeep('corporateInfo.esg.goals.1.content', val);
+        updateDeep('corporateInfo.esg.social.content', val);
+      }}
+    />
+
+    <InputField
+      label="지배구조 영문 라벨"
+      value={
+        getValue('corporateInfo.esg.goals.2.label') ||
+        getValue('corporateInfo.esg.governance.label') ||
+        'Governance'
+      }
+      onChange={(val: string) => {
+        updateDeep('corporateInfo.esg.goals.2.label', val);
+        updateDeep('corporateInfo.esg.governance.label', val);
+      }}
+    />
+
+    <InputField
+      label="투명경영 제목"
+      value={
+        getValue('corporateInfo.esg.goals.2.title') ||
+        getValue('corporateInfo.esg.governance.title')
+      }
+      onChange={(val: string) => {
+        updateDeep('corporateInfo.esg.goals.2.title', val);
+        updateDeep('corporateInfo.esg.governance.title', val);
+      }}
+    />
+
+    <TextAreaField
+      label="투명경영 내용"
+      value={
+        getValue('corporateInfo.esg.goals.2.content') ||
+        getValue('corporateInfo.esg.governance.content')
+      }
+      onChange={(val: string) => {
+        updateDeep('corporateInfo.esg.goals.2.content', val);
+        updateDeep('corporateInfo.esg.governance.content', val);
+      }}
+    />
+  </div>
+)}
 
           {/* 5. 홍보 센터 */}
           {active === 'pr' && (
