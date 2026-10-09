@@ -92,9 +92,20 @@ export default function ViewerClient({ data: initialData, siteId: propSiteId }: 
       setLoading(true);
       supabase.from('sites').select('content').eq('id', siteId).single().then(({ data: siteRecord }) => {
         if (siteRecord?.content) {
-          setData(siteRecord.content);
+          const content = siteRecord.content;
+
+          // [구조 보정 로직] solutionMain이 없는 구버전 데이터일 경우 처리
+          if (!content.solutionMain && content.solutions && content.solutions.length > 0) {
+            const firstSol = content.solutions[0];
+            content.solutionMain = {
+              title: firstSol.title || '사업 소개',
+              description: firstSol.description || '솔루션 상세 안내',
+              detailContent: firstSol.detailContent || '상세 내용을 확인하세요.',
+            };
+          }
+
+          setData(content);
         } else {
-          // DB에 데이터가 없으면 ID에 맞는 프리셋(법률/피트니스 등)을 적용
           setData(getPresetData(siteId));
         }
         setLoading(false);
