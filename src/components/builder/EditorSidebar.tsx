@@ -174,25 +174,59 @@ export default function EditorSidebar({
                 onChange={(val: string) => updateDeep('company.name', val)}
               />
               <InputField
-                label="회사 로고 URL"
-                value={getValue('company.logoUrl')}
-                onChange={(val: string) => updateDeep('company.logoUrl', val)}
+                label="대표이사 성명"
+                value={
+                  getValue('corporateInfo.representativeName') ||
+                  getValue('footer.ownerName') ||
+                  ''
+                }
+                onChange={(val: string) => {
+                  updateDeep('corporateInfo.representativeName', val);
+                  updateDeep('footer.ownerName', val);
+                }}
+                placeholder="예: 홍길동"
               />
               <InputField
-                label="대표자 인사말 타이틀"
-                value={getValue('corporateInfo.ceoGreeting.title')}
-                onChange={(val: string) => updateDeep('corporateInfo.ceoGreeting.title', val)}
+                label="회사 소개 한 줄 슬로건 (상단 타이틀)"
+                value={getValue('corporateInfo.about')}
+                onChange={(val: string) => updateDeep('corporateInfo.about', val)}
+                placeholder="예: 신뢰를 바탕으로 미래를 설계하는 기업"
+              />
+              <InputField
+                label="핵심 비전 (Vision)"
+                value={
+                  getValue('corporateInfo.vision') ||
+                  getValue('corporateInfo.missionVision.vision')
+                }
+                onChange={(val: string) => {
+                  updateDeep('corporateInfo.vision', val);
+                  updateDeep('corporateInfo.missionVision.vision', val);
+                }}
+                placeholder="예: 최고의 기술력으로 고객의 가치를 실현하겠습니다."
               />
               <TextAreaField
-                label="대표자 인사말 본문"
-                value={getValue('corporateInfo.ceoGreeting.content')}
-                onChange={(val: string) => updateDeep('corporateInfo.ceoGreeting.content', val)}
-                h="h-28"
+                label="대표이사 인사말 (CEO Message)"
+                value={
+                  getValue('corporateInfo.ceoMessage') ||
+                  getValue('corporateInfo.ceoGreeting.content')
+                }
+                onChange={(val: string) => {
+                  updateDeep('corporateInfo.ceoMessage', val);
+                  updateDeep('corporateInfo.ceoGreeting.content', val);
+                }}
+                placeholder="회사의 철학과 비전을 담은 인사말을 입력하세요."
+                h="h-32"
               />
               <InputField
-                label="핵심 비전"
-                value={getValue('corporateInfo.missionVision.vision')}
-                onChange={(val: string) => updateDeep('corporateInfo.missionVision.vision', val)}
+                label="설립연도 / 연혁 요약 (Since)"
+                value={getValue('corporateInfo.since')}
+                onChange={(val: string) => updateDeep('corporateInfo.since', val)}
+                placeholder="예: Since 1990"
+              />
+              <InputField
+                label="회사 로고 이미지 URL"
+                value={getValue('company.logoUrl')}
+                onChange={(val: string) => updateDeep('company.logoUrl', val)}
               />
             </div>
           )}
@@ -367,7 +401,10 @@ export default function EditorSidebar({
               <InputField
                 label="대표자명"
                 value={getValue('footer.ownerName')}
-                onChange={(val: string) => updateDeep('footer.ownerName', val)}
+                onChange={(val: string) => {
+                  updateDeep('footer.ownerName', val);
+                  updateDeep('corporateInfo.representativeName', val);
+                }}
               />
               <InputField
                 label="사업장 주소"

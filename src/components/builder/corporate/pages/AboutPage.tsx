@@ -4,16 +4,31 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 interface AboutPageProps {
-  corporateInfo: any;
-  company: any;
+  corporateInfo?: any;
+  company?: any;
 }
 
 export default function AboutPage({ corporateInfo = {}, company = {} }: AboutPageProps) {
-  const about = corporateInfo.about || '';
-  const vision = corporateInfo.vision || '';
-  const ceoMessage = corporateInfo.ceoMessage || '';
+  const about =
+    corporateInfo.about ||
+    corporateInfo.ceoGreeting?.title ||
+    '';
+
+  const vision =
+    corporateInfo.vision ||
+    corporateInfo.missionVision?.vision ||
+    '';
+
+  const ceoMessage =
+    corporateInfo.ceoMessage ||
+    corporateInfo.ceoGreeting?.content ||
+    '';
+
   const representativeName =
-    corporateInfo.representativeName || corporateInfo.ceo?.title || '';
+    corporateInfo.representativeName ||
+    corporateInfo.ceo?.title ||
+    corporateInfo.ceoGreeting?.name ||
+    '';
 
   return (
     <motion.div
