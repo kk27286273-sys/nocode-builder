@@ -22,14 +22,18 @@ function PreviewContent() {
 
       // 1. Supabase 사이트 데이터 우선
       if (siteId) {
-        const { data: siteRecord } = await supabase
-          .from('sites')
-          .select('content')
-          .eq('id', siteId)
-          .single();
+const { data: siteRecord, error } = await supabase
+  .from('sites')
+  .select('data')
+  .eq('id', siteId)
+  .single();
 
-        if (siteRecord?.content) {
-          setData(siteRecord.content);
+if (error) {
+  console.error('발행 사이트 데이터 로드 실패:', error);
+}
+
+if (siteRecord?.data) {
+  setData(siteRecord.data as B2BTemplateData);
           setLoading(false);
           return;
         }

@@ -114,10 +114,11 @@ export default function BuilderPage() {
     if (!siteId || !data) return alert('사이트를 먼저 선택해주세요.');
     setIsLoading(true);
     const { error } = await supabase.from('sites').update({ data }).eq('id', siteId);
-    if (error) {
-      alert('발행 실패: ' + error.message);
-    } else {
-      window.open(`/site/${siteId}`, '_blank');
+if (error) {
+  alert('발행 실패: ' + error.message);
+} else {
+  window.open(`/preview?id=${encodeURIComponent(siteId)}`, '_blank');
+}
     }
     setIsLoading(false);
   }
