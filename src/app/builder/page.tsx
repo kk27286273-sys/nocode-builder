@@ -148,8 +148,8 @@ export default function BuilderPage() {
   if (!data) return <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900 font-bold text-white">빌더 데이터를 불러오는 중...</div>;
 
   return (
-    <div className="fixed inset-0 z-[9999] w-screen h-screen flex overflow-hidden bg-slate-100">
-      <div className="w-[430px] h-full flex flex-col shrink-0 bg-white border-r border-slate-300 shadow-2xl relative z-20">
+<div className="relative z-[9999] min-h-screen w-full flex overflow-y-auto bg-slate-100">
+<div className="w-[430px] min-h-screen flex flex-col shrink-0 bg-white border-r border-slate-300 shadow-2xl relative z-20">
         <div className="h-14 px-4 bg-slate-900 flex items-center justify-between shrink-0 border-b border-slate-800">
           <div className="flex items-center gap-2">
             <span className="text-[11px] font-black text-slate-400 uppercase tracking-wider">Site</span>
@@ -202,7 +202,7 @@ export default function BuilderPage() {
         </div>
       </div>
 
-      <main className="flex-1 h-full min-h-0 bg-slate-200 relative z-10 overflow-hidden">
+<main className="flex-1 min-h-screen bg-slate-200 relative z-10">
         <ViewerManager data={data} activeSection={activeSection} setActiveSection={setActiveSection} />
       </main>
     </div>
