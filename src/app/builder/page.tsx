@@ -161,43 +161,24 @@ function createDefaultData(template: TemplateKey): B2BTemplateData {
       },
       disclosure: { certifications: [], reports: [] },
     },
-    navigation: {
-      menus: [
-        {
-          label: '소개',
-          children: [{ label: '서비스 소개', targetId: 'services' }],
-        },
-      ],
-    },
-    prCenter: { news: [], notice: [] },
-    recruit: {
-      talentValue: '함께 성장하는 인재',
-      benefitInfo: '복지 정보를 입력해주세요.',
-      openPositions: [],
-    },
-    csCenter: {
-      faq: [],
-      contactInfo: {
-        email: 'info@example.com',
-        phone: '02-000-0000',
-        address: '주소를 입력해주세요.',
-      },
-    },
-    supportPhone: '02-000-0000',
-    csGuide: '운영시간을 입력해주세요.',
-    kakaoLink: '',
-    newsContent: '',
-    videoUrl: '',
-    talentValue: '함께 성장하는 인재',
-    benefitInfo: '복지 정보를 입력해주세요.',
-    footer: {
-      address: '주소를 입력해주세요.',
-      ownerName: '대표자명',
-      businessNumber: '사업자등록번호',
-      contactEmail: 'info@example.com',
-      companyName: '회사명',
-    },
-  };
+navigation: {
+  menus:
+    template === 'corporate'
+      ? [
+          { label: '회사소개', children: [] },
+          { label: '사업소개', children: [] },
+          { label: '지속가능경영', children: [] },
+          { label: '홍보센터', children: [] },
+          { label: '인재경영', children: [] },
+          { label: '고객센터', children: [] },
+        ]
+      : [
+          {
+            label: '소개',
+            children: [{ label: '서비스 소개', targetId: 'services' }],
+          },
+        ],
+},
 
   return base as unknown as B2BTemplateData;
 }
