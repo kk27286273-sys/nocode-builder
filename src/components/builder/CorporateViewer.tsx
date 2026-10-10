@@ -87,16 +87,17 @@ export const CorporateViewer = ({
       <main className="w-full">
         <AnimatePresence mode="wait">
           {activePage === 'main' && (
-            <MainPage
-              key="main"
-              hero={{
-                title: data.hero?.title || solutionMain.title,
-                subtitle: data.hero?.subtitle || solutionMain.description,
-                badge: data.hero?.badge || 'Since 1990',
-              }}
-              solutions={solutionList}
-              navigateTo={navigateTo}
-            />
+<MainPage
+  key="main"
+  hero={{
+    title: data.hero?.title || solutionMain.title,
+    subtitle: data.hero?.subtitle || solutionMain.description,
+    badge: data.hero?.badge || 'Since 1990',
+    mediaUrl: data.hero?.mediaUrl || '',
+  }}
+  solutions={solutionList}
+  navigateTo={navigateTo}
+/>
           )}
 
           {activePage === 'about' && (

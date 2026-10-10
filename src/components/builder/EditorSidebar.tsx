@@ -232,15 +232,21 @@ export default function EditorSidebar({
                     <button type="button" onClick={() => removeSolutionCard(idx)} className="absolute right-3 top-3 text-xs font-bold text-slate-400 hover:text-rose-500">
                       ✕
                     </button>
-                    <InputField label="카드 제목" value={item.title} onChange={(v) => updateDeep(`solutions.${idx}.title`, v)} />
-                    <TextAreaField label="요약 설명" value={item.description} onChange={(v) => updateDeep(`solutions.${idx}.description`, v)} h="h-16" />
-                    <ImageUploadField
-                      label="솔루션 대표 이미지"
-                      value={item.image || ''}
-                      onChange={(url) => updateDeep(`solutions.${idx}.image`, url)}
-                      siteId={siteId}
-                      purpose="general"
-                    />
+<InputField label="카드 제목" value={item.title} onChange={(v) => updateDeep(`solutions.${idx}.title`, v)} />
+<TextAreaField label="요약 설명" value={item.description} onChange={(v) => updateDeep(`solutions.${idx}.description`, v)} h="h-16" />
+<TextAreaField
+  label="상세 설명"
+  value={item.detailContent || ''}
+  onChange={(v) => updateDeep(`solutions.${idx}.detailContent`, v)}
+  h="h-24"
+/>
+<ImageUploadField
+  label="솔루션 대표 이미지"
+  value={item.image || ''}
+  onChange={(url) => updateDeep(`solutions.${idx}.image`, url)}
+  siteId={siteId}
+  purpose="general"
+/>
                   </div>
                 ))}
               </div>
