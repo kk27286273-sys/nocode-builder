@@ -6,6 +6,8 @@ import ShowroomSlider from '@/components/showroom/ShowroomSlider';
 
 const KAKAO_LINK = 'http://pf.kakao.com/_qxmixiX/chat';
 const PHONE_NUMBER = '01029482728';
+const PREVIEW_URL =
+  'https://thsoft.co.kr/preview?id=00000000-0000-0000-0000-000000000000';
 
 const values = [
   {
@@ -131,6 +133,13 @@ function NexiaValues() {
 }
 
 export default function LandingPage() {
+  const scrollToTemplates = () => {
+    document.getElementById('templates-section')?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    });
+  };
+
   return (
     <main className="min-h-screen overflow-hidden bg-white font-sans text-slate-900 selection:bg-cyan-100">
       <style jsx global>{`
@@ -207,12 +216,13 @@ export default function LandingPage() {
           </p>
 
           <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-            <Link
-              href="/preview"
+            <button
+              type="button"
+              onClick={scrollToTemplates}
               className="inline-flex items-center justify-center rounded-2xl bg-cyan-300 px-7 py-4 font-bold text-slate-950 transition hover:-translate-y-0.5 hover:bg-cyan-200"
             >
               템플릿 둘러보기 <span className="ml-2">→</span>
-            </Link>
+            </button>
             <a
               href={KAKAO_LINK}
               target="_blank"
@@ -242,7 +252,10 @@ export default function LandingPage() {
 
       <NexiaValues />
 
-      <section className="px-6 py-24 md:py-32">
+      <section
+        id="templates-section"
+        className="scroll-mt-8 px-6 py-24 md:py-32"
+      >
         <div className="mx-auto max-w-7xl">
           <div className="mb-12 flex flex-col justify-between gap-5 md:mb-16 md:flex-row md:items-end">
             <div>
@@ -267,6 +280,69 @@ export default function LandingPage() {
           <div className="overflow-hidden rounded-3xl border border-slate-200 bg-slate-50">
             <ShowroomSlider />
           </div>
+
+          <div className="mt-8 rounded-3xl border border-sky-200 bg-gradient-to-br from-sky-50 to-white p-6 md:p-8">
+            <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+              <div className="max-w-3xl">
+                <p className="text-sm font-bold text-sky-700">
+                  기기렌탈 · 기업 서비스
+                </p>
+                <h3 className="mt-2 text-2xl font-bold text-slate-900">
+                  B2B 견적 및 사양 안내형
+                </h3>
+                <p className="mt-2 font-semibold text-slate-700">
+                  복잡한 견적 신청을 30초 만에 해결
+                </p>
+
+                <p className="mt-5 leading-7 text-slate-600">
+                  신속한 사양 비교와 효율성을 강조하는 스카이 블루 테마입니다.
+                  제품 라인업과 요금제를 명확히 제시하여 빠른 견적 요청을 유도합니다.
+                </p>
+
+                <div className="mt-6">
+                  <p className="text-sm font-bold text-slate-900">
+                    주요 특화 기능
+                  </p>
+                  <ul className="mt-3 flex flex-wrap gap-2 text-sm text-slate-700">
+                    <li className="rounded-full bg-white px-4 py-2 ring-1 ring-sky-100">
+                      제품 스펙 비교표
+                    </li>
+                    <li className="rounded-full bg-white px-4 py-2 ring-1 ring-sky-100">
+                      빠른 견적 요청 CTA
+                    </li>
+                    <li className="rounded-full bg-white px-4 py-2 ring-1 ring-sky-100">
+                      B2B 납품 실적
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="mt-6 grid gap-4 text-sm sm:grid-cols-2">
+                  <p className="text-slate-600">
+                    <strong className="text-slate-900">추천 대상</strong>
+                    <br />
+                    사무기기·가전 렌탈, B2B 서비스
+                  </p>
+                  <p className="text-slate-600">
+                    <strong className="text-slate-900">제공 페이지 구성</strong>
+                    <br />
+                    1. 메인 페이지 · 2. 렌탈 라인업 · 3. 간편 견적요청
+                  </p>
+                </div>
+              </div>
+
+              <a
+                href={PREVIEW_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex shrink-0 items-center justify-center rounded-2xl bg-sky-600 px-6 py-4 font-bold text-white transition hover:bg-sky-700"
+              >
+                실제 템플릿 미리보기
+                <span className="ml-2" aria-hidden="true">
+                  ↗
+                </span>
+              </a>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -289,7 +365,9 @@ export default function LandingPage() {
 
           <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
             <div className="mb-5">
-              <span className="text-sm font-bold text-slate-900">무료 사이트 속도 진단</span>
+              <span className="text-sm font-bold text-slate-900">
+                무료 사이트 속도 진단
+              </span>
               <p className="mt-2 text-sm leading-6 text-slate-500">
                 현재 페이지에서 제공하는 무료 진단 기능을 준비 중입니다.
                 지금은 상담을 통해 진단을 신청해 주세요.
@@ -341,7 +419,10 @@ export default function LandingPage() {
         <div className="mx-auto max-w-7xl">
           <div className="flex flex-col gap-8 border-b border-white/10 pb-10 md:flex-row md:items-start md:justify-between">
             <div>
-              <Link href="/" className="text-xl font-black tracking-[0.18em] text-white">
+              <Link
+                href="/"
+                className="text-xl font-black tracking-[0.18em] text-white"
+              >
                 NEXIA
               </Link>
               <p className="mt-3 text-sm text-slate-500">
@@ -349,9 +430,18 @@ export default function LandingPage() {
               </p>
             </div>
             <div className="flex gap-5 text-sm">
-              <a href="/terms" className="transition hover:text-white">이용약관</a>
-              <a href="/privacy" className="transition hover:text-white">개인정보처리방침</a>
-              <a href={KAKAO_LINK} target="_blank" rel="noreferrer" className="transition hover:text-white">
+              <a href="/terms" className="transition hover:text-white">
+                이용약관
+              </a>
+              <a href="/privacy" className="transition hover:text-white">
+                개인정보처리방침
+              </a>
+              <a
+                href={KAKAO_LINK}
+                target="_blank"
+                rel="noreferrer"
+                className="transition hover:text-white"
+              >
                 문의하기
               </a>
             </div>
@@ -361,10 +451,15 @@ export default function LandingPage() {
             <p className="font-bold text-slate-200">티에이치소프트</p>
             <p>대표자명: 김태헌</p>
             <p>사업자등록번호: 599-18-02634</p>
-            <p>사업장 주소: 경상북도 구미시 수출대로3길 130, (공단동 우림필유아파트) 108동 101호</p>
+            <p>
+              사업장 주소: 경상북도 구미시 수출대로3길 130, (공단동 우림필유아파트)
+              108동 101호
+            </p>
             <p>대표번호: 010-2948-2728</p>
             <p>통신판매업신고: 신고 진행 중</p>
-            <p className="pt-5 text-slate-600">© 2026 TH SOFT. All rights reserved.</p>
+            <p className="pt-5 text-slate-600">
+              © 2026 TH SOFT. All rights reserved.
+            </p>
           </div>
         </div>
       </footer>
