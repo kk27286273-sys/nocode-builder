@@ -152,12 +152,13 @@ export default function EditorSidebar({
                   updateDeep('footer.ownerName', v);
                 }}
               />
-              <ImageUploadField
-                label="회사 로고 (GNB)"
-                value={getValue('company.logoUrl') || ''}
-                onChange={(url) => updateDeep('company.logoUrl', url)}
-                siteId={siteId}
-              />
+<ImageUploadField
+  label="회사 로고 (GNB)"
+  value={getValue('company.logoUrl') || ''}
+  onChange={(url) => updateDeep('company.logoUrl', url)}
+  siteId={siteId}
+  purpose="logo"
+/>
               <ImageUploadField
                 label="대표이사 사진 (소개 페이지)"
                 value={getValue('corporateInfo.ceoGreeting.image') || ''}

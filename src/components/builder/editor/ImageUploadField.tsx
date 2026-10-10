@@ -12,6 +12,7 @@ interface ImageUploadFieldProps {
   value: string;
   onChange: (url: string) => void;
   siteId?: string | null;
+  purpose?: 'logo' | 'general';
 }
 
 export default function ImageUploadField({
@@ -19,6 +20,7 @@ export default function ImageUploadField({
   value,
   onChange,
   siteId,
+  purpose = 'general',
 }: ImageUploadFieldProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
@@ -52,16 +54,16 @@ export default function ImageUploadField({
     setIsUploading(true);
 
     try {
-      // GIF는 애니메이션 보존을 위해 원본으로 업로드합니다.
+      // GIF 애니메이션은 보존하고, 나머지는 WebP로 최적화합니다.
       const uploadFile =
         file.type === 'image/gif'
           ? file
           : await imageCompression(file, {
-              maxSizeMB: 0.5,
-              maxWidthOrHeight: 1920,
+              maxSizeMB: purpose === 'logo' ? 0.1 : 0.5,
+              maxWidthOrHeight: purpose === 'logo' ? 512 : 1920,
               useWebWorker: true,
               fileType: 'image/webp',
-              initialQuality: 0.82,
+              initialQuality: purpose === 'logo' ? 0.82 : 0.82,
             });
 
       const safeSiteId = String(siteId).replace(/[^a-zA-Z0-9_-]/g, '');
