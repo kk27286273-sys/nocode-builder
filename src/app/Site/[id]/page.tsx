@@ -1,4 +1,5 @@
 'use client';
+
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase/client';
@@ -20,6 +21,7 @@ export default function PublicSitePage() {
 
     async function fetchSite() {
       setLoading(true);
+
       const { data: siteRecord, error } = await supabase
         .from('sites')
         .select('data')
@@ -31,6 +33,7 @@ export default function PublicSitePage() {
       } else {
         setData(siteRecord.data);
       }
+
       setLoading(false);
     }
 
@@ -39,7 +42,7 @@ export default function PublicSitePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-900 text-white font-bold">
+      <div className="flex min-h-screen w-full items-center justify-center bg-slate-900 font-bold text-white">
         사이트를 불러오는 중입니다...
       </div>
     );
@@ -47,21 +50,21 @@ export default function PublicSitePage() {
 
   if (notFound || !data) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-slate-100 text-slate-800 gap-4">
+      <div className="flex min-h-screen w-full flex-col items-center justify-center gap-4 bg-slate-100 text-slate-800">
         <h1 className="text-2xl font-bold">사이트를 찾을 수 없습니다</h1>
-        <p className="text-sm text-slate-500">발행된 사이트 ID가 올바른지 확인해주세요.</p>
+        <p className="text-sm text-slate-500">
+          발행된 사이트 ID가 올바른지 확인해주세요.
+        </p>
       </div>
     );
   }
 
-  // [핵심 수정] templateType에 의존하지 않고, 
-  // 데이터 구조에 'solutionMain'이 있으면 솔루션 뷰어(LivePreview)를 강제 적용합니다.
   const isSolutionType = data.solutionMain !== undefined;
 
   return (
-    <div className="min-h-screen w-full bg-white">
+    <div className="min-h-screen w-full overflow-x-hidden bg-white">
       {isSolutionType ? (
-        <LivePreview data={data} />
+        <LivePreview data={data} published />
       ) : (
         <CorporateViewer
           data={data}
