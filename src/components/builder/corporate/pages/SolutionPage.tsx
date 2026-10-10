@@ -65,13 +65,15 @@ export default function SolutionPage({ data }: SolutionPageProps) {
                 transition={{ delay: index * 0.1 }}
                 className="p-8 border rounded-2xl bg-white shadow-sm hover:shadow-md transition-shadow flex flex-col gap-4 border-t-4 border-t-blue-600"
               >
-{solution.image && (
-  <img
-    src={solution.image}
-    alt={solution.title || `솔루션 ${index + 1}`}
-    className="h-48 w-full rounded-xl object-cover"
-  />
-)}
+                {solution.image && (
+                  <img
+                    src={solution.image}
+                    alt={solution.title || `솔루션 ${index + 1}`}
+                    loading="lazy"
+                    decoding="async"
+                    className="h-48 w-full rounded-xl object-cover"
+                  />
+                )}
 <div className="text-xs font-bold text-blue-500 uppercase">
   Solution {String(index + 1).padStart(2, '0')}
 </div>

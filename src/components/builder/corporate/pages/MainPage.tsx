@@ -16,15 +16,18 @@ export default function MainPage({
 }: MainPageProps) {
   return (
     <div className="w-full">
-<section
-  className="relative flex h-[80vh] items-center justify-center overflow-hidden bg-slate-900 bg-cover bg-center text-white"
-  style={
-    hero?.mediaUrl
-      ? { backgroundImage: `url("${hero.mediaUrl}")` }
-      : undefined
-  }
->
-  <div className="absolute inset-0 z-10 bg-gradient-to-b from-slate-900/30 to-slate-900/70" />
+      <section className="relative flex h-[80vh] items-center justify-center overflow-hidden bg-slate-900 text-white">
+        {hero?.mediaUrl && (
+          <img
+            src={hero.mediaUrl}
+            alt={hero?.title || '히어로 배경'}
+            fetchPriority="high"
+            loading="eager"
+            decoding="sync"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+        )}
+        <div className="absolute inset-0 z-10 bg-gradient-to-b from-slate-900/40 via-slate-900/60 to-slate-900/80" />
 
         <div className="relative z-20 text-center px-4">
           <motion.span
@@ -65,24 +68,20 @@ export default function MainPage({
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-            {(Array.isArray(solutions) ? solutions : []).map((solution, index) => (
-              <motion.div
-                key={solution.id ?? index}
-                whileHover={{ y: -15 }}
-                onClick={() => navigateTo('sol_detail', index)}
-                className="group cursor-pointer p-10 bg-slate-50 rounded-3xl border border-slate-100 hover:border-blue-200 transition-all duration-300 shadow-sm hover:shadow-xl"
-              >
-{solution.image ? (
-  <img
-    src={solution.image}
-    alt={solution.title || `솔루션 ${index + 1}`}
-    className="mb-6 h-48 w-full rounded-2xl object-cover"
-  />
-) : (
-  <div className="mb-8 flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-xl font-bold text-blue-600 shadow-md transition-colors duration-300 group-hover:bg-blue-600 group-hover:text-white">
-    {String(index + 1).padStart(2, '0')}
-  </div>
-)}
+      <section className="relative flex h-[80vh] items-center justify-center overflow-hidden bg-slate-900 text-white">
+        {hero?.mediaUrl && (
+          <img
+            src={hero.mediaUrl}
+            alt={hero?.title || '히어로 배경'}
+            fetchPriority="high"
+            loading="eager"
+            decoding="sync"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+        )}
+        <div className="absolute inset-0 z-10 bg-gradient-to-b from-slate-900/40 via-slate-900/60 to-slate-900/80" />
+
+        <div className="relative z-20 text-center px-4">
                 <h3 className="text-2xl font-bold text-slate-900 mb-4 group-hover:text-blue-600 transition-colors">
                   {solution.title || `솔루션 ${index + 1}`}
                 </h3>
