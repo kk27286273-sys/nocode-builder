@@ -248,11 +248,11 @@ export default function EditorSidebar({
   purpose="general"
 />
 <ImageUploadField
-  label="솔루션 대표 이미지"
-  value={item.image || ''}
-  onChange={(url) => updateDeep(`solutions.${idx}.image`, url)}
+  label="솔루션 이미지"
+  value={solution.image || ''}
+  onChange={(url) => updateSolution(index, 'image', url)}
   siteId={siteId}
-  purpose="general"
+  purpose="solution"
 />
                   </div>
                 ))}

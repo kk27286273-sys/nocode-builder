@@ -14,7 +14,7 @@ interface ImageUploadFieldProps {
   value: string;
   onChange: (url: string) => void;
   siteId?: string | null;
-  purpose?: 'logo' | 'general';
+  purpose?: 'logo' | 'general' | 'solution';
 }
 
 export default function ImageUploadField({
@@ -58,13 +58,22 @@ export default function ImageUploadField({
     try {
       const isGif = file.type === 'image/gif';
       const isLogo = purpose === 'logo';
+      const isSolution = purpose === 'solution';
 
       let uploadFile: File | Blob = file;
 
       if (!isGif) {
         uploadFile = await imageCompression(file, {
-          maxSizeMB: isLogo ? MAX_LOGO_SIZE / (1024 * 1024) : 0.5,
-          maxWidthOrHeight: isLogo ? LOGO_MAX_DIMENSION : 1920,
+          maxSizeMB: isLogo
+            ? MAX_LOGO_SIZE / (1024 * 1024)
+            : isSolution
+              ? 0.25
+              : 0.5,
+          maxWidthOrHeight: isLogo
+            ? LOGO_MAX_DIMENSION
+            : isSolution
+              ? 640
+              : 1920,
           useWebWorker: true,
           fileType: 'image/webp',
           initialQuality: 0.82,
