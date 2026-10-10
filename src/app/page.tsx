@@ -6,8 +6,7 @@ import ShowroomSlider from '@/components/showroom/ShowroomSlider';
 
 const KAKAO_LINK = 'http://pf.kakao.com/_qxmixiX/chat';
 const PHONE_NUMBER = '01029482728';
-const PREVIEW_URL =
-  'https://thsoft.co.kr/preview?id=00000000-0000-0000-0000-000000000000';
+const PREVIEW_URL = 'https://thsoft.co.kr/preview?id=builder';
 
 const values = [
   {
