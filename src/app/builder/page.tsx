@@ -124,11 +124,24 @@ export default function BuilderPage() {
 
   async function deleteSite() {
     if (!siteId || !confirm('정말 삭제하시겠습니까?')) return;
+
     setIsLoading(true);
-    await supabase.from('sites').delete().eq('id', siteId);
+
+    const { error } = await supabase
+      .from('sites')
+      .delete()
+      .eq('id', siteId);
+
+    if (error) {
+      console.error('사이트 삭제 에러:', error);
+      alert('사이트 삭제 실패: ' + error.message);
+      setIsLoading(false);
+      return;
+    }
+
     setSiteId(null);
     setData(null);
-    fetchSites();
+    await fetchSites();
     setIsLoading(false);
   }
 

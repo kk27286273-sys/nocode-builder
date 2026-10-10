@@ -28,25 +28,25 @@ export default function GNB({
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-white border-b border-slate-100 shadow-sm">
+    <header className="sticky top-0 z-50 w-full border-b border-slate-100 bg-white shadow-sm">
       <div className="flex min-h-16 items-center justify-between gap-3 px-4 py-3 md:min-h-20 md:px-12">
         <button
           type="button"
-          className="flex min-w-0 cursor-pointer items-center text-left"
+          className="flex min-w-0 cursor-pointer items-center gap-3 text-left"
           onClick={() => navigateTo('main')}
           aria-label="홈으로 이동"
         >
           {company?.logoUrl ? (
             <img
               src={company.logoUrl}
-              alt={company?.name || '회사 로고'}
-              className="h-8 w-auto max-w-36 object-contain"
+              alt={`${company?.name || '회사'} 로고`}
+              className="h-8 w-auto max-w-36 object-contain md:h-10"
             />
-          ) : (
-            <span className="truncate text-lg font-black tracking-tight text-slate-900 md:text-xl">
-              {company?.name || 'COMPANY'}
-            </span>
-          )}
+          ) : null}
+
+          <span className="truncate text-lg font-black tracking-tight text-slate-900 md:text-xl">
+            {company?.name || 'COMPANY'}
+          </span>
         </button>
 
         <button
