@@ -39,14 +39,14 @@ className="absolute inset-0 h-full w-full bg-slate-900 object-contain"
             {hero?.badge || 'BRAND NEW'}
           </motion.span>
 
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="mb-6 text-5xl font-black leading-tight tracking-tighter md:text-7xl"
-          >
-            {hero?.title || '기업의 미래를 설계합니다'}
-          </motion.h1>
+<motion.h1
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ delay: 0, duration: 0.3, ease: 'easeOut' }}
+  className="mb-6 text-5xl font-black leading-tight tracking-tighter md:text-7xl"
+>
+  {hero?.title || '기업의 미래를 설계합니다'}
+</motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
