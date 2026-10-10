@@ -1,31 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-
-const InputField = ({ label, value, onChange, type = 'text', placeholder = '' }: any) => (
-  <div className="space-y-1">
-    <label className="text-[11px] text-slate-500 font-medium">{label}</label>
-    <input
-      type={type}
-      value={value ?? ''}
-      onChange={(e) => onChange(e.target.value)}
-      placeholder={placeholder}
-      className="w-full p-2 border border-slate-200 rounded text-xs outline-none focus:ring-1 focus:ring-blue-500 bg-white"
-    />
-  </div>
-);
-
-const TextAreaField = ({ label, value, onChange, placeholder = '', h = 'h-20' }: any) => (
-  <div className="space-y-1">
-    <label className="text-[11px] text-slate-500 font-medium">{label}</label>
-    <textarea
-      value={value ?? ''}
-      onChange={(e) => onChange(e.target.value)}
-      placeholder={placeholder}
-      className={`w-full p-2 border border-slate-200 rounded text-xs ${h} resize-y outline-none focus:ring-1 focus:ring-blue-500 bg-white`}
-    />
-  </div>
-);
+import { InputField, TextAreaField } from './editor/FormControls';
+import ImageUploadField from './editor/ImageUploadField';
 
 interface EditorSidebarProps {
   data: any;
@@ -47,11 +24,8 @@ export default function EditorSidebar({
 
   const active = setActiveSection ? activeSection : currentTab;
   const setTab = (tabId: string) => {
-    if (setActiveSection) {
-      setActiveSection(tabId);
-    } else {
-      setCurrentTab(tabId);
-    }
+    if (setActiveSection) setActiveSection(tabId);
+    else setCurrentTab(tabId);
   };
 
   const updateDeep = (path: string, value: any) => {
@@ -66,7 +40,9 @@ export default function EditorSidebar({
         const sourceValue = source?.[key];
         target[key] = Array.isArray(sourceValue)
           ? [...sourceValue]
-          : { ...(sourceValue || {}) };
+          : sourceValue && typeof sourceValue === 'object'
+          ? { ...sourceValue }
+          : {};
         source = sourceValue || {};
         target = target[key];
       }
@@ -84,21 +60,34 @@ export default function EditorSidebar({
     return Array.isArray(val) ? val : [];
   };
 
-  const addSolutionCard = () => {
-    const currentList = getArray('solutions');
-    const newCard = {
-      title: '새 솔루션',
-      category: '신규기술',
-      description: '솔루션에 대한 핵심 요약 설명을 입력하세요.',
-      detailContent: '솔루션 상세 내용을 상세하게 입력하세요.',
-      image: '',
-    };
-    updateDeep('solutions', [...currentList, newCard]);
+  // 연혁 추가/삭제
+  const addHistory = () => {
+    updateDeep('corporateInfo.history', [...getArray('corporateInfo.history'), { year: '', event: '' }]);
+  };
+  const removeHistory = (index: number) => {
+    updateDeep('corporateInfo.history', getArray('corporateInfo.history').filter((_, i) => i !== index));
   };
 
+  // 채용 추가/삭제
+  const addOpenPosition = () => {
+    updateDeep('recruit.openPositions', [
+      ...getArray('recruit.openPositions'),
+      { title: '', department: '', deadline: '', link: '' },
+    ]);
+  };
+  const removeOpenPosition = (index: number) => {
+    updateDeep('recruit.openPositions', getArray('recruit.openPositions').filter((_, i) => i !== index));
+  };
+
+  // 솔루션 추가/삭제
+  const addSolutionCard = () => {
+    updateDeep('solutions', [
+      ...getArray('solutions'),
+      { title: '새 솔루션', category: '신규기술', description: '', detailContent: '', image: '' },
+    ]);
+  };
   const removeSolutionCard = (index: number) => {
-    const currentList = getArray('solutions');
-    updateDeep('solutions', currentList.filter((_, idx) => idx !== index));
+    updateDeep('solutions', getArray('solutions').filter((_, i) => i !== index));
   };
 
   const sections = [
@@ -113,416 +102,217 @@ export default function EditorSidebar({
   ];
 
   return (
-    <div className="flex w-full h-full bg-white overflow-hidden">
+    <div className="flex h-full w-full overflow-hidden bg-white">
       {/* 탭 네비게이션 */}
-      <div className="w-36 bg-slate-50 border-r border-slate-200 flex flex-col shrink-0">
-        <nav className="flex-1 p-2 space-y-1 overflow-y-auto">
-          {sections.map((section) => (
+      <div className="flex w-36 shrink-0 flex-col border-r border-slate-200 bg-slate-50">
+        <nav className="flex-1 space-y-1 overflow-y-auto p-2">
+          {sections.map((sec) => (
             <button
-              key={section.id}
+              key={sec.id}
               type="button"
-              onClick={() => setTab(section.id)}
-              className={`w-full text-left px-3 py-2.5 rounded-md text-xs font-bold transition-all ${
-                active === section.id
-                  ? 'bg-blue-600 text-white shadow-sm'
-                  : 'text-slate-500 hover:bg-slate-200'
+              onClick={() => setTab(sec.id)}
+              className={`w-full rounded-md px-3 py-2.5 text-left text-xs font-bold transition-all ${
+                active === sec.id ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-200'
               }`}
             >
-              {section.label}
+              {sec.label}
             </button>
           ))}
         </nav>
       </div>
 
-      {/* 설정 폼 영역 */}
-      <div className="flex-1 min-w-0 overflow-y-auto p-4 bg-slate-50">
+      {/* 설정 폼 본문 */}
+      <div className="min-w-0 flex-1 overflow-y-auto bg-slate-50 p-4">
         <div className="space-y-4">
           <div className="border-b border-slate-200 pb-2">
             <h3 className="text-sm font-bold text-slate-800">
-              {sections.find((sec) => sec.id === active)?.label} 설정
+              {sections.find((s) => s.id === active)?.label} 설정
             </h3>
           </div>
 
-          {/* 1. 메인 화면 */}
+          {/* 1. 메인 */}
           {active === 'main' && (
-            <div className="space-y-4 bg-white p-4 rounded-xl border border-slate-200">
-              <InputField
-                label="메인 배지"
-                value={getValue('hero.badge')}
-                onChange={(val: string) => updateDeep('hero.badge', val)}
-              />
-              <InputField
-                label="메인 타이틀"
-                value={getValue('hero.title')}
-                onChange={(val: string) => updateDeep('hero.title', val)}
-              />
-              <TextAreaField
-                label="메인 서브 타이틀"
-                value={getValue('hero.subtitle')}
-                onChange={(val: string) => updateDeep('hero.subtitle', val)}
-                h="h-20"
-              />
+            <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
+              <InputField label="메인 배지" value={getValue('hero.badge')} onChange={(v) => updateDeep('hero.badge', v)} />
+              <InputField label="메인 타이틀" value={getValue('hero.title')} onChange={(v) => updateDeep('hero.title', v)} />
+              <TextAreaField label="메인 서브 타이틀" value={getValue('hero.subtitle')} onChange={(v) => updateDeep('hero.subtitle', v)} />
             </div>
           )}
 
           {/* 2. 회사 소개 */}
           {active === 'about' && (
-            <div className="space-y-4 bg-white p-4 rounded-xl border border-slate-200">
-              <InputField
-                label="회사명"
-                value={getValue('company.name')}
-                onChange={(val: string) => updateDeep('company.name', val)}
-              />
+            <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
+              <InputField label="회사명" value={getValue('company.name')} onChange={(v) => updateDeep('company.name', v)} />
               <InputField
                 label="대표이사 성명"
-                value={
-                  getValue('corporateInfo.representativeName') ||
-                  getValue('footer.ownerName') ||
-                  ''
-                }
-                onChange={(val: string) => {
-                  updateDeep('corporateInfo.representativeName', val);
-                  updateDeep('footer.ownerName', val);
+                value={getValue('corporateInfo.representativeName') || getValue('footer.ownerName')}
+                onChange={(v) => {
+                  updateDeep('corporateInfo.representativeName', v);
+                  updateDeep('corporateInfo.ceoGreeting.name', v);
+                  updateDeep('footer.ownerName', v);
                 }}
-                placeholder="예: 홍길동"
               />
-              <InputField
-                label="회사 소개 한 줄 슬로건 (상단 타이틀)"
-                value={getValue('corporateInfo.about')}
-                onChange={(val: string) => updateDeep('corporateInfo.about', val)}
-                placeholder="예: 신뢰를 바탕으로 미래를 설계하는 기업"
+              <ImageUploadField
+                label="회사 로고 (GNB)"
+                value={getValue('company.logoUrl') || ''}
+                onChange={(url) => updateDeep('company.logoUrl', url)}
+                siteId={siteId}
               />
+              <ImageUploadField
+                label="대표이사 사진 (소개 페이지)"
+                value={getValue('corporateInfo.ceoGreeting.image') || ''}
+                onChange={(url) => updateDeep('corporateInfo.ceoGreeting.image', url)}
+                siteId={siteId}
+              />
+              <InputField label="슬로건" value={getValue('corporateInfo.about')} onChange={(v) => updateDeep('corporateInfo.about', v)} />
               <InputField
-                label="핵심 비전 (Vision)"
-                value={
-                  getValue('corporateInfo.vision') ||
-                  getValue('corporateInfo.missionVision.vision')
-                }
-                onChange={(val: string) => {
-                  updateDeep('corporateInfo.vision', val);
-                  updateDeep('corporateInfo.missionVision.vision', val);
+                label="핵심 비전"
+                value={getValue('corporateInfo.vision') || getValue('corporateInfo.missionVision.vision')}
+                onChange={(v) => {
+                  updateDeep('corporateInfo.vision', v);
+                  updateDeep('corporateInfo.missionVision.vision', v);
                 }}
-                placeholder="예: 최고의 기술력으로 고객의 가치를 실현하겠습니다."
               />
               <TextAreaField
-                label="대표이사 인사말 (CEO Message)"
-                value={
-                  getValue('corporateInfo.ceoMessage') ||
-                  getValue('corporateInfo.ceoGreeting.content')
-                }
-                onChange={(val: string) => {
-                  updateDeep('corporateInfo.ceoMessage', val);
-                  updateDeep('corporateInfo.ceoGreeting.content', val);
+                label="대표 인사말"
+                value={getValue('corporateInfo.ceoMessage') || getValue('corporateInfo.ceoGreeting.content')}
+                onChange={(v) => {
+                  updateDeep('corporateInfo.ceoMessage', v);
+                  updateDeep('corporateInfo.ceoGreeting.content', v);
                 }}
-                placeholder="회사의 철학과 비전을 담은 인사말을 입력하세요."
                 h="h-32"
               />
-              <InputField
-                label="설립연도 / 연혁 요약 (Since)"
-                value={getValue('corporateInfo.since')}
-                onChange={(val: string) => updateDeep('corporateInfo.since', val)}
-                placeholder="예: Since 1990"
-              />
-              <InputField
-                label="회사 로고 이미지 URL"
-                value={getValue('company.logoUrl')}
-                onChange={(val: string) => updateDeep('company.logoUrl', val)}
-              />
-            </div>
-          )}
 
-          {/* 3. 사업 소개 (솔루션) */}
-          {active === 'sol_detail' && (
-            <div className="space-y-5">
-              <div className="bg-white p-4 rounded-xl border border-slate-200 space-y-3">
-                <div className="font-bold text-xs text-blue-600">사업 소개 상단 대표 정보</div>
-                <InputField
-                  label="상단 대표 제목"
-                  value={getValue('solutionMain.title')}
-                  onChange={(val: string) => updateDeep('solutionMain.title', val)}
-                />
-                <TextAreaField
-                  label="상단 요약 설명"
-                  value={getValue('solutionMain.description')}
-                  onChange={(val: string) => updateDeep('solutionMain.description', val)}
-                />
-                <TextAreaField
-                  label="상세 대표 내용"
-                  value={getValue('solutionMain.detailContent')}
-                  onChange={(val: string) => updateDeep('solutionMain.detailContent', val)}
-                  h="h-24"
-                />
-              </div>
-
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <div className="font-bold text-xs text-slate-700">하단 카드 목록</div>
-                  <button
-                    type="button"
-                    onClick={addSolutionCard}
-                    className="text-[11px] bg-blue-600 text-white px-2.5 py-1 rounded font-bold hover:bg-blue-700"
-                  >
-                    + 카드 추가
+              {/* 연혁 섹션 */}
+              <div className="space-y-3 border-t border-slate-100 pt-4">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xs font-bold text-slate-700">회사 연혁</h4>
+                  <button type="button" onClick={addHistory} className="rounded bg-blue-600 px-2.5 py-1.5 text-[11px] font-bold text-white hover:bg-blue-700">
+                    + 연혁 추가
                   </button>
                 </div>
-
-                {getArray('solutions').map((solution: any, idx: number) => (
-                  <div key={idx} className="p-4 bg-white border border-slate-200 rounded-xl space-y-3 relative">
-                    <button
-                      type="button"
-                      onClick={() => removeSolutionCard(idx)}
-                      className="absolute top-3 right-3 text-slate-400 hover:text-rose-500 text-xs font-bold"
-                    >
-                      ✕
+                {getArray('corporateInfo.history').map((item: any, idx: number) => (
+                  <div key={idx} className="relative space-y-2 rounded-lg border border-slate-200 p-3">
+                    <button type="button" onClick={() => removeHistory(idx)} className="absolute right-3 top-3 text-xs font-bold text-slate-400 hover:text-rose-600">
+                      삭제
                     </button>
-                    <div className="font-bold text-[11px] text-blue-600">카드 {idx + 1}</div>
-                    <InputField
-                      label="카드 제목"
-                      value={solution.title}
-                      onChange={(val: string) => updateDeep(`solutions.${idx}.title`, val)}
-                    />
-                    <TextAreaField
-                      label="카드 요약 설명"
-                      value={solution.description}
-                      onChange={(val: string) => updateDeep(`solutions.${idx}.description`, val)}
-                      h="h-16"
-                    />
-                    <TextAreaField
-                      label="카드 상세 내용"
-                      value={solution.detailContent || solution.detailedFeatures?.[0]?.featureContent || ''}
-                      onChange={(val: string) => updateDeep(`solutions.${idx}.detailContent`, val)}
-                      h="h-24"
-                    />
+                    <InputField label="연도" value={item?.year} onChange={(v) => updateDeep(`corporateInfo.history.${idx}.year`, v)} />
+                    <TextAreaField label="내용" value={item?.event} onChange={(v) => updateDeep(`corporateInfo.history.${idx}.event`, v)} h="h-16" />
                   </div>
                 ))}
               </div>
             </div>
           )}
 
-          {/* 4. 지속가능경영 */}
-{active === 'esg' && (
-  <div className="space-y-4 bg-white p-4 rounded-xl border border-slate-200">
-    <InputField
-      label="페이지 제목"
-      value={getValue('corporateInfo.esg.mainTitle')}
-      onChange={(val: string) =>
-        updateDeep('corporateInfo.esg.mainTitle', val)
-      }
-    />
+          {/* 3. 사업 소개 */}
+          {active === 'sol_detail' && (
+            <div className="space-y-4">
+              <div className="space-y-3 rounded-xl border border-slate-200 bg-white p-4">
+                <InputField label="대표 제목" value={getValue('solutionMain.title')} onChange={(v) => updateDeep('solutionMain.title', v)} />
+                <TextAreaField label="대표 요약" value={getValue('solutionMain.description')} onChange={(v) => updateDeep('solutionMain.description', v)} />
+              </div>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-slate-700">솔루션 카드 목록</span>
+                  <button type="button" onClick={addSolutionCard} className="rounded bg-blue-600 px-2.5 py-1 text-[11px] font-bold text-white hover:bg-blue-700">
+                    + 카드 추가
+                  </button>
+                </div>
+                {getArray('solutions').map((item: any, idx: number) => (
+                  <div key={idx} className="relative space-y-2 rounded-xl border border-slate-200 bg-white p-4">
+                    <button type="button" onClick={() => removeSolutionCard(idx)} className="absolute right-3 top-3 text-xs font-bold text-slate-400 hover:text-rose-500">
+                      ✕
+                    </button>
+                    <InputField label="카드 제목" value={item.title} onChange={(v) => updateDeep(`solutions.${idx}.title`, v)} />
+                    <TextAreaField label="요약 설명" value={item.description} onChange={(v) => updateDeep(`solutions.${idx}.description`, v)} h="h-16" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
-    <TextAreaField
-      label="페이지 설명"
-      value={getValue('corporateInfo.esg.mainDesc')}
-      onChange={(val: string) =>
-        updateDeep('corporateInfo.esg.mainDesc', val)
-      }
-      h="h-20"
-    />
+          {/* 4. ESG */}
+          {active === 'esg' && (
+            <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
+              <InputField label="메인 타이틀" value={getValue('corporateInfo.esg.mainTitle')} onChange={(v) => updateDeep('corporateInfo.esg.mainTitle', v)} />
+              <TextAreaField label="메인 설명" value={getValue('corporateInfo.esg.mainDesc')} onChange={(v) => updateDeep('corporateInfo.esg.mainDesc', v)} />
+            </div>
+          )}
 
-    <InputField
-      label="환경경영 영문 라벨"
-      value={
-        getValue('corporateInfo.esg.goals.0.label') ||
-        getValue('corporateInfo.esg.environmental.label') ||
-        'Environmental'
-      }
-      onChange={(val: string) => {
-        updateDeep('corporateInfo.esg.goals.0.label', val);
-        updateDeep('corporateInfo.esg.environmental.label', val);
-      }}
-    />
-
-    <InputField
-      label="환경경영 제목"
-      value={
-        getValue('corporateInfo.esg.goals.0.title') ||
-        getValue('corporateInfo.esg.environmental.title')
-      }
-      onChange={(val: string) => {
-        updateDeep('corporateInfo.esg.goals.0.title', val);
-        updateDeep('corporateInfo.esg.environmental.title', val);
-      }}
-    />
-
-    <TextAreaField
-      label="환경경영 내용"
-      value={
-        getValue('corporateInfo.esg.goals.0.content') ||
-        getValue('corporateInfo.esg.environmental.content')
-      }
-      onChange={(val: string) => {
-        updateDeep('corporateInfo.esg.goals.0.content', val);
-        updateDeep('corporateInfo.esg.environmental.content', val);
-      }}
-    />
-
-    <InputField
-      label="사회공헌 영문 라벨"
-      value={
-        getValue('corporateInfo.esg.goals.1.label') ||
-        getValue('corporateInfo.esg.social.label') ||
-        'Social'
-      }
-      onChange={(val: string) => {
-        updateDeep('corporateInfo.esg.goals.1.label', val);
-        updateDeep('corporateInfo.esg.social.label', val);
-      }}
-    />
-
-    <InputField
-      label="사회공헌 제목"
-      value={
-        getValue('corporateInfo.esg.goals.1.title') ||
-        getValue('corporateInfo.esg.social.title')
-      }
-      onChange={(val: string) => {
-        updateDeep('corporateInfo.esg.goals.1.title', val);
-        updateDeep('corporateInfo.esg.social.title', val);
-      }}
-    />
-
-    <TextAreaField
-      label="사회공헌 내용"
-      value={
-        getValue('corporateInfo.esg.goals.1.content') ||
-        getValue('corporateInfo.esg.social.content')
-      }
-      onChange={(val: string) => {
-        updateDeep('corporateInfo.esg.goals.1.content', val);
-        updateDeep('corporateInfo.esg.social.content', val);
-      }}
-    />
-
-    <InputField
-      label="지배구조 영문 라벨"
-      value={
-        getValue('corporateInfo.esg.goals.2.label') ||
-        getValue('corporateInfo.esg.governance.label') ||
-        'Governance'
-      }
-      onChange={(val: string) => {
-        updateDeep('corporateInfo.esg.goals.2.label', val);
-        updateDeep('corporateInfo.esg.governance.label', val);
-      }}
-    />
-
-    <InputField
-      label="투명경영 제목"
-      value={
-        getValue('corporateInfo.esg.goals.2.title') ||
-        getValue('corporateInfo.esg.governance.title')
-      }
-      onChange={(val: string) => {
-        updateDeep('corporateInfo.esg.goals.2.title', val);
-        updateDeep('corporateInfo.esg.governance.title', val);
-      }}
-    />
-
-    <TextAreaField
-      label="투명경영 내용"
-      value={
-        getValue('corporateInfo.esg.goals.2.content') ||
-        getValue('corporateInfo.esg.governance.content')
-      }
-      onChange={(val: string) => {
-        updateDeep('corporateInfo.esg.goals.2.content', val);
-        updateDeep('corporateInfo.esg.governance.content', val);
-      }}
-    />
-  </div>
-)}
-
-          {/* 5. 홍보 센터 */}
+          {/* 5. PR 센터 */}
           {active === 'pr' && (
-            <div className="space-y-4 bg-white p-4 rounded-xl border border-slate-200">
-              <div className="text-xs text-slate-500">홍보센터 뉴스 및 공지사항 데이터가 표시됩니다.</div>
-              <InputField
-                label="최신 뉴스 대표 제목"
-                value={getValue('prCenter.news.0.title')}
-                onChange={(val: string) => updateDeep('prCenter.news.0.title', val)}
-              />
-              <TextAreaField
-                label="최신 뉴스 대표 요약"
-                value={getValue('prCenter.news.0.summary')}
-                onChange={(val: string) => updateDeep('prCenter.news.0.summary', val)}
-              />
-              <InputField
-                label="대표 공지사항 제목"
-                value={getValue('prCenter.notice.0.title')}
-                onChange={(val: string) => updateDeep('prCenter.notice.0.title', val)}
-              />
+            <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
+              <InputField label="뉴스 대표 제목" value={getValue('prCenter.news.0.title')} onChange={(v) => updateDeep('prCenter.news.0.title', v)} />
+              <TextAreaField label="뉴스 대표 요약" value={getValue('prCenter.news.0.summary')} onChange={(v) => updateDeep('prCenter.news.0.summary', v)} />
             </div>
           )}
 
           {/* 6. 인재 경영 */}
           {active === 'recruit' && (
-            <div className="space-y-4 bg-white p-4 rounded-xl border border-slate-200">
+            <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
               <TextAreaField
                 label="인재상"
                 value={getValue('recruit.talentValue') || getValue('talentValue')}
-                onChange={(val: string) => {
-                  updateDeep('recruit.talentValue', val);
-                  updateDeep('talentValue', val);
-                }}
-                h="h-28"
+                onChange={(v) => { updateDeep('recruit.talentValue', v); updateDeep('talentValue', v); }}
+                h="h-24"
               />
               <TextAreaField
-                label="복지 및 혜택"
+                label="복리후생"
                 value={getValue('recruit.benefitInfo') || getValue('benefitInfo')}
-                onChange={(val: string) => {
-                  updateDeep('recruit.benefitInfo', val);
-                  updateDeep('benefitInfo', val);
-                }}
-                h="h-28"
+                onChange={(v) => { updateDeep('recruit.benefitInfo', v); updateDeep('benefitInfo', v); }}
+                h="h-24"
               />
+
+              {/* 채용 공고 섹션 */}
+              <div className="space-y-3 border-t border-slate-100 pt-4">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xs font-bold text-slate-700">채용 포지션</h4>
+                  <button type="button" onClick={addOpenPosition} className="rounded bg-blue-600 px-2.5 py-1.5 text-[11px] font-bold text-white hover:bg-blue-700">
+                    + 포지션 추가
+                  </button>
+                </div>
+                {getArray('recruit.openPositions').map((item: any, idx: number) => (
+                  <div key={idx} className="relative space-y-2 rounded-lg border border-slate-200 p-3">
+                    <button type="button" onClick={() => removeOpenPosition(idx)} className="absolute right-3 top-3 text-xs font-bold text-slate-400 hover:text-rose-600">
+                      삭제
+                    </button>
+                    <InputField label="직무명" value={item?.title} onChange={(v) => updateDeep(`recruit.openPositions.${idx}.title`, v)} />
+                    <InputField label="부서" value={item?.department} onChange={(v) => updateDeep(`recruit.openPositions.${idx}.department`, v)} />
+                    <InputField label="마감일" value={item?.deadline} onChange={(v) => updateDeep(`recruit.openPositions.${idx}.deadline`, v)} />
+                    <InputField label="지원 링크" value={item?.link} onChange={(v) => updateDeep(`recruit.openPositions.${idx}.link`, v)} placeholder="https://" />
+                  </div>
+                ))}
+              </div>
             </div>
           )}
 
           {/* 7. 고객 센터 */}
           {active === 'cs' && (
-            <div className="space-y-4 bg-white p-4 rounded-xl border border-slate-200">
+            <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
               <InputField
-                label="고객센터 전화번호"
+                label="대표 전화번호"
                 value={getValue('supportPhone') || getValue('csCenter.contactInfo.phone')}
-                onChange={(val: string) => {
-                  updateDeep('supportPhone', val);
-                  updateDeep('csCenter.contactInfo.phone', val);
-                }}
+                onChange={(v) => { updateDeep('supportPhone', v); updateDeep('csCenter.contactInfo.phone', v); }}
               />
-              <InputField
-                label="상담 가능 시간 가이드"
-                value={getValue('csGuide')}
-                onChange={(val: string) => updateDeep('csGuide', val)}
-              />
+              <InputField label="운영 시간 가이드" value={getValue('csGuide')} onChange={(v) => updateDeep('csGuide', v)} />
             </div>
           )}
 
           {/* 8. 하단 정보 */}
           {active === 'footer' && (
-            <div className="space-y-4 bg-white p-4 rounded-xl border border-slate-200">
+            <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
+              <InputField label="사업자등록번호" value={getValue('footer.businessNumber')} onChange={(v) => updateDeep('footer.businessNumber', v)} />
               <InputField
-                label="사업자 등록번호"
-                value={getValue('footer.businessNumber')}
-                onChange={(val: string) => updateDeep('footer.businessNumber', val)}
-              />
-              <InputField
-                label="대표자명"
+                label="대표자 성명"
                 value={getValue('footer.ownerName')}
-                onChange={(val: string) => {
-                  updateDeep('footer.ownerName', val);
-                  updateDeep('corporateInfo.representativeName', val);
+                onChange={(v) => {
+                  updateDeep('footer.ownerName', v);
+                  updateDeep('corporateInfo.representativeName', v);
+                  updateDeep('corporateInfo.ceoGreeting.name', v);
                 }}
               />
-              <InputField
-                label="사업장 주소"
-                value={getValue('footer.address')}
-                onChange={(val: string) => updateDeep('footer.address', val)}
-              />
-              <InputField
-                label="대표 이메일"
-                value={getValue('footer.contactEmail')}
-                onChange={(val: string) => updateDeep('footer.contactEmail', val)}
-              />
+              <InputField label="사업장 주소" value={getValue('footer.address')} onChange={(v) => updateDeep('footer.address', v)} />
+              <InputField label="대표 이메일" value={getValue('footer.contactEmail')} onChange={(v) => updateDeep('footer.contactEmail', v)} />
             </div>
           )}
         </div>
