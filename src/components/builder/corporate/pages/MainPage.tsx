@@ -24,7 +24,7 @@ export default function MainPage({
             fetchPriority="high"
             loading="eager"
             decoding="sync"
-            className="absolute inset-0 h-full w-full object-cover"
+className="absolute inset-0 h-full w-full bg-slate-900 object-contain"
           />
         )}
 
