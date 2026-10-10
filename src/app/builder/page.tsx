@@ -250,10 +250,15 @@ function mergeWithDefaultData(
       },
     },
     footer: {
-      ...defaults.footer,
-      ...(currentData.footer || {}),
+      address: '주소를 입력해주세요.',
+      ownerName: '대표자명',
+      businessNumber: '사업자등록번호',
+      contactEmail: 'info@example.com',
+      companyName: '회사명',
     },
-  } as B2BTemplateData;
+  };
+
+  return base as unknown as B2BTemplateData;
 }
 
 export default function BuilderPage() {
