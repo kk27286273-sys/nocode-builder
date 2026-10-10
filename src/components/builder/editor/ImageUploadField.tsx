@@ -6,6 +6,8 @@ import { supabase } from '@/lib/supabase/client';
 
 const IMAGE_BUCKET = 'site-images';
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
+const MAX_LOGO_SIZE = 100 * 1024;
+const LOGO_MAX_DIMENSION = 512;
 
 interface ImageUploadFieldProps {
   label: string;
@@ -54,17 +56,30 @@ export default function ImageUploadField({
     setIsUploading(true);
 
     try {
-      // GIF 애니메이션은 보존하고, 나머지는 WebP로 최적화합니다.
-      const uploadFile =
-        file.type === 'image/gif'
-          ? file
-          : await imageCompression(file, {
-              maxSizeMB: purpose === 'logo' ? 0.1 : 0.5,
-              maxWidthOrHeight: purpose === 'logo' ? 512 : 1920,
-              useWebWorker: true,
-              fileType: 'image/webp',
-              initialQuality: purpose === 'logo' ? 0.82 : 0.82,
-            });
+      const isGif = file.type === 'image/gif';
+      const isLogo = purpose === 'logo';
+
+      let uploadFile: File | Blob = file;
+
+      if (!isGif) {
+        uploadFile = await imageCompression(file, {
+          maxSizeMB: isLogo ? MAX_LOGO_SIZE / (1024 * 1024) : 0.5,
+          maxWidthOrHeight: isLogo ? LOGO_MAX_DIMENSION : 1920,
+          useWebWorker: true,
+          fileType: 'image/webp',
+          initialQuality: 0.82,
+        });
+
+        if (uploadFile.type !== 'image/webp') {
+          throw new Error('이미지를 WebP 형식으로 변환하지 못했습니다.');
+        }
+
+        if (isLogo && uploadFile.size > MAX_LOGO_SIZE) {
+          throw new Error(
+            '로고를 100KB 이하로 압축하지 못했습니다. 더 작은 이미지로 다시 시도해 주세요.',
+          );
+        }
+      }
 
       const safeSiteId = String(siteId).replace(/[^a-zA-Z0-9_-]/g, '');
       if (!safeSiteId) {

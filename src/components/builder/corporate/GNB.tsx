@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 
 interface GNBProps {
@@ -18,6 +18,9 @@ export default function GNB({
   activePage,
   navigateTo,
 }: GNBProps) {
+  const [logoFailed, setLogoFailed] = useState(false);
+  const hasLogo = Boolean(company?.logoUrl) && !logoFailed;
+
   const mainMenus = [
     { label: '회사소개', id: 'about' },
     { label: '사업소개', id: 'sol_detail' },
@@ -36,11 +39,14 @@ export default function GNB({
           onClick={() => navigateTo('main')}
           aria-label="홈으로 이동"
         >
-          {company?.logoUrl ? (
+          {hasLogo ? (
             <img
               src={company.logoUrl}
               alt={`${company?.name || '회사'} 로고`}
-              className="h-8 w-auto max-w-36 object-contain md:h-10"
+              width={144}
+              height={40}
+              onError={() => setLogoFailed(true)}
+              className="h-8 w-36 shrink-0 object-contain object-left md:h-10"
             />
           ) : null}
 
