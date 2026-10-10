@@ -136,6 +136,13 @@ export default function EditorSidebar({
               <InputField label="메인 배지" value={getValue('hero.badge')} onChange={(v) => updateDeep('hero.badge', v)} />
               <InputField label="메인 타이틀" value={getValue('hero.title')} onChange={(v) => updateDeep('hero.title', v)} />
               <TextAreaField label="메인 서브 타이틀" value={getValue('hero.subtitle')} onChange={(v) => updateDeep('hero.subtitle', v)} />
+              <ImageUploadField
+                label="메인 히어로 배경 이미지"
+                value={getValue('hero.mediaUrl') || ''}
+                onChange={(url) => updateDeep('hero.mediaUrl', url)}
+                siteId={siteId}
+                purpose="general"
+              />
             </div>
           )}
 
@@ -152,18 +159,19 @@ export default function EditorSidebar({
                   updateDeep('footer.ownerName', v);
                 }}
               />
-<ImageUploadField
-  label="회사 로고 (GNB)"
-  value={getValue('company.logoUrl') || ''}
-  onChange={(url) => updateDeep('company.logoUrl', url)}
-  siteId={siteId}
-  purpose="logo"
-/>
+              <ImageUploadField
+                label="회사 로고 (GNB)"
+                value={getValue('company.logoUrl') || ''}
+                onChange={(url) => updateDeep('company.logoUrl', url)}
+                siteId={siteId}
+                purpose="logo"
+              />
               <ImageUploadField
                 label="대표이사 사진 (소개 페이지)"
                 value={getValue('corporateInfo.ceoGreeting.image') || ''}
                 onChange={(url) => updateDeep('corporateInfo.ceoGreeting.image', url)}
                 siteId={siteId}
+                purpose="general"
               />
               <InputField label="슬로건" value={getValue('corporateInfo.about')} onChange={(v) => updateDeep('corporateInfo.about', v)} />
               <InputField
@@ -226,41 +234,48 @@ export default function EditorSidebar({
                     </button>
                     <InputField label="카드 제목" value={item.title} onChange={(v) => updateDeep(`solutions.${idx}.title`, v)} />
                     <TextAreaField label="요약 설명" value={item.description} onChange={(v) => updateDeep(`solutions.${idx}.description`, v)} h="h-16" />
+                    <ImageUploadField
+                      label="솔루션 대표 이미지"
+                      value={item.image || ''}
+                      onChange={(url) => updateDeep(`solutions.${idx}.image`, url)}
+                      siteId={siteId}
+                      purpose="general"
+                    />
                   </div>
                 ))}
               </div>
             </div>
           )}
 
-{/* 4. ESG */}
-{active === 'esg' && (
-  <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
-    <InputField
-      label="페이지 제목"
-      value={getValue('corporateInfo.esg.mainTitle')}
-      onChange={(v) => updateDeep('corporateInfo.esg.mainTitle', v)}
-    />
+          {/* 4. ESG */}
+          {active === 'esg' && (
+            <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
+              <InputField
+                label="페이지 제목"
+                value={getValue('corporateInfo.esg.mainTitle')}
+                onChange={(v) => updateDeep('corporateInfo.esg.mainTitle', v)}
+              />
 
-    <TextAreaField
-      label="페이지 설명"
-      value={getValue('corporateInfo.esg.mainDesc')}
-      onChange={(v) => updateDeep('corporateInfo.esg.mainDesc', v)}
-      h="h-20"
-    />
+              <TextAreaField
+                label="페이지 설명"
+                value={getValue('corporateInfo.esg.mainDesc')}
+                onChange={(v) => updateDeep('corporateInfo.esg.mainDesc', v)}
+                h="h-20"
+              />
 
-    <InputField label="환경경영 영문 라벨" value={getValue('corporateInfo.esg.goals.0.label')} onChange={(v) => updateDeep('corporateInfo.esg.goals.0.label', v)} />
-    <InputField label="환경경영 제목" value={getValue('corporateInfo.esg.goals.0.title')} onChange={(v) => updateDeep('corporateInfo.esg.goals.0.title', v)} />
-    <TextAreaField label="환경경영 내용" value={getValue('corporateInfo.esg.goals.0.content')} onChange={(v) => updateDeep('corporateInfo.esg.goals.0.content', v)} />
+              <InputField label="환경경영 영문 라벨" value={getValue('corporateInfo.esg.goals.0.label')} onChange={(v) => updateDeep('corporateInfo.esg.goals.0.label', v)} />
+              <InputField label="환경경영 제목" value={getValue('corporateInfo.esg.goals.0.title')} onChange={(v) => updateDeep('corporateInfo.esg.goals.0.title', v)} />
+              <TextAreaField label="환경경영 내용" value={getValue('corporateInfo.esg.goals.0.content')} onChange={(v) => updateDeep('corporateInfo.esg.goals.0.content', v)} />
 
-    <InputField label="사회공헌 영문 라벨" value={getValue('corporateInfo.esg.goals.1.label')} onChange={(v) => updateDeep('corporateInfo.esg.goals.1.label', v)} />
-    <InputField label="사회공헌 제목" value={getValue('corporateInfo.esg.goals.1.title')} onChange={(v) => updateDeep('corporateInfo.esg.goals.1.title', v)} />
-    <TextAreaField label="사회공헌 내용" value={getValue('corporateInfo.esg.goals.1.content')} onChange={(v) => updateDeep('corporateInfo.esg.goals.1.content', v)} />
+              <InputField label="사회공헌 영문 라벨" value={getValue('corporateInfo.esg.goals.1.label')} onChange={(v) => updateDeep('corporateInfo.esg.goals.1.label', v)} />
+              <InputField label="사회공헌 제목" value={getValue('corporateInfo.esg.goals.1.title')} onChange={(v) => updateDeep('corporateInfo.esg.goals.1.title', v)} />
+              <TextAreaField label="사회공헌 내용" value={getValue('corporateInfo.esg.goals.1.content')} onChange={(v) => updateDeep('corporateInfo.esg.goals.1.content', v)} />
 
-    <InputField label="지배구조 영문 라벨" value={getValue('corporateInfo.esg.goals.2.label')} onChange={(v) => updateDeep('corporateInfo.esg.goals.2.label', v)} />
-    <InputField label="투명경영 제목" value={getValue('corporateInfo.esg.goals.2.title')} onChange={(v) => updateDeep('corporateInfo.esg.goals.2.title', v)} />
-    <TextAreaField label="투명경영 내용" value={getValue('corporateInfo.esg.goals.2.content')} onChange={(v) => updateDeep('corporateInfo.esg.goals.2.content', v)} />
-  </div>
-)}
+              <InputField label="지배구조 영문 라벨" value={getValue('corporateInfo.esg.goals.2.label')} onChange={(v) => updateDeep('corporateInfo.esg.goals.2.label', v)} />
+              <InputField label="투명경영 제목" value={getValue('corporateInfo.esg.goals.2.title')} onChange={(v) => updateDeep('corporateInfo.esg.goals.2.title', v)} />
+              <TextAreaField label="투명경영 내용" value={getValue('corporateInfo.esg.goals.2.content')} onChange={(v) => updateDeep('corporateInfo.esg.goals.2.content', v)} />
+            </div>
+          )}
 
           {/* 5. PR 센터 */}
           {active === 'pr' && (
