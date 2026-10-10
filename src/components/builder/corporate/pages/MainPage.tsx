@@ -85,7 +85,7 @@ className="absolute inset-0 h-full w-full bg-slate-900 object-contain"
                       alt={solution.title || `솔루션 ${index + 1}`}
                       loading="lazy"
                       decoding="async"
-                      className="mb-6 h-48 w-full rounded-2xl object-cover"
+className="mb-6 h-48 w-full rounded-2xl bg-slate-100 object-contain"
                     />
                   ) : (
                     <div className="mb-8 flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-xl font-bold text-blue-600 shadow-md transition-colors duration-300 group-hover:bg-blue-600 group-hover:text-white">
@@ -103,7 +103,7 @@ className="absolute inset-0 h-full w-full bg-slate-900 object-contain"
                   </p>
 
                   <div className="mt-8 flex items-center gap-2 text-sm font-bold text-blue-600 transition-all duration-300 group-hover:gap-3">
-                    상세보기 <span>→</span>
+                자세히 보기 <span aria-hidden="true">→</span>
                   </div>
                 </motion.div>
               ),
