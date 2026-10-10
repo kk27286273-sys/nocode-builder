@@ -17,7 +17,8 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
   const activePage = propSection || internalPage;
   const setActivePage = propSetSection || setInternalPage;
 
-  const [selectedSolution, setSelectedSolution] = useState<number | null>(null);
+const [selectedSolution, setSelectedSolution] = useState<number | null>(null);
+const [logoFailed, setLogoFailed] = useState(false);
 
   // 표준 7개 메뉴 정의 (에디터 섹션 ID와 일치시킴)
   const STANDARD_MENUS = [
@@ -38,26 +39,28 @@ export const CorporateViewer = ({ data, activeSection: propSection, setActiveSec
   const Navbar = () => (
     <nav className="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
-<div className="cursor-pointer" onClick={() => navigateTo('main')}>
-  {/* 1. 로고 URL이 있고, 빈 문자열이 아닐 때만 이미지 출력 */}
-  {company.logoUrl && company.logoUrl !== "" ? (
-    <img 
-      src={company.logoUrl} 
-      alt={company.name} 
-      className="h-10 object-contain" 
-      onError={(e) => {
-        // 이미지 로드 실패 시 텍스트로 대체 (에러 방지)
-        e.currentTarget.style.display = 'none';
-      }}
+<div
+  className="flex h-10 min-w-0 cursor-pointer items-center gap-3"
+  onClick={() => navigateTo('main')}
+>
+  {company?.logoUrl && !logoFailed ? (
+    <img
+      src={company.logoUrl}
+      alt={`${company?.name || '회사'} 로고`}
+      width={144}
+      height={40}
+      onError={() => setLogoFailed(true)}
+      className="h-10 w-36 shrink-0 object-contain object-left"
     />
   ) : (
-    /* 2. 로고 이미지가 없으면 회사 이름을 테마 컬러로 출력 */
-    <span className="text-2xl font-bold" style={{ color: themeColor || '#2563eb' }}>
-      {company.name || 'Company Name'}
+    <span
+      className="truncate text-2xl font-bold"
+      style={{ color: themeColor || '#2563eb' }}
+    >
+      {company?.name || 'Company Name'}
     </span>
   )}
 </div>
-        
         <div className="hidden md:flex gap-6">
           {STANDARD_MENUS.map((menu) => (
             <button 
