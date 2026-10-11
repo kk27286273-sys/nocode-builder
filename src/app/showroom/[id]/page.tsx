@@ -5,6 +5,8 @@ import React from 'react';
 import Link from 'next/link';
 import { useParams, notFound } from 'next/navigation';
 import { SHOWROOM_TEMPLATES } from '@/data/showroomTemplates';
+import LegalTaxLayout from '@/components/templates/LegalTaxLayout';
+import FitnessLayout from '@/components/templates/FitnessLayout';
 
 export default function ShowroomDetailPage() {
   const params = useParams();
@@ -15,8 +17,17 @@ export default function ShowroomDetailPage() {
     notFound();
   }
 
+  // 전용 레이아웃이 있으면 해당 컴포넌트 렌더링
+  if (template.layout === 'legal-tax') {
+    return <LegalTaxLayout />;
+  }
+
+  if (template.layout === 'fitness-lesson') {
+    return <FitnessLayout />;
+  }
+
+  // 기본 레이아웃 (기존 코드)
   const kakaoConsultUrl = 'http://pf.kakao.com/_qxmixiX/chat';
-  const isVisualLayout = id === 'fitness-lesson' || id === 'b2b-rental';
 
   return (
     <main className="min-h-screen bg-slate-50 py-16 px-4 sm:px-6 lg:px-8">
