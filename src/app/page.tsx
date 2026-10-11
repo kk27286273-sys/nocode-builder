@@ -73,7 +73,7 @@ function NexiaValues() {
                 aria-expanded={isActive}
                 className={`group relative min-h-56 overflow-hidden rounded-3xl border p-5 text-left transition-all duration-500 md:min-h-72 md:p-6 ${
                   isActive
-                    ? 'border-cyan-300/70 bg-slate-800 shadow-[0_0_40px_rgba(34,211,238,0.12)] md:col-span-1'
+                    ? 'border-cyan-300/70 bg-slate-800 shadow-[0_0_40px_rgba(34,211,238,0.12)]'
                     : 'border-white/10 bg-white/[0.03] hover:border-white/25 hover:bg-white/[0.06]'
                 } ${index === 4 ? 'col-span-2 md:col-span-1' : ''}`}
               >
@@ -237,8 +237,11 @@ function PricingSection() {
 
               <ul className="mt-6 space-y-3">
                 {plan.features.map((feature) => (
-                  <li key={feature} className="flex items-start gap-3 text-sm text-slate-700">
-                    <span className="mt-1 block h-1.5 w-1.5 rounded-full bg-blue-600 flex-shrink-0" />
+                  <li
+                    key={feature}
+                    className="flex items-start gap-3 text-sm text-slate-700"
+                  >
+                    <span className="mt-1 block h-1.5 w-1.5 flex-shrink-0 rounded-full bg-blue-600" />
                     {feature}
                   </li>
                 ))}
@@ -267,7 +270,7 @@ function PricingSection() {
         </div>
 
         <div className="mt-12 rounded-3xl border border-amber-200 bg-amber-50 p-6 md:p-8">
-          <p className="text-sm font-bold text-amber-900">💡 추가 서비스</p>
+          <p className="text-sm font-bold text-amber-900">추가 서비스</p>
           <div className="mt-4 grid gap-4 text-sm text-amber-900 md:grid-cols-2">
             <p>• 새 버튼 추가: 1개당 1만 원</p>
             <p>• 새 섹션 추가: 1개당 3만 원</p>
@@ -319,7 +322,10 @@ export default function LandingPage() {
 
       <header className="absolute inset-x-0 top-0 z-20">
         <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
-          <Link href="/" className="text-xl font-black tracking-[0.18em] text-white">
+          <Link
+            href="/"
+            className="text-xl font-black tracking-[0.18em] text-white"
+          >
             THsoft
           </Link>
           <a
@@ -400,10 +406,7 @@ export default function LandingPage() {
 
       <NexiaValues />
 
-      <section
-        id="templates-section"
-        className="scroll-mt-8 px-6 py-24 md:py-32"
-      >
+      <section id="templates-section" className="scroll-mt-8 px-6 py-24 md:py-32">
         <div className="mx-auto max-w-7xl">
           <div className="mb-12 max-w-2xl md:mb-16">
             <p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-blue-600">
@@ -421,68 +424,6 @@ export default function LandingPage() {
           </div>
 
           <IndustryGrid />
-
-          <div className="mt-16 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
-            <div className="mb-5">
-              <span className="text-sm font-bold text-slate-900">
-                무료 사이트 속도 진단
-              </span>
-              <p className="mt-2 text-sm leading-6 text-slate-500">
-                현재 페이지에서 제공하는 무료 진단 기능을 준비 중입니다.
-                지금은 상담을 통해 진단을 신청해 주세요.
-              </p>
-            </div>
-            <a
-              href={KAKAO_LINK}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex w-full items-center justify-center rounded-xl bg-slate-900 px-5 py-4 font-bold text-white transition hover:bg-blue-700"
-            >
-              무료 진단 상담 신청하기
-            </a>
-          </div>
-        </div>
-      </section>
-
-          <div className="overflow-hidden rounded-3xl border border-slate-200 bg-slate-50">
-            <ShowroomSlider />
-          </div>
-
-          <div className="mt-16">
-            <div className="mb-8 flex flex-col gap-2">
-              <p className="text-sm font-bold uppercase tracking-[0.25em] text-blue-600">
-                By Industry
-              </p>
-              <h3 className="text-2xl font-bold tracking-tight md:text-3xl">
-                업종별 추천 구성
-              </h3>
-              <p className="leading-7 text-slate-600">
-                카드에 마우스를 올리면 업종별 핵심 구성이 펼쳐집니다.
-              </p>
-            </div>
-
-            <IndustryGrid />
-          </div>
-
-          <div className="mt-16 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
-            <div className="mb-5">
-              <span className="text-sm font-bold text-slate-900">
-                무료 사이트 속도 진단
-              </span>
-              <p className="mt-2 text-sm leading-6 text-slate-500">
-                현재 페이지에서 제공하는 무료 진단 기능을 준비 중입니다.
-                지금은 상담을 통해 진단을 신청해 주세요.
-              </p>
-            </div>
-            <a
-              href={KAKAO_LINK}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex w-full items-center justify-center rounded-xl bg-slate-900 px-5 py-4 font-bold text-white transition hover:bg-blue-700"
-            >
-              무료 진단 상담 신청하기
-            </a>
-          </div>
         </div>
       </section>
 
@@ -506,11 +447,11 @@ export default function LandingPage() {
           <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
             <div className="mb-5">
               <span className="text-sm font-bold text-slate-900">
-                속도 진단 안내
+                무료 사이트 속도 진단
               </span>
               <p className="mt-2 text-sm leading-6 text-slate-500">
-                Nexia로 만든 사이트는 국내 기준 LCP 1초 미만,
-                해외 접속 0.5초 이내를 목표로 최적화됩니다.
+                현재 페이지에서 제공하는 무료 진단 기능을 준비 중입니다.
+                지금은 상담을 통해 진단을 신청해 주세요.
               </p>
             </div>
             <a
@@ -519,7 +460,7 @@ export default function LandingPage() {
               rel="noreferrer"
               className="inline-flex w-full items-center justify-center rounded-xl bg-slate-900 px-5 py-4 font-bold text-white transition hover:bg-blue-700"
             >
-              성능 목표 상담받기
+              무료 진단 상담 신청하기
             </a>
           </div>
         </div>
