@@ -11,6 +11,7 @@ export default function PreviewPage() {
   const siteId = params?.siteId as string;
 
   const [data, setData] = useState<B2BTemplateData | null>(null);
+  const [activeSection, setActiveSection] = useState('main');
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -47,7 +48,7 @@ export default function PreviewPage() {
 
   return (
     <main className="min-h-screen w-full bg-white">
-      <ViewerManager data={data} activeSection="main" setActiveSection={() => {}} />
+      <ViewerManager data={data} activeSection={activeSection} setActiveSection={setActiveSection} />
     </main>
   );
 }
