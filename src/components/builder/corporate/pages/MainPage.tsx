@@ -17,16 +17,18 @@ export default function MainPage({
   return (
     <div className="w-full">
       <section className="relative flex h-[80vh] items-center justify-center overflow-hidden bg-slate-900 text-white">
-        {hero?.mediaUrl && (
-          <img
-            src={hero.mediaUrl}
-            alt={hero?.title || '히어로 배경'}
-            fetchPriority="high"
-            loading="eager"
-            decoding="sync"
-className="absolute inset-0 h-full w-full bg-slate-900 object-contain"
-          />
-        )}
+{hero?.mediaUrl && (
+  <img
+    src={hero.mediaUrl}
+    srcSet={hero.mediaSrcSet || undefined}
+    sizes="100vw"
+    alt={hero?.title || '히어로 배경'}
+    fetchPriority="high"
+    loading="eager"
+    decoding="async"
+    className="absolute inset-0 h-full w-full bg-slate-900 object-contain"
+  />
+)}
 
         <div className="absolute inset-0 z-10 bg-gradient-to-b from-slate-900/40 via-slate-900/60 to-slate-900/80" />
 

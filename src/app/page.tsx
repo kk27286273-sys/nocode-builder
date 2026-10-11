@@ -131,6 +131,159 @@ function NexiaValues() {
   );
 }
 
+function PricingSection() {
+  const plans = [
+    {
+      name: 'Basic',
+      setupFee: 700000,
+      monthlyFee: 59000,
+      description: '핵심 정보 집중형',
+      features: [
+        '원페이지 구성',
+        '3영업일 이내 수정',
+        '기본 서버 관리',
+        '보안 업데이트',
+        '기본 SEO 세팅',
+        '도메인 지급',
+      ],
+      cta: 'Basic 선택하기',
+      highlight: false,
+    },
+    {
+      name: 'Pro',
+      setupFee: 1000000,
+      monthlyFee: 79000,
+      description: '브랜드 확장형',
+      features: [
+        '멀티페이지 2장',
+        '72시간 이내 수정(연중무휴)',
+        '기본 서버 관리',
+        '보안 업데이트',
+        '기본 SEO 세팅',
+        '도메인 지급',
+      ],
+      cta: 'Pro 선택하기',
+      highlight: true,
+    },
+    {
+      name: 'Premium',
+      setupFee: 1200000,
+      monthlyFee: 99000,
+      description: '비즈니스 완성형',
+      features: [
+        '멀티페이지 4장',
+        '24시간 이내 수정(연중무휴)',
+        '최적화 유지 및 월간 리포트',
+        'VIP 우선 대응',
+        '기본 SEO 세팅',
+        '도메인 지급',
+      ],
+      cta: 'Premium 선택하기',
+      highlight: false,
+    },
+  ];
+
+  const handleSelectPlan = (plan: typeof plans[0]) => {
+    const totalFirstPayment = plan.setupFee + plan.monthlyFee;
+    const params = new URLSearchParams({
+      plan: plan.name.toLowerCase(),
+      setupFee: String(plan.setupFee),
+      monthlyFee: String(plan.monthlyFee),
+      totalFirstPayment: String(totalFirstPayment),
+    });
+    window.location.href = `/pay?${params.toString()}`;
+  };
+
+  return (
+    <section className="px-6 py-24 md:py-32">
+      <div className="mx-auto max-w-7xl">
+        <div className="mb-16 text-center">
+          <p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-blue-600">
+            Flexible Plans
+          </p>
+          <h2 className="text-3xl font-bold tracking-tight md:text-5xl">
+            당신의 비즈니스에 맞는 요금제
+          </h2>
+          <p className="mt-4 text-slate-600">
+            구축비 + 월간 구독으로 시작하고, 언제든 업그레이드하세요.
+          </p>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-3">
+          {plans.map((plan) => (
+            <div
+              key={plan.name}
+              className={`relative rounded-3xl border p-8 transition-all ${
+                plan.highlight
+                  ? 'border-blue-300 bg-gradient-to-br from-blue-50 to-white shadow-lg ring-2 ring-blue-100'
+                  : 'border-slate-200 bg-white'
+              }`}
+            >
+              {plan.highlight && (
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-blue-600 px-4 py-1 text-xs font-bold text-white">
+                  가장 인기
+                </div>
+              )}
+
+              <h3 className="text-2xl font-bold text-slate-900">{plan.name}</h3>
+              <p className="mt-1 text-sm text-slate-600">{plan.description}</p>
+
+              <div className="mt-6 space-y-1">
+                <p className="text-sm text-slate-600">구축비</p>
+                <p className="text-3xl font-bold text-slate-900">
+                  {(plan.setupFee / 10000).toFixed(0)}만 원
+                </p>
+                <p className="mt-4 text-sm text-slate-600">월간 구독료</p>
+                <p className="text-2xl font-bold text-blue-600">
+                  {(plan.monthlyFee / 10000).toFixed(1)}만 원
+                </p>
+              </div>
+
+              <div className="mt-6 rounded-2xl bg-slate-50 p-4">
+                <p className="text-xs font-semibold text-slate-600">첫 결제액</p>
+                <p className="mt-1 text-xl font-bold text-slate-900">
+                  {((plan.setupFee + plan.monthlyFee) / 10000).toFixed(1)}만 원
+                </p>
+              </div>
+
+              <ul className="mt-6 space-y-3">
+                {plan.features.map((feature) => (
+                  <li key={feature} className="flex items-start gap-3 text-sm text-slate-700">
+                    <span className="mt-1 block h-1.5 w-1.5 rounded-full bg-blue-600 flex-shrink-0" />
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+
+              <button
+                type="button"
+                onClick={() => handleSelectPlan(plan)}
+                className={`mt-8 w-full rounded-xl px-6 py-4 font-bold transition ${
+                  plan.highlight
+                    ? 'bg-blue-600 text-white hover:bg-blue-700'
+                    : 'border border-slate-300 text-slate-900 hover:bg-slate-50'
+                }`}
+              >
+                {plan.cta}
+              </button>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-12 rounded-3xl border border-amber-200 bg-amber-50 p-6 md:p-8">
+          <p className="text-sm font-bold text-amber-900">💡 추가 서비스</p>
+          <div className="mt-4 grid gap-4 text-sm text-amber-900 md:grid-cols-2">
+            <p>• 새 버튼 추가: 1개당 1만 원</p>
+            <p>• 새 섹션 추가: 1개당 3만 원</p>
+            <p>• 새 페이지 추가: 1페이지당 5만 원</p>
+            <p>• 외부 서비스 연동: 별도 견적</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function LandingPage() {
   const scrollToTemplates = () => {
     document.getElementById('templates-section')?.scrollIntoView({
@@ -383,6 +536,8 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+
+      <PricingSection />
 
       <section className="px-6 py-24 text-center md:py-32">
         <div className="mx-auto max-w-3xl">

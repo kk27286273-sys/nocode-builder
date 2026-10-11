@@ -136,12 +136,15 @@ export default function EditorSidebar({
               <InputField label="메인 배지" value={getValue('hero.badge')} onChange={(v) => updateDeep('hero.badge', v)} />
               <InputField label="메인 타이틀" value={getValue('hero.title')} onChange={(v) => updateDeep('hero.title', v)} />
               <TextAreaField label="메인 서브 타이틀" value={getValue('hero.subtitle')} onChange={(v) => updateDeep('hero.subtitle', v)} />
-              <ImageUploadField
-                label="메인 히어로 배경 이미지"
-                value={getValue('hero.mediaUrl') || ''}
-                onChange={(url) => updateDeep('hero.mediaUrl', url)}
-                siteId={siteId}
-                purpose="general"
+<ImageUploadField
+  label="메인 히어로 배경 이미지"        
+  value={getValue('hero.mediaUrl') || ''}
+  onChange={(result) => {
+    updateDeep('hero.mediaUrl', result?.url || '');
+    updateDeep('hero.mediaSrcSet', result?.srcSet || '');
+  }}
+  siteId={siteId}
+  purpose="general"
               />
             </div>
           )}
@@ -159,20 +162,23 @@ export default function EditorSidebar({
                   updateDeep('footer.ownerName', v);
                 }}
               />
-              <ImageUploadField
-                label="회사 로고 (GNB)"
-                value={getValue('company.logoUrl') || ''}
-                onChange={(url) => updateDeep('company.logoUrl', url)}
-                siteId={siteId}
-                purpose="logo"
-              />
-              <ImageUploadField
-                label="대표이사 사진 (소개 페이지)"
-                value={getValue('corporateInfo.ceoGreeting.image') || ''}
-                onChange={(url) => updateDeep('corporateInfo.ceoGreeting.image', url)}
-                siteId={siteId}
-                purpose="general"
-              />
+<ImageUploadField
+  label="회사 로고 (GNB)"
+  value={getValue('company.logoUrl') || ''}
+  onChange={(result) => {
+    updateDeep('company.logoUrl', result?.url || '');
+    updateDeep('company.logoSrcSet', result?.srcSet || '');
+  }}
+  siteId={siteId}
+  purpose="logo"
+/>
+<ImageUploadField
+  label="대표이사 사진 (소개 페이지)"    
+  value={getValue('corporateInfo.ceoGreeting.image') || ''}
+  onChange={(result) => updateDeep('corporateInfo.ceoGreeting.image', result?.url || '')}
+  siteId={siteId}
+  purpose="general"
+/>
               <InputField label="슬로건" value={getValue('corporateInfo.about')} onChange={(v) => updateDeep('corporateInfo.about', v)} />
               <InputField
                 label="핵심 비전"
@@ -260,13 +266,16 @@ export default function EditorSidebar({
       h="h-24"
     />
 
-    <ImageUploadField
-      label="솔루션 이미지"
-      value={item.image || ''}
-      onChange={(url) => updateDeep(`solutions.${idx}.image`, url)}
-      siteId={siteId}
-      purpose="solution"
-    />
+<ImageUploadField
+  label="솔루션 이미지"
+  value={item.image || ''}
+  onChange={(result) => {
+    updateDeep(`solutions.${idx}.image`, result?.url || '');
+    updateDeep(`solutions.${idx}.imageSrcSet`, result?.srcSet || '');
+  }}
+  siteId={siteId}
+  purpose="solution"
+/>
   </div>
 ))}
               </div>

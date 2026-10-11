@@ -94,6 +94,7 @@ hero={{
   subtitle: data.hero?.subtitle || solutionMain.description,
   badge: data.hero?.badge || 'Since 1990',
   mediaUrl: data.hero?.mediaUrl || '',
+  mediaSrcSet: data.hero?.mediaSrcSet || '',
 }}
   solutions={solutionList}
   navigateTo={navigateTo}

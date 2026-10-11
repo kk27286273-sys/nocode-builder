@@ -44,7 +44,7 @@ export default async function ShowroomDetailPage({ params }: Props) {
   const FeatureSection = (
     <div>
       <h2 className="text-lg font-bold text-slate-900 mb-3">주요 특화 기능</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {template.features.map((feature, idx) => (
           <div
             key={idx}
