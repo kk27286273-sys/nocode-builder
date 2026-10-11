@@ -120,31 +120,44 @@ export default function EditorSidebar({
     updateDeep('process', getArray('process').filter((_, i) => i !== index));
   };
 
-  // ===== 템플릿 타입 확인 =====
-  const templateType = data?.templateType;
-  const isInterior = templateType === 'interior' || templateType === 'onepage';
+// ===== 템플릿 타입 확인 =====
+const templateType = data?.templateType;
+const isInterior = templateType === 'interior' || templateType === 'onepage';
 
-  // ===== 섹션 목록 (템플릿별) =====
-  const sections = isInterior
-    ? [
-        { id: 'main', label: '히어로' },
-        { id: 'projects', label: '시공 사례' },
-        { id: 'services', label: '서비스' },
-        { id: 'process', label: '시공 절차' },
-        { id: 'estimate', label: '견적 문의' },
-        { id: 'contact', label: '연락처' },
-        { id: 'footer', label: '하단 정보' },
-      ]
-    : [
-        { id: 'main', label: '메인 화면' },
-        { id: 'about', label: '회사 소개' },
-        { id: 'sol_detail', label: '사업 소개' },
-        { id: 'esg', label: '지속가능경영' },
-        { id: 'pr', label: '홍보 센터' },
-        { id: 'recruit', label: '인재 경영' },
-        { id: 'cs', label: '고객 센터' },
-        { id: 'footer', label: '하단 정보' },
-      ];
+// ===== 섹션 목록 (템플릿별) =====
+const sections = isInterior
+  ? [
+      { id: 'main', label: '히어로' },
+      { id: 'projects', label: '시공 사례' },
+      { id: 'services', label: '서비스' },
+      { id: 'process', label: '시공 절차' },
+      { id: 'estimate', label: '견적 문의' },
+      { id: 'contact', label: '연락처' },
+      { id: 'footer', label: '하단 정보' },
+    ]
+  : templateType === 'legal'
+  ? [
+      { id: 'main', label: '메인 화면' },
+      { id: 'contact', label: '연락처' },
+      { id: 'footer', label: '하단 정보' },
+    ]
+  : templateType === 'fitness'
+  ? [
+      { id: 'main', label: '메인 화면' },
+      { id: 'services', label: '클래스' },
+      { id: 'contact', label: '연락처' },
+      { id: 'footer', label: '하단 정보' },
+    ]
+  : [
+      { id: 'main', label: '메인 화면' },
+      { id: 'about', label: '회사 소개' },
+      { id: 'sol_detail', label: '사업 소개' },
+      { id: 'esg', label: '지속가능경영' },
+      { id: 'pr', label: '홍보 센터' },
+      { id: 'recruit', label: '인재 경영' },
+      { id: 'cs', label: '고객 센터' },
+      { id: 'footer', label: '하단 정보' },
+    ];
 
   return (
     <div className="flex h-full w-full overflow-hidden bg-white">
@@ -174,6 +187,169 @@ export default function EditorSidebar({
               {sections.find((s) => s.id === active)?.label} 설정
             </h3>
           </div>
+
+          {/* ===== 법률형 섹션 ===== */}
+          {templateType === 'legal' && (
+            <>
+              {/* 1. 메인 */}
+              {active === 'main' && (
+                <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
+                  <InputField
+                    label="메인 제목"
+                    value={getValue('hero.title')}
+                    onChange={(v) => updateDeep('hero.title', v)}
+                    placeholder="신뢰할 수 있는 법률 파트너"
+                  />
+                  <TextAreaField
+                    label="설명"
+                    value={getValue('hero.subtitle')}
+                    onChange={(v) => updateDeep('hero.subtitle', v)}
+                    h="h-24"
+                    placeholder="의뢰인의 권리를 지키는 전문적인 법률 서비스"
+                  />
+                </div>
+              )}
+
+              {/* 2. 연락처 */}
+              {active === 'contact' && (
+                <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
+                  <InputField
+                    label="이메일"
+                    value={getValue('csCenter.contactInfo.email')}
+                    onChange={(v) => updateDeep('csCenter.contactInfo.email', v)}
+                  />
+                  <InputField
+                    label="전화"
+                    value={getValue('csCenter.contactInfo.phone')}
+                    onChange={(v) => updateDeep('csCenter.contactInfo.phone', v)}
+                  />
+                  <InputField
+                    label="주소"
+                    value={getValue('csCenter.contactInfo.address')}
+                    onChange={(v) => updateDeep('csCenter.contactInfo.address', v)}
+                  />
+                </div>
+              )}
+
+              {/* 3. 하단 정보 */}
+              {active === 'footer' && (
+                <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
+                  <InputField
+                    label="회사명"
+                    value={getValue('footer.companyName')}
+                    onChange={(v) => updateDeep('footer.companyName', v)}
+                  />
+                  <InputField
+                    label="주소"
+                    value={getValue('footer.address')}
+                    onChange={(v) => updateDeep('footer.address', v)}
+                  />
+                </div>
+              )}
+            </>
+          )}
+
+          {/* ===== 피트니스형 섹션 ===== */}
+          {templateType === 'fitness' && (
+            <>
+              {/* 1. 메인 */}
+              {active === 'main' && (
+                <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
+                  <InputField
+                    label="메인 제목"
+                    value={getValue('hero.title')}
+                    onChange={(v) => updateDeep('hero.title', v)}
+                    placeholder="건강한 변화를 시작하세요"
+                  />
+                  <TextAreaField
+                    label="설명"
+                    value={getValue('hero.subtitle')}
+                    onChange={(v) => updateDeep('hero.subtitle', v)}
+                    h="h-24"
+                    placeholder="전문 코치와 함께하는 맞춤형 운동 프로그램"
+                  />
+                </div>
+              )}
+
+              {/* 2. 클래스 */}
+              {active === 'services' && (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-slate-700">클래스</span>
+                    <button
+                      type="button"
+                      onClick={addService}
+                      className="rounded bg-blue-600 px-2.5 py-1 text-[11px] font-bold text-white hover:bg-blue-700"
+                    >
+                      + 클래스 추가
+                    </button>
+                  </div>
+                  {getArray('services').map((item: any, idx: number) => (
+                    <div
+                      key={idx}
+                      className="relative space-y-2 rounded-xl border border-slate-200 bg-white p-4"
+                    >
+                      <button
+                        type="button"
+                        onClick={() => removeService(idx)}
+                        className="absolute right-3 top-3 text-xs font-bold text-slate-400 hover:text-rose-500"
+                      >
+                        ×
+                      </button>
+                      <InputField
+                        label="클래스명"
+                        value={item.title}
+                        onChange={(v) => updateDeep(`services.${idx}.title`, v)}
+                      />
+                      <TextAreaField
+                        label="설명"
+                        value={item.description}
+                        onChange={(v) => updateDeep(`services.${idx}.description`, v)}
+                        h="h-16"
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* 3. 연락처 */}
+              {active === 'contact' && (
+                <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
+                  <InputField
+                    label="이메일"
+                    value={getValue('csCenter.contactInfo.email')}
+                    onChange={(v) => updateDeep('csCenter.contactInfo.email', v)}
+                  />
+                  <InputField
+                    label="전화"
+                    value={getValue('csCenter.contactInfo.phone')}
+                    onChange={(v) => updateDeep('csCenter.contactInfo.phone', v)}
+                  />
+                  <InputField
+                    label="주소"
+                    value={getValue('csCenter.contactInfo.address')}
+                    onChange={(v) => updateDeep('csCenter.contactInfo.address', v)}
+                  />
+                </div>
+              )}
+
+              {/* 4. 하단 정보 */}
+              {active === 'footer' && (
+                <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
+                  <InputField
+                    label="회사명"
+                    value={getValue('footer.companyName')}
+                    onChange={(v) => updateDeep('footer.companyName', v)}
+                  />
+                  <InputField
+                    label="주소"
+                    value={getValue('footer.address')}
+                    onChange={(v) => updateDeep('footer.address', v)}
+                  />
+                </div>
+              )}
+            </>
+          )}
 
           {/* ===== 인테리어/원페이지 섹션 ===== */}
           {isInterior && (
