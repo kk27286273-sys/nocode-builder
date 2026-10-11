@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabaseClient';
+import { supabase } from '@/lib/supabase';
 import { CorporateViewer } from '@/components/viewer/templates/CorporateViewer';
 
 export default function CorporateLayout() {
