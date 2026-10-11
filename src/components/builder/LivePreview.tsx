@@ -5,6 +5,7 @@
 import React from 'react';
 import { CorporateViewer } from './CorporateViewer';
 import InteriorViewer from '@/components/viewer/templates/InteriorViewer';
+import LegalViewer from '@/components/viewer/templates/LegalViewer';
 
 interface LivePreviewProps {
   data: any;
@@ -30,6 +31,8 @@ export default function LivePreview({
     <div className="min-h-screen w-full overflow-x-hidden bg-white">
       {templateType === 'interior' || templateType === 'onepage' ? (
         <InteriorViewer data={data} setData={setData} editable={!published} />
+      ) : templateType === 'legal' ? (
+        <LegalViewer data={data} setData={setData} editable={!published} />
       ) : (
         <CorporateViewer
           data={data}
