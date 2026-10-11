@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import CorporateViewer from '@/components/CorporateViewer';
+import CorporateViewer from '@/components/viewer/templates/CorporateViewer';
 
 export default function CorporateLayout() {
   // 샘플 데이터
