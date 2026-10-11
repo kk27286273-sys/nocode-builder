@@ -4,6 +4,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import ShowroomSlider from '@/components/showroom/ShowroomSlider';
+import IndustryGrid from '@/components/home/IndustryGrid';
 
 const KAKAO_LINK = 'http://pf.kakao.com/_qxmixiX/chat';
 const PHONE_NUMBER = '01029482728';
@@ -202,10 +203,10 @@ function PricingSection() {
           {plans.map((plan) => (
             <div
               key={plan.name}
-              className={`relative rounded-3xl border p-8 transition-all ${
+              className={`group relative rounded-3xl border p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl ${
                 plan.highlight
                   ? 'border-blue-300 bg-gradient-to-br from-blue-50 to-white shadow-lg ring-2 ring-blue-100'
-                  : 'border-slate-200 bg-white'
+                  : 'border-slate-200 bg-white hover:border-slate-900'
               }`}
             >
               {plan.highlight && (
@@ -243,6 +244,14 @@ function PricingSection() {
                   </li>
                 ))}
               </ul>
+
+              <div className="grid grid-rows-[0fr] opacity-0 transition-all duration-500 group-hover:mt-6 group-hover:grid-rows-[1fr] group-hover:opacity-100">
+                <div className="overflow-hidden">
+                  <p className="rounded-2xl bg-slate-900 px-4 py-3 text-xs leading-5 text-slate-100">
+                    텍스트·이미지·연락처 변경은 무료입니다. 구조 변경과 외부 연동은 별도 협의합니다.
+                  </p>
+                </div>
+              </div>
 
               <Link
                 href={`/pay?plan=${plan.name.toLowerCase()}`}
@@ -312,7 +321,7 @@ export default function LandingPage() {
       <header className="absolute inset-x-0 top-0 z-20">
         <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
           <Link href="/" className="text-xl font-black tracking-[0.18em] text-white">
-            NEXIA
+            THsoft
           </Link>
           <a
             href={KAKAO_LINK}
@@ -414,6 +423,42 @@ export default function LandingPage() {
           <div className="overflow-hidden rounded-3xl border border-slate-200 bg-slate-50">
             <ShowroomSlider />
           </div>
+
+          <div className="mt-16">
+            <div className="mb-8 flex flex-col gap-2">
+              <p className="text-sm font-bold uppercase tracking-[0.25em] text-blue-600">
+                By Industry
+              </p>
+              <h3 className="text-2xl font-bold tracking-tight md:text-3xl">
+                업종별 추천 구성
+              </h3>
+              <p className="leading-7 text-slate-600">
+                카드에 마우스를 올리면 업종별 핵심 구성이 펼쳐집니다.
+              </p>
+            </div>
+
+            <IndustryGrid />
+          </div>
+
+          <div className="mt-16 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
+            <div className="mb-5">
+              <span className="text-sm font-bold text-slate-900">
+                무료 사이트 속도 진단
+              </span>
+              <p className="mt-2 text-sm leading-6 text-slate-500">
+                현재 페이지에서 제공하는 무료 진단 기능을 준비 중입니다.
+                지금은 상담을 통해 진단을 신청해 주세요.
+              </p>
+            </div>
+            <a
+              href={KAKAO_LINK}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex w-full items-center justify-center rounded-xl bg-slate-900 px-5 py-4 font-bold text-white transition hover:bg-blue-700"
+            >
+              무료 진단 상담 신청하기
+            </a>
+          </div>
         </div>
       </section>
 
@@ -437,11 +482,11 @@ export default function LandingPage() {
           <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
             <div className="mb-5">
               <span className="text-sm font-bold text-slate-900">
-                무료 사이트 속도 진단
+                속도 진단 안내
               </span>
               <p className="mt-2 text-sm leading-6 text-slate-500">
-                현재 페이지에서 제공하는 무료 진단 기능을 준비 중입니다.
-                지금은 상담을 통해 진단을 신청해 주세요.
+                Nexia로 만든 사이트는 국내 기준 LCP 1초 미만,
+                해외 접속 0.5초 이내를 목표로 최적화됩니다.
               </p>
             </div>
             <a
@@ -450,7 +495,7 @@ export default function LandingPage() {
               rel="noreferrer"
               className="inline-flex w-full items-center justify-center rounded-xl bg-slate-900 px-5 py-4 font-bold text-white transition hover:bg-blue-700"
             >
-              무료 진단 상담 신청하기
+              성능 목표 상담받기
             </a>
           </div>
         </div>
@@ -498,7 +543,7 @@ export default function LandingPage() {
                 href="/"
                 className="text-xl font-black tracking-[0.18em] text-white"
               >
-                NEXIA
+                THsoft
               </Link>
               <p className="mt-3 text-sm text-slate-500">
                 Beyond Speed, Beyond Limits.
