@@ -31,7 +31,7 @@ const INDUSTRIES: Industry[] = [
     ko: '법률·세무',
     summary: '전문성과 안정감을 강조한 다크 네이비 기반 구성입니다.',
     points: ['전문 분야 안내', '상담 신청 강조', '약력·자격 정리'],
-    templateId: 'legal-tax',
+    templateId: 'legal',  // ← legal-tax에서 legal로 변경
     accent: '#0F172A',
   },
   {
@@ -49,7 +49,7 @@ const INDUSTRIES: Industry[] = [
     ko: '피트니스·레슨',
     summary: '활동적인 톤으로 수업과 이용권 정보를 빠르게 보여줍니다.',
     points: ['수업·클래스 안내', '이용권 비교', '위치·시간표'],
-    templateId: 'fitness-lesson',
+    templateId: 'fitness',  // ← fitness-lesson에서 fitness로 변경 (일관성)
     accent: '#EA580C',
   },
 ];
