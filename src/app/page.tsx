@@ -3,7 +3,6 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import ShowroomSlider from '@/components/showroom/ShowroomSlider';
 import IndustryGrid from '@/components/home/IndustryGrid';
 
 const KAKAO_LINK = 'http://pf.kakao.com/_qxmixiX/chat';
@@ -406,19 +405,44 @@ export default function LandingPage() {
         className="scroll-mt-8 px-6 py-24 md:py-32"
       >
         <div className="mx-auto max-w-7xl">
-          <div className="mb-12 flex flex-col justify-between gap-5 md:mb-16 md:flex-row md:items-end">
-            <div>
-              <p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-blue-600">
-                Made with Nexia
-              </p>
-              <h2 className="text-3xl font-bold tracking-tight md:text-5xl">
-                템플릿을 직접 확인하세요
-              </h2>
-              <p className="mt-4 leading-7 text-slate-600">
-                완성된 화면을 둘러보고, Nexia가 만드는 웹 경험을 확인해 보세요.
+          <div className="mb-12 max-w-2xl md:mb-16">
+            <p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-blue-600">
+              Made with Nexia
+            </p>
+            <h2 className="text-3xl font-bold tracking-tight md:text-5xl">
+              업종에 맞는 템플릿을
+              <br className="hidden sm:block" />
+              직접 확인하세요
+            </h2>
+            <p className="mt-5 leading-7 text-slate-600">
+              각 카드 오른쪽에서 실제 화면을 바로 확인할 수 있습니다.
+              마음에 드는 구성을 고른 뒤 상담을 신청해 주세요.
+            </p>
+          </div>
+
+          <IndustryGrid />
+
+          <div className="mt-16 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
+            <div className="mb-5">
+              <span className="text-sm font-bold text-slate-900">
+                무료 사이트 속도 진단
+              </span>
+              <p className="mt-2 text-sm leading-6 text-slate-500">
+                현재 페이지에서 제공하는 무료 진단 기능을 준비 중입니다.
+                지금은 상담을 통해 진단을 신청해 주세요.
               </p>
             </div>
+            <a
+              href={KAKAO_LINK}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex w-full items-center justify-center rounded-xl bg-slate-900 px-5 py-4 font-bold text-white transition hover:bg-blue-700"
+            >
+              무료 진단 상담 신청하기
+            </a>
           </div>
+        </div>
+      </section>
 
           <div className="overflow-hidden rounded-3xl border border-slate-200 bg-slate-50">
             <ShowroomSlider />
