@@ -1,7 +1,10 @@
+// src/components/builder/LivePreview.tsx
+
 'use client';
 
 import React from 'react';
 import { CorporateViewer } from './CorporateViewer';
+import OnePageViewer from '@/components/viewer/templates/OnePageViewer';
 
 interface LivePreviewProps {
   data: any;
@@ -19,13 +22,19 @@ export default function LivePreview({
   setActiveSection,
   published = false,
 }: LivePreviewProps) {
+  const templateType = data?.templateType;
+
   return (
     <div className="min-h-screen w-full overflow-x-hidden bg-white">
-      <CorporateViewer
-        data={data}
-        activeSection={activeSection}
-        setActiveSection={setActiveSection}
-      />
+      {templateType === 'onepage' ? (
+        <OnePageViewer data={data} />
+      ) : (
+        <CorporateViewer
+          data={data}
+          activeSection={activeSection}
+          setActiveSection={setActiveSection}
+        />
+      )}
     </div>
   );
 }
