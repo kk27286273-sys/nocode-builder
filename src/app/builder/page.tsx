@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import { B2BTemplateData } from '@/types/template';
-import { supabase } from '@/lib/supabase/client';
+import { supabase } from '@/lib/supabase';
 import EditorSidebar from '@/components/builder/EditorSidebar';
 import ViewerManager from '@/components/builder/ViewerManager';
 
