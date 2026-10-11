@@ -281,97 +281,107 @@ export default function LandingPage() {
 
   return (
     <main className="min-h-screen overflow-hidden bg-white font-sans text-slate-900 selection:bg-cyan-100">
-      <style jsx global>{`
-        @keyframes nexia-trail {
-          0% {
-            transform: translateX(-120%) skewX(-18deg);
-            opacity: 0;
-          }
-          25% {
-            opacity: 1;
-          }
-          100% {
-            transform: translateX(240%) skewX(-18deg);
-            opacity: 0;
-          }
-        }
+      {/* ... (스타일, 헤더, 히어로 섹션, NexiaValues 동일) ... */}
 
-        @media (prefers-reduced-motion: reduce) {
-          *,
-          *::before,
-          *::after {
-            animation-duration: 0.01ms !important;
-            animation-iteration-count: 1 !important;
-            scroll-behavior: auto !important;
-            transition-duration: 0.01ms !important;
-          }
-        }
-      `}</style>
+      <section
+        id="templates-section"
+        className="scroll-mt-8 px-6 py-24 md:py-32"
+      >
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-12 flex flex-col justify-between gap-5 md:mb-16 md:flex-row md:items-end">
+            <div>
+              <p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-blue-600">
+                Made with Nexia
+              </p>
+              <h2 className="text-3xl font-bold tracking-tight md:text-5xl">
+                템플릿을 직접 확인하세요
+              </h2>
+              <p className="mt-4 leading-7 text-slate-600">
+                완성된 화면을 둘러보고, Nexia가 만드는 웹 경험을 확인해 보세요.
+              </p>
+            </div>
+          </div>
 
-      <header className="absolute inset-x-0 top-0 z-20">
-        <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
-          <Link href="/" className="text-xl font-black tracking-[0.18em] text-white">
-            NEXIA
-          </Link>
-          <a
-            href={KAKAO_LINK}
-            target="_blank"
-            rel="noreferrer"
-            className="rounded-full border border-white/25 bg-white/10 px-5 py-2.5 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/20"
-          >
-            문의하기
-          </a>
-        </nav>
-      </header>
+          <div className="overflow-hidden rounded-3xl border border-slate-200 bg-slate-50">
+            <ShowroomSlider />
+          </div>
+        </div>
+      </section>
 
-      <section className="relative isolate flex min-h-[680px] items-center overflow-hidden bg-slate-950 px-6 py-32 text-white md:min-h-[780px]">
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_70%_30%,rgba(8,145,178,0.25),transparent_45%),radial-gradient(ellipse_at_20%_80%,rgba(37,99,235,0.18),transparent_40%)]"
-        />
-        <div
-          aria-hidden="true"
-          className="absolute -right-32 top-24 -z-10 h-96 w-96 rounded-full border border-cyan-300/10 md:right-10 md:top-20"
-        />
-        <div
-          aria-hidden="true"
-          className="absolute -right-20 top-36 -z-10 h-72 w-72 rounded-full border border-cyan-300/10 md:right-24 md:top-36"
-        />
+      {/* ← B2B 카드 섹션 제거됨 */}
 
-        <div className="mx-auto w-full max-w-7xl">
-          <p className="mb-6 text-xs font-bold uppercase tracking-[0.35em] text-cyan-300 md:text-sm">
-            The next generation website builder
-          </p>
-          <h1 className="text-6xl font-black tracking-[-0.07em] md:text-8xl lg:text-9xl">
-            NEXIA
-          </h1>
-          <p className="mt-5 text-2xl font-semibold tracking-tight text-white md:text-4xl">
-            Beyond Speed, Beyond Limits.
-          </p>
-          <p className="mt-7 max-w-xl text-base leading-7 text-slate-300 md:text-lg md:leading-8">
-            비즈니스의 다음 단계를 위한 웹사이트 빌더.
-            <br className="hidden sm:block" />
-            더 빠르게 만들고, 더 자유롭게 다듬고, 더 나은 경험을 선보이세요.
-          </p>
+      <section className="bg-slate-50 px-6 py-24 md:py-28">
+        <div className="mx-auto grid max-w-7xl gap-12 md:grid-cols-[0.8fr_1.2fr] md:items-center">
+          <div>
+            <p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-blue-600">
+              Performance, measured
+            </p>
+            <h2 className="text-3xl font-bold tracking-tight md:text-5xl">
+              속도는 주장보다
+              <br />
+              측정으로 확인하세요.
+            </h2>
+            <p className="mt-5 max-w-lg leading-7 text-slate-600">
+              사이트 속도는 이미지, 콘텐츠, 기능과 측정 환경에 따라 달라집니다.
+              실제 페이지를 기준으로 진단하고 개선 지점을 확인해 보세요.
+            </p>
+          </div>
 
-          <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-            <button
-              type="button"
-              onClick={scrollToTemplates}
-              className="inline-flex items-center justify-center rounded-2xl bg-cyan-300 px-7 py-4 font-bold text-slate-950 transition hover:-translate-y-0.5 hover:bg-cyan-200"
-            >
-              템플릿 둘러보기 <span className="ml-2">→</span>
-            </button>
+          <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
+            <div className="mb-5">
+              <span className="text-sm font-bold text-slate-900">
+                무료 사이트 속도 진단
+              </span>
+              <p className="mt-2 text-sm leading-6 text-slate-500">
+                현재 페이지에서 제공하는 무료 진단 기능을 준비 중입니다.
+                지금은 상담을 통해 진단을 신청해 주세요.
+              </p>
+            </div>
             <a
               href={KAKAO_LINK}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center justify-center rounded-2xl border border-white/20 bg-white/[0.06] px-7 py-4 font-bold text-white transition hover:bg-white/10"
+              className="inline-flex w-full items-center justify-center rounded-xl bg-slate-900 px-5 py-4 font-bold text-white transition hover:bg-blue-700"
             >
-              도입 문의하기
+              무료 진단 상담 신청하기
             </a>
           </div>
+        </div>
+      </section>
 
+      <PricingSection />
+
+      <section className="px-6 py-24 text-center md:py-32">
+        <div className="mx-auto max-w-3xl">
+          <p className="text-sm font-bold uppercase tracking-[0.25em] text-blue-600">
+            Start with Nexia
+          </p>
+          <h2 className="mt-4 text-3xl font-bold tracking-tight md:text-5xl">
+            다음 세대의 웹사이트를
+            <br className="hidden sm:block" />
+            지금 시작하세요.
+          </h2>
+          <p className="mx-auto mt-5 max-w-xl leading-7 text-slate-600">
+            템플릿을 확인하거나, 프로젝트에 맞는 제작 상담을 신청해 보세요.
+          </p>
+          <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+            <a
+              href={`tel:${PHONE_NUMBER}`}
+              className="rounded-2xl bg-blue-600 px-7 py-4 font-bold text-white transition hover:bg-blue-700"
+            >
+              전화 상담하기
+            </a>
+            <a
+              href={KAKAO_LINK}
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-2xl border border-slate-300 px-7 py-4 font-bold text-slate-900 transition hover:bg-slate-100"
+            >
+              카카오톡 문의하기
+            </a>
+          </div>
+        </div>
+      </section>
           <div className="mt-14 flex flex-wrap gap-x-8 gap-y-3 text-xs font-medium text-slate-400 md:text-sm">
             <span>직관적인 사이트 편집</span>
             <span className="text-cyan-400">/</span>
