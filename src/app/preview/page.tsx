@@ -1,100 +1,45 @@
 'use client';
 
-import React, { useEffect, useState, Suspense } from 'react';
+import React, { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { defaultB2BTemplateData, B2BTemplateData } from '@/data/templates';
 import { SHOWROOM_TEMPLATES } from '@/data/showroomTemplates';
-import LivePreview from '@/components/builder/LivePreview';
-import { supabase } from '@/lib/supabase/client';
+import LivePreview from '@/components/LivePreview';
+import LegalTaxLayout from '@/components/templates/LegalTaxLayout';
 
 function PreviewContent() {
   const searchParams = useSearchParams();
-  const siteId = searchParams.get('id');
   const templateId = searchParams.get('templateId');
 
-  const [data, setData] = useState<B2BTemplateData>(defaultB2BTemplateData);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function loadPreviewData() {
-      setLoading(true);
-
-      // 1. Supabase 사이트 데이터 로드
-      if (siteId) {
-        const { data: siteRecord, error } = await supabase
-          .from('sites')
-          .select('data')
-          .eq('id', siteId)
-          .single();
-
-        if (error) {
-          console.error('발행 사이트 데이터 로드 실패:', error);
-        }
-
-        if (siteRecord?.data) {
-          try {
-            const parsedData =
-              typeof siteRecord.data === 'string'
-                ? JSON.parse(siteRecord.data)
-                : siteRecord.data;
-
-            setData({
-              ...defaultB2BTemplateData,
-              ...parsedData,
-            });
-            setLoading(false);
-            return;
-          } catch (e) {
-            console.error('데이터 파싱 오류:', e);
-          }
-        }
-      }
-
-      // 2. 쇼룸 템플릿 매칭
-      if (templateId) {
-        const matched = SHOWROOM_TEMPLATES.find((t) => t.id === templateId);
-        if (matched) {
-          setData({
-            ...defaultB2BTemplateData,
-            themeColor: matched.themeColor,
-          });
-          setLoading(false);
-          return;
-        }
-      }
-
-      // 3. 기본 데이터 폴백
-      setData(defaultB2BTemplateData);
-      setLoading(false);
-    }
-
-    loadPreviewData();
-  }, [siteId, templateId]);
-
-  if (loading) {
+  if (!templateId) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white text-slate-600 font-medium">
-        미리보기를 불러오는 중입니다...
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <p className="text-slate-600">템플릿을 선택해주세요.</p>
       </div>
     );
   }
 
-  return (
-    <div className="min-h-screen bg-white">
-      <LivePreview data={data} zoom={100} />
-    </div>
-  );
+  const template = SHOWROOM_TEMPLATES.find((t) => t.id === templateId);
+
+  if (!template) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <p className="text-slate-600">템플릿을 찾을 수 없습니다.</p>
+      </div>
+    );
+  }
+
+  // legal-tax는 전용 레이아웃
+  if (templateId === 'legal-tax') {
+    return <LegalTaxLayout />;
+  }
+
+  // 나머지는 LivePreview
+  return <LivePreview template={template} />;
 }
 
 export default function PreviewPage() {
   return (
-    <Suspense
-      fallback={
-        <div className="min-h-screen flex items-center justify-center bg-white text-slate-600 font-medium">
-          미리보기를 불러오는 중입니다...
-        </div>
-      }
-    >
+    <Suspense fallback={<div className="min-h-screen bg-slate-50" />}>
       <PreviewContent />
     </Suspense>
   );
