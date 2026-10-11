@@ -1,4 +1,5 @@
 // src/components/home/IndustryGrid.tsx
+
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
@@ -35,11 +36,11 @@ const INDUSTRIES: Industry[] = [
   },
   {
     no: '03',
-    en: 'Counseling',
-    ko: '상담·교육',
-    summary: '편안한 색감으로 접근 장벽을 낮추고 상담을 유도합니다.',
-    points: ['프로그램 소개', '상담 절차 안내', '후기·FAQ 구성'],
-    templateId: 'counseling',
+    en: 'Interior',
+    ko: '인테리어·시공',
+    summary: '시공 사례를 강조하고 무료 견적 문의를 유도하는 구성입니다.',
+    points: ['시공 사례 전시', '서비스 소개', '견적 문의 폼'],
+    templateId: 'interior',
     accent: '#065F46',
   },
   {
@@ -53,7 +54,6 @@ const INDUSTRIES: Industry[] = [
   },
 ];
 
-// 미리보기 iframe 내부를 실제 데스크톱 폭으로 렌더링한 뒤 축소
 const FRAME_WIDTH = 1440;
 const FRAME_HEIGHT = 1000;
 
@@ -67,7 +67,6 @@ function IndustryCard({ item, index }: { item: Industry; index: number }) {
   const [scale, setScale] = useState(0.3);
   const [hover, setHover] = useState(false);
 
-  // 카드가 화면에 들어오면 등장 + iframe 로드 시작
   useEffect(() => {
     const el = cardRef.current;
     if (!el) return;
@@ -93,7 +92,6 @@ function IndustryCard({ item, index }: { item: Industry; index: number }) {
     return () => observer.disconnect();
   }, []);
 
-  // 미리보기 박스 폭에 맞춰 축소 비율 계산
   useEffect(() => {
     const box = frameBoxRef.current;
     if (!box) return;
