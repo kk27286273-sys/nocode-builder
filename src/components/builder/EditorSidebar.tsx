@@ -62,10 +62,6 @@ export default function EditorSidebar({
     return Array.isArray(val) ? val : [];
   };
 
-  // 템플릿 타입 확인
-  const templateType = data?.templateType;
-  const isOnePage = templateType === 'onepage';
-
   // ===== 공통 함수 =====
   const addHistory = () => {
     updateDeep('corporateInfo.history', [...getArray('corporateInfo.history'), { year: '', event: '' }]);
@@ -97,20 +93,45 @@ export default function EditorSidebar({
   const addProject = () => {
     updateDeep('projects', [
       ...getArray('projects'),
-      { name: '새 프로젝트', client: '', year: '', tags: [], image: '' },
+      { name: '새 프로젝트', area: '', tags: [], duration: '', beforeImage: '', afterImage: '', description: '', images: [] },
     ]);
   };
   const removeProject = (index: number) => {
     updateDeep('projects', getArray('projects').filter((_, i) => i !== index));
   };
 
+  const addService = () => {
+    updateDeep('services', [
+      ...getArray('services'),
+      { icon: '🏠', title: '새 서비스', description: '' },
+    ]);
+  };
+  const removeService = (index: number) => {
+    updateDeep('services', getArray('services').filter((_, i) => i !== index));
+  };
+
+  const addProcess = () => {
+    updateDeep('process', [
+      ...getArray('process'),
+      { step: getArray('process').length + 1, title: '', description: '' },
+    ]);
+  };
+  const removeProcess = (index: number) => {
+    updateDeep('process', getArray('process').filter((_, i) => i !== index));
+  };
+
+  // ===== 템플릿 타입 확인 =====
+  const templateType = data?.templateType;
+  const isInterior = templateType === 'interior' || templateType === 'onepage';
+
   // ===== 섹션 목록 (템플릿별) =====
-  const sections = isOnePage
+  const sections = isInterior
     ? [
         { id: 'main', label: '히어로' },
-        { id: 'projects', label: '프로젝트' },
+        { id: 'projects', label: '시공 사례' },
         { id: 'services', label: '서비스' },
-        { id: 'about', label: '소개' },
+        { id: 'process', label: '시공 절차' },
+        { id: 'estimate', label: '견적 문의' },
         { id: 'contact', label: '연락처' },
         { id: 'footer', label: '하단 정보' },
       ]
@@ -154,44 +175,27 @@ export default function EditorSidebar({
             </h3>
           </div>
 
-          {/* ===== 원페이지 섹션 ===== */}
-          {isOnePage && (
+          {/* ===== 인테리어/원페이지 섹션 ===== */}
+          {isInterior && (
             <>
               {/* 1. 히어로 */}
               {active === 'main' && (
                 <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
                   <InputField
-                    label="배지 (가용성)"
-                    value={getValue('hero.badge')}
-                    onChange={(v) => updateDeep('hero.badge', v)}
-                    placeholder="11월부터 새로운 작업을 받고 있습니다"
-                  />
-                  <InputField
-                    label="메인 제목 (1줄)"
+                    label="메인 제목"
                     value={getValue('hero.title')}
                     onChange={(v) => updateDeep('hero.title', v)}
-                    placeholder="브랜드의 가치를"
-                  />
-                  <InputField
-                    label="메인 제목 (2줄)"
-                    value={getValue('hero.titleSub')}
-                    onChange={(v) => updateDeep('hero.titleSub', v)}
-                    placeholder="한 페이지에 담습니다"
+                    placeholder="당신의 꿈의 공간을 만듭니다"
                   />
                   <TextAreaField
                     label="설명"
                     value={getValue('hero.subtitle')}
                     onChange={(v) => updateDeep('hero.subtitle', v)}
                     h="h-24"
-                  />
-                  <InputField
-                    label="CTA 버튼 텍스트"
-                    value={getValue('hero.ctaLabel')}
-                    onChange={(v) => updateDeep('hero.ctaLabel', v)}
-                    placeholder="작업 보기"
+                    placeholder="전문적인 시공으로 가치 있는 인테리어"
                   />
                   <ImageUploadField
-                    label="히어로 이미지 (선택)"
+                    label="히어로 배경 이미지"
                     value={getValue('hero.mediaUrl') || ''}
                     onChange={(result) => updateDeep('hero.mediaUrl', result?.url || '')}
                     siteId={siteId}
@@ -200,17 +204,17 @@ export default function EditorSidebar({
                 </div>
               )}
 
-              {/* 2. 프로젝트 */}
+              {/* 2. 시공 사례 */}
               {active === 'projects' && (
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-slate-700">프로젝트 목록</span>
+                    <span className="text-xs font-bold text-slate-700">시공 사례</span>
                     <button
                       type="button"
                       onClick={addProject}
                       className="rounded bg-blue-600 px-2.5 py-1 text-[11px] font-bold text-white hover:bg-blue-700"
                     >
-                      + 프로젝트 추가
+                      + 사례 추가
                     </button>
                   </div>
                   {getArray('projects').map((item: any, idx: number) => (
@@ -231,24 +235,40 @@ export default function EditorSidebar({
                         onChange={(v) => updateDeep(`projects.${idx}.name`, v)}
                       />
                       <InputField
-                        label="클라이언트"
-                        value={item.client}
-                        onChange={(v) => updateDeep(`projects.${idx}.client`, v)}
+                        label="평수"
+                        value={item.area}
+                        onChange={(v) => updateDeep(`projects.${idx}.area`, v)}
+                        placeholder="예: 84㎡"
                       />
                       <InputField
-                        label="연도"
-                        value={item.year}
-                        onChange={(v) => updateDeep(`projects.${idx}.year`, v)}
+                        label="시공 기간"
+                        value={item.duration}
+                        onChange={(v) => updateDeep(`projects.${idx}.duration`, v)}
+                        placeholder="예: 3개월"
                       />
                       <InputField
                         label="태그 (쉼표로 구분)"
                         value={(item.tags || []).join(', ')}
-                        onChange={(v) => updateDeep(`projects.${idx}.tags`, v.split(',').map(t => t.trim()))}
+                        onChange={(v) => updateDeep(`projects.${idx}.tags`, v.split(',').map((t: string) => t.trim()))}
+                        placeholder="풀리모델링, 거실"
+                      />
+                      <TextAreaField
+                        label="설명"
+                        value={item.description || ''}
+                        onChange={(v) => updateDeep(`projects.${idx}.description`, v)}
+                        h="h-16"
                       />
                       <ImageUploadField
-                        label="프로젝트 이미지"
-                        value={item.image || ''}
-                        onChange={(result) => updateDeep(`projects.${idx}.image`, result?.url || '')}
+                        label="Before 이미지"
+                        value={item.beforeImage || ''}
+                        onChange={(result) => updateDeep(`projects.${idx}.beforeImage`, result?.url || '')}
+                        siteId={siteId}
+                        purpose="general"
+                      />
+                      <ImageUploadField
+                        label="After 이미지"
+                        value={item.afterImage || ''}
+                        onChange={(result) => updateDeep(`projects.${idx}.afterImage`, result?.url || '')}
                         siteId={siteId}
                         purpose="general"
                       />
@@ -261,100 +281,106 @@ export default function EditorSidebar({
               {active === 'services' && (
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-slate-700">서비스 카드</span>
+                    <span className="text-xs font-bold text-slate-700">서비스</span>
                     <button
                       type="button"
-                      onClick={addSolutionCard}
+                      onClick={addService}
                       className="rounded bg-blue-600 px-2.5 py-1 text-[11px] font-bold text-white hover:bg-blue-700"
                     >
-                      + 카드 추가
+                      + 서비스 추가
                     </button>
                   </div>
-                  {getArray('solutions').map((item: any, idx: number) => (
+                  {getArray('services').map((item: any, idx: number) => (
                     <div
                       key={idx}
                       className="relative space-y-2 rounded-xl border border-slate-200 bg-white p-4"
                     >
                       <button
                         type="button"
-                        onClick={() => removeSolutionCard(idx)}
+                        onClick={() => removeService(idx)}
                         className="absolute right-3 top-3 text-xs font-bold text-slate-400 hover:text-rose-500"
                       >
                         ×
                       </button>
                       <InputField
-                        label="카테고리"
-                        value={item.category}
-                        onChange={(v) => updateDeep(`solutions.${idx}.category`, v)}
+                        label="아이콘 (이모지)"
+                        value={item.icon || ''}
+                        onChange={(v) => updateDeep(`services.${idx}.icon`, v)}
+                        placeholder="🏠"
                       />
                       <InputField
                         label="제목"
                         value={item.title}
-                        onChange={(v) => updateDeep(`solutions.${idx}.title`, v)}
+                        onChange={(v) => updateDeep(`services.${idx}.title`, v)}
                       />
                       <TextAreaField
                         label="설명"
                         value={item.description}
-                        onChange={(v) => updateDeep(`solutions.${idx}.description`, v)}
+                        onChange={(v) => updateDeep(`services.${idx}.description`, v)}
                         h="h-16"
-                      />
-                      <ImageUploadField
-                        label="이미지"
-                        value={item.image || ''}
-                        onChange={(result) => updateDeep(`solutions.${idx}.image`, result?.url || '')}
-                        siteId={siteId}
-                        purpose="general"
                       />
                     </div>
                   ))}
                 </div>
               )}
 
-              {/* 4. 소개 */}
-              {active === 'about' && (
-                <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
-                  <InputField
-                    label="회사명"
-                    value={getValue('company.name')}
-                    onChange={(v) => updateDeep('company.name', v)}
-                  />
-                  <InputField
-                    label="대표자명"
-                    value={getValue('corporateInfo.ceoGreeting.name')}
-                    onChange={(v) => updateDeep('corporateInfo.ceoGreeting.name', v)}
-                  />
-                  <InputField
-                    label="소개 제목"
-                    value={getValue('corporateInfo.ceoGreeting.title')}
-                    onChange={(v) => updateDeep('corporateInfo.ceoGreeting.title', v)}
-                  />
-                  <TextAreaField
-                    label="소개 내용"
-                    value={getValue('corporateInfo.ceoGreeting.content')}
-                    onChange={(v) => updateDeep('corporateInfo.ceoGreeting.content', v)}
-                    h="h-24"
-                  />
-                  <InputField
-                    label="미션"
-                    value={getValue('corporateInfo.missionVision.mission')}
-                    onChange={(v) => updateDeep('corporateInfo.missionVision.mission', v)}
-                  />
-                  <InputField
-                    label="비전"
-                    value={getValue('corporateInfo.missionVision.vision')}
-                    onChange={(v) => updateDeep('corporateInfo.missionVision.vision', v)}
-                  />
-                  <ImageUploadField
-                    label="대표 사진"
-                    value={getValue('corporateInfo.ceoGreeting.image') || ''}
-                    onChange={(result) => updateDeep('corporateInfo.ceoGreeting.image', result?.url || '')}
-                    siteId={siteId}
-                    purpose="general"
-                  />
+              {/* 4. 시공 절차 */}
+              {active === 'process' && (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-slate-700">시공 절차</span>
+                    <button
+                      type="button"
+                      onClick={addProcess}
+                      className="rounded bg-blue-600 px-2.5 py-1 text-[11px] font-bold text-white hover:bg-blue-700"
+                    >
+                      + 단계 추가
+                    </button>
+                  </div>
+                  {getArray('process').map((item: any, idx: number) => (
+                    <div
+                      key={idx}
+                      className="relative space-y-2 rounded-xl border border-slate-200 bg-white p-4"
+                    >
+                      <button
+                        type="button"
+                        onClick={() => removeProcess(idx)}
+                        className="absolute right-3 top-3 text-xs font-bold text-slate-400 hover:text-rose-500"
+                      >
+                        ×
+                      </button>
+                      <InputField
+                        label="단계 번호"
+                        type="number"
+                        value={item.step}
+                        onChange={(v) => updateDeep(`process.${idx}.step`, parseInt(v))}
+                      />
+                      <InputField
+                        label="제목"
+                        value={item.title}
+                        onChange={(v) => updateDeep(`process.${idx}.title`, v)}
+                      />
+                      <TextAreaField
+                        label="설명"
+                        value={item.description}
+                        onChange={(v) => updateDeep(`process.${idx}.description`, v)}
+                        h="h-16"
+                      />
+                    </div>
+                  ))}
                 </div>
               )}
 
-              {/* 5. 연락처 */}
+              {/* 5. 견적 문의 */}
+              {active === 'estimate' && (
+                <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
+                  <p className="text-xs text-slate-600">
+                    견적 문의 폼은 프리뷰에서 자동으로 렌더링됩니다. 추가 설정이 필요하면 알려주세요.
+                  </p>
+                </div>
+              )}
+
+              {/* 6. 연락처 */}
               {active === 'contact' && (
                 <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
                   <InputField
@@ -375,7 +401,7 @@ export default function EditorSidebar({
                 </div>
               )}
 
-              {/* 6. 하단 정보 */}
+              {/* 7. 하단 정보 */}
               {active === 'footer' && (
                 <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
                   <InputField
@@ -399,7 +425,7 @@ export default function EditorSidebar({
           )}
 
           {/* ===== 기업형 섹션 (기존) ===== */}
-          {!isOnePage && (
+          {!isInterior && (
             <>
               {/* 1. 메인 */}
               {active === 'main' && (
