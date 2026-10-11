@@ -1,0 +1,136 @@
+// 뷰어 폴더(CorporateViewer, OnePageViewer, PortfolioViewer, RentalViewer)와
+// 빌더(onepage/corporate/fitness/legal)를 모두 수용하는 통합 타입
+export type TemplateType =
+  | 'onepage'
+  | 'corporate'
+  | 'fitness'
+  | 'legal'
+  | 'rental-shop'
+  | 'portfolio';
+
+// 솔루션(서비스) 카드 1개
+export interface Solution {
+  title: string;
+  category?: string;
+  description: string;
+  image?: string;
+  detailContent?: string;
+  detailedFeatures?: {
+    featureTitle: string;
+    featureContent: string;
+  }[];
+}
+
+export interface B2BTemplateData {
+  id?: string;
+  site_id?: string;
+  templateType: TemplateType;
+  themeColor: string;
+
+  company: {
+    name: string;
+    logoUrl: string;
+  };
+
+  hero: {
+    title: string;
+    subtitle: string;
+    badge: string;
+    mediaUrl: string;
+  };
+
+  // 메인 상단 고정 솔루션 (단일 객체, 선택)
+  solutionMain?: {
+    title: string;
+    description: string;
+    detailContent: string;
+  };
+
+  // 하단 '상세 소개' 섹션 카드 리스트
+  solutions: Solution[];
+
+  // 회사소개 + 지속가능경영 + 공시정보
+  corporateInfo: {
+    ceoGreeting: {
+      title: string;
+      content: string;
+      image: string;
+    };
+    missionVision: {
+      mission: string;
+      vision: string;
+    };
+    history: {
+      year: string;
+      event: string;
+    }[];
+    orgChart: string;
+    ciImage: string;
+    location: {
+      headOffice: {
+        address: string;
+        tel: string;
+        fax: string;
+      };
+    };
+    // 지속가능경영 (ESG)
+    esg: {
+      environmental: { title: string; content: string; image: string };
+      social: { title: string; content: string; image: string };
+      governance: { title: string; content: string; image: string };
+    };
+    // 공시정보
+    disclosure: {
+      certifications: { name: string; image: string; date: string }[];
+      reports: { title: string; date: string; link: string }[];
+    };
+  };
+
+  navigation: {
+    menus: {
+      label: string;
+      children: { label: string; targetId?: string }[];
+    }[];
+  };
+
+  // 홍보센터
+  prCenter: {
+    news: { title: string; date: string; summary: string; image: string }[];
+    notice: { title: string; date: string; isImportant: boolean }[];
+  };
+
+  // 인재경영
+  recruit: {
+    talentValue: string;
+    benefitInfo: string;
+    openPositions: {
+      title: string;
+      department: string;
+      deadline: string;
+      link: string;
+    }[];
+  };
+
+  // 고객센터
+  csCenter: {
+    faq: { question: string; answer: string }[];
+    contactInfo: { email: string; phone: string; address: string };
+  };
+
+  // 공통 필드 (에디터 사용)
+  supportPhone: string;
+  csGuide: string;
+  kakaoLink: string;
+  newsContent: string;
+  videoUrl: string;
+  talentValue: string;
+  benefitInfo: string;
+
+  footer: {
+    address: string;
+    ownerName: string;
+    businessNumber: string;
+    contactEmail: string;
+    companyName: string;
+  };
+}
