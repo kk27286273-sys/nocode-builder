@@ -230,7 +230,7 @@ function mergeWithDefaultData(
     return defaults;
   }
 
-  return {
+  const merged = {
     ...defaults,
     ...currentData,
     templateType: template,
@@ -255,26 +255,6 @@ function mergeWithDefaultData(
     process: Array.isArray(currentData.process)
       ? currentData.process
       : defaults.process,
-    corporateInfo: {
-      ...defaults.corporateInfo,
-      ...(currentData.corporateInfo || {}),
-      ceoGreeting: {
-        ...defaults.corporateInfo.ceoGreeting,
-        ...(currentData.corporateInfo?.ceoGreeting || {}),
-      },
-      missionVision: {
-        ...defaults.corporateInfo.missionVision,
-        ...(currentData.corporateInfo?.missionVision || {}),
-      },
-      location: {
-        ...defaults.corporateInfo.location,
-        ...(currentData.corporateInfo?.location || {}),
-        headOffice: {
-          ...defaults.corporateInfo.location.headOffice,
-          ...(currentData.corporateInfo?.location?.headOffice || {}),
-        },
-      },
-    },
     navigation: {
       ...defaults.navigation,
       ...(currentData.navigation || {}),
@@ -299,9 +279,37 @@ function mergeWithDefaultData(
       ...defaults.footer,
       ...(currentData.footer || {}),
     },
-  } as B2BTemplateData;
-}
+  };
 
+  // corporate만 corporateInfo 병합
+  if (template === 'corporate') {
+    return {
+      ...merged,
+      corporateInfo: {
+        ...defaults.corporateInfo,
+        ...(currentData.corporateInfo || {}),
+        ceoGreeting: {
+          ...defaults.corporateInfo.ceoGreeting,
+          ...(currentData.corporateInfo?.ceoGreeting || {}),
+        },
+        missionVision: {
+          ...defaults.corporateInfo.missionVision,
+          ...(currentData.corporateInfo?.missionVision || {}),
+        },
+        location: {
+          ...defaults.corporateInfo.location,
+          ...(currentData.corporateInfo?.location || {}),
+          headOffice: {
+            ...defaults.corporateInfo.location.headOffice,
+            ...(currentData.corporateInfo?.location?.headOffice || {}),
+          },
+        },
+      },
+    } as B2BTemplateData;
+  }
+
+  return merged as B2BTemplateData;
+}
 export default function BuilderPage() {
   const [data, setData] = useState<B2BTemplateData | null>(null);
   const [siteId, setSiteId] = useState<string | null>(null);
