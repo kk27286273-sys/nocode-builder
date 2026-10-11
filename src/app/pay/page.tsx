@@ -3,6 +3,7 @@
 import React, { useCallback, useState, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
+import { getPlan } from '@/lib/plans';
 
 const SDK_URL = 'https://js.tosspayments.com/v2/standard';
 
@@ -39,14 +40,7 @@ function PayContent() {
   const [formData, setFormData] = useState({ email: '', name: '', phone: '' });
 
   const plan = searchParams.get('plan') || 'pro';
-  
-  const plans: Record<string, { setupFee: number; monthlyFee: number; name: string }> = {
-    basic: { setupFee: 700000, monthlyFee: 59000, name: 'Basic' },
-    pro: { setupFee: 1000000, monthlyFee: 79000, name: 'Pro' },
-    premium: { setupFee: 1200000, monthlyFee: 99000, name: 'Premium' },
-  };
-
-  const { setupFee, monthlyFee, name } = plans[plan] || plans.pro;
+  const { setupFee, monthlyFee, name } = getPlan(plan);
   const totalFirstPayment = setupFee + monthlyFee;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -69,38 +63,31 @@ function PayContent() {
     setIsLoading(true);
 
     try {
-      const TossPayments = await loadTossSdk();
-      const tossPayments = TossPayments(clientKey);
-
-      // 빌링결제: 고객키 생성 (비회원)
-      const customerKey = `CUSTOMER_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
-      
-      const payment = tossPayments.payment({
-        customerKey: customerKey,
+      // 1) 서버에 주문 먼저 기록 (금액 고정)
+      const orderRes = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plan, ...formData }),
       });
 
-      // 첫 결제 요청 (카드 등록 + 결제)
-      await payment.requestPayment({
+      if (!orderRes.ok) {
+        const err = await orderRes.json();
+        throw new Error(err.message || '주문 생성에 실패했습니다.');
+      }
+
+      const { orderId, customerKey } = await orderRes.json();
+
+      // 2) 빌링키 발급창 (카드 등록)
+      const TossPayments = await loadTossSdk();
+      const tossPayments = TossPayments(clientKey);
+      const payment = tossPayments.payment({ customerKey });
+
+      await payment.requestBillingAuth({
         method: 'CARD',
-        amount: { currency: 'KRW', value: totalFirstPayment },
-        orderId: `ORDER_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
-        orderName: `Nexia ${name} 구축비 + 첫 달 구독`,
-        successUrl: `${window.location.origin}/pay/success`,
+        successUrl: `${window.location.origin}/pay/billing-success?orderId=${orderId}&customerKey=${customerKey}`,
         failUrl: `${window.location.origin}/checkout/fail`,
         customerEmail: formData.email,
         customerName: formData.name,
-        card: {
-          useEscrow: false,
-          flowMode: 'DEFAULT',
-          useCardPoint: false,
-          useAppCardOnly: false,
-        },
-        // 빌링결제 정보 추가
-        metadata: {
-          plan,
-          monthlyFee: monthlyFee.toString(),
-          customerKey,
-        },
       });
     } catch (error: any) {
       console.error('결제 요청 오류:', error);
@@ -109,7 +96,7 @@ function PayContent() {
       }
       setIsLoading(false);
     }
-  }, [formData, plan, setupFee, monthlyFee, totalFirstPayment, name]);
+  }, [formData, plan]);
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-slate-50 p-6">
@@ -182,9 +169,9 @@ function PayContent() {
         </button>
 
         <p className="mt-4 text-center text-xs text-slate-500">
-          첫 결제 후 매월 {monthlyFee.toLocaleString()}원이 자동으로 청구됩니다.
+          카드 등록 후 첫 결제 {totalFirstPayment.toLocaleString()}원이 청구되며,
           <br />
-          언제든지 구독을 취소할 수 있습니다.
+          다음 달부터 매월 {monthlyFee.toLocaleString()}원이 자동 결제됩니다.
         </p>
 
         <div className="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-4">
