@@ -1,14 +1,14 @@
-﻿// 뷰어 폴더(CorporateViewer, OnePageViewer, PortfolioViewer, RentalViewer)와
-// 빌더(onepage/corporate/fitness/legal)를 모두 수용하는 통합 타입
+// src/types/Template.ts
+
 export type TemplateType =
   | 'onepage'
   | 'corporate'
   | 'fitness'
   | 'legal'
   | 'rental-shop'
-  | 'portfolio';
+  | 'portfolio'
+  | 'interior';
 
-// 솔루션(서비스) 카드 1개
 export interface Solution {
   title: string;
   category?: string;
@@ -19,6 +19,29 @@ export interface Solution {
     featureTitle: string;
     featureContent: string;
   }[];
+}
+
+export interface InteriorProject {
+  name: string;
+  area: string;
+  tags: string[];
+  duration: string;
+  beforeImage: string;
+  afterImage: string;
+  description?: string;
+  images?: string[];
+}
+
+export interface InteriorService {
+  icon?: string;
+  title: string;
+  description: string;
+}
+
+export interface InteriorProcess {
+  step: number;
+  title: string;
+  description: string;
 }
 
 export interface B2BTemplateData {
@@ -37,24 +60,36 @@ export interface B2BTemplateData {
     subtitle: string;
     badge: string;
     mediaUrl: string;
+    titleSub?: string;
+    ctaLabel?: string;
   };
 
-  // 메인 상단 고정 솔루션 (단일 객체, 선택)
   solutionMain?: {
     title: string;
     description: string;
     detailContent: string;
   };
 
-  // 하단 '상세 소개' 섹션 카드 리스트
   solutions: Solution[];
 
-  // 회사소개 + 지속가능경영 + 공시정보
+  projects?: InteriorProject[];
+
+  services?: InteriorService[];
+
+  process?: InteriorProcess[];
+
+  estimateForm?: {
+    enabled: boolean;
+    submitButtonText?: string;
+    privacyText?: string;
+  };
+
   corporateInfo: {
     ceoGreeting: {
       title: string;
       content: string;
       image: string;
+      name?: string;
     };
     missionVision: {
       mission: string;
@@ -73,17 +108,28 @@ export interface B2BTemplateData {
         fax: string;
       };
     };
-    // 지속가능경영 (ESG)
     esg: {
       environmental: { title: string; content: string; image: string };
       social: { title: string; content: string; image: string };
       governance: { title: string; content: string; image: string };
+      mainTitle?: string;
+      mainDesc?: string;
+      goals?: {
+        [key: number]: {
+          label: string;
+          title: string;
+          content: string;
+        };
+      };
     };
-    // 공시정보
     disclosure: {
       certifications: { name: string; image: string; date: string }[];
       reports: { title: string; date: string; link: string }[];
     };
+    about?: string;
+    vision?: string;
+    ceoMessage?: string;
+    representativeName?: string;
   };
 
   navigation: {
@@ -93,13 +139,11 @@ export interface B2BTemplateData {
     }[];
   };
 
-  // 홍보센터
   prCenter: {
     news: { title: string; date: string; summary: string; image: string }[];
     notice: { title: string; date: string; isImportant: boolean }[];
   };
 
-  // 인재경영
   recruit: {
     talentValue: string;
     benefitInfo: string;
@@ -111,13 +155,11 @@ export interface B2BTemplateData {
     }[];
   };
 
-  // 고객센터
   csCenter: {
     faq: { question: string; answer: string }[];
     contactInfo: { email: string; phone: string; address: string };
   };
 
-  // 공통 필드 (에디터 사용)
   supportPhone: string;
   csGuide: string;
   kakaoLink: string;
