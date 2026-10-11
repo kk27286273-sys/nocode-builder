@@ -574,11 +574,12 @@ export default function BuilderPage() {
       </div>
 
       <main className="relative z-10 min-h-screen flex-1 bg-slate-200">
-        <ViewerManager
-          data={data}
-          activeSection={activeSection}
-          setActiveSection={setActiveSection}
-        />
+<ViewerManager
+  data={data}
+  setData={setData}
+  activeSection={activeSection}
+  setActiveSection={setActiveSection}
+/>
       </main>
     </div>
   );

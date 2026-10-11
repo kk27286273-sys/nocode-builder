@@ -48,7 +48,12 @@ export default function PreviewPage() {
 
   return (
     <main className="min-h-screen w-full bg-white">
-      <ViewerManager data={data} activeSection={activeSection} setActiveSection={setActiveSection} />
+<ViewerManager
+  data={data}
+  activeSection={activeSection}
+  setActiveSection={setActiveSection}
+  published
+/>
     </main>
   );
 }
