@@ -8,9 +8,7 @@ const SDK_URL = 'https://js.tosspayments.com/v2/standard';
 
 function loadTossSdk(): Promise<any> {
   return new Promise((resolve, reject) => {
-    // @ts-ignore
     if (window.TossPayments) {
-      // @ts-ignore
       resolve(window.TossPayments);
       return;
     }
@@ -18,7 +16,6 @@ function loadTossSdk(): Promise<any> {
     const existing = document.querySelector(`script[src="${SDK_URL}"]`);
     if (existing) {
       existing.addEventListener('load', () => {
-        // @ts-ignore
         resolve(window.TossPayments);
       });
       existing.addEventListener('error', () => reject(new Error('SDK 로드 실패')));
@@ -29,7 +26,6 @@ function loadTossSdk(): Promise<any> {
     script.src = SDK_URL;
     script.async = true;
     script.onload = () => {
-      // @ts-ignore
       resolve(window.TossPayments);
     };
     script.onerror = () => reject(new Error('SDK 로드 실패'));
@@ -43,15 +39,15 @@ function PayContent() {
   const [formData, setFormData] = useState({ email: '', name: '', phone: '' });
 
   const plan = searchParams.get('plan') || 'pro';
-  const setupFee = Number(searchParams.get('setupFee')) || 1000000;
-  const monthlyFee = Number(searchParams.get('monthlyFee')) || 79000;
-  const totalFirstPayment = setupFee + monthlyFee;
-
-  const planNames: Record<string, string> = {
-    basic: 'Basic',
-    pro: 'Pro',
-    premium: 'Premium',
+  
+  const plans: Record<string, { setupFee: number; monthlyFee: number; name: string }> = {
+    basic: { setupFee: 700000, monthlyFee: 59000, name: 'Basic' },
+    pro: { setupFee: 1000000, monthlyFee: 79000, name: 'Pro' },
+    premium: { setupFee: 1200000, monthlyFee: 99000, name: 'Premium' },
   };
+
+  const { setupFee, monthlyFee, name } = plans[plan] || plans.pro;
+  const totalFirstPayment = setupFee + monthlyFee;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -69,7 +65,6 @@ function PayContent() {
       alert('결제 설정이 완료되지 않았습니다.');
       return;
     }
-    console.log('로드된 키:', clientKey);
 
     setIsLoading(true);
 
@@ -77,16 +72,19 @@ function PayContent() {
       const TossPayments = await loadTossSdk();
       const tossPayments = TossPayments(clientKey);
 
-      // 비회원 결제창 방식
+      // 빌링결제: 고객키 생성 (비회원)
+      const customerKey = `CUSTOMER_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+      
       const payment = tossPayments.payment({
-        customerKey: TossPayments.ANONYMOUS,
+        customerKey: customerKey,
       });
 
+      // 첫 결제 요청 (카드 등록 + 결제)
       await payment.requestPayment({
         method: 'CARD',
         amount: { currency: 'KRW', value: totalFirstPayment },
         orderId: `ORDER_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
-        orderName: `Nexia ${planNames[plan]} 구축비 + 첫 달 구독`,
+        orderName: `Nexia ${name} 구축비 + 첫 달 구독`,
         successUrl: `${window.location.origin}/pay/success`,
         failUrl: `${window.location.origin}/checkout/fail`,
         customerEmail: formData.email,
@@ -97,6 +95,12 @@ function PayContent() {
           useCardPoint: false,
           useAppCardOnly: false,
         },
+        // 빌링결제 정보 추가
+        metadata: {
+          plan,
+          monthlyFee: monthlyFee.toString(),
+          customerKey,
+        },
       });
     } catch (error: any) {
       console.error('결제 요청 오류:', error);
@@ -105,7 +109,7 @@ function PayContent() {
       }
       setIsLoading(false);
     }
-  }, [formData, plan, totalFirstPayment]);
+  }, [formData, plan, setupFee, monthlyFee, totalFirstPayment, name]);
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-slate-50 p-6">
@@ -114,7 +118,7 @@ function PayContent() {
           ← 돌아가기
         </Link>
 
-        <h1 className="text-2xl font-bold">Nexia {planNames[plan]} 결제</h1>
+        <h1 className="text-2xl font-bold">Nexia {name} 결제</h1>
         <p className="mt-2 text-sm text-slate-500">
           구축비 + 첫 달 구독료를 한 번에 결제합니다.
         </p>
@@ -130,7 +134,7 @@ function PayContent() {
           </div>
           <div className="border-t border-slate-300 pt-4">
             <div className="flex justify-between">
-              <span className="font-bold text-slate-900">총 결제액</span>
+              <span className="font-bold text-slate-900">첫 결제액</span>
               <span className="text-xl font-bold text-blue-600">
                 {totalFirstPayment.toLocaleString()}원
               </span>
@@ -178,7 +182,7 @@ function PayContent() {
         </button>
 
         <p className="mt-4 text-center text-xs text-slate-500">
-          결제 후 매월 {monthlyFee.toLocaleString()}원이 청구됩니다.
+          첫 결제 후 매월 {monthlyFee.toLocaleString()}원이 자동으로 청구됩니다.
           <br />
           언제든지 구독을 취소할 수 있습니다.
         </p>
@@ -187,7 +191,7 @@ function PayContent() {
           <p className="text-xs font-semibold text-amber-900">환불정책 확인</p>
           <p className="mt-2 text-xs text-amber-900">
             구축비는 작업 착수 시 50% 차감, 완성본 발송 후 환불 불가입니다.
-            <Link href="/refund" className="ml-1 font-bold underline">자세히</Link>
+            <Link href="/terms" className="ml-1 font-bold underline">자세히</Link>
           </p>
         </div>
       </div>
