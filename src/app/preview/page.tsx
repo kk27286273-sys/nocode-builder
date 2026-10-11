@@ -1,4 +1,3 @@
-cat > src/app/preview/page.tsx << 'EOF'
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -13,7 +12,6 @@ export default function PreviewPage() {
   const [data, setData] = useState<any>(null);
 
   useEffect(() => {
-    // 더미 데이터
     const dummyData = {
       interior: {
         templateType: 'interior',
@@ -56,4 +54,3 @@ export default function PreviewPage() {
     </main>
   );
 }
-EOF
