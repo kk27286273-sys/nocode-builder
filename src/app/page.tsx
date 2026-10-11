@@ -183,17 +183,6 @@ function PricingSection() {
     },
   ];
 
-  const handleSelectPlan = (plan: typeof plans[0]) => {
-    const totalFirstPayment = plan.setupFee + plan.monthlyFee;
-    const params = new URLSearchParams({
-      plan: plan.name.toLowerCase(),
-      setupFee: String(plan.setupFee),
-      monthlyFee: String(plan.monthlyFee),
-      totalFirstPayment: String(totalFirstPayment),
-    });
-    window.location.href = `/pay?${params.toString()}`;
-  };
-
   return (
     <section className="px-6 py-24 md:py-32">
       <div className="mx-auto max-w-7xl">
@@ -255,17 +244,16 @@ function PricingSection() {
                 ))}
               </ul>
 
-              <button
-                type="button"
-                onClick={() => handleSelectPlan(plan)}
-                className={`mt-8 w-full rounded-xl px-6 py-4 font-bold transition ${
+              <Link
+                href={`/pay?plan=${plan.name.toLowerCase()}`}
+                className={`mt-8 block w-full rounded-xl px-6 py-4 text-center font-bold transition ${
                   plan.highlight
                     ? 'bg-blue-600 text-white hover:bg-blue-700'
                     : 'border border-slate-300 text-slate-900 hover:bg-slate-50'
                 }`}
               >
                 {plan.cta}
-              </button>
+              </Link>
             </div>
           ))}
         </div>
@@ -283,7 +271,6 @@ function PricingSection() {
     </section>
   );
 }
-
 export default function LandingPage() {
   const scrollToTemplates = () => {
     document.getElementById('templates-section')?.scrollIntoView({
