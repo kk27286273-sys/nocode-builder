@@ -125,25 +125,29 @@ export default function InteriorViewer({ data, setData, editable = false }: Prop
                 className="group cursor-pointer overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition hover:shadow-lg"
               >
                 {/* Before/After 슬라이더 */}
-                <div className="relative h-64 w-full overflow-hidden bg-slate-200">
-                  <div
-                    className="absolute inset-0 transition-all duration-500"
-                    style={{
-                      backgroundImage: `url('${beforeAfterIndex[idx] ? p.afterImage : p.beforeImage}')`,
-                      backgroundSize: 'cover',
-                      backgroundPosition: 'center',
-                    }}
-                  />
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleBeforeAfter(idx);
-                    }}
-                    className="absolute bottom-3 right-3 rounded-full bg-white/90 px-3 py-1.5 text-xs font-semibold text-slate-900 transition hover:bg-white"
-                  >
-                    {beforeAfterIndex[idx] ? 'After' : 'Before'}
-                  </button>
-                </div>
+{/* Before/After 슬라이더 */}
+<div 
+  className="relative h-64 w-full overflow-hidden bg-slate-200 cursor-pointer"
+  onClick={() => toggleBeforeAfter(idx)}
+>
+  <div
+    className="absolute inset-0 transition-all duration-500"
+    style={{
+      backgroundImage: `url('${beforeAfterIndex[idx] ? p.afterImage : p.beforeImage}')`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+    }}
+  />
+  <button
+    onClick={(e) => {
+      e.stopPropagation();
+      toggleBeforeAfter(idx);
+    }}
+    className="absolute bottom-3 right-3 rounded-full bg-white/90 px-3 py-1.5 text-xs font-semibold text-slate-900 transition hover:bg-white"
+  >
+    {beforeAfterIndex[idx] ? 'After' : 'Before'}
+  </button>
+</div>
 
                 {/* 정보 */}
                 <div className="p-4">
