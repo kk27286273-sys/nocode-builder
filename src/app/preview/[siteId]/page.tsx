@@ -1,10 +1,12 @@
+// src/app/preview/[siteId]/page.tsx
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import ViewerManager from '@/components/builder/ViewerManager';
-import { B2BTemplateData } from '@/types/template';
+import { B2BTemplateData } from '@/types/Template';
 
 export default function PreviewPage() {
   const params = useParams();
@@ -48,12 +50,12 @@ export default function PreviewPage() {
 
   return (
     <main className="min-h-screen w-full bg-white">
-<ViewerManager
-  data={data}
-  activeSection={activeSection}
-  setActiveSection={setActiveSection}
-  published
-/>
+      <ViewerManager
+        data={data}
+        activeSection={activeSection}
+        setActiveSection={setActiveSection}
+        published
+      />
     </main>
   );
 }
