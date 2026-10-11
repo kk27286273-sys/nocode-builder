@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { SHOWROOM_TEMPLATES } from '@/data/showroomTemplates';
 import LivePreview from '@/components/LivePreview';
 import LegalTaxLayout from '@/components/templates/LegalTaxLayout';
+import CorporateLayout from '@/components/templates/CorporateLayout';
 
 function PreviewContent() {
   const searchParams = useSearchParams();
@@ -31,6 +32,11 @@ function PreviewContent() {
   // legal-tax는 전용 레이아웃
   if (templateId === 'legal-tax') {
     return <LegalTaxLayout />;
+  }
+
+  // corporate도 전용 레이아웃
+  if (templateId === 'corporate') {
+    return <CorporateLayout />;
   }
 
   // 나머지는 LivePreview
