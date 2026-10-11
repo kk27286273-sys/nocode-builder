@@ -1,7 +1,7 @@
 'use client';
 
 import React, { Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { SHOWROOM_TEMPLATES } from '@/data/showroomTemplates';
 import LivePreview from '@/components/LivePreview';
 import LegalTaxLayout from '@/components/templates/LegalTaxLayout';
@@ -9,7 +9,15 @@ import CorporateLayout from '@/components/templates/CorporateLayout';
 
 function PreviewContent() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const templateId = searchParams.get('templateId');
+
+  // corporate 쿼리 파라미터 → /preview/기업형 리다이렉트
+  React.useEffect(() => {
+    if (templateId === 'corporate') {
+      router.replace('/preview/기업형');
+    }
+  }, [templateId, router]);
 
   if (!templateId) {
     return (
