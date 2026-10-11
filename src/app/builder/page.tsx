@@ -1,12 +1,14 @@
-﻿'use client';
+﻿// src/app/builder/page.tsx
+
+'use client';
 
 import React, { useCallback, useEffect, useState } from 'react';
-import { B2BTemplateData } from '@/types/template';
+import { B2BTemplateData } from '@/types/Template';
 import { supabase } from '@/lib/supabase';
 import EditorSidebar from '@/components/builder/EditorSidebar';
 import ViewerManager from '@/components/builder/ViewerManager';
 
-type TemplateKey = 'onepage' | 'corporate' | 'fitness' | 'legal';
+type TemplateKey = 'onepage' | 'corporate' | 'fitness' | 'legal' | 'interior';
 
 type SiteRecord = {
   id: string;
@@ -16,13 +18,14 @@ type SiteRecord = {
 };
 
 const TEMPLATE_OPTIONS: { key: TemplateKey; label: string }[] = [
-  { key: 'onepage', label: '원페이지' },
+  { key: 'interior', label: '인테리어' },
   { key: 'corporate', label: '기업형' },
   { key: 'fitness', label: '피트니스형' },
   { key: 'legal', label: '법률형' },
 ];
 
 const TEMPLATE_ALIASES: Record<TemplateKey, string[]> = {
+  interior: ['interior', '인테리어', '인테리어형'],
   onepage: ['onepage', 'one-page', '원페이지'],
   corporate: ['corporate', '기업형', '기업형 홈페이지'],
   fitness: ['fitness', '피트니스', '피트니스형', '피트니스형 홈페이지'],
@@ -63,15 +66,17 @@ function createDefaultData(template: TemplateKey): B2BTemplateData {
         ? '#f97316'
         : template === 'legal'
           ? '#0f172a'
-          : '#2563eb',
+          : template === 'interior'
+            ? '#065f46'
+            : '#2563eb',
     company: {
       name:
         template === 'fitness'
           ? '피트니스 센터'
           : template === 'legal'
             ? '법률 사무소'
-            : template === 'onepage'
-              ? '브랜드명'
+            : template === 'interior'
+              ? '인테리어 회사'
               : '회사명을 입력해주세요',
       logoUrl: '/images/default-logo.png',
     },
@@ -81,25 +86,25 @@ function createDefaultData(template: TemplateKey): B2BTemplateData {
           ? '건강한 변화를 시작하세요'
           : template === 'legal'
             ? '신뢰할 수 있는 법률 파트너'
-            : template === 'onepage'
-              ? '브랜드의 가치를 한 페이지에'
+            : template === 'interior'
+              ? '당신의 꿈의 공간을 만듭니다'
               : '최고의 정밀 기술로 산업의 표준을 제시합니다',
       subtitle:
         template === 'fitness'
           ? '전문 코치와 함께하는 맞춤형 운동 프로그램'
           : template === 'legal'
             ? '의뢰인의 권리를 지키는 전문적인 법률 서비스'
-            : template === 'onepage'
-              ? '서비스와 브랜드를 간결하고 효과적으로 소개합니다.'
+            : template === 'interior'
+              ? '전문적인 시공으로 가치 있는 인테리어'
               : '글로벌 시장을 선도하는 정밀 금형 솔루션 기업',
       badge:
         template === 'fitness'
           ? 'PERSONAL TRAINING'
           : template === 'legal'
             ? 'LEGAL SERVICE'
-            : template === 'corporate'
-              ? 'Since 1990'
-              : 'WELCOME',
+            : template === 'interior'
+              ? '11월부터 새로운 작업을 받고 있습니다'
+              : 'Since 1990',
       mediaUrl: '',
     },
     solutions: [
@@ -109,24 +114,24 @@ function createDefaultData(template: TemplateKey): B2BTemplateData {
             ? '맞춤형 트레이닝'
             : template === 'legal'
               ? '전문 법률 상담'
-              : template === 'onepage'
-                ? '핵심 서비스'
+              : template === 'interior'
+                ? '풀리모델링'
                 : '정밀 금형 설계',
         category:
           template === 'fitness'
             ? '트레이닝'
             : template === 'legal'
               ? '법률 서비스'
-              : template === 'onepage'
-                ? '서비스'
+              : template === 'interior'
+                ? '시공 분야'
                 : '핵심기술',
         description:
           template === 'fitness'
             ? '목표와 체력에 맞춘 운동 프로그램을 제공합니다.'
             : template === 'legal'
               ? '사안에 맞는 전문적인 검토와 대응을 제공합니다.'
-              : template === 'onepage'
-                ? '고객에게 제공하는 핵심 서비스를 소개합니다.'
+              : template === 'interior'
+                ? '벽, 바닥, 천장까지 완전히 새롭게'
                 : '초정밀 설계를 통한 완벽한 품질 구현',
         image: '',
         detailedFeatures: [
@@ -134,6 +139,9 @@ function createDefaultData(template: TemplateKey): B2BTemplateData {
         ],
       },
     ],
+    projects: template === 'interior' ? [] : undefined,
+    services: template === 'interior' ? [] : undefined,
+    process: template === 'interior' ? [] : undefined,
     corporateInfo: {
       ceoGreeting: {
         title: '신뢰와 전문성으로 보답하겠습니다',
@@ -238,6 +246,15 @@ function mergeWithDefaultData(
       Array.isArray(currentData.solutions) && currentData.solutions.length > 0
         ? currentData.solutions
         : defaults.solutions,
+    projects: Array.isArray(currentData.projects)
+      ? currentData.projects
+      : defaults.projects,
+    services: Array.isArray(currentData.services)
+      ? currentData.services
+      : defaults.services,
+    process: Array.isArray(currentData.process)
+      ? currentData.process
+      : defaults.process,
     corporateInfo: {
       ...defaults.corporateInfo,
       ...(currentData.corporateInfo || {}),
@@ -477,8 +494,8 @@ export default function BuilderPage() {
         <p className="max-w-xl text-sm text-slate-300">
           Supabase의 `sites` 테이블에 해당 템플릿의 사이트가 있어야 편집할 수
           있습니다. 기존 데이터의 `template_type` 또는 `data.templateType`을
-          `onepage`, `corporate`, `fitness`, `legal` 중 하나로 지정하거나,
-          사이트 이름을 원페이지·기업형·피트니스형·법률형으로 설정해 주세요.
+          `interior`, `corporate`, `fitness`, `legal` 중 하나로 지정하거나,
+          사이트 이름을 인테리어·기업형·피트니스형·법률형으로 설정해 주세요.
         </p>
         <button
           type="button"
@@ -574,12 +591,12 @@ export default function BuilderPage() {
       </div>
 
       <main className="relative z-10 min-h-screen flex-1 bg-slate-200">
-<ViewerManager
-  data={data}
-  setData={setData}
-  activeSection={activeSection}
-  setActiveSection={setActiveSection}
-/>
+        <ViewerManager
+          data={data}
+          setData={setData}
+          activeSection={activeSection}
+          setActiveSection={setActiveSection}
+        />
       </main>
     </div>
   );
