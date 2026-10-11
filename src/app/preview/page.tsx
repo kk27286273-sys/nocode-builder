@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import InteriorViewer from '@/components/viewer/templates/InteriorViewer';
 import { CorporateViewer } from '@/components/builder/CorporateViewer';
 
-export default function PreviewPage() {
+function PreviewContent() {
   const searchParams = useSearchParams();
   const templateId = searchParams?.get('templateId') || 'corporate';
 
@@ -52,5 +52,13 @@ export default function PreviewPage() {
         <CorporateViewer data={data} />
       )}
     </main>
+  );
+}
+
+export default function PreviewPage() {
+  return (
+    <Suspense fallback={<div className="h-screen flex items-center justify-center">로드 중...</div>}>
+      <PreviewContent />
+    </Suspense>
   );
 }
