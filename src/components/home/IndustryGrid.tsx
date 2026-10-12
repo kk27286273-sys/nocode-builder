@@ -52,7 +52,6 @@ const INDUSTRIES: Industry[] = [
     points: ['수업·클래스 안내', '이용권 비교', '위치·시간표'],
     templateId: 'fitness',
     accent: '#EA580C',
-    disabled: true,
   },
 ];
 
