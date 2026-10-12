@@ -6,7 +6,7 @@ import { supabase } from '@/lib/supabase';
 import InteriorViewer from '@/components/viewer/templates/InteriorViewer';
 import { CorporateViewer } from '@/components/builder/CorporateViewer';
 import LegalViewer from '@/components/viewer/templates/LegalViewer';
-import FitnessViewer from '@/components/viewers/FitnessViewer';
+import FitnessViewer from '@/components/viewer/templates/FitnessViewer';
 import { getDefaultData } from '@/lib/defaultData';
 
 function PreviewContent() {
