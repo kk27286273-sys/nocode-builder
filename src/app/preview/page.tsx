@@ -7,6 +7,7 @@ import InteriorViewer from '@/components/viewer/templates/InteriorViewer';
 import { CorporateViewer } from '@/components/builder/CorporateViewer';
 import LegalViewer from '@/components/viewer/templates/LegalViewer';
 import FitnessViewer from '@/components/viewer/templates/FitnessViewer';
+import { ViewerManager } from '@/components/viewer/ViewerManager';
 import { getDefaultData } from '@/lib/defaultData';
 
 function PreviewContent() {
@@ -53,10 +54,7 @@ function PreviewContent() {
 
   return (
     <main className="min-h-screen w-full bg-white">
-      {templateId === 'interior' && <InteriorViewer data={data} editable={false} />}
-      {templateId === 'legal' && <LegalViewer data={data} />}
-      {templateId === 'fitness' && <FitnessViewer data={data} />}
-      {templateId === 'corporate' && <CorporateViewer data={data} />}
+      <ViewerManager data={{ templateType: templateId, ...data }} />
     </main>
   );
 }
