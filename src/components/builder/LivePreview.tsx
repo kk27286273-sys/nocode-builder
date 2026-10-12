@@ -4,7 +4,7 @@ import React from 'react';
 import { CorporateViewer } from './CorporateViewer';
 import InteriorViewer from '@/components/viewer/templates/InteriorViewer';
 import LegalViewer from '@/components/viewer/templates/LegalViewer';
-import FitnessViewer from '@/components/viewers/FitnessViewer';
+import FitnessViewer from '@/components/viewer/templates/FitnessViewer';
 
 interface LivePreviewProps {
   data: any;
