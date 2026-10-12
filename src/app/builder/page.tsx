@@ -8,7 +8,12 @@ import { supabase } from '@/lib/supabase';
 import EditorSidebar from '@/components/builder/EditorSidebar';
 import ViewerManager from '@/components/builder/ViewerManager';
 
-type TemplateKey = 'onepage' | 'corporate' | 'fitness' | 'legal' | 'interior';
+type TemplateKey =
+  | 'onepage'
+  | 'corporate'
+  | 'fitness'
+  | 'legal'
+  | 'interior';
 
 type SiteRecord = {
   id: string;
@@ -17,7 +22,10 @@ type SiteRecord = {
   template_type?: string | null;
 };
 
-const TEMPLATE_OPTIONS: { key: TemplateKey; label: string }[] = [
+const TEMPLATE_OPTIONS: {
+  key: TemplateKey;
+  label: string;
+}[] = [
   { key: 'interior', label: '인테리어' },
   { key: 'corporate', label: '기업형' },
   { key: 'fitness', label: '피트니스형' },
@@ -38,11 +46,11 @@ function normalizeTemplate(value: unknown): TemplateKey | null {
   const normalized = value.trim().toLowerCase();
 
   for (const option of TEMPLATE_OPTIONS) {
-    if (
-      TEMPLATE_ALIASES[option.key].some(
-        (alias) => alias.toLowerCase() === normalized,
-      )
-    ) {
+    const isMatched = TEMPLATE_ALIASES[option.key].some(
+      (alias) => alias.toLowerCase() === normalized,
+    );
+
+    if (isMatched) {
       return option.key;
     }
   }
@@ -61,6 +69,7 @@ function getSiteTemplate(site: SiteRecord): TemplateKey | null {
 function createDefaultData(template: TemplateKey): B2BTemplateData {
   const base = {
     templateType: template,
+
     themeColor:
       template === 'fitness'
         ? '#f97316'
@@ -69,6 +78,7 @@ function createDefaultData(template: TemplateKey): B2BTemplateData {
           : template === 'interior'
             ? '#065f46'
             : '#2563eb',
+
     company: {
       name:
         template === 'fitness'
@@ -80,6 +90,7 @@ function createDefaultData(template: TemplateKey): B2BTemplateData {
               : '회사명을 입력해주세요',
       logoUrl: '/images/default-logo.png',
     },
+
     hero: {
       title:
         template === 'fitness'
@@ -89,6 +100,7 @@ function createDefaultData(template: TemplateKey): B2BTemplateData {
             : template === 'interior'
               ? '당신의 꿈의 공간을 만듭니다'
               : '최고의 정밀 기술로 산업의 표준을 제시합니다',
+
       subtitle:
         template === 'fitness'
           ? '전문 코치와 함께하는 맞춤형 운동 프로그램'
@@ -97,6 +109,7 @@ function createDefaultData(template: TemplateKey): B2BTemplateData {
             : template === 'interior'
               ? '전문적인 시공으로 가치 있는 인테리어'
               : '글로벌 시장을 선도하는 정밀 금형 솔루션 기업',
+
       badge:
         template === 'fitness'
           ? 'PERSONAL TRAINING'
@@ -105,8 +118,10 @@ function createDefaultData(template: TemplateKey): B2BTemplateData {
             : template === 'interior'
               ? '11월부터 새로운 작업을 받고 있습니다'
               : 'Since 1990',
+
       mediaUrl: '',
     },
+
     solutions: [
       {
         title:
@@ -117,6 +132,7 @@ function createDefaultData(template: TemplateKey): B2BTemplateData {
               : template === 'interior'
                 ? '풀리모델링'
                 : '정밀 금형 설계',
+
         category:
           template === 'fitness'
             ? '트레이닝'
@@ -125,6 +141,7 @@ function createDefaultData(template: TemplateKey): B2BTemplateData {
               : template === 'interior'
                 ? '시공 분야'
                 : '핵심기술',
+
         description:
           template === 'fitness'
             ? '목표와 체력에 맞춘 운동 프로그램을 제공합니다.'
@@ -133,28 +150,44 @@ function createDefaultData(template: TemplateKey): B2BTemplateData {
               : template === 'interior'
                 ? '벽, 바닥, 천장까지 완전히 새롭게'
                 : '초정밀 설계를 통한 완벽한 품질 구현',
+
         image: '',
+
         detailedFeatures: [
-          { featureTitle: '특징 1', featureContent: '상세 내용을 입력해주세요.' },
+          {
+            featureTitle: '특징 1',
+            featureContent: '상세 내용을 입력해주세요.',
+          },
         ],
       },
     ],
+
     projects: template === 'interior' ? [] : undefined,
     services: template === 'interior' ? [] : undefined,
     process: template === 'interior' ? [] : undefined,
+
     corporateInfo: {
       ceoGreeting: {
         title: '신뢰와 전문성으로 보답하겠습니다',
         content: '소개 내용을 입력해주세요.',
         image: '',
       },
+
       missionVision: {
         mission: '고객에게 더 나은 가치를 제공합니다.',
         vision: '분야를 선도하는 전문 브랜드',
       },
-      history: [{ year: '2024', event: '서비스 시작' }],
+
+      history: [
+        {
+          year: '2024',
+          event: '서비스 시작',
+        },
+      ],
+
       orgChart: '',
       ciImage: '',
+
       location: {
         headOffice: {
           address: '주소를 입력해주세요.',
@@ -162,37 +195,84 @@ function createDefaultData(template: TemplateKey): B2BTemplateData {
           fax: '',
         },
       },
+
       esg: {
-        environmental: { title: '환경', content: '', image: '' },
-        social: { title: '사회', content: '', image: '' },
-        governance: { title: '경영', content: '', image: '' },
+        environmental: {
+          title: '환경',
+          content: '',
+          image: '',
+        },
+        social: {
+          title: '사회',
+          content: '',
+          image: '',
+        },
+        governance: {
+          title: '경영',
+          content: '',
+          image: '',
+        },
       },
-      disclosure: { certifications: [], reports: [] },
+
+      disclosure: {
+        certifications: [],
+        reports: [],
+      },
     },
+
     navigation: {
       menus:
         template === 'corporate'
           ? [
-              { label: '회사소개', children: [] },
-              { label: '사업소개', children: [] },
-              { label: '지속가능경영', children: [] },
-              { label: '홍보센터', children: [] },
-              { label: '인재경영', children: [] },
-              { label: '고객센터', children: [] },
+              {
+                label: '회사소개',
+                children: [],
+              },
+              {
+                label: '사업소개',
+                children: [],
+              },
+              {
+                label: '지속가능경영',
+                children: [],
+              },
+              {
+                label: '홍보센터',
+                children: [],
+              },
+              {
+                label: '인재경영',
+                children: [],
+              },
+              {
+                label: '고객센터',
+                children: [],
+              },
             ]
           : [
               {
                 label: '소개',
-                children: [{ label: '서비스 소개', targetId: 'services' }],
+                children: [
+                  {
+                    label: '서비스 소개',
+                    targetId: 'services',
+                  },
+                ],
               },
             ],
     },
-    prCenter: { news: [], notice: [] },
+
+    prCenter: {
+      news: [],
+      notice: [],
+    },
+
     recruit: {
       talentValue: '함께 성장하는 인재',
       benefitInfo: '복지 정보를 입력해주세요.',
       openPositions: [],
     },
+
     csCenter: {
       faq: [],
       contactInfo: {
@@ -201,6 +281,7 @@ function createDefaultData(template: TemplateKey): B2BTemplateData {
         address: '주소를 입력해주세요.',
       },
     },
+
     supportPhone: '02-000-0000',
     csGuide: '운영시간을 입력해주세요.',
     kakaoLink: '',
@@ -208,6 +289,7 @@ function createDefaultData(template: TemplateKey): B2BTemplateData {
     videoUrl: '',
     talentValue: '함께 성장하는 인재',
     benefitInfo: '복지 정보를 입력해주세요.',
+
     footer: {
       address: '주소를 입력해주세요.',
       ownerName: '대표자명',
@@ -233,72 +315,90 @@ function mergeWithDefaultData(
   const merged = {
     ...defaults,
     ...currentData,
+
     templateType: template,
+
     company: {
       ...defaults.company,
       ...(currentData.company || {}),
     },
+
     hero: {
       ...defaults.hero,
       ...(currentData.hero || {}),
     },
+
     solutions:
-      Array.isArray(currentData.solutions) && currentData.solutions.length > 0
+      Array.isArray(currentData.solutions) &&
+      currentData.solutions.length > 0
         ? currentData.solutions
         : defaults.solutions,
+
     projects: Array.isArray(currentData.projects)
       ? currentData.projects
       : defaults.projects,
+
     services: Array.isArray(currentData.services)
       ? currentData.services
       : defaults.services,
+
     process: Array.isArray(currentData.process)
       ? currentData.process
       : defaults.process,
+
     navigation: {
       ...defaults.navigation,
       ...(currentData.navigation || {}),
     },
+
     prCenter: {
       ...defaults.prCenter,
       ...(currentData.prCenter || {}),
     },
+
     recruit: {
       ...defaults.recruit,
       ...(currentData.recruit || {}),
     },
+
     csCenter: {
       ...defaults.csCenter,
       ...(currentData.csCenter || {}),
+
       contactInfo: {
         ...defaults.csCenter.contactInfo,
         ...(currentData.csCenter?.contactInfo || {}),
       },
     },
+
     footer: {
       ...defaults.footer,
       ...(currentData.footer || {}),
     },
   };
 
-  // corporate만 corporateInfo 병합
   if (template === 'corporate') {
     return {
       ...merged,
+
       corporateInfo: {
         ...defaults.corporateInfo,
         ...(currentData.corporateInfo || {}),
+
         ceoGreeting: {
           ...defaults.corporateInfo.ceoGreeting,
           ...(currentData.corporateInfo?.ceoGreeting || {}),
         },
+
         missionVision: {
           ...defaults.corporateInfo.missionVision,
           ...(currentData.corporateInfo?.missionVision || {}),
         },
+
         location: {
           ...defaults.corporateInfo.location,
           ...(currentData.corporateInfo?.location || {}),
+
           headOffice: {
             ...defaults.corporateInfo.location.headOffice,
             ...(currentData.corporateInfo?.location?.headOffice || {}),
@@ -310,16 +410,25 @@ function mergeWithDefaultData(
 
   return merged as B2BTemplateData;
 }
+
 export default function BuilderPage() {
   const [data, setData] = useState<B2BTemplateData | null>(null);
   const [siteId, setSiteId] = useState<string | null>(null);
   const [sitesList, setSitesList] = useState<SiteRecord[]>([]);
+
   const [selectedTemplate, setSelectedTemplate] =
     useState<TemplateKey>('corporate');
+
   const [activeSection, setActiveSection] = useState('main');
   const [isLoading, setIsLoading] = useState(true);
 
+  // Supabase 조회 오류를 화면에 표시하기 위한 상태
+  const [loadError, setLoadError] = useState<string | null>(null);
+
   const fetchSites = useCallback(async () => {
+    setIsLoading(true);
+    setLoadError(null);
+
     const { data: sites, error } = await supabase
       .from('sites')
       .select('id, name, data, template_type')
@@ -327,18 +436,25 @@ export default function BuilderPage() {
 
     if (error) {
       console.error('사이트 목록 로드 에러:', error);
+
+      setLoadError(error.message);
       setSitesList([]);
+      setSiteId(null);
+      setData(null);
       setIsLoading(false);
+
       return;
     }
 
     const list = (sites || []) as SiteRecord[];
+
     setSitesList(list);
 
     if (list.length === 0) {
       setSiteId(null);
       setData(null);
       setIsLoading(false);
+
       return;
     }
 
@@ -367,11 +483,16 @@ export default function BuilderPage() {
     if (!id) return;
 
     const selectedSite = sitesList.find((site) => site.id === id);
-    if (!selectedSite) return;
+
+    if (!selectedSite) {
+      setLoadError('선택한 사이트를 목록에서 찾을 수 없습니다.');
+      return;
+    }
 
     const template = getSiteTemplate(selectedSite) || 'corporate';
 
     setIsLoading(true);
+    setLoadError(null);
     setSiteId(id);
     setSelectedTemplate(template);
 
@@ -383,8 +504,11 @@ export default function BuilderPage() {
 
     if (error) {
       console.error('데이터 로드 에러:', error);
-      alert('사이트 데이터를 불러오지 못했습니다: ' + error.message);
+
+      setLoadError(error.message);
+      setData(null);
       setIsLoading(false);
+
       return;
     }
 
@@ -395,6 +519,7 @@ export default function BuilderPage() {
 
   async function handleTemplateChange(template: TemplateKey) {
     setSelectedTemplate(template);
+    setLoadError(null);
 
     const matchingSite = sitesList.find(
       (site) => getSiteTemplate(site) === template,
@@ -403,9 +528,13 @@ export default function BuilderPage() {
     if (!matchingSite) {
       setSiteId(null);
       setData(null);
+
       alert(
-        `${TEMPLATE_OPTIONS.find((option) => option.key === template)?.label} 사이트가 Supabase에 없습니다. 먼저 해당 템플릿의 사이트 데이터를 생성해야 합니다.`,
+        `${
+          TEMPLATE_OPTIONS.find((option) => option.key === template)?.label
+        } 사이트가 Supabase에 없습니다. 먼저 해당 템플릿의 사이트 데이터를 생성해야 합니다.`,
       );
+
       return;
     }
 
@@ -419,6 +548,7 @@ export default function BuilderPage() {
     }
 
     setIsLoading(true);
+    setLoadError(null);
 
     try {
       const templateLabel =
@@ -440,11 +570,14 @@ export default function BuilderPage() {
         .eq('id', siteId);
 
       if (error) {
+        console.error('발행 실패:', error);
+        setLoadError(error.message);
         alert('발행 실패: ' + error.message);
         return;
       }
 
       alert(`${templateLabel} 홈페이지를 저장했습니다.`);
+
       window.open(
         `/preview/${encodeURIComponent(siteId)}`,
         '_blank',
@@ -452,6 +585,13 @@ export default function BuilderPage() {
       );
     } catch (error) {
       console.error('발행 중 오류:', error);
+
+      const message =
+        error instanceof Error
+          ? error.message
+          : '알 수 없는 오류가 발생했습니다.';
+
+      setLoadError(message);
       alert('발행 중 오류가 발생했습니다.');
     } finally {
       setIsLoading(false);
@@ -459,21 +599,31 @@ export default function BuilderPage() {
   }
 
   async function deleteSite() {
-    if (!siteId || !confirm('정말 선택한 사이트를 삭제하시겠습니까?')) return;
+    if (!siteId || !confirm('정말 선택한 사이트를 삭제하시겠습니까?')) {
+      return;
+    }
 
     setIsLoading(true);
+    setLoadError(null);
 
-    const { error } = await supabase.from('sites').delete().eq('id', siteId);
+    const { error } = await supabase
+      .from('sites')
+      .delete()
+      .eq('id', siteId);
 
     if (error) {
       console.error('사이트 삭제 에러:', error);
+
+      setLoadError(error.message);
       alert('사이트 삭제 실패: ' + error.message);
       setIsLoading(false);
+
       return;
     }
 
     setSiteId(null);
     setData(null);
+
     await fetchSites();
   }
 
@@ -496,15 +646,32 @@ export default function BuilderPage() {
   if (!data) {
     return (
       <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-4 bg-slate-900 px-6 text-center text-white">
-        <p className="text-lg font-bold">
-          {selectedTemplateLabel} 사이트 데이터를 찾을 수 없습니다.
-        </p>
-        <p className="max-w-xl text-sm text-slate-300">
-          Supabase의 `sites` 테이블에 해당 템플릿의 사이트가 있어야 편집할 수
-          있습니다. 기존 데이터의 `template_type` 또는 `data.templateType`을
-          `interior`, `corporate`, `fitness`, `legal` 중 하나로 지정하거나,
-          사이트 이름을 인테리어·기업형·피트니스형·법률형으로 설정해 주세요.
-        </p>
+        {loadError ? (
+          <>
+            <p className="text-lg font-bold text-rose-400">
+              사이트 조회 오류
+            </p>
+
+            <p className="max-w-xl break-words text-sm text-slate-300">
+              {loadError}
+            </p>
+          </>
+        ) : (
+          <>
+            <p className="text-lg font-bold">
+              {selectedTemplateLabel} 사이트 데이터를 찾을 수 없습니다.
+            </p>
+
+            <p className="max-w-xl text-sm leading-6 text-slate-300">
+              Supabase의 sites 테이블에 해당 템플릿의 사이트가 있어야 편집할
+              수 있습니다. 기존 데이터의 template_type 또는
+              data.templateType을 interior, corporate, fitness, legal 중 하나로
+              지정하거나 사이트 이름을 인테리어·기업형·피트니스형·법률형으로
+              설정해 주세요.
+            </p>
+          </>
+        )}
+
         <button
           type="button"
           onClick={() => void fetchSites()}
@@ -551,6 +718,7 @@ export default function BuilderPage() {
               <option value="">
                 {templateSites.length ? '사이트 선택' : '사이트 없음'}
               </option>
+
               {templateSites.map((site) => (
                 <option key={site.id} value={site.id}>
                   {site.name || site.id}
@@ -567,6 +735,7 @@ export default function BuilderPage() {
             >
               메인
             </button>
+
             <button
               type="button"
               onClick={handlePublish}
@@ -575,6 +744,7 @@ export default function BuilderPage() {
             >
               {isLoading ? '저장...' : '저장·발행'}
             </button>
+
             <button
               type="button"
               onClick={deleteSite}
