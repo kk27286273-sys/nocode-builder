@@ -1,67 +1,113 @@
 ﻿'use client';
 
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
-import InteriorViewer from '@/components/viewer/templates/InteriorViewer';
-import { CorporateViewer } from '@/components/builder/CorporateViewer';
-import LegalViewer from '@/components/viewer/templates/LegalViewer';
-import FitnessViewer from '@/components/viewer/templates/FitnessViewer';
 import { ViewerManager } from '@/components/viewer/ViewerManager';
 import { getDefaultData } from '@/lib/defaultData';
 
 function PreviewContent() {
   const searchParams = useSearchParams();
-  const templateId = searchParams?.get('templateId') || 'corporate';
+  const templateId = searchParams.get('templateId') || 'corporate';
 
   const [data, setData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    let cancelled = false;
+
     async function fetchData() {
+      setIsLoading(true);
+
       try {
-        // ?쒗뵆由???낆뿉 留욌뒗 ?ъ씠???곗씠??議고쉶
-        const { data: sites, error } = await supabase
+        const { data: site, error } = await supabase
           .from('sites')
           .select('data, template_type')
           .eq('template_type', templateId)
-          .single();
+          .limit(1)
+          .maybeSingle();
 
-        if (error || !sites?.data) {
-          console.log('DB?먯꽌 李얠? 紐삵븿. 湲곕낯 ?곗씠???ъ슜');
-          setData(getDefaultData(templateId));
-        } else {
-          setData(sites.data);
+        if (cancelled) return;
+
+        if (error || !site?.data) {
+          console.log(
+            `${templateId} 템플릿 데이터를 찾지 못했습니다. 기본 데이터를 사용합니다.`,
+          );
+
+          const defaultData = getDefaultData(templateId);
+
+          setData({
+            ...defaultData,
+            templateType: templateId,
+          });
+
+          return;
         }
-      } catch (err) {
-        console.error('Fetch error:', err);
-        setData(getDefaultData(templateId));
+
+        setData({
+          ...site.data,
+          templateType: templateId,
+        });
+      } catch (error) {
+        if (cancelled) return;
+
+        console.error('프리뷰 데이터 조회 오류:', error);
+
+        const defaultData = getDefaultData(templateId);
+
+        setData({
+          ...defaultData,
+          templateType: templateId,
+        });
       } finally {
-        setIsLoading(false);
+        if (!cancelled) {
+          setIsLoading(false);
+        }
       }
     }
 
-    fetchData();
+    void fetchData();
+
+    return () => {
+      cancelled = true;
+    };
   }, [templateId]);
 
   if (isLoading) {
-    return <div className="h-screen flex items-center justify-center">濡쒕뱶 以?..</div>;
+    return (
+      <div className="flex h-screen items-center justify-center">
+        로드 중...
+      </div>
+    );
   }
 
   if (!data) {
-    return <div className="h-screen flex items-center justify-center text-rose-600">?곗씠?곕? 李얠쓣 ???놁뒿?덈떎.</div>;
+    return (
+      <div className="flex h-screen items-center justify-center text-rose-600">
+        데이터를 찾을 수 없습니다.
+      </div>
+    );
   }
 
   return (
     <main className="min-h-screen w-full bg-white">
-      <ViewerManager templateType={templateId} data={data} />
+      <ViewerManager
+        templateType={templateId}
+        data={data}
+      />
     </main>
   );
 }
 
 export default function PreviewPage() {
   return (
-    <Suspense fallback={<div className="h-screen flex items-center justify-center">濡쒕뱶 以?..</div>}>
+    <Suspense
+      fallback={
+        <div className="flex h-screen items-center justify-center">
+          로드 중...
+        </div>
+      }
+    >
       <PreviewContent />
     </Suspense>
   );
