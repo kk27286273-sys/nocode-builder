@@ -1,0 +1,145 @@
+﻿392091066e5bad3d0e0e1264f62357e89a5ba3c3	2026-10-04 20:28:16 +0900	fix: default-b2b ?꾨━酉?DB 濡쒕뱶 ?덉슜 諛?濡쒓퀬/怨듬갚 ?숆린??
+8c2063f75cbe4211a28338a1d44d052aa4bc838d	2026-10-02 20:35:35 +0900	fix: resolve z-index and flex layout for builder sidebar
+9880e0a531124b37e49203a4513aeb4efbca1fb2	2026-10-04 23:44:29 +0900	fix: add optional chaining on site company name
+a4a0674213a67bc94a524056b39195934ddd365d	2026-10-02 20:04:04 +0900	feat: show only live preview on main landing
+fd60fed91171bd9ba58d8e985e900d1d0b8bd50b	2026-10-04 08:30:13 +0900	feat: 硫붿씤쨌?꾨━酉걔룹틪踰꾩뒪 寃ъ쟻 ?곷떞 ??Supabase leads ?뚯씠釉??ㅼ떆媛??곕룞 ?꾨즺
+9f61eaa7b3cb02faa53f0dbbb6dcec4b21701059	2026-10-05 21:22:19 +0900	fix: add required name field to sites upsert
+adc1d601f63ecabb30588e4c29f15e590fbcf3bb	2026-10-05 23:12:33 +0900	feat: 蹂듦뎄 - ?ъ씠???좏깮 ?쒕∼?ㅼ슫 諛??곗씠??濡쒕뱶 濡쒖쭅 異붽?
+cc210bbacc39937c75d36a6ffa728eac3b367b18	2026-10-04 19:35:52 +0900	fix: EditorSidebar 紐⑤뱺 ?낅뜲?댄듃 濡쒖쭅???⑥닔??prev)?쇰줈 蹂寃쏀븯???곗씠???좎떎 ?닿껐
+ff01d8f0218d222a5d0541c8696e24916aefc86b	2026-10-01 20:52:44 +0900	fix: Vercel 鍮뚮뱶 ?먮윭 ?닿껐 (footer 異붽?, @supabase/ssr ?ㅼ튂, dashboard 紐⑤뱢??
+19e2d3066655d019d09426a49a92db142564a0ae	2026-10-03 13:55:31 +0900	fix: 諛쒗뻾 ?섏씠吏(/preview)?먯꽌 鍮뚮뜑 ?ㅼ떆媛??섏젙 ?곗씠???곕룞 ?곸슜
+45629d0de53964ee9b0dcda1cfe1543d193e91c4	2026-10-02 20:16:54 +0900	feat: create builder page
+9582a400c3a34f407eca8e1fb61d90c36989d06d	2026-10-05 20:30:21 +0900	fix: 諛쒗뻾 ?⑥닔 濡쒖쭅 異붽?
+cde2a000d197fe9c4f526db680666abff5bcabcb	2026-10-04 23:16:54 +0900	fix: resolve typescript build errors in builder page
+f402bd9abbc99a929216d2df288e1feacb5b336b	2026-10-04 21:28:41 +0900	fix: ?섍꼍蹂??李몄“ ?대쫫 ?듭씪 諛?鍮뚮뱶 ?먮윭 理쒖쥌 ?닿껐
+3c43377d6e85683b87c6ea6ce735a2e950520df0	2026-10-03 13:38:17 +0900	feat: 硫붿씤 ?쒗뵆由?誘몃━蹂닿린 ?곕룞 諛?鍮뚮뜑 諛쒗뻾 ????李??ㅽ뵂 援ы쁽
+64435d3585629ea1b647a2e9840511087f542429	2026-10-02 23:10:18 +0900	feat: 硫붿씤 ?덊럹?댁? 移댄뵾 諛??뺤같 ?④?/FAQ ?뱀뀡 由щ돱??
+88c3a260ae9d70bc4f48d3e350b746f91d00a09d	2026-10-04 23:42:11 +0900	fix: ignore typescript errors for final deployment
+9403d83cd0c7fe0d76d98df8e82f118e62f49edb	2026-10-05 20:26:17 +0900	fix: ?꾪솕踰덊샇 ?ㅽ? ?섏젙
+2c449ad15f2e1e542f8a9323c78b79cfe37e5b6e	2026-10-04 21:12:38 +0900	fix: PreviewPage 援щЦ ?ㅻ쪟 理쒖쥌 ?닿껐 諛?DB 吏곸젒 ?곌껐 ?곸슜
+7084bc40fe05f06eb2bb31c58e92f6a2c4ad0cbf	2026-10-04 23:13:34 +0900	fix: restore all builder functions and add sales copy inputs
+a44452a2810a108b16c41b860762ec1393d9d1e9	2026-10-05 23:15:00 +0900	feat: ?ъ씠????젣 湲곕뒫 異붽? 諛??곷떒 愿由?諛?UI 媛쒖꽑
+ef24dbb31262b8553a8d34ea5d9464bc6db73aa9	2026-10-05 21:19:37 +0900	fix: make LivePreview zoom props optional and align supabase client path
+584587c59f4543351e0a066fa1393313dc2d1694	2026-10-01 22:06:00 +0900	feat: ViewerClient ?고듃 ?ъ씠利??ㅼ떆媛?諛섏쁺 諛?寃ъ쟻???숈쓽 ?곕룞
+67c61169134bfb02f9c8ca02d27a3b46ed480046	2026-10-04 23:49:53 +0900	feat: recreate high-conversion landing page
+95260e5a0a48c0330e7cad5d4079636687e06d4c	2026-10-05 20:24:07 +0900	feat: final stability update
+e0e61e9ee1985d0556ed3cf94aab99b1ea8c9d4c	2026-10-05 22:00:40 +0900	feat: add builder password auth
+6c478aaff347fb5a10a8fac8cdb8d8ec1cbd2d35	2026-10-04 19:12:44 +0900	fix: admin me API ?붾뱶?ъ씤??異붽? 諛?404 ?닿껐
+9ba746c3f22c5e04c12a1e7618e9a9cea73866d4	2026-10-05 20:44:22 +0900	fix: add data field to sites upsert to solve not-null constraint
+a787c89b929a8987c3e59f1c7ec23ace8e3c15d5	2026-10-04 13:02:52 +0900	fix: publish API JSON ?뚯떛 ?먮윭 諛⑹뼱 諛??꾨━酉?湲곕낯媛?TH?뚰봽??蹂듦뎄
+cae723cfdf9f0438fe8908ef60d4eb2328326099	2026-10-03 13:17:34 +0900	fix: 鍮뚮뜑 ?쇱슦??404 ?닿껐(/builder) 諛??먮뵒???붾㈃ 硫붿씤怨?100% ?숆린??
+ca67a7595f81a1e3c07eda01a2153417344e15ba	2026-10-04 20:38:52 +0900	fix: PreviewPage 援щЦ ?ㅻ쪟 ?섏젙 諛??곗씠??濡쒕뱶 濡쒖쭅 蹂듦뎄
+d627b20293a96c3ff2d48cc692cb7b11d4809d8c	2026-10-04 22:41:59 +0900	feat: apply high-conversion sales landing page
+df07c0807b69ff9f94a7b496d3e0ed8427f2606b	2026-10-05 22:30:48 +0900	feat: ?ㅼ쟻 吏??On/Off 諛??됱긽/?고듃 理쒖쟻??
+eee796fcb21e46685034b9c5fae00c4651839990	2026-10-04 21:24:03 +0900	fix: ?쒕쾭 ?ъ씠???곗씠??API ?앹꽦
+f0c7bef30e7b47d62339dfb6c9198059c9c2ba5b	2026-09-30 21:55:00 +0900	trigger: vercel redeploy
+3a88e22d750251e79e5654e3109d96f25e9235a4	2026-10-02 23:14:41 +0900	feat: ?곷떞 ?좎껌 諛??뚮줈??踰꾪듉 移댁뭅?ㅽ넚 ?ㅽ뵂梨꾪똿 ?곕룞
+8dc89cee32c43c2cc6c49fcb7eb41d9cedd0fcb3	2026-10-05 21:56:57 +0900	feat: add builder password auth and server-side publish API
+a6c8988fa7d5bc5a92a0217c23352642e7c47b36	2026-09-30 22:48:52 +0900	feat: vercel deployment config and mobile responsive view
+c8a802865e9ac04787e1c394961beb68a3413bd3	2026-10-05 23:47:32 +0900	fix: make refreshSites optional and add type check in EditorSidebar
+3ec9d964f1dd13fbbbb0f75fe1f313568f175b98	2026-10-04 08:47:38 +0900	fix: supabaseAdmin.ts 紐⑤뱢 ?꾨씫 ?닿껐 諛?Vercel 鍮뚮뱶 ?섏젙
+6cc969ce738ebfe407aa66f7509d0670823273ce	2026-10-05 23:01:53 +0900	fix: ViewerClient ?대?吏 異쒕젰 濡쒖쭅 ?섏젙
+7189af18b7c97b0d338f891e3e1b5b68f29832cc	2026-10-04 21:26:55 +0900	fix: PreviewPage 援щЦ ?ㅻ쪟 ?꾨꼍 ?닿껐 諛??쒕쾭 API ?곕룞
+97e978fd78b3254237d0235eeba4569f0867aaa0	2026-10-05 21:49:56 +0900	fix: remove duplicate try-catch and resolve async syntax errors
+ebc913ac778e1df56ea4ca0d41e0e53418a1abe3	2026-10-04 21:40:23 +0900	fix: 硫붿씤?섏씠吏 湲닿툒 珥덇린??
+71aa726ec4455dbc095fc81468a464553e5f70dc	2026-10-01 21:42:37 +0900	fix: EditorSidebarProps ????먮윭 ?닿껐
+79ca185273ed2ca68e0f806b8ed727008eab4d53	2026-10-01 22:27:56 +0900	feat: 愿由ъ옄 ??쒕낫???쒓? ?몄퐫??蹂듦뎄 諛?由щ뱶 ?곴뎄 ??젣 湲곕뒫 異붽?
+894a3bcdd431c68b81e475e0e7401c16defe4ff1	2026-10-04 22:11:23 +0900	fix: admin password authentication recovery
+946a9576b2259f18134944364842421baf76fd17	2026-10-03 13:25:22 +0900	feat: 鍮뚮뜑 ?먮낯 B2B 罹붾쾭??蹂듦뎄 諛??낅┰??/preview ?쇱슦???좎꽕
+d90ab8dc1f15c281b6cb4ced36491e3dc9282d32	2026-10-04 19:16:10 +0900	fix: Supabase 援?二쇱냼 李몄“ ?쒓굅 諛??뺤긽 URL濡?援먯껜
+536b91bc0677e7450a8b99f7cdbcfcbd6bb3f250	2026-10-04 08:37:13 +0900	fix: ?섑뙆踰좎씠???묒냽 URL 理쒖떊??諛?leads RLS 蹂댁븞 ?뚯씠釉??곕룞
+d80b641b1c798828886c36a4183c10e5609a3fa0	2026-10-04 08:09:44 +0900	feat: 蹂댁븞 2?④퀎 ?꾨즺 (愿由ъ옄 ?몄쬆, RLS ?곌린 ?좉툑, 諛깆뿏??API ?곕룞)
+edebedd0c0bd88a1bee96453c8a6cfe7127df263	2026-10-04 23:24:40 +0900	fix: add supabase env check and unify client
+fecbddaa2626b297724bc86516ae049e42925329	2026-10-02 23:20:12 +0900	feat: 移댁뭅?ㅽ넚 怨듭떇 梨꾨꼸 1:1 梨꾪똿 URL 諛섏쁺
+1b6cd46324d4ade56673e74e96f281bfed58e239	2026-10-05 21:14:21 +0900	fix: remove redundant onPublish prop
+260ce07e23de86a62a90205b726d6f2b78785082	2026-10-05 22:53:12 +0900	Fix: use service_role for reliable publishing
+522c6cb877043490430ef3401cdd9dfd763ebc07	2026-09-29 21:07:07 +0900	Initial commit from Create Next App
+a34ce5333f812cf99e9a1dc67bc4aae34ba62353	2026-10-03 13:50:05 +0900	feat: 鍮뚮뜑 ?꾩껜 ?몃? ?몄쭛湲?EditorSidebar) 蹂듦뎄 諛?諛깆뾽 ?꾨즺
+fcac7b893ba4d7f7474639af003f6fbc94f2e6be	2026-09-29 23:31:48 +0900	feat: add privacy policy agreement
+138d96d4be7b4d5b27632d6544b5b01b92dc1704	2026-10-02 20:30:13 +0900	fix: add root layout for builder
+0e2d731b9323116dd34288502adfeb6a51bdfd69	2026-10-01 22:37:45 +0900	fix: 愿由ъ옄 由щ뱶 ?곴뎄 ??젣 移댁슫??寃利?諛??먮윭 ?몃뱾留?諛고룷
+218d7bc96f5014b98c518d5fc3d07d886a60a03b	2026-10-04 23:59:00 +0900	feat: implement interactive showroom slider
+276dd819cd90a07f60f44249a1f659ca6d1ffc04	2026-10-01 22:14:29 +0900	feat: ?꾩옄?곴굅?섎쾿 ?명꽣 ?쒓린, ?댁슜?쎄?/?섎텋洹쒖젙/媛쒖씤?뺣낫 紐⑤떖 ?듯빀
+3f6d5bfa85bb79114101a73333e7d052c47c4082	2026-10-02 20:47:44 +0900	fix: 紐⑤컮???섍꼍 GNB ?ㅻ뜑 媛濡??뺣젹 諛??낆껜紐?留먯쨪??泥섎━
+4e8d91321e24dbbb2867039e2df67366e6f58ad3	2026-10-01 08:17:30 +0900	fix page
+d54d12415fcf9150573b6ed94e9eb19a4d235537	2026-10-02 20:25:01 +0900	fix: restore sidebar layout and live preview rendering in builder
+090ed9914db2ea9fd09bf77cb6cc59183e3146b3	2026-10-01 22:22:21 +0900	fix: ViewerClient 媛쒖씤?뺣낫 梨낆엫???띿뒪??臾몃쾿 ?ㅻ쪟 ?섏젙
+2c2ec3cb5a6b8314a91d94fe91d33126c076644e	2026-10-04 20:34:56 +0900	fix: ?곗씠??濡쒕뱶 援ъ“ ?꾨㈃ 媛쒗렪 (DB ?곗꽑?쒖쐞 媛뺤젣 諛?default-b2b ?쒗븳 ?쒓굅)
+492ebeb40608d7e48a1350c82da9ef1273b55618	2026-10-02 20:21:12 +0900	feat: restore full builder with live preview
+6dae6f1a38e674a63e325c5de2816816b80ca8bf	2026-10-05 22:02:04 +0900	fix: correct template data import name
+cd6e9ebdddf6e4e50234425ebad8f43540a91493	2026-10-04 19:45:51 +0900	fix: 濡쒓퀬 理쒕? ?덈퉬 ?쒗븳 諛??ㅻ뜑 ?띿뒪???덉씠?꾩썐 諛由??꾩긽 ?섏젙
+aa8faa4973a3c8fe617cf5a0624dc4c720a48a25	2026-10-05 23:41:08 +0900	feat: 諛쒗뻾 ?깃났 ???ъ씠??紐⑸줉 ?먮룞 媛깆떊 湲곕뒫 異붽?
+c7ef796746364ad4a4b595c68c002ab45d246e21	2026-10-04 21:04:42 +0900	fix: DB ??吏곸젒 ?낅젰?쇰줈 401 ?먮윭 諛??곗씠??濡쒕뱶 臾몄젣 媛뺤젣 ?닿껐
+d54f45b7548f4866cdffe83221dd82b66952d394	2026-10-01 22:08:29 +0900	fix: ViewerClient 諛?page.tsx ???鍮뚮뱶 ?먮윭 ?꾨꼍 ?닿껐
+15b0fbc02a5faea0b756f165ceb2fafe5ce310ce	2026-10-04 22:28:51 +0900	feat: implement professional builder UI
+1e90782f3ed84aba451a5af94eca465def4de01d	2026-09-30 21:47:25 +0900	feat: B2B enterprise template and lead management migration
+4750e86a8153a79420cbf68fdc409c732157d2d4	2026-10-03 12:47:14 +0900	feat: 硫붿씤 ??諛??먮뵒???꾩껜 2???붽툑?????곕룞/?꾪솕 ?뚮줈???숆린??
+5bd068b4a5601000296e85a768a47bf1b2e1d2ee	2026-09-30 21:13:32 +0900	refactor: split components and add multi-image upload
+961043cf7328248e2d31ad15765248073fc40588	2026-10-05 21:11:19 +0900	fix: integrate publish logic into sidebar
+a9706ca2b1fea43a1589b537c0f6955c6fb6d878	2026-10-04 23:39:52 +0900	fix: resolve typescript type mismatch in builder page
+4e913259bb31fdccf0bdf4812a85330c2ab6a1c6	2026-10-01 22:34:25 +0900	feat: 寃ъ쟻 ?좎껌 ??Supabase leads ?뚯씠釉??ㅼ떆媛?DB ?곕룞 ?꾨즺
+5dd1e4b084ae1f41cac94a6dcb8d41b2260192d6	2026-10-04 22:34:06 +0900	feat: restore high-end preview design
+5e3196309355f4af34caf575ee84e699e9534ca0	2026-10-04 13:04:20 +0900	fix: publish route.ts ?뺥솗??寃쎈줈 媛뺤젣 ?앹꽦 諛?404 ?닿껐
+fd7100abf494e62f8ae06620a7ac97ee5aaf55f5	2026-10-04 23:38:21 +0900	?섏젙 ?댁슜 ?붿빟
+18126afcef14e948cec12c964d496d4bdba9c08d	2026-10-02 23:49:03 +0900	fix: templates export ?대쫫 留ㅼ묶 蹂듦뎄 (defaultB2BTemplate 異붽?)
+3f7273f526680d9169ab9fb2cf1496df03f3ffa0	2026-10-04 22:13:05 +0900	fix: builder-data api reconstruction
+50b2be89f0b55242b099b6bc90b6bacd408beb34	2026-10-05 22:33:25 +0900	fix: LivePreview 臾몃쾿 ?ㅻ쪟(以묐났 愿꾪샇) ?섏젙
+7cd20e06956eb30da790d3da0eb7d4085877edfc	2026-10-05 22:21:45 +0900	fix: defaultB2BTemplate export 蹂꾩묶 異붽?
+8bf256d0f47a66194e9fcea10f7806438b0d7cd9	2026-10-05 00:03:23 +0900	chore: set maintenance page for main
+01538761a30a635a575168b9dde0ba1c1fec61fd	2026-09-30 21:51:01 +0900	fix: remove unused onSuccess prop from PaymentModal
+04d3d9d7234edf5cc1767f73d11c286e0ac31754	2026-10-04 21:37:32 +0900	fix: 誘몃뱾?⑥뼱 ?ㅻ쪟濡??명븳 500 ?먮윭 ?닿껐???꾪빐 誘몃뱾?⑥뼱 ?쇱떆 鍮꾪솢?깊솕
+eb93ebd0da172aac1fe4d8c65ba5046f4287ad15	2026-10-02 20:18:37 +0900	fix: clean string literals in admin page
+16747fda6498f3386a0429a830846f24c8c1c9fd	2026-10-04 23:18:53 +0900	fix: resolve client runtime error and unify supabase import
+3df44344d7bc191e84f2ab7551b3cc17488d422b	2026-10-02 22:18:58 +0900	feat: robots.txt 寃??濡쒕큸 ?섏쭛 ?뚯씪 諛섏쁺
+7554ecc873c2e55d71383da1426788e9cf4fbb5c	2026-10-05 23:50:53 +0900	fix: replace non-existent created_at column with updated_at for site listing
+9d14d2d70cbadfa65de63bc7ef143326cb482d5f	2026-10-04 01:49:12 +0900	feat: ?꾨━酉?諛?鍮뚮뜑 罹붾쾭???덉뼱濡?2??遺꾪븷 鍮꾩＜???덉씠?꾩썐 媛쒗렪
+e814e6771f1d199f4396d25a824e63e5cb09243d	2026-10-04 19:30:51 +0900	fix: ?대?吏 ?낅줈?????곗씠??遺덈????좎? 諛??띿뒪???좎? ?ㅻ쪟 ?섏젙
+e7548e87720d6bfa8881eb7d15bbf67f1ada8297	2026-10-04 23:53:18 +0900	feat: convert landing page to digital showroom style
+f415c0007a243abb36576e6eaa5b9b37d2125d7b	2026-10-04 21:48:47 +0900	fix: useSearchParams Suspense boundary 異붽?濡?鍮뚮뱶 ?먮윭 ?닿껐
+20d646b44650abf854b5bb46aa208c5839d4ce02	2026-10-01 22:21:31 +0900	fix: 媛쒖씤?뺣낫 蹂댄샇梨낆엫???ㅼ젣 ?뺣낫 諛섏쁺
+39f606e9ea6694cd300ca9206bab611d1c586a92	2026-10-04 08:12:21 +0900	fix: 鍮뚮뜑 ?섏씠吏 媛뺤젣 鍮꾨?踰덊샇 ?몄쬆 ?붾㈃ 諛??ㅼ떆媛?寃利??좉툑 ?곸슜
+4d169ab56276f764abc68c7f00bf3dbdf97bbd9b	2026-10-04 01:19:03 +0900	fix: src/lib/supabase.ts ?뚯씪 ?앹꽦 諛?Vercel 鍮뚮뱶 ?ㅻ쪟 ?닿껐
+95b6ed7643f5e17924f29aeedc7d9a4473c9c5fa	2026-10-02 23:41:34 +0900	feat: ?뺤같 ?④? 490,000??蹂寃? ??쒕쾲???섏젙, 硫붿씤 移댄뵾 以꾨컮轅?理쒖쟻??諛?鍮뚮뜑 ?쒗뵆由??쇱튂??
+1d17955f4ff1b5fb345b88b71b4cdce551765e83	2026-10-05 22:44:16 +0900	Fix image upload and optimize sidebar
+791780d2254f4b4858c90ebbf535b95f97d98212	2026-09-29 23:19:33 +0900	fix: mobile layout and live preview scroll
+7af77c6929c3aa5f114865af936d215e15bfc5f0	2026-10-05 20:39:45 +0900	fix: add name field to sites upsert
+83b77921b5cd9b0bda605aee0eddeef61ea22a64	2026-10-05 21:25:55 +0900	fix: align db column name from data to content in ViewerClient
+c4b7665a59ed7162c24fd8fb3ffd15ae6a2fad4f	2026-10-01 22:29:51 +0900	style: 愿由ъ옄 ??쒕낫??臾멸뎄 吏곴????ㅻТ?뺤쑝濡?媛쒖꽑
+d0f70da5de5588960b2d3d526fab8f83cad04aea	2026-10-03 14:09:13 +0900	fix: 硫붿씤 ?덊럹?댁? 媛寃??뱀뀡 遺媛??蹂꾨룄 臾멸뎄 ?쒓굅
+d9b76f56c5301f95f6d9df3b824315e2200ecb4c	2026-10-04 21:47:38 +0900	fix: supabaseAdmin export 異붽?濡?鍮뚮뱶 ?먮윭 ?닿껐
+fbd7446fc03bc5b9cc1feebe27975b3519a7aa30	2026-10-01 20:45:28 +0900	feat: ?명뀒由ъ뼱 ?섑뵆 湲곕낯媛?怨좎젙 諛?罹먯떆 ?뺣━
+24f8d54d8a4d805c0bd7835fde4a4378b843c1c8	2026-10-04 19:53:34 +0900	fix: ?곗씠???숆린??諛?濡쒓퀬-?띿뒪???덉씠?꾩썐 理쒖쟻???꾨즺
+547807cacbd2d3cef99d126f4145dafb61e885fa	2026-10-04 20:23:59 +0900	fix: 諛쒗뻾?붾㈃ 濡쒓퀬 ?泥?濡쒖쭅 諛?怨듬갚 泥섎━ ?곸슜, ?꾨━酉?諛쒗뻾 ?붾㈃ ?숆린??
+59986334586540ce20d90486d174e2da194dec87	2026-10-02 21:03:13 +0900	fix: ?먮뵒???ъ씠?쒕컮 ?명꽣?섏씠?????蹂듦뎄 諛??명꽣 ?ㅼ젙 ?뱀뀡 異붽?
+8cf8b05e1cf28da81dccbf2d7f705b43bcf707c8	2026-10-04 20:19:15 +0900	fix: 濡쒓퀬-?띿뒪???꾩쟾 ?泥?濡쒖쭅 諛?怨듬갚 泥섎━, ?덉씠?꾩썐 諛由?諛⑹? ?곸슜
+9b7813d820eccd7fadabce768b418cfd592c8dc8	2026-10-03 14:43:41 +0900	style: ?붽툑??移대뱶 ??寃곗젣湲덉븸 ?곗륫 諛곗튂 諛??꾨줈 ?ㅻ챸??踰좎씠吏??쒗깮 異붽?
+b6f8a5b294f4bfdf9625b643b7ca170a6678900c	2026-10-04 20:44:28 +0900	fix: PreviewPage ?꾩껜 援ъ“ 蹂듦뎄 諛?濡쒓퀬 ?泥?濡쒖쭅 理쒖쥌 ?곸슜
+db786aa9d1795f352f32f271ea69941ecef4b147	2026-10-01 20:31:56 +0900	feat: 移댁뭅?ㅽ넚 ?곷떞 ?곕룞 諛??섑뵆 肄섑뀗痢?諛섏쁺
+fd98ea6384531a3a831a9437b67a7fbca8da109c	2026-10-04 22:25:54 +0900	feat: recover builder page with verified api
+58d9254a1a8883448681ef790d316e16f5680488	2026-10-04 01:30:20 +0900	fix: EditorSidebar props ?꾨꼍 ?곕룞?쇰줈 鍮뚮뜑 ?붾㈃ 濡쒕뵫 ?щ옒???닿껐
+8e790522574d89be1b64edfd60d144518bbb1515	2026-10-05 23:54:12 +0900	debug: add detailed logs to deleteSite function
+9099198fce57b22577c1d2b82c0f25efb6069ca4	2026-10-04 20:07:42 +0900	fix: solutionsSection ????ㅻ쪟 ?섏젙 諛?濡쒓퀬-?띿뒪???덉씠?꾩썐 理쒖쟻??
+a959e074f834474c109f5c0b324ab5a536cb93e5	2026-10-03 12:54:28 +0900	fix: lucide-react ?섏〈???쒓굅 諛?SVG ?泥대줈 Vercel 鍮뚮뱶 ?ㅻ쪟 ?닿껐
+31bad191dbcba83f195748c01a598cb3b4ff83dd	2026-09-29 23:11:48 +0900	feat: deploy latest builder and admin
+41da5cc4285696d623c1837d99fb683f01601799	2026-10-03 13:42:22 +0900	fix: 鍮뚮뜑 ?섏씠吏 LivePreview import 寃쎈줈 ?섏젙
+891a755a24cdaab4c03dc8157b873616ad2fc547	2026-10-05 22:19:26 +0900	鍮뚮뜑 理쒖쥌 ?꾩꽦: ?대?吏 ?믪씠 議곗젅 諛??꾩옣 ?대?吏 異붽?
+c57afecbf2cac14cd4e686318359a140eab3b369	2026-10-05 21:16:10 +0900	fix: auto-generate siteId and simplify builder page
+fafa3c08373cbdd4f47d5c15b87dc7cc5973d665	2026-10-05 00:00:58 +0900	fix: add swiper dependency to package.json
+8f9b778daf7b8df587b83a7018bf7e39105a4190	2026-10-02 20:28:35 +0900	fix: load css in builder
+0bdcbb3df8133304df4e69293e9ab3ad65f99c7d	2026-10-01 21:36:22 +0900	feat: 寃ъ쟻 ?곷떞 ??諛?媛쒖씤?뺣낫 ?섏쭛 ?숈쓽 泥댄겕諛뺤뒪 異붽?
+af5cedc4e3aec50241e0cbb039991b0d6f7c5e0a	2026-10-02 21:23:27 +0900	design: 紐⑤컮???ㅻ뜑 硫붾돱 ?④? 諛??낆껜紐??⑤룆 以묒븰 諛곗튂
+b23c5ce980351c2214d64055f7c0f29aab30cebf	2026-10-02 20:31:53 +0900	fix: remove duplicate builder layout to restore tailwind css
+31ddd8ee4b8fcba3baf66dbfe34597105521b456	2026-10-02 20:33:35 +0900	fix: restore main page and clean duplicate routes
+357dc4fbdc58f19213846981df5a4db115b76885	2026-10-04 01:23:52 +0900	fix: ?꾨━酉??섏씠吏 useSearchParams Suspense 媛먯떥湲곕줈 Vercel 鍮뚮뱶 ?닿껐
+811d9b666d6fb9490cb44d43e437522c4757e789	2026-10-04 21:56:18 +0900	fix: API ?먮윭 援ъ껜??諛??붾쾭源?肄붾뱶 ?곸슜
+973da5db7895168615c63902967f86a94250ed10	2026-10-04 22:46:27 +0900	feat: apply high-conversion sales builder
+101ecfabffa6f03d72b816a3a7261c4979641165	2026-10-05 21:44:02 +0900	fix: add async keyword to handleImageUpload to resolve build error
+2dfe501aff4754037f51227aff4bd714b7148c66	2026-10-02 20:50:50 +0900	fix: 紐⑤컮???섍꼍 GNB ?곷떒諛?諛?硫붾돱 ?몄텧 ?뺤긽??
+45be063a194317bf46be47c89ce5b7120f9102bd	2026-10-04 01:08:51 +0900	feat: ?섑뙆踰좎씠??DB ?곕룞 ?꾨즺, 硫???낆껜 ?좏깮 湲곕뒫 諛??낅┰ ?꾨━酉??곸슜
+831ef551d2a6eccf5aa78c341692651a312c4b30	2026-10-02 20:57:21 +0900	feat: ?먮뵒???ъ씠?쒕컮 紐⑤뱺 湲곗〈 湲곕뒫 ?좎? 諛??명꽣 ?뺣낫 ?섏젙 ??異붽?
+e37eca305a0943dc4e802b99e4698447761ec235	2026-10-04 21:46:40 +0900	security: ?대씪?댁뼵??DB 吏곸젒 ?묒냽 ?쒓굅 諛??쒕쾭 API 泥닿퀎 援ъ텞
+1e7f972258746561f874f69f748becbbf0cc434a	2026-10-04 19:40:30 +0900	fix: solutionsSection ????ㅻ쪟 ?섏젙 (Non-null assertion 異붽?)
+23ffcfcf6f1f7416e67546598ff2883f19c5e856	2026-10-03 13:28:32 +0900	fix: 硫붿씤 ??諛??꾨━酉??섏씠吏 ?뚯씪 蹂듦뎄 諛??숆린??
+32bfd30f5fc699959a32f747d683617cb1100d79	2026-10-05 21:42:28 +0900	feat: implement image direct upload to Supabase Storage with upload status
+6b1fa344214fe15bff396aa2ad0bc1f52b309dda	2026-10-04 08:46:58 +0900	feat: ?낆껜蹂?寃ъ쟻 ?먮룞 寃⑸━ ?대뱶誘??섏씠吏 諛?諛깆뿏??API ?곕룞 ?꾨즺
+79bf4b8356e9880f57e40627eb848ddd3f9e6de1	2026-10-04 21:57:59 +0900	debug: detailed error messages for api

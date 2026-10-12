@@ -1,44 +1,43 @@
-// src/app/preview/[siteId]/page.tsx
-
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
+import React, { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import ViewerManager from '@/components/builder/ViewerManager';
 import { B2BTemplateData } from '@/types/Template';
 
-export default function PreviewPage() {
-  const params = useParams();
-  const siteId = params?.siteId as string;
+function PreviewContent() {
+  const searchParams = useSearchParams();
+  const templateId = searchParams?.get('templateId') as string;
 
   const [data, setData] = useState<B2BTemplateData | null>(null);
   const [activeSection, setActiveSection] = useState('main');
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (!siteId) return;
+    if (!templateId) {
+      setIsLoading(false);
+      return;
+    }
 
-    const decodedId = decodeURIComponent(siteId);
-
-    async function fetchSiteData() {
-      const { data: site, error } = await supabase
+    async function fetchTemplateData() {
+      const { data: sites, error } = await supabase
         .from('sites')
         .select('data')
-        .eq('id', decodedId)
+        .eq('template_type', templateId)
         .single();
 
       if (error) {
         console.error('Supabase error:', error);
         setData(null);
       } else {
-        setData(site?.data || null);
+        setData(sites?.data || null);
       }
       setIsLoading(false);
     }
 
-    void fetchSiteData();
-  }, [siteId]);
+    void fetchTemplateData();
+  }, [templateId]);
 
   if (isLoading) {
     return <div className="h-screen flex items-center justify-center">로드 중...</div>;
@@ -57,5 +56,13 @@ export default function PreviewPage() {
         published
       />
     </main>
+  );
+}
+
+export default function PreviewPage() {
+  return (
+    <Suspense fallback={<div className="h-screen flex items-center justify-center">로드 중...</div>}>
+      <PreviewContent />
+    </Suspense>
   );
 }

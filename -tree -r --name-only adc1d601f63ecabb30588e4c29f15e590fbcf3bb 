@@ -1,0 +1,58 @@
+[35mAGENTS.md[m[36m:[m[32m5[m[36m:[mThis version has breaking changes — APIs, conventions, and file structure may all differ from your training [1;31mdata[m. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m5[m[36m:[m  B2BTemplate[1;31mData[m,
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m10[m[36m:[m} from '@/[1;31mdata[m/templates';
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m15[m[36m:[m  [1;31mdata[m: B2BTemplate[1;31mData[m;
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m16[m[36m:[m  set[1;31mData[m: React.Dispatch<React.SetStateAction<B2BTemplate[1;31mData[m>>;
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m61[m[36m:[m  [1;31mdata[m,
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m62[m[36m:[m  set[1;31mData[m,
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m70[m[36m:[m    key: keyof NonNullable<B2BTemplate[1;31mData[m['fontSizes']>,
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m73[m[36m:[m    set[1;31mData[m((prev) => ({
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m103[m[36m:[m      const { [1;31mdata[m: publicUrl[1;31mData[m } = supabase.storage
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m107[m[36m:[m      callback(publicUrl[1;31mData[m.publicUrl);
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m118[m[36m:[m    const newLinks = [...([1;31mdata[m.navigation?.navLinks || []), { label: '새 메뉴', targetId: 'stats' }];
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m119[m[36m:[m    set[1;31mData[m({ ...[1;31mdata[m, navigation: { navLinks: newLinks } });
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m123[m[36m:[m    const newLinks = [...([1;31mdata[m.navigation?.navLinks || [])];
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m125[m[36m:[m    set[1;31mData[m({ ...[1;31mdata[m, navigation: { navLinks: newLinks } });
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m129[m[36m:[m    const newLinks = ([1;31mdata[m.navigation?.navLinks || []).filter((_, idx) => idx !== index);
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m130[m[36m:[m    set[1;31mData[m({ ...[1;31mdata[m, navigation: { navLinks: newLinks } });
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m140[m[36m:[m    set[1;31mData[m({ ...[1;31mdata[m, solutions: [...[1;31mdata[m.solutions, newSol] });
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m144[m[36m:[m    const newSol = [...[1;31mdata[m.solutions];
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m146[m[36m:[m    set[1;31mData[m({ ...[1;31mdata[m, solutions: newSol });
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m150[m[36m:[m    set[1;31mData[m({ ...[1;31mdata[m, solutions: [1;31mdata[m.solutions.filter((_, idx) => idx !== index) });
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m160[m[36m:[m    set[1;31mData[m({ ...[1;31mdata[m, reviews: [...[1;31mdata[m.reviews, newRev] });
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m164[m[36m:[m    const newRev = [...[1;31mdata[m.reviews];
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m166[m[36m:[m    set[1;31mData[m({ ...[1;31mdata[m, reviews: newRev });
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m170[m[36m:[m    set[1;31mData[m({ ...[1;31mdata[m, reviews: [1;31mdata[m.reviews.filter((_, idx) => idx !== index) });
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m179[m[36m:[m    set[1;31mData[m({ ...[1;31mdata[m, faqs: [...[1;31mdata[m.faqs, newFaq] });
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m183[m[36m:[m    const newFaqs = [...[1;31mdata[m.faqs];
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m185[m[36m:[m    set[1;31mData[m({ ...[1;31mdata[m, faqs: newFaqs });
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m189[m[36m:[m    set[1;31mData[m({ ...[1;31mdata[m, faqs: [1;31mdata[m.faqs.filter((_, idx) => idx !== index) });
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m194[m[36m:[m    set[1;31mData[m((prev) => ({
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m225[m[36m:[m            style={{ backgroundColor: [1;31mdata[m.themeColor || '#0284C7' }}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m243[m[36m:[m              value={[1;31mdata[m.themeColor || '#0284C7'}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m244[m[36m:[m              onChange={(e) => set[1;31mData[m({ ...[1;31mdata[m, themeColor: e.target.value })}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m249[m[36m:[m              value={[1;31mdata[m.themeColor || '#0284C7'}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m250[m[36m:[m              onChange={(e) => set[1;31mData[m({ ...[1;31mdata[m, themeColor: e.target.value })}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m263[m[36m:[m              value={[1;31mdata[m.company.name}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m265[m[36m:[m                set[1;31mData[m({ ...[1;31mdata[m, company: { ...[1;31mdata[m.company, name: e.target.value } })
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m272[m[36m:[m            value={[1;31mdata[m.fontSizes?.companyName}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m281[m[36m:[m              value={[1;31mdata[m.supportPhone}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m282[m[36m:[m              onChange={(e) => set[1;31mData[m({ ...[1;31mdata[m, supportPhone: e.target.value })}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m294[m[36m:[m                  (url) => set[1;31mData[m({ ...[1;31mdata[m, company: { ...[1;31mdata[m.company, logoUrl: url } }),
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m316[m[36m:[m            {[1;31mdata[m.navigation?.navLinks?.map((nav, idx) => (
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m350[m[36m:[m              value={[1;31mdata[m.hero.badge}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m352[m[36m:[m                set[1;31mData[m({ ...[1;31mdata[m, hero: { ...[1;31mdata[m.hero, badge: e.target.value } })
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m359[m[36m:[m            value={[1;31mdata[m.fontSizes?.heroBadge}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m369[m[36m:[m              value={[1;31mdata[m.hero.title}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m371[m[36m:[m                set[1;31mData[m({ ...[1;31mdata[m, hero: { ...[1;31mdata[m.hero, title: e.target.value } })
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m378[m[36m:[m            value={[1;31mdata[m.fontSizes?.heroTitle}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m388[m[36m:[m              value={[1;31mdata[m.hero.subtitle}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m390[m[36m:[m                set[1;31mData[m({ ...[1;31mdata[m, hero: { ...[1;31mdata[m.hero, subtitle: e.target.value } })
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m397[m[36m:[m            value={[1;31mdata[m.fontSizes?.heroSubtitle}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m412[m[36m:[m                    set[1;31mData[m({
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m413[m[36m:[m                      ...[1;31mdata[m,
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m414[m[36m:[m                      hero: { ...[1;31mdata[m.hero, mediaUrl: url, mediaType: 'image' },
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m426[m[36m:[m        {[1;31mdata[m.partnersSection && (
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m433[m[36m:[m                  checked={[1;31mdata[m.partnersSection.enabled}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m435[m[36m:[m                    set[1;31mData[m({
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m436[m[36m:

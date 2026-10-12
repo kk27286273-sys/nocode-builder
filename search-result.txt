@@ -1,0 +1,957 @@
+﻿
+  src\app\api\billing\confirm\route.ts:73:        .from('orders')
+  src\app\api\billing\confirm\route.ts:74:        .update({ status: 'pa
+id' })
+  src\app\api\billing\confirm\route.ts:75:        .eq('order_id', order
+Id);
+  src\app\api\billing\confirm\route.ts:76:
+  src\app\api\billing\confirm\route.ts:77:      // 5) 결제 이력 저장
+> src\app\api\billing\confirm\route.ts:78:      await supabaseAdmin.fro
+m('payments').insert({
+  src\app\api\billing\confirm\route.ts:79:        order_id: orderId,
+  src\app\api\billing\confirm\route.ts:80:        customer_key: custome
+rKey,
+  src\app\api\billing\confirm\route.ts:81:        payment_key: result.p
+aymentKey,
+  src\app\api\billing\confirm\route.ts:82:        amount: order.amount,
+  src\app\api\billing\confirm\route.ts:83:        kind: 'first',
+  src\app\api\billing\confirm\route.ts:84:        status: result.status
+,
+  src\app\api\billing\confirm\route.ts:85:        raw: result,
+  src\app\api\billing\confirm\route.ts:86:      });
+  src\app\api\billing\confirm\route.ts:87:
+  src\app\api\billing\confirm\route.ts:88:      return NextResponse.jso
+n({ amount: order.amount });
+  src\app\api\builder-data\route.ts:14:    // 2. 마스터 권한 클라이언트 생성
+  src\app\api\builder-data\route.ts:15:    const supabaseAdmin = create
+AdminClient();
+  src\app\api\builder-data\route.ts:16:
+  src\app\api\builder-data\route.ts:17:    // 3. DB에서 해당 siteId 데이터 조회
+  src\app\api\builder-data\route.ts:18:    const { data, error } = awai
+t supabaseAdmin
+> src\app\api\builder-data\route.ts:19:      .from('sites')
+  src\app\api\builder-data\route.ts:20:      .select('*')
+  src\app\api\builder-data\route.ts:21:      .eq('id', siteId)
+  src\app\api\builder-data\route.ts:22:      .single();
+  src\app\api\builder-data\route.ts:23:
+  src\app\api\builder-data\route.ts:24:    if (error) {
+  src\app\api\builder-data\route.ts:25:      console.error('DB 조회 에러:',
+ error);
+  src\app\api\builder-data\route.ts:26:      return NextResponse.json({
+ 
+  src\app\api\builder-data\route.ts:27:        error: 'DB 조회 중 에러가 발생했습
+니다.', 
+  src\app\api\builder-data\route.ts:28:        details: error.message 
+  src\app\api\builder-data\route.ts:29:      }, { status: 500 });
+  src\app\api\cron\billing\route.ts:48:        await supabaseAdmin
+  src\app\api\cron\billing\route.ts:49:          .from('subscriptions')
+  src\app\api\cron\billing\route.ts:50:          .update({ next_billing
+_at: next.toISOString().slice(0, 10) })
+  src\app\api\cron\billing\route.ts:51:          .eq('id', sub.id);
+  src\app\api\cron\billing\route.ts:52:
+> src\app\api\cron\billing\route.ts:53:        await supabaseAdmin.from
+('payments').insert({
+  src\app\api\cron\billing\route.ts:54:          order_id: orderId,
+  src\app\api\cron\billing\route.ts:55:          customer_key: sub.cust
+omer_key,
+  src\app\api\cron\billing\route.ts:56:          payment_key: r.payment
+Key,
+  src\app\api\cron\billing\route.ts:57:          amount: sub.monthly_fe
+e,
+  src\app\api\cron\billing\route.ts:58:          kind: 'recurring',
+  src\app\api\cron\billing\route.ts:59:          status: r.status,
+  src\app\api\cron\billing\route.ts:60:          raw: r,
+  src\app\api\cron\billing\route.ts:61:        });
+  src\app\api\cron\billing\route.ts:62:
+  src\app\api\cron\billing\route.ts:63:        results.push({ customerK
+ey: sub.customer_key, ok: true });
+  src\app\api\cron\billing\route.ts:64:      } catch (e: any) {
+  src\app\api\cron\billing\route.ts:65:        console.error(`청구 실패 (${
+sub.customer_key}):`, e);
+  src\app\api\cron\billing\route.ts:66:
+> src\app\api\cron\billing\route.ts:67:        await supabaseAdmin.from
+('payments').insert({
+  src\app\api\cron\billing\route.ts:68:          order_id: orderId,
+  src\app\api\cron\billing\route.ts:69:          customer_key: sub.cust
+omer_key,
+  src\app\api\cron\billing\route.ts:70:          amount: sub.monthly_fe
+e,
+  src\app\api\cron\billing\route.ts:71:          kind: 'recurring',
+  src\app\api\cron\billing\route.ts:72:          status: 'FAILED',
+  src\app\api\cron\billing\route.ts:73:          raw: { error: e.messag
+e },
+  src\app\api\cron\billing\route.ts:74:        });
+  src\app\api\cron\billing\route.ts:75:
+  src\app\api\cron\billing\route.ts:76:        results.push({ customerK
+ey: sub.customer_key, ok: false, error: e.message });
+  src\app\api\cron\billing\route.ts:77:      }
+  src\app\api\domains\route.ts:12:      );
+  src\app\api\domains\route.ts:13:    }
+  src\app\api\domains\route.ts:14:
+  src\app\api\domains\route.ts:15:    const cleanDomain = domain.toLowe
+rCase().trim().replace(/^https?:\/\//, "");
+  src\app\api\domains\route.ts:16:
+> src\app\api\domains\route.ts:17:    // Supabase sites 테이블에 도메인 매핑 저장
+  src\app\api\domains\route.ts:18:    const { error: dbError } = await 
+supabaseAdmin
+> src\app\api\domains\route.ts:19:      .from("sites")
+  src\app\api\domains\route.ts:20:      .update({ custom_domain: cleanD
+omain })
+  src\app\api\domains\route.ts:21:      .eq("id", siteId);
+  src\app\api\domains\route.ts:22:
+  src\app\api\domains\route.ts:23:    if (dbError) throw dbError;
+  src\app\api\domains\route.ts:24:
+  src\app\api\domains\route.ts:25:    return NextResponse.json({
+  src\app\api\domains\route.ts:26:      success: true,
+  src\app\api\domains\route.ts:27:      domain: cleanDomain,
+  src\app\api\domains\route.ts:28:      cnameTarget: "cname.vercel-dns.
+com",
+  src\app\api\domains\route.ts:29:      message: "도메인이 성공적으로 등록되었습니다. D
+NS CNAME을 연결해 주세요.",
+  src\app\api\leads\route.ts:12:        { status: 400 }
+  src\app\api\leads\route.ts:13:      );
+  src\app\api\leads\route.ts:14:    }
+  src\app\api\leads\route.ts:15:
+  src\app\api\leads\route.ts:16:    // 1. Supabase leads 테이블에 저장
+> src\app\api\leads\route.ts:17:    const { error: dbError } = await su
+pabaseAdmin.from('leads').insert([
+  src\app\api\leads\route.ts:18:      {
+  src\app\api\leads\route.ts:19:        site_id: siteId,
+  src\app\api\leads\route.ts:20:        name: name.trim(),
+  src\app\api\leads\route.ts:21:        phone: phone.trim(),
+  src\app\api\leads\route.ts:22:        message: message?.trim() || '',
+  src\app\api\leads\route.ts:23:      },
+  src\app\api\leads\route.ts:24:    ]);
+  src\app\api\leads\route.ts:25:
+  src\app\api\leads\route.ts:26:    if (dbError) throw dbError;
+  src\app\api\leads\route.ts:27:
+  src\app\api\leads\route.ts:28:    // 2. 사이트 정보 조회 (알림 텍스트용)
+  src\app\api\leads\route.ts:29:    const { data: site } = await supaba
+seAdmin
+> src\app\api\leads\route.ts:30:      .from('sites')
+  src\app\api\leads\route.ts:31:      .select('title')
+  src\app\api\leads\route.ts:32:      .eq('id', siteId)
+  src\app\api\leads\route.ts:33:      .maybeSingle();
+  src\app\api\leads\route.ts:34:
+  src\app\api\leads\route.ts:35:    const siteTitle = site?.title || '미
+지정 사이트';
+  src\app\api\leads\route.ts:36:
+  src\app\api\leads\route.ts:37:    // 3. 실시간 알림 발송 (백그라운드 비동기)
+  src\app\api\leads\route.ts:38:    sendLeadNotification({
+  src\app\api\leads\route.ts:39:      siteTitle,
+  src\app\api\leads\route.ts:40:      name,
+  src\app\api\orders\route.ts:14:    const customerKey = `CUS_${randomU
+UID().replace(/-/g, '')}`;
+  src\app\api\orders\route.ts:15:    const orderId = `ORD_${Date.now()}
+_${randomUUID().slice(0, 8)}`;
+  src\app\api\orders\route.ts:16:
+  src\app\api\orders\route.ts:17:    const { error: ce } = await supaba
+seAdmin
+  src\app\api\orders\route.ts:18:      .from('customers')
+> src\app\api\orders\route.ts:19:      .insert({ customer_key: customer
+Key, name, email, phone });
+  src\app\api\orders\route.ts:20:    if (ce) throw ce;
+  src\app\api\orders\route.ts:21:
+> src\app\api\orders\route.ts:22:    const { error: oe } = await supaba
+seAdmin.from('orders').insert({
+  src\app\api\orders\route.ts:23:      order_id: orderId,
+  src\app\api\orders\route.ts:24:      customer_key: customerKey,
+  src\app\api\orders\route.ts:25:      plan: plan ?? 'pro',
+  src\app\api\orders\route.ts:26:      setup_fee: p.setupFee,
+  src\app\api\orders\route.ts:27:      monthly_fee: p.monthlyFee,
+  src\app\api\orders\route.ts:28:      amount: p.setupFee + p.monthlyFe
+e,
+  src\app\api\orders\route.ts:29:      status: 'pending',
+  src\app\api\orders\route.ts:30:    });
+  src\app\api\orders\route.ts:31:    if (oe) throw oe;
+  src\app\api\orders\route.ts:32:
+> src\app\api\publish\route.ts:1:import { createClient } from '@supabas
+e/supabase-js';
+  src\app\api\publish\route.ts:2:import { NextResponse } from 'next/ser
+ver';
+  src\app\api\publish\route.ts:3:
+  src\app\api\publish\route.ts:4:// 서버 전용 서비스 롤 키를 사용하여 RLS를 우회하고 강제로 저
+장합니다.
+> src\app\api\publish\route.ts:5:const supabaseAdmin = createClient(
+  src\app\api\publish\route.ts:6:  process.env.NEXT_PUBLIC_SUPABASE_URL
+!,
+  src\app\api\publish\route.ts:7:  process.env.SUPABASE_SERVICE_ROLE_KE
+Y! 
+  src\app\api\publish\route.ts:8:);
+  src\app\api\publish\route.ts:9:
+  src\app\api\publish\route.ts:10:export async function POST(req: Reque
+st) {
+  src\app\api\publish\route.ts:11:  try {
+  src\app\api\publish\route.ts:12:    const { id, name, content } = awa
+it req.json();
+  src\app\api\publish\route.ts:13:
+  src\app\api\publish\route.ts:14:    if (!id || !content) {
+  src\app\api\publish\route.ts:15:      return NextResponse.json({ erro
+r: '필수 데이터(id, content)가 누락되었습니다.' }, { status: 400 });
+  src\app\api\publish\route.ts:16:    }
+  src\app\api\publish\route.ts:17:
+  src\app\api\publish\route.ts:18:    // 1. 기존 사이트 데이터가 있는지 확인 후 업데이트 또
+는 삽입 (Upsert)
+  src\app\api\publish\route.ts:19:    const { data, error } = await sup
+abaseAdmin
+> src\app\api\publish\route.ts:20:      .from('sites')
+  src\app\api\publish\route.ts:21:      .upsert({ 
+  src\app\api\publish\route.ts:22:        id: id, 
+  src\app\api\publish\route.ts:23:        name: name || '이름 없는 사이트', 
+  src\app\api\publish\route.ts:24:        content: content, // 여기서 이미지 
+URL이 포함된 전체 JSON이 저장됩니다.
+  src\app\api\publish\route.ts:25:        updated_at: new Date().toISOS
+tring(),
+  src\app\api\publish\route.ts:26:      }, { onConflict: 'id' });
+  src\app\api\publish\route.ts:27:
+  src\app\api\publish\route.ts:28:    if (error) throw error;
+  src\app\api\publish\route.ts:29:
+  src\app\api\publish\route.ts:30:    return NextResponse.json({ succes
+s: true, message: '사이트가 성공적으로 발행되었습니다.' });
+> src\app\api\site-data\route.ts:1:import { createClient } from '@supab
+ase/supabase-js';
+  src\app\api\site-data\route.ts:2:import { NextResponse } from 'next/s
+erver';
+  src\app\api\site-data\route.ts:3:
+  src\app\api\site-data\route.ts:4:export async function GET(request: R
+equest) {
+  src\app\api\site-data\route.ts:5:  const { searchParams } = new URL(r
+equest.url);
+  src\app\api\site-data\route.ts:6:  const siteId = searchParams.get('s
+iteId');
+  src\app\api\site-data\route.ts:7:
+  src\app\api\site-data\route.ts:8:  if (!siteId) {
+  src\app\api\site-data\route.ts:9:    return NextResponse.json({ error
+: 'siteId is required' }, { status: 400 });
+  src\app\api\site-data\route.ts:10:  }
+  src\app\api\site-data\route.ts:11:
+> src\app\api\site-data\route.ts:12:  const supabase = createClient(
+  src\app\api\site-data\route.ts:13:    process.env.SUPABASE_URL!,
+  src\app\api\site-data\route.ts:14:    process.env.SUPABASE_SERVICE_RO
+LE_KEY!
+  src\app\api\site-data\route.ts:15:  );
+  src\app\api\site-data\route.ts:16:
+  src\app\api\site-data\route.ts:17:  const { data, error } = await sup
+abase
+> src\app\api\site-data\route.ts:18:    .from('sites')
+  src\app\api\site-data\route.ts:19:    .select('data')
+  src\app\api\site-data\route.ts:20:    .eq('id', siteId)
+  src\app\api\site-data\route.ts:21:    .single();
+  src\app\api\site-data\route.ts:22:
+  src\app\api\site-data\route.ts:23:  if (error || !data) {
+  src\app\api\site-data\route.ts:24:    return NextResponse.json({ erro
+r: 'Site not found' }, { status: 404 });
+  src\app\api\site-data\route.ts:25:  }
+  src\app\api\site-data\route.ts:26:
+  src\app\api\site-data\route.ts:27:  return NextResponse.json(data.dat
+a);
+  src\app\api\site-data\route.ts:28:}
+  src\app\api\sites\publish\route.ts:31:    let result;
+  src\app\api\sites\publish\route.ts:32:
+  src\app\api\sites\publish\route.ts:33:    if (siteId) {
+  src\app\api\sites\publish\route.ts:34:      // 1. 기존 사이트 갱신 (UPDATE)
+  src\app\api\sites\publish\route.ts:35:      const { data, error } = a
+wait supabaseAdmin
+> src\app\api\sites\publish\route.ts:36:        .from("sites")
+  src\app\api\sites\publish\route.ts:37:        .update(record)
+  src\app\api\sites\publish\route.ts:38:        .eq("id", siteId)
+  src\app\api\sites\publish\route.ts:39:        .select()
+  src\app\api\sites\publish\route.ts:40:        .single();
+  src\app\api\sites\publish\route.ts:41:
+  src\app\api\sites\publish\route.ts:42:      if (error) throw error;
+  src\app\api\sites\publish\route.ts:43:      result = data;
+  src\app\api\sites\publish\route.ts:44:    } else {
+> src\app\api\sites\publish\route.ts:45:      // 2. 신규 사이트 등록 (INSERT)
+  src\app\api\sites\publish\route.ts:46:      const { data, error } = a
+wait supabaseAdmin
+> src\app\api\sites\publish\route.ts:47:        .from("sites")
+> src\app\api\sites\publish\route.ts:48:        .insert([{ ...record, i
+s_published: true }])
+  src\app\api\sites\publish\route.ts:49:        .select()
+  src\app\api\sites\publish\route.ts:50:        .single();
+  src\app\api\sites\publish\route.ts:51:
+  src\app\api\sites\publish\route.ts:52:      if (error) throw error;
+  src\app\api\sites\publish\route.ts:53:      result = data;
+  src\app\api\sites\publish\route.ts:54:    }
+  src\app\api\sites\publish\route.ts:55:
+  src\app\api\sites\publish\route.ts:56:    return NextResponse.json({
+  src\app\api\sites\publish\route.ts:57:      success: true,
+  src\app\api\sites\publish\route.ts:58:      siteId: result.id,
+  src\app\api\webhooks\portone\route.ts:22:    // merchant_uid 네이밍 규칙: 
+site_{siteId}_{timestamp} 형태 가정
+  src\app\api\webhooks\portone\route.ts:23:    const siteIdMatch = merc
+hant_uid.match(/^site_([a-zA-Z0-9-]+)_/);
+  src\app\api\webhooks\portone\route.ts:24:    const siteId = siteIdMat
+ch ? siteIdMatch[1] : null;
+  src\app\api\webhooks\portone\route.ts:25:
+  src\app\api\webhooks\portone\route.ts:26:    // 1. 결제 이력 기록
+> src\app\api\webhooks\portone\route.ts:27:    await supabaseAdmin.from
+("payments").insert([
+  src\app\api\webhooks\portone\route.ts:28:      {
+  src\app\api\webhooks\portone\route.ts:29:        site_id: siteId,
+  src\app\api\webhooks\portone\route.ts:30:        imp_uid,
+  src\app\api\webhooks\portone\route.ts:31:        merchant_uid,
+  src\app\api\webhooks\portone\route.ts:32:        status,
+  src\app\api\webhooks\portone\route.ts:33:        amount: 99000, // 기본
+ 비즈니스 플랜 기준 (필요시 포트원 API 단건조회로 실 결제액 검증)
+  src\app\api\webhooks\portone\route.ts:34:      },
+  src\app\api\webhooks\portone\route.ts:35:    ]);
+  src\app\api\webhooks\portone\route.ts:36:
+  src\app\api\webhooks\portone\route.ts:37:    // 2. 결제 성공(paid) 처리: 사이
+트 구독 활성화 및 만료일자 30일 연장
+  src\app\api\webhooks\portone\route.ts:38:    if (status === "paid" &&
+ siteId) {
+  src\app\api\webhooks\portone\route.ts:39:      const nextMonth = new 
+Date();
+  src\app\api\webhooks\portone\route.ts:40:      nextMonth.setDate(next
+Month.getDate() + 30);
+  src\app\api\webhooks\portone\route.ts:41:
+  src\app\api\webhooks\portone\route.ts:42:      const { error: updateE
+rror } = await supabaseAdmin
+> src\app\api\webhooks\portone\route.ts:43:        .from("sites")
+  src\app\api\webhooks\portone\route.ts:44:        .update({
+  src\app\api\webhooks\portone\route.ts:45:          subscription_statu
+s: "active",
+  src\app\api\webhooks\portone\route.ts:46:          is_published: true
+,
+  src\app\api\webhooks\portone\route.ts:47:          current_period_end
+: nextMonth.toISOString(),
+  src\app\api\webhooks\portone\route.ts:48:        })
+  src\app\api\webhooks\portone\route.ts:49:        .eq("id", siteId);
+  src\app\api\webhooks\portone\route.ts:50:
+  src\app\api\webhooks\portone\route.ts:51:      if (updateError) throw
+ updateError;
+  src\app\api\webhooks\portone\route.ts:52:    }
+  src\app\api\webhooks\portone\route.ts:53:
+  src\app\api\webhooks\portone\route.ts:54:    // 3. 결제 실패/취소 시: 구독 만료 
+처리
+  src\app\api\webhooks\portone\route.ts:55:    if ((status === "failed"
+ || status === "cancelled") && siteId) {
+  src\app\api\webhooks\portone\route.ts:56:      await supabaseAdmin
+> src\app\api\webhooks\portone\route.ts:57:        .from("sites")
+  src\app\api\webhooks\portone\route.ts:58:        .update({
+  src\app\api\webhooks\portone\route.ts:59:          subscription_statu
+s: "inactive",
+  src\app\api\webhooks\portone\route.ts:60:        })
+  src\app\api\webhooks\portone\route.ts:61:        .eq("id", siteId);
+  src\app\api\webhooks\portone\route.ts:62:    }
+  src\app\api\webhooks\portone\route.ts:63:
+  src\app\api\webhooks\portone\route.ts:64:    return NextResponse.json
+({ success: true, received: true });
+  src\app\api\webhooks\portone\route.ts:65:  } catch (error: any) {
+  src\app\api\webhooks\portone\route.ts:66:    console.error("[PORTONE_
+WEBHOOK_ERROR]", error);
+  src\app\api\webhooks\portone\route.ts:67:    return NextResponse.json
+(
+  src\app\builder\page.tsx:412:}
+  src\app\builder\page.tsx:413:
+  src\app\builder\page.tsx:414:export default function BuilderPage() {
+  src\app\builder\page.tsx:415:  const [data, setData] = useState<B2BTe
+mplateData | null>(null);
+  src\app\builder\page.tsx:416:  const [siteId, setSiteId] = useState<s
+tring | null>(null);
+> src\app\builder\page.tsx:417:  const [sitesList, setSitesList] = useS
+tate<SiteRecord[]>([]);
+  src\app\builder\page.tsx:418:
+  src\app\builder\page.tsx:419:  const [selectedTemplate, setSelectedTe
+mplate] =
+  src\app\builder\page.tsx:420:    useState<TemplateKey>('corporate');
+  src\app\builder\page.tsx:421:
+  src\app\builder\page.tsx:422:  const [activeSection, setActiveSection
+] = useState('main');
+  src\app\builder\page.tsx:423:  const [isLoading, setIsLoading] = useS
+tate(true);
+  src\app\builder\page.tsx:424:
+  src\app\builder\page.tsx:425:  // Supabase 조회 오류를 화면에 표시하기 위한 상태
+  src\app\builder\page.tsx:426:  const [loadError, setLoadError] = useS
+tate<string | null>(null);
+  src\app\builder\page.tsx:427:
+> src\app\builder\page.tsx:428:  const fetchSites = useCallback(async (
+) => {
+  src\app\builder\page.tsx:429:    setIsLoading(true);
+  src\app\builder\page.tsx:430:    setLoadError(null);
+  src\app\builder\page.tsx:431:
+> src\app\builder\page.tsx:432:    const { data: sites, error } = await
+ supabase
+> src\app\builder\page.tsx:433:      .from('sites')
+  src\app\builder\page.tsx:434:      .select('id, name, data, template_
+type')
+  src\app\builder\page.tsx:435:      .order('name');
+  src\app\builder\page.tsx:436:
+  src\app\builder\page.tsx:437:    if (error) {
+  src\app\builder\page.tsx:438:      console.error('사이트 목록 로드 에러:', err
+or);
+  src\app\builder\page.tsx:439:
+  src\app\builder\page.tsx:440:      setLoadError(error.message);
+> src\app\builder\page.tsx:441:      setSitesList([]);
+  src\app\builder\page.tsx:442:      setSiteId(null);
+  src\app\builder\page.tsx:443:      setData(null);
+  src\app\builder\page.tsx:444:      setIsLoading(false);
+  src\app\builder\page.tsx:445:
+  src\app\builder\page.tsx:446:      return;
+  src\app\builder\page.tsx:447:    }
+  src\app\builder\page.tsx:448:
+> src\app\builder\page.tsx:449:    const list = (sites || []) as SiteRe
+cord[];
+  src\app\builder\page.tsx:450:
+> src\app\builder\page.tsx:451:    setSitesList(list);
+  src\app\builder\page.tsx:452:
+  src\app\builder\page.tsx:453:    if (list.length === 0) {
+  src\app\builder\page.tsx:454:      setSiteId(null);
+  src\app\builder\page.tsx:455:      setData(null);
+  src\app\builder\page.tsx:456:      setIsLoading(false);
+  src\app\builder\page.tsx:457:
+  src\app\builder\page.tsx:458:      return;
+  src\app\builder\page.tsx:459:    }
+  src\app\builder\page.tsx:460:
+  src\app\builder\page.tsx:461:    const currentSite = siteId
+  src\app\builder\page.tsx:474:    setData(mergeWithDefaultData(templat
+e, initialSite.data));
+  src\app\builder\page.tsx:475:    setIsLoading(false);
+  src\app\builder\page.tsx:476:  }, [siteId]);
+  src\app\builder\page.tsx:477:
+  src\app\builder\page.tsx:478:  useEffect(() => {
+> src\app\builder\page.tsx:479:    void fetchSites();
+> src\app\builder\page.tsx:480:  }, [fetchSites]);
+  src\app\builder\page.tsx:481:
+  src\app\builder\page.tsx:482:  async function loadSiteData(id: string
+) {
+  src\app\builder\page.tsx:483:    if (!id) return;
+  src\app\builder\page.tsx:484:
+> src\app\builder\page.tsx:485:    const selectedSite = sitesList.find(
+(site) => site.id === id);
+  src\app\builder\page.tsx:486:
+  src\app\builder\page.tsx:487:    if (!selectedSite) {
+  src\app\builder\page.tsx:488:      setLoadError('선택한 사이트를 목록에서 찾을 수 없
+습니다.');
+  src\app\builder\page.tsx:489:      return;
+  src\app\builder\page.tsx:490:    }
+  src\app\builder\page.tsx:491:
+  src\app\builder\page.tsx:492:    const template = getSiteTemplate(sel
+ectedSite) || 'corporate';
+  src\app\builder\page.tsx:493:
+  src\app\builder\page.tsx:494:    setIsLoading(true);
+  src\app\builder\page.tsx:495:    setLoadError(null);
+  src\app\builder\page.tsx:496:    setSiteId(id);
+  src\app\builder\page.tsx:497:    setSelectedTemplate(template);
+  src\app\builder\page.tsx:498:
+  src\app\builder\page.tsx:499:    const { data: siteData, error } = aw
+ait supabase
+> src\app\builder\page.tsx:500:      .from('sites')
+  src\app\builder\page.tsx:501:      .select('id, name, data, template_
+type')
+  src\app\builder\page.tsx:502:      .eq('id', id)
+  src\app\builder\page.tsx:503:      .single();
+  src\app\builder\page.tsx:504:
+  src\app\builder\page.tsx:505:    if (error) {
+  src\app\builder\page.tsx:506:      console.error('데이터 로드 에러:', error)
+;
+  src\app\builder\page.tsx:507:
+  src\app\builder\page.tsx:508:      setLoadError(error.message);
+  src\app\builder\page.tsx:509:      setData(null);
+  src\app\builder\page.tsx:510:      setIsLoading(false);
+  src\app\builder\page.tsx:519:
+  src\app\builder\page.tsx:520:  async function handleTemplateChange(te
+mplate: TemplateKey) {
+  src\app\builder\page.tsx:521:    setSelectedTemplate(template);
+  src\app\builder\page.tsx:522:    setLoadError(null);
+  src\app\builder\page.tsx:523:
+> src\app\builder\page.tsx:524:    const matchingSite = sitesList.find(
+  src\app\builder\page.tsx:525:      (site) => getSiteTemplate(site) ==
+= template,
+  src\app\builder\page.tsx:526:    );
+  src\app\builder\page.tsx:527:
+  src\app\builder\page.tsx:528:    if (!matchingSite) {
+  src\app\builder\page.tsx:529:      setSiteId(null);
+  src\app\builder\page.tsx:530:      setData(null);
+  src\app\builder\page.tsx:531:
+  src\app\builder\page.tsx:532:      alert(
+  src\app\builder\page.tsx:533:        `${
+  src\app\builder\page.tsx:534:          TEMPLATE_OPTIONS.find((option)
+ => option.key === template)?.label
+  src\app\builder\page.tsx:559:        ...data,
+  src\app\builder\page.tsx:560:        templateType: selectedTemplate,
+  src\app\builder\page.tsx:561:      };
+  src\app\builder\page.tsx:562:
+  src\app\builder\page.tsx:563:      const { error } = await supabase
+> src\app\builder\page.tsx:564:        .from('sites')
+  src\app\builder\page.tsx:565:        .update({
+  src\app\builder\page.tsx:566:          data: publishData,
+  src\app\builder\page.tsx:567:          template_type: selectedTemplat
+e,
+  src\app\builder\page.tsx:568:          updated_at: new Date().toISOSt
+ring(),
+  src\app\builder\page.tsx:569:        })
+  src\app\builder\page.tsx:570:        .eq('id', siteId);
+  src\app\builder\page.tsx:571:
+  src\app\builder\page.tsx:572:      if (error) {
+  src\app\builder\page.tsx:573:        console.error('발행 실패:', error);
+  src\app\builder\page.tsx:574:        setLoadError(error.message);
+  src\app\builder\page.tsx:605:
+  src\app\builder\page.tsx:606:    setIsLoading(true);
+  src\app\builder\page.tsx:607:    setLoadError(null);
+  src\app\builder\page.tsx:608:
+  src\app\builder\page.tsx:609:    const { error } = await supabase
+> src\app\builder\page.tsx:610:      .from('sites')
+  src\app\builder\page.tsx:611:      .delete()
+  src\app\builder\page.tsx:612:      .eq('id', siteId);
+  src\app\builder\page.tsx:613:
+  src\app\builder\page.tsx:614:    if (error) {
+  src\app\builder\page.tsx:615:      console.error('사이트 삭제 에러:', error)
+;
+  src\app\builder\page.tsx:616:
+  src\app\builder\page.tsx:617:      setLoadError(error.message);
+  src\app\builder\page.tsx:618:      alert('사이트 삭제 실패: ' + error.messag
+e);
+  src\app\builder\page.tsx:619:      setIsLoading(false);
+  src\app\builder\page.tsx:620:
+  src\app\builder\page.tsx:622:    }
+  src\app\builder\page.tsx:623:
+  src\app\builder\page.tsx:624:    setSiteId(null);
+  src\app\builder\page.tsx:625:    setData(null);
+  src\app\builder\page.tsx:626:
+> src\app\builder\page.tsx:627:    await fetchSites();
+  src\app\builder\page.tsx:628:  }
+  src\app\builder\page.tsx:629:
+> src\app\builder\page.tsx:630:  const templateSites = sitesList.filter
+(
+  src\app\builder\page.tsx:631:    (site) => getSiteTemplate(site) === 
+selectedTemplate,
+  src\app\builder\page.tsx:632:  );
+  src\app\builder\page.tsx:633:
+  src\app\builder\page.tsx:634:  const selectedTemplateLabel =
+  src\app\builder\page.tsx:635:    TEMPLATE_OPTIONS.find((option) => op
+tion.key === selectedTemplate)?.label ||
+  src\app\builder\page.tsx:636:    '템플릿';
+  src\app\builder\page.tsx:637:
+  src\app\builder\page.tsx:638:  if (isLoading && !data) {
+  src\app\builder\page.tsx:639:    return (
+  src\app\builder\page.tsx:640:      <div className="fixed inset-0 z-[9
+999] flex items-center justify-center bg-slate-900 font-bold text-white
+">
+  src\app\builder\page.tsx:661:            <p className="text-lg font-b
+old">
+  src\app\builder\page.tsx:662:              {selectedTemplateLabel} 사이
+트 데이터를 찾을 수 없습니다.
+  src\app\builder\page.tsx:663:            </p>
+  src\app\builder\page.tsx:664:
+  src\app\builder\page.tsx:665:            <p className="max-w-xl text-
+sm leading-6 text-slate-300">
+> src\app\builder\page.tsx:666:              Supabase의 sites 테이블에 해당 템플
+릿의 사이트가 있어야 편집할
+  src\app\builder\page.tsx:667:              수 있습니다. 기존 데이터의 template_t
+ype 또는
+  src\app\builder\page.tsx:668:              data.templateType을 interio
+r, corporate, fitness, legal 중 하나로
+  src\app\builder\page.tsx:669:              지정하거나 사이트 이름을 인테리어·기업형·피트니
+스형·법률형으로
+  src\app\builder\page.tsx:670:              설정해 주세요.
+  src\app\builder\page.tsx:671:            </p>
+  src\app\builder\page.tsx:672:          </>
+  src\app\builder\page.tsx:673:        )}
+  src\app\builder\page.tsx:674:
+  src\app\builder\page.tsx:675:        <button
+  src\app\builder\page.tsx:676:          type="button"
+> src\app\builder\page.tsx:677:          onClick={() => void fetchSites
+()}
+  src\app\builder\page.tsx:678:          className="rounded-lg bg-blue-
+600 px-4 py-2 text-sm font-bold hover:bg-blue-500"
+  src\app\builder\page.tsx:679:        >
+  src\app\builder\page.tsx:680:          다시 불러오기
+  src\app\builder\page.tsx:681:        </button>
+  src\app\builder\page.tsx:682:      </div>
+  src\app\builder\page.tsx:683:    );
+  src\app\builder\page.tsx:684:  }
+  src\app\builder\page.tsx:685:
+  src\app\builder\page.tsx:686:  return (
+  src\app\builder\page.tsx:687:    <div className="relative z-[9999] fl
+ex min-h-screen w-full overflow-y-auto bg-slate-100">
+  src\app\builder\page.tsx:709:            </select>
+  src\app\builder\page.tsx:710:
+  src\app\builder\page.tsx:711:            <select
+  src\app\builder\page.tsx:712:              value={siteId || ''}
+  src\app\builder\page.tsx:713:              onChange={(event) => void 
+loadSiteData(event.target.value)}
+> src\app\builder\page.tsx:714:              disabled={isLoading || tem
+plateSites.length === 0}
+  src\app\builder\page.tsx:715:              aria-label={`${selectedTem
+plateLabel} 사이트 선택`}
+  src\app\builder\page.tsx:716:              className="max-w-[120px] c
+ursor-pointer truncate rounded border border-slate-700 bg-slate-800 px-
+2 py-1.5 text-xs text-white outline-none disabled:opacity-50"
+  src\app\builder\page.tsx:717:            >
+  src\app\builder\page.tsx:718:              <option value="">
+> src\app\builder\page.tsx:719:                {templateSites.length ? 
+'사이트 선택' : '사이트 없음'}
+  src\app\builder\page.tsx:720:              </option>
+  src\app\builder\page.tsx:721:
+> src\app\builder\page.tsx:722:              {templateSites.map((site) 
+=> (
+  src\app\builder\page.tsx:723:                <option key={site.id} va
+lue={site.id}>
+  src\app\builder\page.tsx:724:                  {site.name || site.id}
+  src\app\builder\page.tsx:725:                </option>
+  src\app\builder\page.tsx:726:              ))}
+  src\app\builder\page.tsx:727:            </select>
+  src\app\builder\page.tsx:728:          </div>
+  src\app\builder\page.tsx:729:
+  src\app\builder\page.tsx:730:          <div className="flex shrink-0 
+items-center gap-1.5">
+  src\app\builder\page.tsx:731:            <button
+  src\app\builder\page.tsx:732:              type="button"
+  src\app\builder\page.tsx:759:        <div className="flex-1 overflow-
+y-auto">
+  src\app\builder\page.tsx:760:          <EditorSidebar
+  src\app\builder\page.tsx:761:            data={data}
+  src\app\builder\page.tsx:762:            setData={setData}
+  src\app\builder\page.tsx:763:            siteId={siteId}
+> src\app\builder\page.tsx:764:            refreshSites={fetchSites}
+  src\app\builder\page.tsx:765:            activeSection={activeSection
+}
+  src\app\builder\page.tsx:766:            setActiveSection={setActiveS
+ection}
+  src\app\builder\page.tsx:767:          />
+  src\app\builder\page.tsx:768:        </div>
+  src\app\builder\page.tsx:769:      </div>
+  src\app\builder\page.tsx:770:
+  src\app\builder\page.tsx:771:      <main className="relative z-10 min
+-h-screen flex-1 bg-slate-200">
+  src\app\builder\page.tsx:772:        <ViewerManager
+  src\app\builder\page.tsx:773:          data={data}
+  src\app\builder\page.tsx:774:          setData={setData}
+  src\app\p\[id]\page.tsx:10:export async function generateMetadata({ p
+arams }: Props): Promise<Metadata> {
+  src\app\p\[id]\page.tsx:11:  const { id } = await params;
+  src\app\p\[id]\page.tsx:12:
+  src\app\p\[id]\page.tsx:13:  try {
+  src\app\p\[id]\page.tsx:14:    const { data: site } = await supabaseA
+dmin
+> src\app\p\[id]\page.tsx:15:      .from('sites')
+  src\app\p\[id]\page.tsx:16:      .select('title, content')
+  src\app\p\[id]\page.tsx:17:      .eq('id', id)
+  src\app\p\[id]\page.tsx:18:      .single();
+  src\app\p\[id]\page.tsx:19:
+  src\app\p\[id]\page.tsx:20:    if (!site || !site.content) {
+  src\app\p\[id]\page.tsx:21:      return {
+  src\app\p\[id]\page.tsx:22:        title: 'B2B 기업 웹사이트',
+  src\app\p\[id]\page.tsx:23:        description: '비즈니스 성장 솔루션을 확인해보세요.
+',
+  src\app\p\[id]\page.tsx:24:      };
+  src\app\p\[id]\page.tsx:25:    }
+  src\app\p\[id]\ViewerClient.tsx:91:    }
+  src\app\p\[id]\ViewerClient.tsx:92:
+  src\app\p\[id]\ViewerClient.tsx:93:    if (siteId) {
+  src\app\p\[id]\ViewerClient.tsx:94:      setLoading(true);
+  src\app\p\[id]\ViewerClient.tsx:95:      supabase
+> src\app\p\[id]\ViewerClient.tsx:96:        .from('sites')
+  src\app\p\[id]\ViewerClient.tsx:97:        .select('content')
+  src\app\p\[id]\ViewerClient.tsx:98:        .eq('id', siteId)
+  src\app\p\[id]\ViewerClient.tsx:99:        .single()
+  src\app\p\[id]\ViewerClient.tsx:100:        .then(({ data: siteRecord
+ }) => {
+  src\app\p\[id]\ViewerClient.tsx:101:          if (siteRecord?.content
+) {
+  src\app\p\[id]\ViewerClient.tsx:102:            const content = siteR
+ecord.content;
+  src\app\p\[id]\ViewerClient.tsx:103:
+  src\app\p\[id]\ViewerClient.tsx:104:            // solutionMain이 없는 구
+버전 데이터 구조를 보정합니다.
+  src\app\p\[id]\ViewerClient.tsx:105:            if (!content.solution
+Main && content.solutions && content.solutions.length > 0) {
+  src\app\p\[id]\ViewerClient.tsx:106:              const firstSol = co
+ntent.solutions[0];
+  src\app\preview\[siteId]\page.tsx:19:      setIsLoading(false);
+  src\app\preview\[siteId]\page.tsx:20:      return;
+  src\app\preview\[siteId]\page.tsx:21:    }
+  src\app\preview\[siteId]\page.tsx:22:
+  src\app\preview\[siteId]\page.tsx:23:    async function fetchTemplate
+Data() {
+> src\app\preview\[siteId]\page.tsx:24:      const { data: sites, error
+ } = await supabase
+> src\app\preview\[siteId]\page.tsx:25:        .from('sites')
+  src\app\preview\[siteId]\page.tsx:26:        .select('data')
+  src\app\preview\[siteId]\page.tsx:27:        .eq('template_type', tem
+plateId)
+  src\app\preview\[siteId]\page.tsx:28:        .single();
+  src\app\preview\[siteId]\page.tsx:29:
+  src\app\preview\[siteId]\page.tsx:30:      if (error) {
+  src\app\preview\[siteId]\page.tsx:31:        console.error('Supabase 
+error:', error);
+  src\app\preview\[siteId]\page.tsx:32:        setData(null);
+  src\app\preview\[siteId]\page.tsx:33:      } else {
+> src\app\preview\[siteId]\page.tsx:34:        setData(sites?.data || n
+ull);
+  src\app\preview\[siteId]\page.tsx:35:      }
+  src\app\preview\[siteId]\page.tsx:36:      setIsLoading(false);
+  src\app\preview\[siteId]\page.tsx:37:    }
+  src\app\preview\[siteId]\page.tsx:38:
+  src\app\preview\[siteId]\page.tsx:39:    void fetchTemplateData();
+  src\app\preview\[siteId]\page.tsx:40:  }, [templateId]);
+  src\app\preview\[siteId]\page.tsx:41:
+  src\app\preview\[siteId]\page.tsx:42:  if (isLoading) {
+  src\app\preview\[siteId]\page.tsx:43:    return <div className="h-scr
+een flex items-center justify-center">로드 중...</div>;
+  src\app\preview\[siteId]\page.tsx:44:  }
+  src\app\preview\page.tsx:19:
+  src\app\preview\page.tsx:20:  useEffect(() => {
+  src\app\preview\page.tsx:21:    async function fetchData() {
+  src\app\preview\page.tsx:22:      try {
+  src\app\preview\page.tsx:23:        // ?쒗뵆由???낆뿉 留욌뒗 ?ъ씠???곗씠??議고쉶
+> src\app\preview\page.tsx:24:        const { data: sites, error } = aw
+ait supabase
+> src\app\preview\page.tsx:25:          .from('sites')
+  src\app\preview\page.tsx:26:          .select('data, template_type')
+  src\app\preview\page.tsx:27:          .eq('template_type', templateId
+)
+  src\app\preview\page.tsx:28:          .single();
+  src\app\preview\page.tsx:29:
+> src\app\preview\page.tsx:30:        if (error || !sites?.data) {
+  src\app\preview\page.tsx:31:          console.log('DB?먯꽌 李얠? 紐삵븿. 湲곕낯
+ ?곗씠???ъ슜');
+  src\app\preview\page.tsx:32:          setData(getDefaultData(template
+Id));
+  src\app\preview\page.tsx:33:        } else {
+> src\app\preview\page.tsx:34:          setData(sites.data);
+  src\app\preview\page.tsx:35:        }
+  src\app\preview\page.tsx:36:      } catch (err) {
+  src\app\preview\page.tsx:37:        console.error('Fetch error:', err
+);
+  src\app\preview\page.tsx:38:        setData(getDefaultData(templateId
+));
+  src\app\preview\page.tsx:39:      } finally {
+  src\app\preview\page.tsx:40:        setIsLoading(false);
+  src\app\preview\page.tsx:41:      }
+  src\app\preview\page.tsx:42:    }
+  src\app\preview\page.tsx:43:
+  src\app\preview\page.tsx:44:    fetchData();
+  src\app\Site\[id]\layout.tsx:10:  const { id } = await params;
+  src\app\Site\[id]\layout.tsx:11:
+  src\app\Site\[id]\layout.tsx:12:  try {
+  src\app\Site\[id]\layout.tsx:13:    const supabase = createAdminClien
+t();
+  src\app\Site\[id]\layout.tsx:14:    const { data: siteRecord } = awai
+t supabase
+> src\app\Site\[id]\layout.tsx:15:      .from('sites')
+  src\app\Site\[id]\layout.tsx:16:      .select('data')
+  src\app\Site\[id]\layout.tsx:17:      .eq('id', id)
+  src\app\Site\[id]\layout.tsx:18:      .single();
+  src\app\Site\[id]\layout.tsx:19:
+  src\app\Site\[id]\layout.tsx:20:    if (!siteRecord?.data) {
+  src\app\Site\[id]\layout.tsx:21:      return {
+  src\app\Site\[id]\layout.tsx:22:        title: 'first project',
+  src\app\Site\[id]\layout.tsx:23:        description: '기업 홈페이지 빌더',
+  src\app\Site\[id]\layout.tsx:24:      };
+  src\app\Site\[id]\layout.tsx:25:    }
+  src\app\Site\[id]\page.tsx:21:
+  src\app\Site\[id]\page.tsx:22:    async function fetchSite() {
+  src\app\Site\[id]\page.tsx:23:      setLoading(true);
+  src\app\Site\[id]\page.tsx:24:
+  src\app\Site\[id]\page.tsx:25:      const { data: siteRecord, error }
+ = await supabase
+> src\app\Site\[id]\page.tsx:26:        .from('sites')
+  src\app\Site\[id]\page.tsx:27:        .select('data')
+  src\app\Site\[id]\page.tsx:28:        .eq('id', siteId)
+  src\app\Site\[id]\page.tsx:29:        .single();
+  src\app\Site\[id]\page.tsx:30:
+  src\app\Site\[id]\page.tsx:31:      if (error || !siteRecord?.data) {
+  src\app\Site\[id]\page.tsx:32:        setNotFound(true);
+  src\app\Site\[id]\page.tsx:33:      } else {
+  src\app\Site\[id]\page.tsx:34:        setData(siteRecord.data);
+  src\app\Site\[id]\page.tsx:35:      }
+  src\app\Site\[id]\page.tsx:36:
+  src\components\builder\EditorSidebar.tsx:8:
+  src\components\builder\EditorSidebar.tsx:9:interface EditorSidebarPro
+ps {
+  src\components\builder\EditorSidebar.tsx:10:  data: any;
+  src\components\builder\EditorSidebar.tsx:11:  setData: React.Dispatch
+<React.SetStateAction<any>>;
+  src\components\builder\EditorSidebar.tsx:12:  siteId?: string | null;
+> src\components\builder\EditorSidebar.tsx:13:  refreshSites?: () => vo
+id;
+  src\components\builder\EditorSidebar.tsx:14:  activeSection?: string;
+  src\components\builder\EditorSidebar.tsx:15:  setActiveSection?: (sec
+tion: string) => void;
+  src\components\builder\EditorSidebar.tsx:16:}
+  src\components\builder\EditorSidebar.tsx:17:
+  src\components\builder\EditorSidebar.tsx:18:export default function E
+ditorSidebar({
+  src\components\builder\EditorSidebar.tsx:19:  data,
+  src\components\builder\EditorSidebar.tsx:20:  setData,
+  src\components\builder\EditorSidebar.tsx:21:  siteId,
+  src\components\builder\EditorSidebar.tsx:22:  activeSection = 'main',
+  src\components\builder\EditorSidebar.tsx:23:  setActiveSection,
+  src\components\templates\CorporateLayout.tsx:11:
+  src\components\templates\CorporateLayout.tsx:12:  useEffect(() => {
+  src\components\templates\CorporateLayout.tsx:13:    const fetchCorpor
+ateData = async () => {
+  src\components\templates\CorporateLayout.tsx:14:      try {
+  src\components\templates\CorporateLayout.tsx:15:        const { data:
+ siteData, error: siteError } = await supabase
+> src\components\templates\CorporateLayout.tsx:16:          .from('site
+s')
+  src\components\templates\CorporateLayout.tsx:17:          .select('*'
+)
+  src\components\templates\CorporateLayout.tsx:18:          .eq('templa
+te_type', 'corporate')
+  src\components\templates\CorporateLayout.tsx:19:          .single();
+  src\components\templates\CorporateLayout.tsx:20:
+  src\components\templates\CorporateLayout.tsx:21:        if (siteError
+ || !siteData) {
+  src\components\templates\CorporateLayout.tsx:22:          setError('기
+업형 데이터를 불러올 수 없습니다.');
+  src\components\templates\CorporateLayout.tsx:23:          setLoading(
+false);
+  src\components\templates\CorporateLayout.tsx:24:          return;
+  src\components\templates\CorporateLayout.tsx:25:        }
+  src\components\templates\CorporateLayout.tsx:26:
+> src\lib\supabase\admin.ts:1:import { createClient } from '@supabase/s
+upabase-js';
+  src\lib\supabase\admin.ts:2:
+  src\lib\supabase\admin.ts:3:export function createAdminClient() {
+  src\lib\supabase\admin.ts:4:  const supabaseUrl =
+  src\lib\supabase\admin.ts:5:    process.env.SUPABASE_URL || process.e
+nv.NEXT_PUBLIC_SUPABASE_URL;
+  src\lib\supabase\admin.ts:6:  const supabaseServiceRoleKey = process.
+env.SUPABASE_SERVICE_ROLE_KEY;
+  src\lib\supabase\admin.ts:7:
+  src\lib\supabase\admin.ts:8:  if (!supabaseUrl || !supabaseServiceRol
+eKey) {
+  src\lib\supabase\admin.ts:9:    throw new Error(
+  src\lib\supabase\admin.ts:10:      '서버 환경변수(SUPABASE_URL 또는 NEXT_PUBL
+IC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)가 설정되지 않았습니다.'
+  src\lib\supabase\admin.ts:11:    );
+  src\lib\supabase\admin.ts:12:  }
+  src\lib\supabase\admin.ts:13:
+> src\lib\supabase\admin.ts:14:  return createClient(supabaseUrl, supab
+aseServiceRoleKey, {
+  src\lib\supabase\admin.ts:15:    auth: {
+  src\lib\supabase\admin.ts:16:      autoRefreshToken: false,
+  src\lib\supabase\admin.ts:17:      persistSession: false,
+  src\lib\supabase\admin.ts:18:    },
+  src\lib\supabase\admin.ts:19:  });
+  src\lib\supabase\admin.ts:20:}
+  src\lib\supabase\admin.ts:21:
+  src\lib\supabase\admin.ts:22:/**
+  src\lib\supabase\admin.ts:23: * 기존 `supabaseAdmin.from(...)` 등의 호출 형태
+를 유지하면서,
+  src\lib\supabase\admin.ts:24: * 실제 속성을 사용할 때만 관리자 클라이언트를 생성합니다.
+  src\lib\supabase\admin.ts:25: */
+> src\lib\supabase\admin.ts:26:export const supabaseAdmin = new Proxy({
+} as ReturnType<typeof createClient>, {
+  src\lib\supabase\admin.ts:27:  get(_target, property) {
+  src\lib\supabase\admin.ts:28:    const client = createAdminClient();
+  src\lib\supabase\admin.ts:29:    const value = Reflect.get(client, pr
+operty, client);
+  src\lib\supabase\admin.ts:30:
+  src\lib\supabase\admin.ts:31:    return typeof value === 'function' ?
+ value.bind(client) : value;
+  src\lib\supabase\admin.ts:32:  },
+  src\lib\supabase\admin.ts:33:});
+> src\lib\supabase\client.ts:1:import { createClient } from '@supabase/
+supabase-js';
+  src\lib\supabase\client.ts:2:
+  src\lib\supabase\client.ts:3:const supabaseUrl = process.env.NEXT_PUB
+LIC_SUPABASE_URL;
+  src\lib\supabase\client.ts:4:const supabaseAnonKey = process.env.NEXT
+_PUBLIC_SUPABASE_ANON_KEY;
+  src\lib\supabase\client.ts:5:
+  src\lib\supabase\client.ts:6:// 여기서 에러를 명확하게 잡아내기 위해 체크 로직을 넣습니다.
+  src\lib\supabase\client.ts:7:if (!supabaseUrl || !supabaseAnonKey) {
+  src\lib\supabase\client.ts:8:  console.error('❌ Supabase 환경변수가 설정되지 않
+았습니다. Vercel Settings를 확인하세요.');
+  src\lib\supabase\client.ts:9:}
+  src\lib\supabase\client.ts:10:
+> src\lib\supabase\client.ts:11:export const supabase = createClient(
+  src\lib\supabase\client.ts:12:  supabaseUrl || '', 
+  src\lib\supabase\client.ts:13:  supabaseAnonKey || ''
+  src\lib\supabase\client.ts:14:);
+  src\lib\supabase\server.ts:1:import { createServerClient, type Cookie
+Options } from '@supabase/ssr';
+  src\lib\supabase\server.ts:2:import { cookies } from 'next/headers';
+  src\lib\supabase\server.ts:3:
+> src\lib\supabase\server.ts:4:export async function createClient() {
+  src\lib\supabase\server.ts:5:  const cookieStore = await cookies();
+  src\lib\supabase\server.ts:6:
+  src\lib\supabase\server.ts:7:  return createServerClient(
+  src\lib\supabase\server.ts:8:    process.env.NEXT_PUBLIC_SUPABASE_URL
+!,
+  src\lib\supabase\server.ts:9:    process.env.NEXT_PUBLIC_SUPABASE_ANO
+N_KEY!,
+  src\lib\supabase\server.ts:10:    {
+  src\lib\supabase\server.ts:11:      cookies: {
+  src\lib\supabase\server.ts:12:        get(name: string) {
+  src\lib\supabase\server.ts:13:          return cookieStore.get(name)?
+.value;
+  src\lib\supabase\server.ts:14:        },
+> src\lib\supabase.ts:1:import { createClient } from '@supabase/supabas
+e-js';
+  src\lib\supabase.ts:2:
+  src\lib\supabase.ts:3:const supabaseUrl = 'https://ldhyemuuzghejojdui
+br.supabase.co';
+  src\lib\supabase.ts:4:const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsIn
+R5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxkaHllbXV1emdoZWpvamR1
+aWJyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA2NzkyMTcsImV4cCI6MjEwNjI1NTIxN30
+.tYLKzbI4_W5FADS6VPwWr2FZOMnywlAUKVt2dOOG_YA';
+  src\lib\supabase.ts:5:
+> src\lib\supabase.ts:6:export const supabase = createClient(supabaseUr
+l, supabaseAnonKey);
+> src\lib\supabaseAdmin.ts:1:import { createClient } from '@supabase/su
+pabase-js';
+  src\lib\supabaseAdmin.ts:2:
+> src\lib\supabaseAdmin.ts:3:export const supabaseAdmin = createClient(
+  src\lib\supabaseAdmin.ts:4:  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  src\lib\supabaseAdmin.ts:5:  process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  src\lib\supabaseAdmin.ts:6:  { auth: { persistSession: false } }
+  src\lib\supabaseAdmin.ts:7:);
+  src\utils\publishSite.ts:9:export async function publishSite(
+  src\utils\publishSite.ts:10:  templateData: B2BTemplateData,
+  src\utils\publishSite.ts:11:  currentSiteId?: string | null
+  src\utils\publishSite.ts:12:): Promise<PublishResponse> {
+  src\utils\publishSite.ts:13:  try {
+> src\utils\publishSite.ts:14:    const res = await fetch("/api/sites/p
+ublish", {
+  src\utils\publishSite.ts:15:      method: "POST",
+  src\utils\publishSite.ts:16:      headers: { "Content-Type": "applica
+tion/json" },
+  src\utils\publishSite.ts:17:      body: JSON.stringify({
+  src\utils\publishSite.ts:18:        siteId: currentSiteId || null,
+  src\utils\publishSite.ts:19:        templateData,
+  src\utils\publishSite.ts:20:      }),
+  src\utils\publishSite.ts:21:    });
+  src\utils\publishSite.ts:22:
+  src\utils\publishSite.ts:23:    const result = await res.json();
+  src\utils\publishSite.ts:24:
+> supabase\01_schema_and_rls.sql:1:-- sites 테이블에 구독 관련 필드 추가
+> supabase\01_schema_and_rls.sql:2:ALTER TABLE public.sites 
+  supabase\01_schema_and_rls.sql:3:ADD COLUMN IF NOT EXISTS subscriptio
+n_status TEXT DEFAULT 'inactive', -- active, inactive, past_due
+  supabase\01_schema_and_rls.sql:4:ADD COLUMN IF NOT EXISTS subscriptio
+n_tier TEXT DEFAULT 'business',    -- standard, business, premium
+  supabase\01_schema_and_rls.sql:5:ADD COLUMN IF NOT EXISTS current_per
+iod_end TIMESTAMP WITH TIME ZONE;
+  supabase\01_schema_and_rls.sql:6:
+  supabase\01_schema_and_rls.sql:7:-- 결제 로그(payments) 테이블 생성
+  supabase\01_schema_and_rls.sql:8:CREATE TABLE IF NOT EXISTS public.pa
+yments (
+  supabase\01_schema_and_rls.sql:9:    id UUID PRIMARY KEY DEFAULT gen_
+random_uuid(),
+> supabase\01_schema_and_rls.sql:10:    site_id UUID REFERENCES public.
+sites(id) ON DELETE SET NULL,
+  supabase\01_schema_and_rls.sql:11:    imp_uid TEXT NOT NULL,         
+ -- 포트원 결제 고유번호
+  supabase\01_schema_and_rls.sql:12:    merchant_uid TEXT NOT NULL,    
+ -- 가맹점 주문번호
+  supabase\01_schema_and_rls.sql:13:    amount NUMERIC NOT NULL,       
+ -- 결제 금액
+  supabase\01_schema_and_rls.sql:14:    status TEXT NOT NULL,          
+ -- paid, failed, cancelled
+  supabase\01_schema_and_rls.sql:15:    customer_email TEXT,
+  supabase\01_schema_and_rls.sql:16:    created_at TIMESTAMP WITH TIME 
+ZONE DEFAULT TIMEZONE('utc'::text, NOW())
+  supabase\01_schema_and_rls.sql:17:);
+  supabase\01_schema_and_rls.sql:18:
+  supabase\01_schema_and_rls.sql:19:-- payments RLS 활성화 (관리자/웹훅 전용)
+  supabase\01_schema_and_rls.sql:20:ALTER TABLE public.payments ENABLE 
+ROW LEVEL SECURITY;
+
+

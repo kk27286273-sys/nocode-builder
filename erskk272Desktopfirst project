@@ -1,0 +1,907 @@
+[35mAGENTS.md[m[36m:[m[32m5[m[36m:[mThis version has breaking changes — APIs, conventions, and file structure may all differ from your training [1;31mdata[m. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m5[m[36m:[m  B2BTemplate[1;31mData[m,
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m10[m[36m:[m} from '@/[1;31mdata[m/templates';
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m15[m[36m:[m  [1;31mdata[m: B2BTemplate[1;31mData[m;
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m16[m[36m:[m  set[1;31mData[m: React.Dispatch<React.SetStateAction<B2BTemplate[1;31mData[m>>;
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m61[m[36m:[m  [1;31mdata[m,
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m62[m[36m:[m  set[1;31mData[m,
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m70[m[36m:[m    key: keyof NonNullable<B2BTemplate[1;31mData[m['fontSizes']>,
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m73[m[36m:[m    set[1;31mData[m((prev) => ({
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m103[m[36m:[m      const { [1;31mdata[m: publicUrl[1;31mData[m } = supabase.storage
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m107[m[36m:[m      callback(publicUrl[1;31mData[m.publicUrl);
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m118[m[36m:[m    const newLinks = [...([1;31mdata[m.navigation?.navLinks || []), { label: '새 메뉴', targetId: 'stats' }];
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m119[m[36m:[m    set[1;31mData[m({ ...[1;31mdata[m, navigation: { navLinks: newLinks } });
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m123[m[36m:[m    const newLinks = [...([1;31mdata[m.navigation?.navLinks || [])];
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m125[m[36m:[m    set[1;31mData[m({ ...[1;31mdata[m, navigation: { navLinks: newLinks } });
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m129[m[36m:[m    const newLinks = ([1;31mdata[m.navigation?.navLinks || []).filter((_, idx) => idx !== index);
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m130[m[36m:[m    set[1;31mData[m({ ...[1;31mdata[m, navigation: { navLinks: newLinks } });
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m140[m[36m:[m    set[1;31mData[m({ ...[1;31mdata[m, solutions: [...[1;31mdata[m.solutions, newSol] });
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m144[m[36m:[m    const newSol = [...[1;31mdata[m.solutions];
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m146[m[36m:[m    set[1;31mData[m({ ...[1;31mdata[m, solutions: newSol });
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m150[m[36m:[m    set[1;31mData[m({ ...[1;31mdata[m, solutions: [1;31mdata[m.solutions.filter((_, idx) => idx !== index) });
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m160[m[36m:[m    set[1;31mData[m({ ...[1;31mdata[m, reviews: [...[1;31mdata[m.reviews, newRev] });
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m164[m[36m:[m    const newRev = [...[1;31mdata[m.reviews];
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m166[m[36m:[m    set[1;31mData[m({ ...[1;31mdata[m, reviews: newRev });
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m170[m[36m:[m    set[1;31mData[m({ ...[1;31mdata[m, reviews: [1;31mdata[m.reviews.filter((_, idx) => idx !== index) });
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m179[m[36m:[m    set[1;31mData[m({ ...[1;31mdata[m, faqs: [...[1;31mdata[m.faqs, newFaq] });
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m183[m[36m:[m    const newFaqs = [...[1;31mdata[m.faqs];
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m185[m[36m:[m    set[1;31mData[m({ ...[1;31mdata[m, faqs: newFaqs });
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m189[m[36m:[m    set[1;31mData[m({ ...[1;31mdata[m, faqs: [1;31mdata[m.faqs.filter((_, idx) => idx !== index) });
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m194[m[36m:[m    set[1;31mData[m((prev) => ({
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m225[m[36m:[m            style={{ backgroundColor: [1;31mdata[m.themeColor || '#0284C7' }}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m243[m[36m:[m              value={[1;31mdata[m.themeColor || '#0284C7'}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m244[m[36m:[m              onChange={(e) => set[1;31mData[m({ ...[1;31mdata[m, themeColor: e.target.value })}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m249[m[36m:[m              value={[1;31mdata[m.themeColor || '#0284C7'}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m250[m[36m:[m              onChange={(e) => set[1;31mData[m({ ...[1;31mdata[m, themeColor: e.target.value })}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m263[m[36m:[m              value={[1;31mdata[m.company.name}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m265[m[36m:[m                set[1;31mData[m({ ...[1;31mdata[m, company: { ...[1;31mdata[m.company, name: e.target.value } })
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m272[m[36m:[m            value={[1;31mdata[m.fontSizes?.companyName}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m281[m[36m:[m              value={[1;31mdata[m.supportPhone}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m282[m[36m:[m              onChange={(e) => set[1;31mData[m({ ...[1;31mdata[m, supportPhone: e.target.value })}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m294[m[36m:[m                  (url) => set[1;31mData[m({ ...[1;31mdata[m, company: { ...[1;31mdata[m.company, logoUrl: url } }),
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m316[m[36m:[m            {[1;31mdata[m.navigation?.navLinks?.map((nav, idx) => (
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m350[m[36m:[m              value={[1;31mdata[m.hero.badge}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m352[m[36m:[m                set[1;31mData[m({ ...[1;31mdata[m, hero: { ...[1;31mdata[m.hero, badge: e.target.value } })
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m359[m[36m:[m            value={[1;31mdata[m.fontSizes?.heroBadge}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m369[m[36m:[m              value={[1;31mdata[m.hero.title}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m371[m[36m:[m                set[1;31mData[m({ ...[1;31mdata[m, hero: { ...[1;31mdata[m.hero, title: e.target.value } })
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m378[m[36m:[m            value={[1;31mdata[m.fontSizes?.heroTitle}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m388[m[36m:[m              value={[1;31mdata[m.hero.subtitle}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m390[m[36m:[m                set[1;31mData[m({ ...[1;31mdata[m, hero: { ...[1;31mdata[m.hero, subtitle: e.target.value } })
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m397[m[36m:[m            value={[1;31mdata[m.fontSizes?.heroSubtitle}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m412[m[36m:[m                    set[1;31mData[m({
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m413[m[36m:[m                      ...[1;31mdata[m,
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m414[m[36m:[m                      hero: { ...[1;31mdata[m.hero, mediaUrl: url, mediaType: 'image' },
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m426[m[36m:[m        {[1;31mdata[m.partnersSection && (
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m433[m[36m:[m                  checked={[1;31mdata[m.partnersSection.enabled}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m435[m[36m:[m                    set[1;31mData[m({
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m436[m[36m:[m                      ...[1;31mdata[m,
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m438[m[36m:[m                        ...[1;31mdata[m.partnersSection!,
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m452[m[36m:[m                value={[1;31mdata[m.partnersSection.title}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m454[m[36m:[m                  set[1;31mData[m({
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m455[m[36m:[m                    ...[1;31mdata[m,
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m457[m[36m:[m                      ...[1;31mdata[m.partnersSection!,
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m467[m[36m:[m              value={[1;31mdata[m.fontSizes?.partnersTitle}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m478[m[36m:[m                value={[1;31mdata[m.partnersSection.partners.join(', ')}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m480[m[36m:[m                  set[1;31mData[m({
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m481[m[36m:[m                    ...[1;31mdata[m,
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m483[m[36m:[m                      ...[1;31mdata[m.partnersSection!,
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m499[m[36m:[m            value={[1;31mdata[m.fontSizes?.statsValue}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m506[m[36m:[m            value={[1;31mdata[m.fontSizes?.statsLabel}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m512[m[36m:[m            {[1;31mdata[m.stats.map((stat, idx) => (
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m518[m[36m:[m                    const newStats = [...[1;31mdata[m.stats];
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m520[m[36m:[m                    set[1;31mData[m({ ...[1;31mdata[m, stats: newStats });
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m528[m[36m:[m                    const newStats = [...[1;31mdata[m.stats];
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m530[m[36m:[m                    set[1;31mData[m({ ...[1;31mdata[m, stats: newStats });
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m554[m[36m:[m              value={[1;31mdata[m.solutionsSection?.title || ''}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m556[m[36m:[m                set[1;31mData[m({
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m557[m[36m:[m                  ...[1;31mdata[m,
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m559[m[36m:[m                    ...[1;31mdata[m.solutionsSection,
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m561[m[36m:[m                    subtitle: [1;31mdata[m.solutionsSection?.subtitle || '',
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m570[m[36m:[m            value={[1;31mdata[m.fontSizes?.sectionTitle}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m579[m[36m:[m              value={[1;31mdata[m.solutionsSection?.subtitle || ''}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m581[m[36m:[m                set[1;31mData[m({
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m582[m[36m:[m                  ...[1;31mdata[m,
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m584[m[36m:[m                    ...[1;31mdata[m.solutionsSection,
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m585[m[36m:[m                    title: [1;31mdata[m.solutionsSection?.title || '',
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m595[m[36m:[m            value={[1;31mdata[m.fontSizes?.sectionSubtitle}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m601[m[36m:[m            {[1;31mdata[m.solutions.map((sol, idx) => (
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m663[m[36m:[m              value={[1;31mdata[m.reviewsSection?.title || ''}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m665[m[36m:[m                set[1;31mData[m({
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m666[m[36m:[m                  ...[1;31mdata[m,
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m668[m[36m:[m                    ...[1;31mdata[m.reviewsSection,
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m670[m[36m:[m                    subtitle: [1;31mdata[m.reviewsSection?.subtitle || '',
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m678[m[36m:[m            {[1;31mdata[m.reviews.map((rev, idx) => (
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m730[m[36m:[m            value={[1;31mdata[m.fontSizes?.faqQuestion}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m737[m[36m:[m            value={[1;31mdata[m.fontSizes?.faqAnswer}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m743[m[36m:[m            {[1;31mdata[m.faqs.map((faq, idx) => (
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m783[m[36m:[m              value={[1;31mdata[m.footer.companyName}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m792[m[36m:[m              value={[1;31mdata[m.footer.ownerName}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m801[m[36m:[m              value={[1;31mdata[m.footer.businessNumber}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m811[m[36m:[m              value={[1;31mdata[m.footer.address}
+[35mbackup_files/EditorSidebar.tsx[m[36m:[m[32m820[m[36m:[m              value={[1;31mdata[m.footer.contactEmail}
+[35mbackup_files/LivePreview.tsx[m[36m:[m[32m4[m[36m:[mimport { B2BTemplate[1;31mData[m } from '@/[1;31mdata[m/templates';
+[35mbackup_files/LivePreview.tsx[m[36m:[m[32m7[m[36m:[m  [1;31mdata[m: B2BTemplate[1;31mData[m;
+[35mbackup_files/LivePreview.tsx[m[36m:[m[32m12[m[36m:[mexport default function LivePreview({ [1;31mdata[m, zoom, setZoom }: LivePreviewProps) {
+[35mbackup_files/LivePreview.tsx[m[36m:[m[32m13[m[36m:[m  const fs = [1;31mdata[m?.fontSizes || {};
+[35mbackup_files/LivePreview.tsx[m[36m:[m[32m14[m[36m:[m  const supportPhone = [1;31mdata[m?.supportPhone || '010-0000-0000';
+[35mbackup_files/LivePreview.tsx[m[36m:[m[32m15[m[36m:[m  const themeColor = [1;31mdata[m?.themeColor || '#0284C7';
+[35mbackup_files/LivePreview.tsx[m[36m:[m[32m64[m[36m:[m              {[1;31mdata[m?.company?.logoUrl && (
+[35mbackup_files/LivePreview.tsx[m[36m:[m[32m66[m[36m:[m                  src={[1;31mdata[m.company.logoUrl}
+[35mbackup_files/LivePreview.tsx[m[36m:[m[32m75[m[36m:[m                {[1;31mdata[m?.company?.name || '기업명'}
+[35mbackup_files/LivePreview.tsx[m[36m:[m[32m80[m[36m:[m              {[1;31mdata[m?.navigation?.navLinks?.map((nav, idx) => (
+[35mbackup_files/LivePreview.tsx[m[36m:[m[32m104[m[36m:[m            {[1;31mdata[m?.hero?.badge && (
+[35mbackup_files/LivePreview.tsx[m[36m:[m[32m113[m[36m:[m                {[1;31mdata[m.hero.badge}
+[35mbackup_files/LivePreview.tsx[m[36m:[m[32m120[m[36m:[m              {[1;31mdata[m?.hero?.title}
+[35mbackup_files/LivePreview.tsx[m[36m:[m[32m126[m[36m:[m              {[1;31mdata[m?.hero?.subtitle}
+[35mbackup_files/LivePreview.tsx[m[36m:[m[32m143[m[36m:[m          {[1;31mdata[m?.partnersSection?.enabled && (
+[35mbackup_files/LivePreview.tsx[m[36m:[m[32m149[m[36m:[m                {[1;31mdata[m.partnersSection.title}
+[35mbackup_files/LivePreview.tsx[m[36m:[m[32m152[m[36m:[m                {[1;31mdata[m.partnersSection.partners.map((partner, idx) => (
+[35mbackup_files/LivePreview.tsx[m[36m:[m[32m165[m[36m:[m          {[1;31mdata[m?.stats && (
+[35mbackup_files/LivePreview.tsx[m[36m:[m[32m168[m[36m:[m                {[1;31mdata[m.stats.map((stat, idx) => (
+[35mbackup_files/LivePreview.tsx[m[36m:[m[32m192[m[36m:[m          {[1;31mdata[m?.solutions && (
+[35mbackup_files/LivePreview.tsx[m[36m:[m[32m199[m[36m:[m                  {[1;31mdata[m.solutionsSection?.title || '핵심 시공 분야'}
+[35mbackup_files/LivePreview.tsx[m[36m:[m[32m205[m[36m:[m                  {[1;31mdata[m.solutionsSection?.subtitle}
+[35mbackup_files/LivePreview.tsx[m[36m:[m[32m209[m[36m:[m                {[1;31mdata[m.solutions.map((sol, idx) => (
+[35mbackup_files/LivePreview.tsx[m[36m:[m[32m229[m[36m:[m          {[1;31mdata[m?.reviews && (
+[35mbackup_files/LivePreview.tsx[m[36m:[m[32m236[m[36m:[m                  {[1;31mdata[m.reviewsSection?.title || '고객 만족 후기'}
+[35mbackup_files/LivePreview.tsx[m[36m:[m[32m242[m[36m:[m                  {[1;31mdata[m.reviewsSection?.subtitle}
+[35mbackup_files/LivePreview.tsx[m[36m:[m[32m246[m[36m:[m                {[1;31mdata[m.reviews.map((rev, idx) => (
+[35mbackup_files/LivePreview.tsx[m[36m:[m[32m263[m[36m:[m          {[1;31mdata[m?.faqs && (
+[35mbackup_files/LivePreview.tsx[m[36m:[m[32m273[m[36m:[m                  {[1;31mdata[m.faqs.map((faq, idx) => (
+[35mbackup_files/LivePreview.tsx[m[36m:[m[32m384[m[36m:[m          {[1;31mdata[m?.footer && (
+[35mbackup_files/LivePreview.tsx[m[36m:[m[32m389[m[36m:[m                    {[1;31mdata[m.footer.companyName}
+[35mbackup_files/LivePreview.tsx[m[36m:[m[32m392[m[36m:[m                    대표자: {[1;31mdata[m.footer.ownerName} | 사업자등록번호: {[1;31mdata[m.footer.businessNumber}
+[35mbackup_files/LivePreview.tsx[m[36m:[m[32m394[m[36m:[m                    주소: {[1;31mdata[m.footer.address}
+[35mbackup_files/LivePreview.tsx[m[36m:[m[32m396[m[36m:[m                    이메일: {[1;31mdata[m.footer.contactEmail}
+[35mbackup_files/LivePreview.tsx[m[36m:[m[32m407[m[36m:[m                  <p className="text-slate-500">© {[1;31mdata[m.footer.companyName}. All rights reserved.</p>
+[35mbackup_files/page.tsx[m[36m:[m[32m5[m[36m:[mimport { defaultB2BTemplate, B2BTemplate[1;31mData[m } from '@/[1;31mdata[m/templates';
+[35mbackup_files/page.tsx[m[36m:[m[32m10[m[36m:[m  const [[1;31mdata[m, set[1;31mData[m] = useState<B2BTemplate[1;31mData[m>(defaultB2BTemplate);
+[35mbackup_files/page.tsx[m[36m:[m[32m19[m[36m:[m        localStorage.setItem('thsoft_published_site', JSON.stringify([1;31mdata[m));
+[35mbackup_files/page.tsx[m[36m:[m[32m66[m[36m:[m        <EditorSidebar [1;31mdata[m={[1;31mdata[m} set[1;31mData[m={set[1;31mData[m} onPublish={handlePublish} />
+[35mbackup_files/page.tsx[m[36m:[m[32m70[m[36m:[m          <LivePreview [1;31mdata[m={[1;31mdata[m} zoom={zoom} setZoom={setZoom} />
+[35mbackup_files/templates.ts[m[36m:[m[32m28[m[36m:[mexport interface B2BTemplate[1;31mData[m {
+[35mbackup_files/templates.ts[m[36m:[m[32m84[m[36m:[mexport const defaultTemplate[1;31mData[m: B2BTemplate[1;31mData[m = {
+[35mbackup_files/templates.ts[m[36m:[m[32m182[m[36m:[mexport const defaultB2BTemplate = defaultTemplate[1;31mData[m;
+[35mpackage-lock.json[m[36m:[m[32m64[m[36m:[m    "node_modules/@babel/compat-[1;31mdata[m": {
+[35mpackage-lock.json[m[36m:[m[32m66[m[36m:[m      "resolved": "https://registry.npmjs.org/@babel/compat-[1;31mdata[m/-/compat-[1;31mdata[m-7.29.7.tgz",
+[35mpackage-lock.json[m[36m:[m[32m129[m[36m:[m        "@babel/compat-[1;31mdata[m": "^7.29.7",
+[35mpackage-lock.json[m[36m:[m[32m3133[m[36m:[m    "node_modules/[1;31mdata[m-view-buffer": {
+[35mpackage-lock.json[m[36m:[m[32m3135[m[36m:[m      "resolved": "https://registry.npmjs.org/[1;31mdata[m-view-buffer/-/[1;31mdata[m-view-buffer-1.0.2.tgz",
+[35mpackage-lock.json[m[36m:[m[32m3142[m[36m:[m        "is-[1;31mdata[m-view": "^1.0.2"
+[35mpackage-lock.json[m[36m:[m[32m3151[m[36m:[m    "node_modules/[1;31mdata[m-view-byte-length": {
+[35mpackage-lock.json[m[36m:[m[32m3153[m[36m:[m      "resolved": "https://registry.npmjs.org/[1;31mdata[m-view-byte-length/-/[1;31mdata[m-view-byte-length-1.0.2.tgz",
+[35mpackage-lock.json[m[36m:[m[32m3160[m[36m:[m        "is-[1;31mdata[m-view": "^1.0.2"
+[35mpackage-lock.json[m[36m:[m[32m3169[m[36m:[m    "node_modules/[1;31mdata[m-view-byte-offset": {
+[35mpackage-lock.json[m[36m:[m[32m3171[m[36m:[m      "resolved": "https://registry.npmjs.org/[1;31mdata[m-view-byte-offset/-/[1;31mdata[m-view-byte-offset-1.0.1.tgz",
+[35mpackage-lock.json[m[36m:[m[32m3178[m[36m:[m        "is-[1;31mdata[m-view": "^1.0.1"
+[35mpackage-lock.json[m[36m:[m[32m3212[m[36m:[m    "node_modules/define-[1;31mdata[m-property": {
+[35mpackage-lock.json[m[36m:[m[32m3214[m[36m:[m      "resolved": "https://registry.npmjs.org/define-[1;31mdata[m-property/-/define-[1;31mdata[m-property-1.1.4.tgz",
+[35mpackage-lock.json[m[36m:[m[32m3237[m[36m:[m        "define-[1;31mdata[m-property": "^1.0.1",
+[35mpackage-lock.json[m[36m:[m[32m3326[m[36m:[m        "[1;31mdata[m-view-buffer": "^1.0.2",
+[35mpackage-lock.json[m[36m:[m[32m3327[m[36m:[m        "[1;31mdata[m-view-byte-length": "^1.0.2",
+[35mpackage-lock.json[m[36m:[m[32m3328[m[36m:[m        "[1;31mdata[m-view-byte-offset": "^1.0.1",
+[35mpackage-lock.json[m[36m:[m[32m3347[m[36m:[m        "is-[1;31mdata[m-view": "^1.0.2",
+[35mpackage-lock.json[m[36m:[m[32m4599[m[36m:[m    "node_modules/is-[1;31mdata[m-view": {
+[35mpackage-lock.json[m[36m:[m[32m4601[m[36m:[m      "resolved": "https://registry.npmjs.org/is-[1;31mdata[m-view/-/is-[1;31mdata[m-view-1.0.2.tgz",
+[35mpackage-lock.json[m[36m:[m[32m4928[m[36m:[m        "define-[1;31mdata[m-property": "^1.1.4",
+[35mpackage-lock.json[m[36m:[m[32m6226[m[36m:[m        "define-[1;31mdata[m-property": "^1.1.4",
+[35mpackage-lock.json[m[36m:[m[32m6244[m[36m:[m        "define-[1;31mdata[m-property": "^1.1.4",
+[35mpackage-lock.json[m[36m:[m[32m6523[m[36m:[m        "define-[1;31mdata[m-property": "^1.1.4",
+[35msrc/app/Site/[id]/layout.tsx[m[36m:[m[32m1[m[36m:[mimport type { Meta[1;31mdata[m } from 'next';
+[35msrc/app/Site/[id]/layout.tsx[m[36m:[m[32m5[m[36m:[mexport async function generateMeta[1;31mdata[m({
+[35msrc/app/Site/[id]/layout.tsx[m[36m:[m[32m9[m[36m:[m}): Promise<Meta[1;31mdata[m> {
+[35msrc/app/Site/[id]/layout.tsx[m[36m:[m[32m14[m[36m:[m    const { [1;31mdata[m: siteRecord } = await supabase
+[35msrc/app/Site/[id]/layout.tsx[m[36m:[m[32m15[m[36m:[m      .[1;31mfrom('sites[m')
+[35msrc/app/Site/[id]/layout.tsx[m[36m:[m[32m16[m[36m:[m      .select('[1;31mdata[m')
+[35msrc/app/Site/[id]/layout.tsx[m[36m:[m[32m20[m[36m:[m    if (!siteRecord?.[1;31mdata[m) {
+[35msrc/app/Site/[id]/layout.tsx[m[36m:[m[32m27[m[36m:[m    const content = siteRecord.[1;31mdata[m;
+[35msrc/app/Site/[id]/layout.tsx[m[36m:[m[32m50[m[36m:[m    console.error('Failed to generate meta[1;31mdata[m:', error);
+[35msrc/app/Site/[id]/page.tsx[m[36m:[m[32m8[m[36m:[mimport { B2BTemplate[1;31mData[m } from '@/types/template';
+[35msrc/app/Site/[id]/page.tsx[m[36m:[m[32m12[m[36m:[m  const [1;31msiteId[m = params?.id as string;
+[35msrc/app/Site/[id]/page.tsx[m[36m:[m[32m14[m[36m:[m  const [[1;31mdata[m, set[1;31mData[m] = useState<B2BTemplate[1;31mData[m | null>(null);
+[35msrc/app/Site/[id]/page.tsx[m[36m:[m[32m20[m[36m:[m    if (![1;31msiteId[m) return;
+[35msrc/app/Site/[id]/page.tsx[m[36m:[m[32m25[m[36m:[m      const { [1;31mdata[m: siteRecord, error } = await supabase
+[35msrc/app/Site/[id]/page.tsx[m[36m:[m[32m26[m[36m:[m        .[1;31mfrom('sites[m')
+[35msrc/app/Site/[id]/page.tsx[m[36m:[m[32m27[m[36m:[m        .select('[1;31mdata[m')
+[35msrc/app/Site/[id]/page.tsx[m[36m:[m[32m28[m[36m:[m        .eq('id', [1;31msiteId[m)
+[35msrc/app/Site/[id]/page.tsx[m[36m:[m[32m31[m[36m:[m      if (error || !siteRecord?.[1;31mdata[m) {
+[35msrc/app/Site/[id]/page.tsx[m[36m:[m[32m34[m[36m:[m        set[1;31mData[m(siteRecord.[1;31mdata[m);
+[35msrc/app/Site/[id]/page.tsx[m[36m:[m[32m41[m[36m:[m  }, [[1;31msiteId[m]);
+[35msrc/app/Site/[id]/page.tsx[m[36m:[m[32m51[m[36m:[m  if (notFound || ![1;31mdata[m) {
+[35msrc/app/Site/[id]/page.tsx[m[36m:[m[32m62[m[36m:[m  const isSolutionType = [1;31mdata[m.solutionMain !== undefined;
+[35msrc/app/Site/[id]/page.tsx[m[36m:[m[32m67[m[36m:[m        <LivePreview [1;31mdata[m={[1;31mdata[m} published />
+[35msrc/app/Site/[id]/page.tsx[m[36m:[m[32m70[m[36m:[m          [1;31mdata[m={[1;31mdata[m}
+[35msrc/app/api/admin/leads/route.ts[m[36m:[m[32m7[m[36m:[m    const [1;31msiteId[m = searchParams.get('[1;31msiteId[m');
+[35msrc/app/api/admin/leads/route.ts[m[36m:[m[32m14[m[36m:[m    if ([1;31msiteId[m && [1;31msiteId[m !== 'all') {
+[35msrc/app/api/admin/leads/route.ts[m[36m:[m[32m15[m[36m:[m      query = query.eq('site_id', [1;31msiteId[m);
+[35msrc/app/api/admin/leads/route.ts[m[36m:[m[32m18[m[36m:[m    const { [1;31mdata[m, error } = await query;
+[35msrc/app/api/admin/leads/route.ts[m[36m:[m[32m21[m[36m:[m    return NextResponse.json({ leads: [1;31mdata[m || [] });
+[35msrc/app/api/admin/leads/route.ts[m[36m:[m[32m39[m[36m:[mexport async function [1;31mDELETE[m(request: Request) {
+[35msrc/app/api/admin/leads/route.ts[m[36m:[m[32m43[m[36m:[m    const { error } = await supabaseAdmin.from('leads').[1;31mdelete[m().eq('id', id);
+[35msrc/app/api/billing/confirm/route.ts[m[36m:[m[32m15[m[36m:[m    const { [1;31mdata[m: order, error: orderError } = await supabaseAdmin
+[35msrc/app/api/billing/confirm/route.ts[m[36m:[m[32m33[m[36m:[m    const { [1;31mdata[m: customer } = await supabaseAdmin
+[35msrc/app/api/billing/confirm/route.ts[m[36m:[m[32m59[m[36m:[m      await supabaseAdmin.from('subscriptions').[1;31mupsert[m(
+[35msrc/app/api/billing/confirm/route.ts[m[36m:[m[32m78[m[36m:[m      await supabaseAdmin.from('payments').[1;31minsert[m({
+[35msrc/app/api/builder-data/route.ts[m[36m:[m[32m6[m[36m:[m    // 1. URL에서 [1;31msiteId[m 추출 (예: ?[1;31msiteId[m=default-site)
+[35msrc/app/api/builder-data/route.ts[m[36m:[m[32m8[m[36m:[m    const [1;31msiteId[m = searchParams.get('[1;31msiteId[m');
+[35msrc/app/api/builder-data/route.ts[m[36m:[m[32m10[m[36m:[m    if (![1;31msiteId[m) {
+[35msrc/app/api/builder-data/route.ts[m[36m:[m[32m11[m[36m:[m      return NextResponse.json({ error: '[1;31msiteId[m가 필요합니다.' }, { status: 400 });
+[35msrc/app/api/builder-data/route.ts[m[36m:[m[32m17[m[36m:[m    // 3. DB에서 해당 [1;31msiteId[m 데이터 조회
+[35msrc/app/api/builder-data/route.ts[m[36m:[m[32m18[m[36m:[m    const { [1;31mdata[m, error } = await supabaseAdmin
+[35msrc/app/api/builder-data/route.ts[m[36m:[m[32m19[m[36m:[m      .[1;31mfrom('sites[m')
+[35msrc/app/api/builder-data/route.ts[m[36m:[m[32m21[m[36m:[m      .eq('id', [1;31msiteId[m)
+[35msrc/app/api/builder-data/route.ts[m[36m:[m[32m32[m[36m:[m    if (![1;31mdata[m) {
+[35msrc/app/api/builder-data/route.ts[m[36m:[m[32m37[m[36m:[m    return NextResponse.json({ [1;31mdata[m }, { status: 200 });
+[35msrc/app/api/cron/billing/route.ts[m[36m:[m[32m19[m[36m:[m    const { [1;31mdata[m: subs, error: subsError } = await supabaseAdmin
+[35msrc/app/api/cron/billing/route.ts[m[36m:[m[32m53[m[36m:[m        await supabaseAdmin.from('payments').[1;31minsert[m({
+[35msrc/app/api/cron/billing/route.ts[m[36m:[m[32m67[m[36m:[m        await supabaseAdmin.from('payments').[1;31minsert[m({
+[35msrc/app/api/domains/route.ts[m[36m:[m[32m6[m[36m:[m    const { [1;31msiteId[m, domain } = await req.json();
+[35msrc/app/api/domains/route.ts[m[36m:[m[32m8[m[36m:[m    if (![1;31msiteId[m || !domain) {
+[35msrc/app/api/domains/route.ts[m[36m:[m[32m10[m[36m:[m        { error: "[1;31msiteId[m와 도메인은 필수 항목입니다." },
+[35msrc/app/api/domains/route.ts[m[36m:[m[32m21[m[36m:[m      .eq("id", [1;31msiteId[m);
+[35msrc/app/api/images/upload/route.ts[m[36m:[m[32m28[m[36m:[m    const form[1;31mData[m = await request.form[1;31mData[m();
+[35msrc/app/api/images/upload/route.ts[m[36m:[m[32m29[m[36m:[m    const file = form[1;31mData[m.get('file');
+[35msrc/app/api/images/upload/route.ts[m[36m:[m[32m30[m[36m:[m    const raw[1;31mSiteId[m = form[1;31mData[m.get('[1;31msiteId[m');
+[35msrc/app/api/images/upload/route.ts[m[36m:[m[32m31[m[36m:[m    const rawPurpose = form[1;31mData[m.get('purpose');
+[35msrc/app/api/images/upload/route.ts[m[36m:[m[32m37[m[36m:[m    if (typeof raw[1;31mSiteId[m !== 'string' || !raw[1;31mSiteId[m.trim()) {
+[35msrc/app/api/images/upload/route.ts[m[36m:[m[32m49[m[36m:[m    const [1;31msiteId[m = raw[1;31mSiteId[m.replace(/[^a-zA-Z0-9_-]/g, '');
+[35msrc/app/api/images/upload/route.ts[m[36m:[m[32m50[m[36m:[m    if (![1;31msiteId[m) {
+[35msrc/app/api/images/upload/route.ts[m[36m:[m[32m65[m[36m:[m      const path = `${[1;31msiteId[m}/${uploadId}-original.gif`;
+[35msrc/app/api/images/upload/route.ts[m[36m:[m[32m69[m[36m:[m        [1;31mupsert[m: false,
+[35msrc/app/api/images/upload/route.ts[m[36m:[m[32m74[m[36m:[m      const { [1;31mdata[m } = supabase.storage.from(BUCKET).getPublicUrl(path);
+[35msrc/app/api/images/upload/route.ts[m[36m:[m[32m77[m[36m:[m        url: [1;31mdata[m.publicUrl,
+[35msrc/app/api/images/upload/route.ts[m[36m:[m[32m85[m[36m:[m    const meta[1;31mdata[m = await image.meta[1;31mdata[m();
+[35msrc/app/api/images/upload/route.ts[m[36m:[m[32m87[m[36m:[m    if (!meta[1;31mdata[m.width || !meta[1;31mdata[m.height) {
+[35msrc/app/api/images/upload/route.ts[m[36m:[m[32m92[m[36m:[m      (width) => width <= meta[1;31mdata[m.width!,
+[35msrc/app/api/images/upload/route.ts[m[36m:[m[32m103[m[36m:[m    const originalPath = `${[1;31msiteId[m}/${uploadId}-original.${originalExtension}`;
+[35msrc/app/api/images/upload/route.ts[m[36m:[m[32m109[m[36m:[m        [1;31mupsert[m: false,
+[35msrc/app/api/images/upload/route.ts[m[36m:[m[32m117[m[36m:[m    const outputWidths = widths.length > 0 ? widths : [meta[1;31mdata[m.width];
+[35msrc/app/api/images/upload/route.ts[m[36m:[m[32m133[m[36m:[m      const path = `${[1;31msiteId[m}/${uploadId}-${width}.webp`;
+[35msrc/app/api/images/upload/route.ts[m[36m:[m[32m137[m[36m:[m        [1;31mupsert[m: false,
+[35msrc/app/api/images/upload/route.ts[m[36m:[m[32m142[m[36m:[m      const { [1;31mdata[m } = supabase.storage.from(BUCKET).getPublicUrl(path);
+[35msrc/app/api/images/upload/route.ts[m[36m:[m[32m143[m[36m:[m      generated.push({ width, url: [1;31mdata[m.publicUrl });
+[35msrc/app/api/images/upload/route.ts[m[36m:[m[32m151[m[36m:[m      width: meta[1;31mdata[m.width,
+[35msrc/app/api/images/upload/route.ts[m[36m:[m[32m152[m[36m:[m      height: meta[1;31mdata[m.height,
+[35msrc/app/api/leads/route.ts[m[36m:[m[32m7[m[36m:[m    const { [1;31msiteId[m, name, phone, message } = await req.json();
+[35msrc/app/api/leads/route.ts[m[36m:[m[32m9[m[36m:[m    if (![1;31msiteId[m || !name || !phone) {
+[35msrc/app/api/leads/route.ts[m[36m:[m[32m17[m[36m:[m    const { error: dbError } = await supabaseAdmin.from('leads').[1;31minsert[m([
+[35msrc/app/api/leads/route.ts[m[36m:[m[32m19[m[36m:[m        site_id: [1;31msiteId[m,
+[35msrc/app/api/leads/route.ts[m[36m:[m[32m29[m[36m:[m    const { [1;31mdata[m: site } = await supabaseAdmin
+[35msrc/app/api/leads/route.ts[m[36m:[m[32m30[m[36m:[m      .[1;31mfrom('sites[m')
+[35msrc/app/api/leads/route.ts[m[36m:[m[32m32[m[36m:[m      .eq('id', [1;31msiteId[m)
+[35msrc/app/api/orders/route.ts[m[36m:[m[32m19[m[36m:[m      .[1;31minsert[m({ customer_key: customerKey, name, email, phone });
+[35msrc/app/api/orders/route.ts[m[36m:[m[32m22[m[36m:[m    const { error: oe } = await supabaseAdmin.from('orders').[1;31minsert[m({
+[35msrc/app/api/payment/confirm/route.ts[m[36m:[m[32m54[m[36m:[m      [1;31mdata[m: result,
+[35msrc/app/api/publish/route.ts[m[36m:[m[32m18[m[36m:[m    // 1. 기존 사이트 데이터가 있는지 확인 후 업데이트 또는 삽입 ([1;31mUpsert[m)
+[35msrc/app/api/publish/route.ts[m[36m:[m[32m19[m[36m:[m    const { [1;31mdata[m, error } = await supabaseAdmin
+[35msrc/app/api/publish/route.ts[m[36m:[m[32m20[m[36m:[m      .[1;31mfrom('sites[m')
+[35msrc/app/api/publish/route.ts[m[36m:[m[32m21[m[36m:[m      .[1;31mupsert[m({ 
+[35msrc/app/api/site-data/route.ts[m[36m:[m[32m6[m[36m:[m  const [1;31msiteId[m = searchParams.get('[1;31msiteId[m');
+[35msrc/app/api/site-data/route.ts[m[36m:[m[32m8[m[36m:[m  if (![1;31msiteId[m) {
+[35msrc/app/api/site-data/route.ts[m[36m:[m[32m9[m[36m:[m    return NextResponse.json({ error: '[1;31msiteId[m is required' }, { status: 400 });
+[35msrc/app/api/site-data/route.ts[m[36m:[m[32m17[m[36m:[m  const { [1;31mdata[m, error } = await supabase
+[35msrc/app/api/site-data/route.ts[m[36m:[m[32m18[m[36m:[m    .[1;31mfrom('sites[m')
+[35msrc/app/api/site-data/route.ts[m[36m:[m[32m19[m[36m:[m    .select('[1;31mdata[m')
+[35msrc/app/api/site-data/route.ts[m[36m:[m[32m20[m[36m:[m    .eq('id', [1;31msiteId[m)
+[35msrc/app/api/site-data/route.ts[m[36m:[m[32m23[m[36m:[m  if (error || ![1;31mdata[m) {
+[35msrc/app/api/site-data/route.ts[m[36m:[m[32m27[m[36m:[m  return NextResponse.json([1;31mdata[m.[1;31mdata[m);
+[35msrc/app/api/sites/publish/route.ts[m[36m:[m[32m3[m[36m:[mimport { B2BTemplate[1;31mData[m } from "@/[1;31mdata[m/templates";
+[35msrc/app/api/sites/publish/route.ts[m[36m:[m[32m6[m[36m:[m  [1;31msiteId[m?: string | null;
+[35msrc/app/api/sites/publish/route.ts[m[36m:[m[32m7[m[36m:[m  template[1;31mData[m: B2BTemplate[1;31mData[m;
+[35msrc/app/api/sites/publish/route.ts[m[36m:[m[32m14[m[36m:[m    const { [1;31msiteId[m, template[1;31mData[m, subdomain } = body;
+[35msrc/app/api/sites/publish/route.ts[m[36m:[m[32m16[m[36m:[m    const title = template[1;31mData[m.hero?.title?.trim() || template[1;31mData[m.company?.name?.trim();
+[35msrc/app/api/sites/publish/route.ts[m[36m:[m[32m26[m[36m:[m      content: template[1;31mData[m,
+[35msrc/app/api/sites/publish/route.ts[m[36m:[m[32m33[m[36m:[m    if ([1;31msiteId[m) {
+[35msrc/app/api/sites/publish/route.ts[m[36m:[m[32m35[m[36m:[m      const { [1;31mdata[m, error } = await supabaseAdmin
+[35msrc/app/api/sites/publish/route.ts[m[36m:[m[32m38[m[36m:[m        .eq("id", [1;31msiteId[m)
+[35msrc/app/api/sites/publish/route.ts[m[36m:[m[32m43[m[36m:[m      result = [1;31mdata[m;
+[35msrc/app/api/sites/publish/route.ts[m[36m:[m[32m45[m[36m:[m      // 2. 신규 사이트 등록 ([1;31mINSERT[m)
+[35msrc/app/api/sites/publish/route.ts[m[36m:[m[32m46[m[36m:[m      const { [1;31mdata[m, error } = await supabaseAdmin
+[35msrc/app/api/sites/publish/route.ts[m[36m:[m[32m48[m[36m:[m        .[1;31minsert[m([{ ...record, is_published: true }])
+[35msrc/app/api/sites/publish/route.ts[m[36m:[m[32m53[m[36m:[m      result = [1;31mdata[m;
+[35msrc/app/api/sites/publish/route.ts[m[36m:[m[32m58[m[36m:[m      [1;31msiteId[m: result.id,
+[35msrc/app/api/sites/publish/route.ts[m[36m:[m[32m59[m[36m:[m      [1;31mdata[m: result,
+[35msrc/app/api/webhooks/portone/route.ts[m[36m:[m[32m22[m[36m:[m    // merchant_uid 네이밍 규칙: site_{[1;31msiteId[m}_{timestamp} 형태 가정
+[35msrc/app/api/webhooks/portone/route.ts[m[36m:[m[32m23[m[36m:[m    const [1;31msiteId[mMatch = merchant_uid.match(/^site_([a-zA-Z0-9-]+)_/);
+[35msrc/app/api/webhooks/portone/route.ts[m[36m:[m[32m24[m[36m:[m    const [1;31msiteId[m = [1;31msiteId[mMatch ? [1;31msiteId[mMatch[1] : null;
+[35msrc/app/api/webhooks/portone/route.ts[m[36m:[m[32m27[m[36m:[m    await supabaseAdmin.from("payments").[1;31minsert[m([
+[35msrc/app/api/webhooks/portone/route.ts[m[36m:[m[32m29[m[36m:[m        site_id: [1;31msiteId[m,
+[35msrc/app/api/webhooks/portone/route.ts[m[36m:[m[32m38[m[36m:[m    if (status === "paid" && [1;31msiteId[m) {
+[35msrc/app/api/webhooks/portone/route.ts[m[36m:[m[32m49[m[36m:[m        .eq("id", [1;31msiteId[m);
+[35msrc/app/api/webhooks/portone/route.ts[m[36m:[m[32m55[m[36m:[m    if ((status === "failed" || status === "cancelled") && [1;31msiteId[m) {
+[35msrc/app/api/webhooks/portone/route.ts[m[36m:[m[32m61[m[36m:[m        .eq("id", [1;31msiteId[m);
+[35msrc/app/builder/page.tsx[m[36m:[m[32m6[m[36m:[mimport { B2BTemplate[1;31mData[m } from '@/types/Template';
+[35msrc/app/builder/page.tsx[m[36m:[m[32m21[m[36m:[m  [1;31mdata[m: any;
+[35msrc/app/builder/page.tsx[m[36m:[m[32m22[m[36m:[m  [1;31mtemplate_type[m?: string | null;
+[35msrc/app/builder/page.tsx[m[36m:[m[32m63[m[36m:[m    normalizeTemplate(site.[1;31mtemplate_type[m) ||
+[35msrc/app/builder/page.tsx[m[36m:[m[32m64[m[36m:[m    normalizeTemplate(site.[1;31mdata[m?.templateType) ||
+[35msrc/app/builder/page.tsx[m[36m:[m[32m69[m[36m:[mfunction createDefault[1;31mData[m(template: TemplateKey): B2BTemplate[1;31mData[m {
+[35msrc/app/builder/page.tsx[m[36m:[m[32m302[m[36m:[m  return base as unknown as B2BTemplate[1;31mData[m;
+[35msrc/app/builder/page.tsx[m[36m:[m[32m305[m[36m:[mfunction mergeWithDefault[1;31mData[m(
+[35msrc/app/builder/page.tsx[m[36m:[m[32m307[m[36m:[m  current[1;31mData[m: any,
+[35msrc/app/builder/page.tsx[m[36m:[m[32m308[m[36m:[m): B2BTemplate[1;31mData[m {
+[35msrc/app/builder/page.tsx[m[36m:[m[32m309[m[36m:[m  const defaults = createDefault[1;31mData[m(template);
+[35msrc/app/builder/page.tsx[m[36m:[m[32m311[m[36m:[m  if (!current[1;31mData[m || typeof current[1;31mData[m !== 'object') {
+[35msrc/app/builder/page.tsx[m[36m:[m[32m317[m[36m:[m    ...current[1;31mData[m,
+[35msrc/app/builder/page.tsx[m[36m:[m[32m323[m[36m:[m      ...(current[1;31mData[m.company || {}),
+[35msrc/app/builder/page.tsx[m[36m:[m[32m328[m[36m:[m      ...(current[1;31mData[m.hero || {}),
+[35msrc/app/builder/page.tsx[m[36m:[m[32m332[m[36m:[m      Array.isArray(current[1;31mData[m.solutions) &&
+[35msrc/app/builder/page.tsx[m[36m:[m[32m333[m[36m:[m      current[1;31mData[m.solutions.length > 0
+[35msrc/app/builder/page.tsx[m[36m:[m[32m334[m[36m:[m        ? current[1;31mData[m.solutions
+[35msrc/app/builder/page.tsx[m[36m:[m[32m337[m[36m:[m    projects: Array.isArray(current[1;31mData[m.projects)
+[35msrc/app/builder/page.tsx[m[36m:[m[32m338[m[36m:[m      ? current[1;31mData[m.projects
+[35msrc/app/builder/page.tsx[m[36m:[m[32m341[m[36m:[m    services: Array.isArray(current[1;31mData[m.services)
+[35msrc/app/builder/page.tsx[m[36m:[m[32m342[m[36m:[m      ? current[1;31mData[m.services
+[35msrc/app/builder/page.tsx[m[36m:[m[32m345[m[36m:[m    process: Array.isArray(current[1;31mData[m.process)
+[35msrc/app/builder/page.tsx[m[36m:[m[32m346[m[36m:[m      ? current[1;31mData[m.process
+[35msrc/app/builder/page.tsx[m[36m:[m[32m351[m[36m:[m      ...(current[1;31mData[m.navigation || {}),
+[35msrc/app/builder/page.tsx[m[36m:[m[32m356[m[36m:[m      ...(current[1;31mData[m.prCenter || {}),
+[35msrc/app/builder/page.tsx[m[36m:[m[32m361[m[36m:[m      ...(current[1;31mData[m.recruit || {}),
+[35msrc/app/builder/page.tsx[m[36m:[m[32m366[m[36m:[m      ...(current[1;31mData[m.csCenter || {}),
+[35msrc/app/builder/page.tsx[m[36m:[m[32m370[m[36m:[m        ...(current[1;31mData[m.csCenter?.contactInfo || {}),
+[35msrc/app/builder/page.tsx[m[36m:[m[32m376[m[36m:[m      ...(current[1;31mData[m.footer || {}),
+[35msrc/app/builder/page.tsx[m[36m:[m[32m386[m[36m:[m        ...(current[1;31mData[m.corporateInfo || {}),
+[35msrc/app/builder/page.tsx[m[36m:[m[32m390[m[36m:[m          ...(current[1;31mData[m.corporateInfo?.ceoGreeting || {}),
+[35msrc/app/builder/page.tsx[m[36m:[m[32m395[m[36m:[m          ...(current[1;31mData[m.corporateInfo?.missionVision || {}),
+[35msrc/app/builder/page.tsx[m[36m:[m[32m400[m[36m:[m          ...(current[1;31mData[m.corporateInfo?.location || {}),
+[35msrc/app/builder/page.tsx[m[36m:[m[32m404[m[36m:[m            ...(current[1;31mData[m.corporateInfo?.location?.headOffice || {}),
+[35msrc/app/builder/page.tsx[m[36m:[m[32m408[m[36m:[m    } as B2BTemplate[1;31mData[m;
+[35msrc/app/builder/page.tsx[m[36m:[m[32m411[m[36m:[m  return merged as B2BTemplate[1;31mData[m;
+[35msrc/app/builder/page.tsx[m[36m:[m[32m415[m[36m:[m  const [[1;31mdata[m, set[1;31mData[m] = useState<B2BTemplate[1;31mData[m | null>(null);
+[35msrc/app/builder/page.tsx[m[36m:[m[32m416[m[36m:[m  const [[1;31msiteId[m, set[1;31mSiteId[m] = useState<string | null>(null);
+[35msrc/app/builder/page.tsx[m[36m:[m[32m432[m[36m:[m    const { [1;31mdata[m: sites, error } = await supabase
+[35msrc/app/builder/page.tsx[m[36m:[m[32m433[m[36m:[m      .[1;31mfrom('sites[m')
+[35msrc/app/builder/page.tsx[m[36m:[m[32m434[m[36m:[m      .select('id, name, [1;31mdata[m, [1;31mtemplate_type[m')
+[35msrc/app/builder/page.tsx[m[36m:[m[32m442[m[36m:[m      set[1;31mSiteId[m(null);
+[35msrc/app/builder/page.tsx[m[36m:[m[32m443[m[36m:[m      set[1;31mData[m(null);
+[35msrc/app/builder/page.tsx[m[36m:[m[32m454[m[36m:[m      set[1;31mSiteId[m(null);
+[35msrc/app/builder/page.tsx[m[36m:[m[32m455[m[36m:[m      set[1;31mData[m(null);
+[35msrc/app/builder/page.tsx[m[36m:[m[32m461[m[36m:[m    const currentSite = [1;31msiteId[m
+[35msrc/app/builder/page.tsx[m[36m:[m[32m462[m[36m:[m      ? list.find((site) => site.id === [1;31msiteId[m)
+[35msrc/app/builder/page.tsx[m[36m:[m[32m472[m[36m:[m    set[1;31mSiteId[m(initialSite.id);
+[35msrc/app/builder/page.tsx[m[36m:[m[32m474[m[36m:[m    set[1;31mData[m(mergeWithDefault[1;31mData[m(template, initialSite.[1;31mdata[m));
+[35msrc/app/builder/page.tsx[m[36m:[m[32m476[m[36m:[m  }, [[1;31msiteId[m]);
+[35msrc/app/builder/page.tsx[m[36m:[m[32m482[m[36m:[m  async function loadSite[1;31mData[m(id: string) {
+[35msrc/app/builder/page.tsx[m[36m:[m[32m496[m[36m:[m    set[1;31mSiteId[m(id);
+[35msrc/app/builder/page.tsx[m[36m:[m[32m499[m[36m:[m    const { [1;31mdata[m: site[1;31mData[m, error } = await supabase
+[35msrc/app/builder/page.tsx[m[36m:[m[32m500[m[36m:[m      .[1;31mfrom('sites[m')
+[35msrc/app/builder/page.tsx[m[36m:[m[32m501[m[36m:[m      .select('id, name, [1;31mdata[m, [1;31mtemplate_type[m')
+[35msrc/app/builder/page.tsx[m[36m:[m[32m509[m[36m:[m      set[1;31mData[m(null);
+[35msrc/app/builder/page.tsx[m[36m:[m[32m515[m[36m:[m    set[1;31mData[m(mergeWithDefault[1;31mData[m(template, site[1;31mData[m?.[1;31mdata[m));
+[35msrc/app/builder/page.tsx[m[36m:[m[32m529[m[36m:[m      set[1;31mSiteId[m(null);
+[35msrc/app/builder/page.tsx[m[36m:[m[32m530[m[36m:[m      set[1;31mData[m(null);
+[35msrc/app/builder/page.tsx[m[36m:[m[32m541[m[36m:[m    await loadSite[1;31mData[m(matchingSite.id);
+[35msrc/app/builder/page.tsx[m[36m:[m[32m545[m[36m:[m    if (![1;31msiteId[m || ![1;31mdata[m) {
+[35msrc/app/builder/page.tsx[m[36m:[m[32m558[m[36m:[m      const publish[1;31mData[m = {
+[35msrc/app/builder/page.tsx[m[36m:[m[32m559[m[36m:[m        ...[1;31mdata[m,
+[35msrc/app/builder/page.tsx[m[36m:[m[32m564[m[36m:[m        .[1;31mfrom('sites[m')
+[35msrc/app/builder/page.tsx[m[36m:[m[32m566[m[36m:[m          [1;31mdata[m: publish[1;31mData[m,
+[35msrc/app/builder/page.tsx[m[36m:[m[32m567[m[36m:[m          [1;31mtemplate_type[m: selectedTemplate,
+[35msrc/app/builder/page.tsx[m[36m:[m[32m570[m[36m:[m        .eq('id', [1;31msiteId[m);
+[35msrc/app/builder/page.tsx[m[36m:[m[32m582[m[36m:[m        `/preview/${encodeURIComponent([1;31msiteId[m)}`,
+[35msrc/app/builder/page.tsx[m[36m:[m[32m601[m[36m:[m  async function [1;31mdelete[mSite() {
+[35msrc/app/builder/page.tsx[m[36m:[m[32m602[m[36m:[m    if (![1;31msiteId[m || !confirm('정말 선택한 사이트를 삭제하시겠습니까?')) {
+[35msrc/app/builder/page.tsx[m[36m:[m[32m610[m[36m:[m      .[1;31mfrom('sites[m')
+[35msrc/app/builder/page.tsx[m[36m:[m[32m611[m[36m:[m      .[1;31mdelete[m()
+[35msrc/app/builder/page.tsx[m[36m:[m[32m612[m[36m:[m      .eq('id', [1;31msiteId[m);
+[35msrc/app/builder/page.tsx[m[36m:[m[32m624[m[36m:[m    set[1;31mSiteId[m(null);
+[35msrc/app/builder/page.tsx[m[36m:[m[32m625[m[36m:[m    set[1;31mData[m(null);
+[35msrc/app/builder/page.tsx[m[36m:[m[32m638[m[36m:[m  if (isLoading && ![1;31mdata[m) {
+[35msrc/app/builder/page.tsx[m[36m:[m[32m646[m[36m:[m  if (![1;31mdata[m) {
+[35msrc/app/builder/page.tsx[m[36m:[m[32m667[m[36m:[m              수 있습니다. 기존 데이터의 [1;31mtemplate_type[m 또는
+[35msrc/app/builder/page.tsx[m[36m:[m[32m668[m[36m:[m              [1;31mdata[m.templateType을 interior, corporate, fitness, legal 중 하나로
+[35msrc/app/builder/page.tsx[m[36m:[m[32m712[m[36m:[m              value={[1;31msiteId[m || ''}
+[35msrc/app/builder/page.tsx[m[36m:[m[32m713[m[36m:[m              onChange={(event) => void loadSite[1;31mData[m(event.target.value)}
+[35msrc/app/builder/page.tsx[m[36m:[m[32m750[m[36m:[m              onClick={[1;31mdelete[mSite}
+[35msrc/app/builder/page.tsx[m[36m:[m[32m751[m[36m:[m              disabled={![1;31msiteId[m || isLoading}
+[35msrc/app/builder/page.tsx[m[36m:[m[32m761[m[36m:[m            [1;31mdata[m={[1;31mdata[m}
+[35msrc/app/builder/page.tsx[m[36m:[m[32m762[m[36m:[m            set[1;31mData[m={set[1;31mData[m}
+[35msrc/app/builder/page.tsx[m[36m:[m[32m763[m[36m:[m            [1;31msiteId[m={[1;31msiteId[m}
+[35msrc/app/builder/page.tsx[m[36m:[m[32m773[m[36m:[m          [1;31mdata[m={[1;31mdata[m}
+[35msrc/app/builder/page.tsx[m[36m:[m[32m774[m[36m:[m          set[1;31mData[m={set[1;31mData[m}
+[35msrc/app/builder/page.tsx.bak[m[36m:[m[32m3[m[36m:[mimport { B2BTemplate[1;31mData[m } from '@/types/template';
+[35msrc/app/builder/page.tsx.bak[m[36m:[m[32m9[m[36m:[m  const [[1;31mdata[m, set[1;31mData[m] = useState<B2BTemplate[1;31mData[m | null>(null);
+[35msrc/app/builder/page.tsx.bak[m[36m:[m[32m10[m[36m:[m  const [[1;31msiteId[m, set[1;31mSiteId[m] = useState<string | null>(null);
+[35msrc/app/builder/page.tsx.bak[m[36m:[m[32m20[m[36m:[m    const { [1;31mdata[m: sites } = await supabase.[1;31mfrom('sites[m').select('*');
+[35msrc/app/builder/page.tsx.bak[m[36m:[m[32m23[m[36m:[m      if (![1;31msiteId[m) loadSite[1;31mData[m(sites[0].id);
+[35msrc/app/builder/page.tsx.bak[m[36m:[m[32m27[m[36m:[m  async function loadSite[1;31mData[m(id: string) {
+[35msrc/app/builder/page.tsx.bak[m[36m:[m[32m29[m[36m:[m    set[1;31mSiteId[m(id);
+[35msrc/app/builder/page.tsx.bak[m[36m:[m[32m32[m[36m:[m    const { [1;31mdata[m: site[1;31mData[m, error } = await supabase
+[35msrc/app/builder/page.tsx.bak[m[36m:[m[32m33[m[36m:[m      .[1;31mfrom('sites[m')
+[35msrc/app/builder/page.tsx.bak[m[36m:[m[32m34[m[36m:[m      .select('[1;31mdata[m')
+[35msrc/app/builder/page.tsx.bak[m[36m:[m[32m40[m[36m:[m    } else if (site[1;31mData[m && site[1;31mData[m.[1;31mdata[m) {
+[35msrc/app/builder/page.tsx.bak[m[36m:[m[32m41[m[36m:[m      const current[1;31mData[m = site[1;31mData[m.[1;31mdata[m;
+[35msrc/app/builder/page.tsx.bak[m[36m:[m[32m44[m[36m:[m      const defaultCorporate[1;31mData[m: B2BTemplate[1;31mData[m = {
+[35msrc/app/builder/page.tsx.bak[m[36m:[m[32m100[m[36m:[m      set[1;31mData[m({
+[35msrc/app/builder/page.tsx.bak[m[36m:[m[32m101[m[36m:[m        ...defaultCorporate[1;31mData[m,
+[35msrc/app/builder/page.tsx.bak[m[36m:[m[32m102[m[36m:[m        ...current[1;31mData[m,
+[35msrc/app/builder/page.tsx.bak[m[36m:[m[32m104[m[36m:[m        company: { ...defaultCorporate[1;31mData[m.company, ...(current[1;31mData[m.company || {}) },
+[35msrc/app/builder/page.tsx.bak[m[36m:[m[32m105[m[36m:[m        solutions: current[1;31mData[m.solutions && current[1;31mData[m.solutions.length > 0 
+[35msrc/app/builder/page.tsx.bak[m[36m:[m[32m106[m[36m:[m          ? current[1;31mData[m.solutions 
+[35msrc/app/builder/page.tsx.bak[m[36m:[m[32m107[m[36m:[m          : defaultCorporate[1;31mData[m.solutions,
+[35msrc/app/builder/page.tsx.bak[m[36m:[m[32m114[m[36m:[m    if (![1;31msiteId[m || ![1;31mdata[m) return alert('사이트를 먼저 선택해주세요.');
+[35msrc/app/builder/page.tsx.bak[m[36m:[m[32m116[m[36m:[m    const { error } = await supabase.[1;31mfrom('sites[m').update({ [1;31mdata[m }).eq('id', [1;31msiteId[m);
+[35msrc/app/builder/page.tsx.bak[m[36m:[m[32m120[m[36m:[m      window.open(`/site/${[1;31msiteId[m}`, '_blank');
+[35msrc/app/builder/page.tsx.bak[m[36m:[m[32m125[m[36m:[m  async function [1;31mdelete[mSite() {
+[35msrc/app/builder/page.tsx.bak[m[36m:[m[32m126[m[36m:[m    if (![1;31msiteId[m || !confirm('정말 삭제하시겠습니까?')) return;
+[35msrc/app/builder/page.tsx.bak[m[36m:[m[32m131[m[36m:[m      .[1;31mfrom('sites[m')
+[35msrc/app/builder/page.tsx.bak[m[36m:[m[32m132[m[36m:[m      .[1;31mdelete[m()
+[35msrc/app/builder/page.tsx.bak[m[36m:[m[32m133[m[36m:[m      .eq('id', [1;31msiteId[m);
+[35msrc/app/builder/page.tsx.bak[m[36m:[m[32m142[m[36m:[m    set[1;31mSiteId[m(null);
+[35msrc/app/builder/page.tsx.bak[m[36m:[m[32m143[m[36m:[m    set[1;31mData[m(null);
+[35msrc/app/builder/page.tsx.bak[m[36m:[m[32m148[m[36m:[m  if (![1;31mdata[m) return <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900 font-bold text-white">빌더 데이터를 불러오는 중...</div>;
+[35msrc/app/builder/page.tsx.bak[m[36m:[m[32m157[m[36m:[m              value={[1;31msiteId[m || ''} 
+[35msrc/app/builder/page.tsx.bak[m[36m:[m[32m158[m[36m:[m              onChange={(e) => loadSite[1;31mData[m(e.target.value)} 
+[35msrc/app/builder/page.tsx.bak[m[36m:[m[32m184[m[36m:[m              onClick={[1;31mdelete[mSite} 
+[35msrc/app/builder/page.tsx.bak[m[36m:[m[32m185[m[36m:[m              disabled={![1;31msiteId[m || isLoading} 
+[35msrc/app/builder/page.tsx.bak[m[36m:[m[32m195[m[36m:[m            [1;31mdata[m={[1;31mdata[m} 
+[35msrc/app/builder/page.tsx.bak[m[36m:[m[32m196[m[36m:[m            set[1;31mData[m={set[1;31mData[m} 
+[35msrc/app/builder/page.tsx.bak[m[36m:[m[32m197[m[36m:[m            [1;31msiteId[m={[1;31msiteId[m} 
+[35msrc/app/builder/page.tsx.bak[m[36m:[m[32m206[m[36m:[m        <ViewerManager [1;31mdata[m={[1;31mdata[m} activeSection={activeSection} setActiveSection={setActiveSection} />
+[35msrc/app/p/[id]/ViewerClient.tsx[m[36m:[m[32m5[m[36m:[mimport { B2BTemplate[1;31mData[m, defaultB2BTemplate[1;31mData[m } from '@/[1;31mdata[m/templates';
+[35msrc/app/p/[id]/ViewerClient.tsx[m[36m:[m[32m10[m[36m:[mfunction getPreset[1;31mData[m(id: string): B2BTemplate[1;31mData[m {
+[35msrc/app/p/[id]/ViewerClient.tsx[m[36m:[m[32m13[m[36m:[m      ...defaultB2BTemplate[1;31mData[m,
+[35msrc/app/p/[id]/ViewerClient.tsx[m[36m:[m[32m40[m[36m:[m      ...defaultB2BTemplate[1;31mData[m,
+[35msrc/app/p/[id]/ViewerClient.tsx[m[36m:[m[32m65[m[36m:[m  return defaultB2BTemplate[1;31mData[m;
+[35msrc/app/p/[id]/ViewerClient.tsx[m[36m:[m[32m69[m[36m:[m  [1;31mdata[m?: B2BTemplate[1;31mData[m;
+[35msrc/app/p/[id]/ViewerClient.tsx[m[36m:[m[32m70[m[36m:[m  [1;31msiteId[m?: string;
+[35msrc/app/p/[id]/ViewerClient.tsx[m[36m:[m[32m73[m[36m:[mexport default function ViewerClient({ [1;31mdata[m: initial[1;31mData[m, [1;31msiteId[m: prop[1;31mSiteId[m }: ViewerClientProps) {
+[35msrc/app/p/[id]/ViewerClient.tsx[m[36m:[m[32m75[m[36m:[m  const [1;31msiteId[m = prop[1;31mSiteId[m || (params?.id as string);
+[35msrc/app/p/[id]/ViewerClient.tsx[m[36m:[m[32m78[m[36m:[m  const [[1;31mdata[m, set[1;31mData[m] = useState<B2BTemplate[1;31mData[m>(() => {
+[35msrc/app/p/[id]/ViewerClient.tsx[m[36m:[m[32m79[m[36m:[m    if (initial[1;31mData[m) return initial[1;31mData[m;
+[35msrc/app/p/[id]/ViewerClient.tsx[m[36m:[m[32m80[m[36m:[m    if ([1;31msiteId[m) return getPreset[1;31mData[m([1;31msiteId[m);
+[35msrc/app/p/[id]/ViewerClient.tsx[m[36m:[m[32m81[m[36m:[m    return defaultB2BTemplate[1;31mData[m;
+[35msrc/app/p/[id]/ViewerClient.tsx[m[36m:[m[32m84[m[36m:[m  const [loading, setLoading] = useState<boolean>(!initial[1;31mData[m && !![1;31msiteId[m);
+[35msrc/app/p/[id]/ViewerClient.tsx[m[36m:[m[32m87[m[36m:[m    if (initial[1;31mData[m) {
+[35msrc/app/p/[id]/ViewerClient.tsx[m[36m:[m[32m88[m[36m:[m      set[1;31mData[m(initial[1;31mData[m);
+[35msrc/app/p/[id]/ViewerClient.tsx[m[36m:[m[32m93[m[36m:[m    if ([1;31msiteId[m) {
+[35msrc/app/p/[id]/ViewerClient.tsx[m[36m:[m[32m96[m[36m:[m        .[1;31mfrom('sites[m')
+[35msrc/app/p/[id]/ViewerClient.tsx[m[36m:[m[32m98[m[36m:[m        .eq('id', [1;31msiteId[m)
+[35msrc/app/p/[id]/ViewerClient.tsx[m[36m:[m[32m100[m[36m:[m        .then(({ [1;31mdata[m: siteRecord }) => {
+[35msrc/app/p/[id]/ViewerClient.tsx[m[36m:[m[32m114[m[36m:[m            set[1;31mData[m(content);
+[35msrc/app/p/[id]/ViewerClient.tsx[m[36m:[m[32m116[m[36m:[m            set[1;31mData[m(getPreset[1;31mData[m([1;31msiteId[m));
+[35msrc/app/p/[id]/ViewerClient.tsx[m[36m:[m[32m122[m[36m:[m  }, [initial[1;31mData[m, [1;31msiteId[m]);
+[35msrc/app/p/[id]/ViewerClient.tsx[m[36m:[m[32m137[m[36m:[m        [1;31mdata[m={[1;31mdata[m}
+[35msrc/app/p/[id]/page.tsx[m[36m:[m[32m1[m[36m:[mimport { Meta[1;31mdata[m } from 'next';
+[35msrc/app/p/[id]/page.tsx[m[36m:[m[32m10[m[36m:[mexport async function generateMeta[1;31mdata[m({ params }: Props): Promise<Meta[1;31mdata[m> {
+[35msrc/app/p/[id]/page.tsx[m[36m:[m[32m14[m[36m:[m    const { [1;31mdata[m: site } = await supabaseAdmin
+[35msrc/app/p/[id]/page.tsx[m[36m:[m[32m15[m[36m:[m      .[1;31mfrom('sites[m')
+[35msrc/app/p/[id]/page.tsx[m[36m:[m[32m60[m[36m:[m  return <ViewerClient [1;31msiteId[m={id} />;
+[35msrc/app/pay/page.tsx[m[36m:[m[32m40[m[36m:[m  const [form[1;31mData[m, setForm[1;31mData[m] = useState({ email: '', name: '', phone: '' });
+[35msrc/app/pay/page.tsx[m[36m:[m[32m48[m[36m:[m    setForm[1;31mData[m((prev) => ({ ...prev, [name]: value }));
+[35msrc/app/pay/page.tsx[m[36m:[m[32m52[m[36m:[m    if (!form[1;31mData[m.email || !form[1;31mData[m.name || !form[1;31mData[m.phone) {
+[35msrc/app/pay/page.tsx[m[36m:[m[32m70[m[36m:[m        body: JSON.stringify({ plan, ...form[1;31mData[m }),
+[35msrc/app/pay/page.tsx[m[36m:[m[32m89[m[36m:[m        customerEmail: form[1;31mData[m.email,
+[35msrc/app/pay/page.tsx[m[36m:[m[32m90[m[36m:[m        customerName: form[1;31mData[m.name,
+[35msrc/app/pay/page.tsx[m[36m:[m[32m99[m[36m:[m  }, [form[1;31mData[m, plan]);
+[35msrc/app/pay/page.tsx[m[36m:[m[32m137[m[36m:[m              value={form[1;31mData[m.name} onChange={handleInputChange}
+[35msrc/app/pay/page.tsx[m[36m:[m[32m146[m[36m:[m              value={form[1;31mData[m.email} onChange={handleInputChange}
+[35msrc/app/pay/page.tsx[m[36m:[m[32m155[m[36m:[m              value={form[1;31mData[m.phone} onChange={handleInputChange}
+[35msrc/app/preview/[siteId]/page.tsx[m[36m:[m[32m7[m[36m:[mimport { B2BTemplate[1;31mData[m } from '@/types/Template';
+[35msrc/app/preview/[siteId]/page.tsx[m[36m:[m[32m13[m[36m:[m  const [[1;31mdata[m, set[1;31mData[m] = useState<B2BTemplate[1;31mData[m | null>(null);
+[35msrc/app/preview/[siteId]/page.tsx[m[36m:[m[32m23[m[36m:[m    async function fetchTemplate[1;31mData[m() {
+[35msrc/app/preview/[siteId]/page.tsx[m[36m:[m[32m24[m[36m:[m      const { [1;31mdata[m: sites, error } = await supabase
+[35msrc/app/preview/[siteId]/page.tsx[m[36m:[m[32m25[m[36m:[m        .[1;31mfrom('sites[m')
+[35msrc/app/preview/[siteId]/page.tsx[m[36m:[m[32m26[m[36m:[m        .select('[1;31mdata[m')
+[35msrc/app/preview/[siteId]/page.tsx[m[36m:[m[32m27[m[36m:[m        .eq('[1;31mtemplate_type[m', templateId)
+[35msrc/app/preview/[siteId]/page.tsx[m[36m:[m[32m32[m[36m:[m        set[1;31mData[m(null);
+[35msrc/app/preview/[siteId]/page.tsx[m[36m:[m[32m34[m[36m:[m        set[1;31mData[m(sites?.[1;31mdata[m || null);
+[35msrc/app/preview/[siteId]/page.tsx[m[36m:[m[32m39[m[36m:[m    void fetchTemplate[1;31mData[m();
+[35msrc/app/preview/[siteId]/page.tsx[m[36m:[m[32m46[m[36m:[m  if (![1;31mdata[m) {
+[35msrc/app/preview/[siteId]/page.tsx[m[36m:[m[32m53[m[36m:[m        [1;31mdata[m={[1;31mdata[m}
+[35msrc/app/preview/page.tsx[m[36m:[m[32m11[m[36m:[mimport { getDefault[1;31mData[m } from '@/lib/default[1;31mData[m';
+[35msrc/app/preview/page.tsx[m[36m:[m[32m17[m[36m:[m  const [[1;31mdata[m, set[1;31mData[m] = useState<any>(null);
+[35msrc/app/preview/page.tsx[m[36m:[m[32m21[m[36m:[m    async function fetch[1;31mData[m() {
+[35msrc/app/preview/page.tsx[m[36m:[m[32m24[m[36m:[m        const { [1;31mdata[m: sites, error } = await supabase
+[35msrc/app/preview/page.tsx[m[36m:[m[32m25[m[36m:[m          .[1;31mfrom('sites[m')
+[35msrc/app/preview/page.tsx[m[36m:[m[32m26[m[36m:[m          .select('[1;31mdata[m, [1;31mtemplate_type[m')
+[35msrc/app/preview/page.tsx[m[36m:[m[32m27[m[36m:[m          .eq('[1;31mtemplate_type[m', templateId)
+[35msrc/app/preview/page.tsx[m[36m:[m[32m30[m[36m:[m        if (error || !sites?.[1;31mdata[m) {
+[35msrc/app/preview/page.tsx[m[36m:[m[32m32[m[36m:[m          set[1;31mData[m(getDefault[1;31mData[m(templateId));
+[35msrc/app/preview/page.tsx[m[36m:[m[32m34[m[36m:[m          set[1;31mData[m(sites.[1;31mdata[m);
+[35msrc/app/preview/page.tsx[m[36m:[m[32m38[m[36m:[m        set[1;31mData[m(getDefault[1;31mData[m(templateId));
+[35msrc/app/preview/page.tsx[m[36m:[m[32m44[m[36m:[m    fetch[1;31mData[m();
+[35msrc/app/preview/page.tsx[m[36m:[m[32m51[m[36m:[m  if (![1;31mdata[m) {
+[35msrc/app/preview/page.tsx[m[36m:[m[32m57[m[36m:[m      <ViewerManager templateType={templateId} [1;31mdata[m={[1;31mdata[m} />
+[35msrc/app/showroom/[id]/page.tsx[m[36m:[m[32m6[m[36m:[mimport { SHOWROOM_TEMPLATES } from '@/[1;31mdata[m/showroomTemplates';
+[35msrc/components/builder/CorporateViewer.tsx[m[36m:[m[32m15[m[36m:[m  [1;31mdata[m: any;
+[35msrc/components/builder/CorporateViewer.tsx[m[36m:[m[32m21[m[36m:[m  [1;31mdata[m,
+[35msrc/components/builder/CorporateViewer.tsx[m[36m:[m[32m25[m[36m:[m  if (![1;31mdata[m) {
+[35msrc/components/builder/CorporateViewer.tsx[m[36m:[m[32m35[m[36m:[m  } = [1;31mdata[m;
+[35msrc/components/builder/CorporateViewer.tsx[m[36m:[m[32m37[m[36m:[m  const solutionList = Array.isArray([1;31mdata[m.solutions)
+[35msrc/components/builder/CorporateViewer.tsx[m[36m:[m[32m38[m[36m:[m    ? [1;31mdata[m.solutions
+[35msrc/components/builder/CorporateViewer.tsx[m[36m:[m[32m39[m[36m:[m    : Array.isArray([1;31mdata[m.solutions?.list)
+[35msrc/components/builder/CorporateViewer.tsx[m[36m:[m[32m40[m[36m:[m      ? [1;31mdata[m.solutions.list
+[35msrc/components/builder/CorporateViewer.tsx[m[36m:[m[32m43[m[36m:[m  const solutionMain = [1;31mdata[m.solutionMain || {
+[35msrc/components/builder/CorporateViewer.tsx[m[36m:[m[32m44[m[36m:[m    title: [1;31mdata[m.hero?.title || '',
+[35msrc/components/builder/CorporateViewer.tsx[m[36m:[m[32m45[m[36m:[m    description: [1;31mdata[m.hero?.subtitle || '',
+[35msrc/components/builder/CorporateViewer.tsx[m[36m:[m[32m46[m[36m:[m    detailContent: [1;31mdata[m.hero?.subtitle || '',
+[35msrc/components/builder/CorporateViewer.tsx[m[36m:[m[32m93[m[36m:[m  title: [1;31mdata[m.hero?.title || solutionMain.title,
+[35msrc/components/builder/CorporateViewer.tsx[m[36m:[m[32m94[m[36m:[m  subtitle: [1;31mdata[m.hero?.subtitle || solutionMain.description,
+[35msrc/components/builder/CorporateViewer.tsx[m[36m:[m[32m95[m[36m:[m  badge: [1;31mdata[m.hero?.badge || 'Since 1990',
+[35msrc/components/builder/CorporateViewer.tsx[m[36m:[m[32m96[m[36m:[m  mediaUrl: [1;31mdata[m.hero?.mediaUrl || '',
+[35msrc/components/builder/CorporateViewer.tsx[m[36m:[m[32m97[m[36m:[m  mediaSrcSet: [1;31mdata[m.hero?.mediaSrcSet || '',
+[35msrc/components/builder/CorporateViewer.tsx[m[36m:[m[32m115[m[36m:[m              [1;31mdata[m={{ solutionMain, solutions: solutionList }}
+[35msrc/components/builder/CorporateViewer.tsx[m[36m:[m[32m122[m[36m:[m              esg[1;31mData[m={corporateInfo.esg || [1;31mdata[m.esg}
+[35msrc/components/builder/CorporateViewer.tsx[m[36m:[m[32m129[m[36m:[m              pr[1;31mData[m={[1;31mdata[m.prCenter || [1;31mdata[m.pr || { news: [], notice: [] }}
+[35msrc/components/builder/CorporateViewer.tsx[m[36m:[m[32m136[m[36m:[m              recruit[1;31mData[m={
+[35msrc/components/builder/CorporateViewer.tsx[m[36m:[m[32m137[m[36m:[m                [1;31mdata[m.recruit || {
+[35msrc/components/builder/CorporateViewer.tsx[m[36m:[m[32m138[m[36m:[m                  talentValue: [1;31mdata[m.talentValue || '',
+[35msrc/components/builder/CorporateViewer.tsx[m[36m:[m[32m139[m[36m:[m                  benefitInfo: [1;31mdata[m.benefitInfo || '',
+[35msrc/components/builder/CorporateViewer.tsx[m[36m:[m[32m149[m[36m:[m              guide={[1;31mdata[m.csGuide || [1;31mdata[m.public?.notice}
+[35msrc/components/builder/CorporateViewer.tsx[m[36m:[m[32m151[m[36m:[m                [1;31mdata[m.csCenter?.contactInfo ||
+[35msrc/components/builder/CorporateViewer.tsx[m[36m:[m[32m152[m[36m:[m                [1;31mdata[m.cs || {
+[35msrc/components/builder/CorporateViewer.tsx[m[36m:[m[32m153[m[36m:[m                  phone: [1;31mdata[m.supportPhone || '',
+[35msrc/components/builder/CorporateViewer.tsx[m[36m:[m[32m181[m[36m:[m              {[1;31mdata[m.supportPhone ||
+[35msrc/components/builder/CorporateViewer.tsx[m[36m:[m[32m182[m[36m:[m                [1;31mdata[m.csCenter?.contactInfo?.phone ||
+[35msrc/components/builder/CorporateViewer.tsx[m[36m:[m[32m218[m[36m:[m              {[1;31mdata[m.supportPhone ||
+[35msrc/components/builder/CorporateViewer.tsx[m[36m:[m[32m219[m[36m:[m                [1;31mdata[m.csCenter?.contactInfo?.phone ||
+[35msrc/components/builder/CorporateViewer.tsx[m[36m:[m[32m223[m[36m:[m              {footer.contactEmail || [1;31mdata[m.csCenter?.contactInfo?.email || ''}
+[35msrc/components/builder/EditorSidebar.tsx[m[36m:[m[32m10[m[36m:[m  [1;31mdata[m: any;
+[35msrc/components/builder/EditorSidebar.tsx[m[36m:[m[32m11[m[36m:[m  set[1;31mData[m: React.Dispatch<React.SetStateAction<any>>;
+[35msrc/components/builder/EditorSidebar.tsx[m[36m:[m[32m12[m[36m:[m  [1;31msiteId[m?: string | null;
+[35msrc/components/builder/EditorSidebar.tsx[m[36m:[m[32m19[m[36m:[m  [1;31mdata[m,
+[35msrc/components/builder/EditorSidebar.tsx[m[36m:[m[32m20[m[36m:[m  set[1;31mData[m,
+[35msrc/components/builder/EditorSidebar.tsx[m[36m:[m[32m21[m[36m:[m  [1;31msiteId[m,
+[35msrc/components/builder/EditorSidebar.tsx[m[36m:[m[32m35[m[36m:[m    set[1;31mData[m((prev: any) => {
+[35msrc/components/builder/EditorSidebar.tsx[m[36m:[m[32m58[m[36m:[m    path.split('.').reduce((val: any, k) => val?.[k], [1;31mdata[m);
+[35msrc/components/builder/EditorSidebar.tsx[m[36m:[m[32m124[m[36m:[mconst templateType = [1;31mdata[m?.templateType;
+[35msrc/components/builder/EditorSidebar.tsx[m[36m:[m[32m377[m[36m:[m                    [1;31msiteId[m={[1;31msiteId[m}
+[35msrc/components/builder/EditorSidebar.tsx[m[36m:[m[32m441[m[36m:[m                        [1;31msiteId[m={[1;31msiteId[m}
+[35msrc/components/builder/EditorSidebar.tsx[m[36m:[m[32m448[m[36m:[m                        [1;31msiteId[m={[1;31msiteId[m}
+[35msrc/components/builder/EditorSidebar.tsx[m[36m:[m[32m619[m[36m:[m                    [1;31msiteId[m={[1;31msiteId[m}
+[35msrc/components/builder/EditorSidebar.tsx[m[36m:[m[32m645[m[36m:[m                    [1;31msiteId[m={[1;31msiteId[m}
+[35msrc/components/builder/EditorSidebar.tsx[m[36m:[m[32m652[m[36m:[m                    [1;31msiteId[m={[1;31msiteId[m}
+[35msrc/components/builder/EditorSidebar.tsx[m[36m:[m[32m749[m[36m:[m                          [1;31msiteId[m={[1;31msiteId[m}
+[35msrc/components/builder/LivePreview.tsx[m[36m:[m[32m11[m[36m:[m  [1;31mdata[m: any;
+[35msrc/components/builder/LivePreview.tsx[m[36m:[m[32m12[m[36m:[m  set[1;31mData[m?: React.Dispatch<React.SetStateAction<any>>;
+[35msrc/components/builder/LivePreview.tsx[m[36m:[m[32m22[m[36m:[m  [1;31mdata[m,
+[35msrc/components/builder/LivePreview.tsx[m[36m:[m[32m23[m[36m:[m  set[1;31mData[m,
+[35msrc/components/builder/LivePreview.tsx[m[36m:[m[32m28[m[36m:[m  const templateType = [1;31mdata[m?.templateType;
+[35msrc/components/builder/LivePreview.tsx[m[36m:[m[32m33[m[36m:[m        <InteriorViewer [1;31mdata[m={[1;31mdata[m} set[1;31mData[m={set[1;31mData[m} editable={!published} />
+[35msrc/components/builder/LivePreview.tsx[m[36m:[m[32m35[m[36m:[m        <LegalViewer [1;31mdata[m={[1;31mdata[m} set[1;31mData[m={set[1;31mData[m} editable={!published} />
+[35msrc/components/builder/LivePreview.tsx[m[36m:[m[32m38[m[36m:[m          [1;31mdata[m={[1;31mdata[m}
+[35msrc/components/builder/PortfolioViewer.tsx[m[36m:[m[32m4[m[36m:[mimport { B2BTemplate[1;31mData[m } from '@/types/template';
+[35msrc/components/builder/PortfolioViewer.tsx[m[36m:[m[32m6[m[36m:[mexport default function PortfolioViewer({ [1;31mdata[m }: { [1;31mdata[m: B2BTemplate[1;31mData[m }) {
+[35msrc/components/builder/PortfolioViewer.tsx[m[36m:[m[32m7[m[36m:[m  if (![1;31mdata[m) {
+[35msrc/components/builder/PortfolioViewer.tsx[m[36m:[m[32m15[m[36m:[m  const specifics = ([1;31mdata[m.specifics as any) || {};
+[35msrc/components/builder/PortfolioViewer.tsx[m[36m:[m[32m17[m[36m:[m  const themeColor = [1;31mdata[m?.themeColor || '#0f172a';
+[35msrc/components/builder/PortfolioViewer.tsx[m[36m:[m[32m21[m[36m:[m    heroTitle: [1;31mdata[m.fontSizes?.heroTitle || 38,
+[35msrc/components/builder/PortfolioViewer.tsx[m[36m:[m[32m22[m[36m:[m    subTitle: [1;31mdata[m.fontSizes?.subTitle || 18,
+[35msrc/components/builder/PortfolioViewer.tsx[m[36m:[m[32m23[m[36m:[m    sectionTitle: [1;31mdata[m.fontSizes?.sectionTitle || 24,
+[35msrc/components/builder/PortfolioViewer.tsx[m[36m:[m[32m24[m[36m:[m    bodyText: [1;31mdata[m.fontSizes?.bodyText || 15,
+[35msrc/components/builder/PortfolioViewer.tsx[m[36m:[m[32m33[m[36m:[m            {[1;31mdata[m?.company?.name || 'PORTFOLIO'}
+[35msrc/components/builder/PortfolioViewer.tsx[m[36m:[m[32m35[m[36m:[m          {[1;31mdata[m?.company?.phone && (
+[35msrc/components/builder/PortfolioViewer.tsx[m[36m:[m[32m37[m[36m:[m              href={`tel:${[1;31mdata[m.company.phone}`}
+[35msrc/components/builder/PortfolioViewer.tsx[m[36m:[m[32m41[m[36m:[m              📞 협업 문의: {[1;31mdata[m.company.phone}
+[35msrc/components/builder/PortfolioViewer.tsx[m[36m:[m[32m54[m[36m:[m            {[1;31mdata[m?.company?.name || 'Creative Portfolio'}
+[35msrc/components/builder/PortfolioViewer.tsx[m[36m:[m[32m56[m[36m:[m          {[1;31mdata[m?.company?.subTitle && (
+[35msrc/components/builder/PortfolioViewer.tsx[m[36m:[m[32m61[m[36m:[m              {[1;31mdata[m.company.subTitle}
+[35msrc/components/builder/PortfolioViewer.tsx[m[36m:[m[32m68[m[36m:[m            {[1;31mdata[m?.company?.description || '수행한 프로젝트와 주요 결과물을 확인하실 수 있습니다.'}
+[35msrc/components/builder/RentalViewer.tsx[m[36m:[m[32m4[m[36m:[mimport { B2BTemplate[1;31mData[m } from '@/types/template';
+[35msrc/components/builder/RentalViewer.tsx[m[36m:[m[32m6[m[36m:[mexport default function RentalViewer({ [1;31mdata[m }: { [1;31mdata[m: B2BTemplate[1;31mData[m }) {
+[35msrc/components/builder/RentalViewer.tsx[m[36m:[m[32m7[m[36m:[m  if (![1;31mdata[m) {
+[35msrc/components/builder/RentalViewer.tsx[m[36m:[m[32m15[m[36m:[m  const specifics = ([1;31mdata[m.specifics as any) || {};
+[35msrc/components/builder/RentalViewer.tsx[m[36m:[m[32m17[m[36m:[m  const themeColor = [1;31mdata[m?.themeColor || '#0284c7';
+[35msrc/components/builder/RentalViewer.tsx[m[36m:[m[32m21[m[36m:[m    heroTitle: [1;31mdata[m.fontSizes?.heroTitle || 36,
+[35msrc/components/builder/RentalViewer.tsx[m[36m:[m[32m22[m[36m:[m    subTitle: [1;31mdata[m.fontSizes?.subTitle || 18,
+[35msrc/components/builder/RentalViewer.tsx[m[36m:[m[32m23[m[36m:[m    sectionTitle: [1;31mdata[m.fontSizes?.sectionTitle || 24,
+[35msrc/components/builder/RentalViewer.tsx[m[36m:[m[32m24[m[36m:[m    bodyText: [1;31mdata[m.fontSizes?.bodyText || 15,
+[35msrc/components/builder/RentalViewer.tsx[m[36m:[m[32m33[m[36m:[m            {[1;31mdata[m?.company?.name || '렌탈 샵'}
+[35msrc/components/builder/RentalViewer.tsx[m[36m:[m[32m35[m[36m:[m          {[1;31mdata[m?.company?.phone && (
+[35msrc/components/builder/RentalViewer.tsx[m[36m:[m[32m37[m[36m:[m              href={`tel:${[1;31mdata[m.company.phone}`}
+[35msrc/components/builder/RentalViewer.tsx[m[36m:[m[32m41[m[36m:[m              📞 문의전화: {[1;31mdata[m.company.phone}
+[35msrc/components/builder/RentalViewer.tsx[m[36m:[m[32m54[m[36m:[m            {[1;31mdata[m?.company?.name || '스마트한 렌탈 서비스'}
+[35msrc/components/builder/RentalViewer.tsx[m[36m:[m[32m56[m[36m:[m          {[1;31mdata[m?.company?.subTitle && (
+[35msrc/components/builder/RentalViewer.tsx[m[36m:[m[32m61[m[36m:[m              {[1;31mdata[m.company.subTitle}
+[35msrc/components/builder/RentalViewer.tsx[m[36m:[m[32m68[m[36m:[m            {[1;31mdata[m?.company?.description || '합리적인 가격대의 고품질 렌탈 상품을 제안합니다.'}
+[35msrc/components/builder/ViewerManager.tsx[m[36m:[m[32m7[m[36m:[m  [1;31mdata[m: any;
+[35msrc/components/builder/ViewerManager.tsx[m[36m:[m[32m8[m[36m:[m  set[1;31mData[m?: React.Dispatch<React.SetStateAction<any>>;
+[35msrc/components/builder/ViewerManager.tsx[m[36m:[m[32m15[m[36m:[m  [1;31mdata[m,
+[35msrc/components/builder/ViewerManager.tsx[m[36m:[m[32m16[m[36m:[m  set[1;31mData[m,
+[35msrc/components/builder/ViewerManager.tsx[m[36m:[m[32m21[m[36m:[m  if (![1;31mdata[m) {
+[35msrc/components/builder/ViewerManager.tsx[m[36m:[m[32m31[m[36m:[m      [1;31mdata[m={[1;31mdata[m}
+[35msrc/components/builder/ViewerManager.tsx[m[36m:[m[32m32[m[36m:[m      set[1;31mData[m={set[1;31mData[m}
+[35msrc/components/builder/corporate/pages/CSPage.tsx[m[36m:[m[32m14[m[36m:[m  const [form[1;31mData[m, setForm[1;31mData[m] = useState({
+[35msrc/components/builder/corporate/pages/CSPage.tsx[m[36m:[m[32m74[m[36m:[m                      setForm[1;31mData[m({ name: '', email: '', phone: '', subject: '', message: '' });
+[35msrc/components/builder/corporate/pages/CSPage.tsx[m[36m:[m[32m89[m[36m:[m                        value={form[1;31mData[m.name}
+[35msrc/components/builder/corporate/pages/CSPage.tsx[m[36m:[m[32m90[m[36m:[m                        onChange={(e) => setForm[1;31mData[m({ ...form[1;31mData[m, name: e.target.value })}
+[35msrc/components/builder/corporate/pages/CSPage.tsx[m[36m:[m[32m100[m[36m:[m                        value={form[1;31mData[m.email}
+[35msrc/components/builder/corporate/pages/CSPage.tsx[m[36m:[m[32m101[m[36m:[m                        onChange={(e) => setForm[1;31mData[m({ ...form[1;31mData[m, email: e.target.value })}
+[35msrc/components/builder/corporate/pages/CSPage.tsx[m[36m:[m[32m113[m[36m:[m                        value={form[1;31mData[m.phone}
+[35msrc/components/builder/corporate/pages/CSPage.tsx[m[36m:[m[32m114[m[36m:[m                        onChange={(e) => setForm[1;31mData[m({ ...form[1;31mData[m, phone: e.target.value })}
+[35msrc/components/builder/corporate/pages/CSPage.tsx[m[36m:[m[32m124[m[36m:[m                        value={form[1;31mData[m.subject}
+[35msrc/components/builder/corporate/pages/CSPage.tsx[m[36m:[m[32m125[m[36m:[m                        onChange={(e) => setForm[1;31mData[m({ ...form[1;31mData[m, subject: e.target.value })}
+[35msrc/components/builder/corporate/pages/CSPage.tsx[m[36m:[m[32m137[m[36m:[m                      value={form[1;31mData[m.message}
+[35msrc/components/builder/corporate/pages/CSPage.tsx[m[36m:[m[32m138[m[36m:[m                      onChange={(e) => setForm[1;31mData[m({ ...form[1;31mData[m, message: e.target.value })}
+[35msrc/components/builder/corporate/pages/CustomerPage.tsx[m[36m:[m[32m4[m[36m:[mimport { B2BTemplate[1;31mData[m } from '@/types/template';
+[35msrc/components/builder/corporate/pages/CustomerPage.tsx[m[36m:[m[32m6[m[36m:[mexport default function CustomerPage({ [1;31mdata[m }: { [1;31mdata[m: B2BTemplate[1;31mData[m }) {
+[35msrc/components/builder/corporate/pages/CustomerPage.tsx[m[36m:[m[32m13[m[36m:[m            {[1;31mdata[m.csGuide || '고객센터 안내 문구가 설정되지 않았습니다. 에디터에서 수정해 주세요.'}
+[35msrc/components/builder/corporate/pages/CustomerPage.tsx[m[36m:[m[32m20[m[36m:[m            <div className="text-2xl font-medium">{[1;31mdata[m.csCenter.contactInfo.email}</div>
+[35msrc/components/builder/corporate/pages/CustomerPage.tsx[m[36m:[m[32m24[m[36m:[m            <div className="text-2xl font-medium">{[1;31mdata[m.csCenter.contactInfo.phone}</div>
+[35msrc/components/builder/corporate/pages/DisclosurePage.tsx[m[36m:[m[32m6[m[36m:[m  disclosure[1;31mData[m?: {
+[35msrc/components/builder/corporate/pages/DisclosurePage.tsx[m[36m:[m[32m12[m[36m:[mexport default function DisclosurePage({ disclosure[1;31mData[m }: DisclosurePageProps) {
+[35msrc/components/builder/corporate/pages/DisclosurePage.tsx[m[36m:[m[32m13[m[36m:[m  const [1;31mdata[m = disclosure[1;31mData[m || { certifications: [], reports: [] };
+[35msrc/components/builder/corporate/pages/DisclosurePage.tsx[m[36m:[m[32m29[m[36m:[m              {[1;31mdata[m.certifications.map((cert, idx) => (
+[35msrc/components/builder/corporate/pages/DisclosurePage.tsx[m[36m:[m[32m45[m[36m:[m              {[1;31mdata[m.reports.map((report, idx) => (
+[35msrc/components/builder/corporate/pages/ESGPage.tsx[m[36m:[m[32m13[m[36m:[m  esg[1;31mData[m?: {
+[35msrc/components/builder/corporate/pages/ESGPage.tsx[m[36m:[m[32m23[m[36m:[mexport default function ESGPage({ esg[1;31mData[m }: ESGPageProps) {
+[35msrc/components/builder/corporate/pages/ESGPage.tsx[m[36m:[m[32m24[m[36m:[m  const [1;31mdata[m = esg[1;31mData[m || {};
+[35msrc/components/builder/corporate/pages/ESGPage.tsx[m[36m:[m[32m45[m[36m:[m    ...([1;31mdata[m.goals?.[index] || {}),
+[35msrc/components/builder/corporate/pages/ESGPage.tsx[m[36m:[m[32m60[m[36m:[m            {[1;31mdata[m.mainTitle || '지속가능경영'}
+[35msrc/components/builder/corporate/pages/ESGPage.tsx[m[36m:[m[32m63[m[36m:[m            {[1;31mdata[m.mainDesc ||
+[35msrc/components/builder/corporate/pages/PRPage.tsx[m[36m:[m[32m6[m[36m:[m  pr[1;31mData[m?: {
+[35msrc/components/builder/corporate/pages/PRPage.tsx[m[36m:[m[32m12[m[36m:[mexport default function PRPage({ pr[1;31mData[m }: PRPageProps) {
+[35msrc/components/builder/corporate/pages/PRPage.tsx[m[36m:[m[32m13[m[36m:[m  const [1;31mdata[m = pr[1;31mData[m || { news: [], notice: [] };
+[35msrc/components/builder/corporate/pages/PRPage.tsx[m[36m:[m[32m29[m[36m:[m              {[1;31mdata[m.news.map((item, idx) => (
+[35msrc/components/builder/corporate/pages/PRPage.tsx[m[36m:[m[32m46[m[36m:[m              {[1;31mdata[m.notice.map((item, idx) => (
+[35msrc/components/builder/corporate/pages/RecruitPage.tsx[m[36m:[m[32m6[m[36m:[m  recruit[1;31mData[m?: {
+[35msrc/components/builder/corporate/pages/RecruitPage.tsx[m[36m:[m[32m13[m[36m:[mexport default function RecruitPage({ recruit[1;31mData[m }: RecruitPageProps) {
+[35msrc/components/builder/corporate/pages/RecruitPage.tsx[m[36m:[m[32m14[m[36m:[m  const [1;31mdata[m = recruit[1;31mData[m || { talentValue: '', benefitInfo: '', openPositions: [] };
+[35msrc/components/builder/corporate/pages/RecruitPage.tsx[m[36m:[m[32m31[m[36m:[m                {[1;31mdata[m.talentValue || '도전 정신과 전문성을 갖춘 인재, 협력과 소통을 통해 함께 성장하는 인재를 찾습니다.'}
+[35msrc/components/builder/corporate/pages/RecruitPage.tsx[m[36m:[m[32m37[m[36m:[m                {[1;31mdata[m.benefitInfo || '최고의 업무 환경과 성장을 위한 전폭적인 지원, 그리고 일과 삶의 균형을 위한 다양한 복지 제도를 운영합니다.'}
+[35msrc/components/builder/corporate/pages/RecruitPage.tsx[m[36m:[m[32m56[m[36m:[m                  {[1;31mdata[m.openPositions.map((pos, idx) => (
+[35msrc/components/builder/corporate/pages/SolutionPage.tsx[m[36m:[m[32m7[m[36m:[m  [1;31mdata[m: any;
+[35msrc/components/builder/corporate/pages/SolutionPage.tsx[m[36m:[m[32m10[m[36m:[mexport default function SolutionPage({ [1;31mdata[m }: SolutionPageProps) {
+[35msrc/components/builder/corporate/pages/SolutionPage.tsx[m[36m:[m[32m11[m[36m:[m  if (![1;31mdata[m) {
+[35msrc/components/builder/corporate/pages/SolutionPage.tsx[m[36m:[m[32m15[m[36m:[m  const solutionMain = [1;31mdata[m.solutionMain || {};
+[35msrc/components/builder/corporate/pages/SolutionPage.tsx[m[36m:[m[32m16[m[36m:[m  const solutions = Array.isArray([1;31mdata[m.solutions)
+[35msrc/components/builder/corporate/pages/SolutionPage.tsx[m[36m:[m[32m17[m[36m:[m    ? [1;31mdata[m.solutions
+[35msrc/components/builder/corporate/pages/SolutionPage.tsx[m[36m:[m[32m18[m[36m:[m    : Array.isArray([1;31mdata[m.solutions?.list)
+[35msrc/components/builder/corporate/pages/SolutionPage.tsx[m[36m:[m[32m19[m[36m:[m      ? [1;31mdata[m.solutions.list
+[35msrc/components/builder/editor/ImageUploadField.tsx[m[36m:[m[32m16[m[36m:[m  [1;31msiteId[m?: string | null;
+[35msrc/components/builder/editor/ImageUploadField.tsx[m[36m:[m[32m32[m[36m:[m  [1;31msiteId[m,
+[35msrc/components/builder/editor/ImageUploadField.tsx[m[36m:[m[32m45[m[36m:[m    if (![1;31msiteId[m) {
+[35msrc/components/builder/editor/ImageUploadField.tsx[m[36m:[m[32m66[m[36m:[m      const form[1;31mData[m = new Form[1;31mData[m();
+[35msrc/components/builder/editor/ImageUploadField.tsx[m[36m:[m[32m67[m[36m:[m      form[1;31mData[m.append('file', file);
+[35msrc/components/builder/editor/ImageUploadField.tsx[m[36m:[m[32m68[m[36m:[m      form[1;31mData[m.append('[1;31msiteId[m', [1;31msiteId[m);
+[35msrc/components/builder/editor/ImageUploadField.tsx[m[36m:[m[32m69[m[36m:[m      form[1;31mData[m.append('purpose', purpose);
+[35msrc/components/builder/editor/ImageUploadField.tsx[m[36m:[m[32m73[m[36m:[m        body: form[1;31mData[m,
+[35msrc/components/builder/editor/ImageUploadField.tsx.bak[m[36m:[m[32m16[m[36m:[m  [1;31msiteId[m?: string | null;
+[35msrc/components/builder/editor/ImageUploadField.tsx.bak[m[36m:[m[32m24[m[36m:[m  [1;31msiteId[m,
+[35msrc/components/builder/editor/ImageUploadField.tsx.bak[m[36m:[m[32m37[m[36m:[m    if (![1;31msiteId[m) {
+[35msrc/components/builder/editor/ImageUploadField.tsx.bak[m[36m:[m[32m93[m[36m:[m      const safe[1;31mSiteId[m = String([1;31msiteId[m).replace(/[^a-zA-Z0-9_-]/g, '');
+[35msrc/components/builder/editor/ImageUploadField.tsx.bak[m[36m:[m[32m94[m[36m:[m      if (!safe[1;31mSiteId[m) {
+[35msrc/components/builder/editor/ImageUploadField.tsx.bak[m[36m:[m[32m99[m[36m:[m      const filePath = `${safe[1;31mSiteId[m}/${Date.now()}-${Math.random()
+[35msrc/components/builder/editor/ImageUploadField.tsx.bak[m[36m:[m[32m107[m[36m:[m          [1;31mupsert[m: false,
+[35msrc/components/builder/editor/ImageUploadField.tsx.bak[m[36m:[m[32m113[m[36m:[m      const { [1;31mdata[m: publicUrl[1;31mData[m } = supabase.storage
+[35msrc/components/builder/editor/ImageUploadField.tsx.bak[m[36m:[m[32m117[m[36m:[m      if (!publicUrl[1;31mData[m?.publicUrl) {
+[35msrc/components/builder/editor/ImageUploadField.tsx.bak[m[36m:[m[32m121[m[36m:[m      onChange(publicUrl[1;31mData[m.publicUrl);
+[35msrc/components/showroom/ShowroomSlider.tsx[m[36m:[m[32m5[m[36m:[mimport { SHOWROOM_TEMPLATES } from '@/[1;31mdata[m/showroomTemplates';
+[35msrc/components/templates/CorporateLayout.tsx[m[36m:[m[32m8[m[36m:[m  const [[1;31mdata[m, set[1;31mData[m] = useState<any>(null);
+[35msrc/components/templates/CorporateLayout.tsx[m[36m:[m[32m13[m[36m:[m    const fetchCorporate[1;31mData[m = async () => {
+[35msrc/components/templates/CorporateLayout.tsx[m[36m:[m[32m15[m[36m:[m        const { [1;31mdata[m: site[1;31mData[m, error: siteError } = await supabase
+[35msrc/components/templates/CorporateLayout.tsx[m[36m:[m[32m16[m[36m:[m          .[1;31mfrom('sites[m')
+[35msrc/components/templates/CorporateLayout.tsx[m[36m:[m[32m18[m[36m:[m          .eq('[1;31mtemplate_type[m', 'corporate')
+[35msrc/components/templates/CorporateLayout.tsx[m[36m:[m[32m21[m[36m:[m        if (siteError || !site[1;31mData[m) {
+[35msrc/components/templates/CorporateLayout.tsx[m[36m:[m[32m27[m[36m:[m        set[1;31mData[m(site[1;31mData[m.content || {});
+[35msrc/components/templates/CorporateLayout.tsx[m[36m:[m[32m30[m[36m:[m        console.error('Error fetching corporate [1;31mdata[m:', err);
+[35msrc/components/templates/CorporateLayout.tsx[m[36m:[m[32m36[m[36m:[m    fetchCorporate[1;31mData[m();
+[35msrc/components/templates/CorporateLayout.tsx[m[36m:[m[32m47[m[36m:[m  if (error || ![1;31mdata[m) {
+[35msrc/components/templates/CorporateLayout.tsx[m[36m:[m[32m55[m[36m:[m  return <CorporateViewer [1;31mdata[m={[1;31mdata[m} />;
+[35msrc/components/viewer/ViewerManager.tsx[m[36m:[m[32m8[m[36m:[m  [1;31mdata[m,
+[35msrc/components/viewer/ViewerManager.tsx[m[36m:[m[32m11[m[36m:[m  [1;31mdata[m: any;
+[35msrc/components/viewer/ViewerManager.tsx[m[36m:[m[32m15[m[36m:[m      return <CorporateViewer [1;31mdata[m={[1;31mdata[m} />;
+[35msrc/components/viewer/ViewerManager.tsx[m[36m:[m[32m17[m[36m:[m      return <InteriorViewer [1;31mdata[m={[1;31mdata[m} />;
+[35msrc/components/viewer/ViewerManager.tsx[m[36m:[m[32m19[m[36m:[m      return <LegalViewer [1;31mdata[m={[1;31mdata[m} />;
+[35msrc/components/viewer/ViewerManager.tsx[m[36m:[m[32m21[m[36m:[m      return <FitnessViewer [1;31mdata[m={[1;31mdata[m} />;
+[35msrc/components/viewer/ViewerManager.tsx[m[36m:[m[32m23[m[36m:[m      return <CorporateViewer [1;31mdata[m={[1;31mdata[m} />;
+[35msrc/components/viewer/templates/CorporateViewer.tsx[m[36m:[m[32m4[m[36m:[mimport { B2BTemplate[1;31mData[m } from '@/types/template';
+[35msrc/components/viewer/templates/CorporateViewer.tsx[m[36m:[m[32m8[m[36m:[m  [1;31mdata[m: B2BTemplate[1;31mData[m;
+[35msrc/components/viewer/templates/CorporateViewer.tsx[m[36m:[m[32m13[m[36m:[mexport const CorporateViewer = ({ [1;31mdata[m, activeSection: propSection, setActiveSection: propSetSection }: CorporateViewerProps) => {
+[35msrc/components/viewer/templates/CorporateViewer.tsx[m[36m:[m[32m14[m[36m:[m  const { company, corporateInfo, solutions, hero, themeColor, footer } = [1;31mdata[m;
+[35msrc/components/viewer/templates/CorporateViewer.tsx[m[36m:[m[32m178[m[36m:[m  <PageLayout title={([1;31mdata[m as any).corporateInfo.intro?.subTitle || 'Company Introduction'} content={
+[35msrc/components/viewer/templates/CorporateViewer.tsx[m[36m:[m[32m181[m[36m:[m        <h3 className="text-3xl font-bold mb-4">{([1;31mdata[m as any).corporateInfo.intro?.mainTitle}</h3>
+[35msrc/components/viewer/templates/CorporateViewer.tsx[m[36m:[m[32m182[m[36m:[m        <p className="text-slate-600">{[1;31mdata[m.company.name}</p>
+[35msrc/components/viewer/templates/CorporateViewer.tsx[m[36m:[m[32m187[m[36m:[m          <h3 className="text-2xl font-bold mb-6">{([1;31mdata[m as any).corporateInfo.ceo?.title}</h3>
+[35msrc/components/viewer/templates/CorporateViewer.tsx[m[36m:[m[32m197[m[36m:[m  <PageLayout title={([1;31mdata[m as any).sustainability?.title || 'Sustainability'} content={
+[35msrc/components/viewer/templates/CorporateViewer.tsx[m[36m:[m[32m200[m[36m:[m        <h3 className="text-3xl font-bold mb-4">{([1;31mdata[m as any).sustainability?.subTitle}</h3>
+[35msrc/components/viewer/templates/CorporateViewer.tsx[m[36m:[m[32m201[m[36m:[m        <p className="text-slate-600 max-w-2xl mx-auto">{([1;31mdata[m as any).sustainability?.description}</p>
+[35msrc/components/viewer/templates/CorporateViewer.tsx[m[36m:[m[32m204[m[36m:[m        {([1;31mdata[m as any).sustainability?.items?.map((item: any, idx: number) => (
+[35msrc/components/viewer/templates/CorporateViewer.tsx[m[36m:[m[32m251[m[36m:[m                {[1;31mdata[m.prCenter.news.map((news, idx) => (
+[35msrc/components/viewer/templates/CorporateViewer.tsx[m[36m:[m[32m270[m[36m:[m                  <p className="text-xl text-slate-300 leading-relaxed">{[1;31mdata[m.recruit.talentValue}</p>
+[35msrc/components/viewer/templates/CorporateViewer.tsx[m[36m:[m[32m275[m[36m:[m                    <p className="text-slate-600 whitespace-pre-line">{[1;31mdata[m.recruit.benefitInfo}</p>
+[35msrc/components/viewer/templates/CorporateViewer.tsx[m[36m:[m[32m286[m[36m:[m                  {[1;31mdata[m.csGuide || '문의 내용을 입력해주세요.'}
+[35msrc/components/viewer/templates/CorporateViewer.tsx[m[36m:[m[32m291[m[36m:[m                    <p className="text-lg font-bold">{[1;31mdata[m.csCenter.contactInfo.email}</p>
+[35msrc/components/viewer/templates/CorporateViewer.tsx[m[36m:[m[32m295[m[36m:[m                    <p className="text-lg font-bold">{[1;31mdata[m.csCenter.contactInfo.phone}</p>
+[35msrc/components/viewer/templates/CorporateViewer.tsx[m[36m:[m[32m310[m[36m:[m            <p className="text-sm leading-relaxed mb-6">{footer.address}<br/>TEL: {[1;31mdata[m.supportPhone || corporateInfo.location.headOffice.tel}</p>
+[35msrc/components/viewer/templates/CorporateViewer.tsx[m[36m:[m[32m323[m[36m:[m            <p className="text-2xl font-bold text-white mb-2">{[1;31mdata[m.supportPhone || '전화번호 없음'}</p>
+[35msrc/components/viewer/templates/FitnessViewer.tsx[m[36m:[m[32m28[m[36m:[mtype Fitness[1;31mData[m = {
+[35msrc/components/viewer/templates/FitnessViewer.tsx[m[36m:[m[32m65[m[36m:[mconst DEFAULT_FITNESS_[1;31mDATA[m: Fitness[1;31mData[m = {
+[35msrc/components/viewer/templates/FitnessViewer.tsx[m[36m:[m[32m165[m[36m:[mexport default function FitnessViewer({ [1;31mdata[m = {} }: { [1;31mdata[m?: Fitness[1;31mData[m }) {
+[35msrc/components/viewer/templates/FitnessViewer.tsx[m[36m:[m[32m166[m[36m:[m  const merged = { ...DEFAULT_FITNESS_[1;31mDATA[m, ...[1;31mdata[m };
+[35msrc/components/viewer/templates/InteriorViewer.tsx[m[36m:[m[32m6[m[36m:[m  [1;31mdata[m: any;
+[35msrc/components/viewer/templates/InteriorViewer.tsx[m[36m:[m[32m7[m[36m:[m  set[1;31mData[m?: React.Dispatch<React.SetStateAction<any>>;
+[35msrc/components/viewer/templates/InteriorViewer.tsx[m[36m:[m[32m11[m[36m:[mexport default function InteriorViewer({ [1;31mdata[m, set[1;31mData[m, editable = false }: Props) {
+[35msrc/components/viewer/templates/InteriorViewer.tsx[m[36m:[m[32m14[m[36m:[m  const [form[1;31mData[m, setForm[1;31mData[m] = useState({
+[35msrc/components/viewer/templates/InteriorViewer.tsx[m[36m:[m[32m24[m[36m:[m  const projects = [1;31mdata[m?.projects || [];
+[35msrc/components/viewer/templates/InteriorViewer.tsx[m[36m:[m[32m25[m[36m:[m  const services = [1;31mdata[m?.services || [];
+[35msrc/components/viewer/templates/InteriorViewer.tsx[m[36m:[m[32m26[m[36m:[m  const process = [1;31mdata[m?.process || [];
+[35msrc/components/viewer/templates/InteriorViewer.tsx[m[36m:[m[32m36[m[36m:[m    setForm[1;31mData[m((prev) => ({ ...prev, [field]: value }));
+[35msrc/components/viewer/templates/InteriorViewer.tsx[m[36m:[m[32m41[m[36m:[m    if (!form[1;31mData[m.privacy) {
+[35msrc/components/viewer/templates/InteriorViewer.tsx[m[36m:[m[32m45[m[36m:[m    console.log('견적 문의:', form[1;31mData[m);
+[35msrc/components/viewer/templates/InteriorViewer.tsx[m[36m:[m[32m47[m[36m:[m    setForm[1;31mData[m({ name: '', phone: '', spaceType: '', area: '', timeline: '', content: '', privacy: false });
+[35msrc/components/viewer/templates/InteriorViewer.tsx[m[36m:[m[32m56[m[36m:[m          backgroundImage: `url('${[1;31mdata[m?.hero?.mediaUrl || 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1600&h=900&fit=crop'}')`,
+[35msrc/components/viewer/templates/InteriorViewer.tsx[m[36m:[m[32m62[m[36m:[m            {[1;31mdata[m?.hero?.title || '당신의 꿈의 공간을 만듭니다'}
+[35msrc/components/viewer/templates/InteriorViewer.tsx[m[36m:[m[32m65[m[36m:[m            {[1;31mdata[m?.hero?.subtitle || '전문적인 시공으로 가치 있는 인테리어'}
+[35msrc/components/viewer/templates/InteriorViewer.tsx[m[36m:[m[32m237[m[36m:[m                value={form[1;31mData[m.name}
+[35msrc/components/viewer/templates/InteriorViewer.tsx[m[36m:[m[32m248[m[36m:[m                value={form[1;31mData[m.phone}
+[35msrc/components/viewer/templates/InteriorViewer.tsx[m[36m:[m[32m260[m[36m:[m                  value={form[1;31mData[m.spaceType}
+[35msrc/components/viewer/templates/InteriorViewer.tsx[m[36m:[m[32m276[m[36m:[m                  value={form[1;31mData[m.area}
+[35msrc/components/viewer/templates/InteriorViewer.tsx[m[36m:[m[32m289[m[36m:[m                value={form[1;31mData[m.timeline}
+[35msrc/components/viewer/templates/InteriorViewer.tsx[m[36m:[m[32m299[m[36m:[m                value={form[1;31mData[m.content}
+[35msrc/components/viewer/templates/InteriorViewer.tsx[m[36m:[m[32m310[m[36m:[m                checked={form[1;31mData[m.privacy}
+[35msrc/components/viewer/templates/InteriorViewer.tsx[m[36m:[m[32m332[m[36m:[m          <p className="font-bold">{[1;31mdata[m?.footer?.companyName || '인테리어 회사'}</p>
+[35msrc/components/viewer/templates/InteriorViewer.tsx[m[36m:[m[32m333[m[36m:[m          <p className="mt-2 text-sm text-slate-400">{[1;31mdata[m?.footer?.address}</p>
+[35msrc/components/viewer/templates/InteriorViewer.tsx[m[36m:[m[32m335[m[36m:[m            사업자등록번호: {[1;31mdata[m?.footer?.businessNumber}
+[35msrc/components/viewer/templates/InteriorViewer.tsx[m[36m:[m[32m338[m[36m:[m            <a href={`tel:${[1;31mdata[m?.csCenter?.contactInfo?.phone}`} className="text-sm hover:text-blue-400">
+[35msrc/components/viewer/templates/InteriorViewer.tsx[m[36m:[m[32m339[m[36m:[m              전화: {[1;31mdata[m?.csCenter?.contactInfo?.phone}
+[35msrc/components/viewer/templates/InteriorViewer.tsx[m[36m:[m[32m341[m[36m:[m            <a href={`mailto:${[1;31mdata[m?.csCenter?.contactInfo?.email}`} className="text-sm hover:text-blue-400">
+[35msrc/components/viewer/templates/InteriorViewer.tsx[m[36m:[m[32m342[m[36m:[m              이메일: {[1;31mdata[m?.csCenter?.contactInfo?.email}
+[35msrc/components/viewer/templates/InteriorViewer.tsx[m[36m:[m[32m346[m[36m:[m            © {new Date().getFullYear()} {[1;31mdata[m?.footer?.companyName}. All rights reserved.
+[1mdiff --git a/src/app/preview/page.tsx b/src/app/preview/page.tsx[m
+[1mindex 2658f41..9d68f81 100644[m
+[1m--- a/src/app/preview/page.tsx[m
+[1m+++ b/src/app/preview/page.tsx[m
+[36m@@ -1,68 +1,114 @@[m
+ ﻿'use client';[m
+ [m
+[31m-import React, { useState, useEffect, Suspense } from 'react';[m
+[32m+[m[32mimport React, { Suspense, useEffect, useState } from 'react';[m
+ import { useSearchParams } from 'next/navigation';[m
+ import { supabase } from '@/lib/supabase';[m
+[31m-import InteriorViewer from '@/components/viewer/templates/InteriorViewer';[m
+[31m-import { CorporateViewer } from '@/components/builder/CorporateViewer';[m
+[31m-import LegalViewer from '@/components/viewer/templates/LegalViewer';[m
+[31m-import FitnessViewer from '@/components/viewer/templates/FitnessViewer';[m
+ import { ViewerManager } from '@/components/viewer/ViewerManager';[m
+ import { getDefaultData } from '@/lib/defaultData';[m
+ [m
+ function PreviewContent() {[m
+   const searchParams = useSearchParams();[m
+[31m-  const templateId = searchParams?.get('templateId') || 'corporate';[m
+[32m+[m[32m  const templateId = searchParams.get('templateId') || 'corporate';[m
+ [m
+   const [data, setData] = useState<any>(null);[m
+   const [isLoading, setIsLoading] = useState(true);[m
+ [m
+   useEffect(() => {[m
+[32m+[m[32m    let cancelled = false;[m
+[32m+[m
+     async function fetchData() {[m
+[32m+[m[32m      setIsLoading(true);[m
+[32m+[m
+       try {[m
+[31m-        // ?쒗뵆由???낆뿉 留욌뒗 ?ъ씠???곗씠??議고쉶[m
+[31m-        const { data: sites, error } = await supabase[m
+[32m+[m[32m        const { data: site, error } = await supabase[m
+           .from('sites')[m
+           .select('data, template_type')[m
+           .eq('template_type', templateId)[m
+[31m-          .single();[m
+[32m+[m[32m          .limit(1)[m
+[32m+[m[32m          .maybeSingle();[m
+[32m+[m
+[32m+[m[32m        if (cancelled) return;[m
+[32m+[m
+[32m+[m[32m        if (error || !site?.data) {[m
+[32m+[m[32m          console.log([m
+[32m+[m[32m            `${templateId} 템플릿 데이터를 찾지 못했습니다. 기본 데이터를 사용합니다.`,[m
+[32m+[m[32m          );[m
+ [m
+[31m-        if (error || !sites?.data) {[m
+[31m-          console.log('DB?먯꽌 李얠? 紐삵븿. 湲곕낯 ?곗씠???ъ슜');[m
+[31m-          setData(getDefaultData(templateId));[m
+[31m-        } else {[m
+[31m-          setData(sites.data);[m
+[32m+[m[32m          const defaultData = getDefaultData(templateId);[m
+[32m+[m
+[32m+[m[32m          setData({[m
+[32m+[m[32m            ...defaultData,[m
+[32m+[m[32m            templateType: templateId,[m
+[32m+[m[32m          });[m
+[32m+[m
+[32m+[m[32m          return;[m
+         }[m
+[31m-      } catch (err) {[m
+[31m-        console.error('Fetch error:', err);[m
+[31m-        setData(getDefaultData(templateId));[m
+[32m+[m
+[32m+[m[32m        setData({[m
+[32m+[m[32m          ...site.data,[m
+[32m+[m[32m          templateType: templateId,[m
+[32m+[m[32m        });[m
+[32m+[m[32m      } catch (error) {[m
+[32m+[m[32m        if (cancelled) return;[m
+[32m+[m
+[32m+[m[32m        console.error('프리뷰 데이터 조회 오류:', error);[m
+[32m+[m
+[32m+[m[32m        const defaultData = getDefaultData(templateId);[m
+[32m+[m
+[32m+[m[32m        setData({[m
+[32m+[m[32m          ...defaultData,[m
+[32m+[m[32m          templateType: templateId,[m
+[32m+[m[32m        });[m
+       } finally {[m
+[31m-        setIsLoading(false);[m
+[32m+[m[32m        if (!cancelled) {[m
+[32m+[m[32m          setIsLoading(false);[m
+[32m+[m[32m        }[m
+       }[m
+     }[m
+ [m
+[31m-    fetchData();[m
+[32m+[m[32m    void fetchData();[m
+[32m+[m
+[32m+[m[32m    return () => {[m
+[32m+[m[32m      cancelled = true;[m
+[32m+[m[32m    };[m
+   }, [templateId]);[m
+ [m
+   if (isLoading) {[m
+[31m-    return <div className="h-screen flex items-center justify-center">濡쒕뱶 以?..</div>;[m
+[32m+[m[32m    return ([m
+[32m+[m[32m      <div className="flex h-screen items-center justify-center">[m
+[32m+[m[32m        로드 중...[m
+[32m+[m[32m      </div>[m
+[32m+[m[32m    );[m
+   }[m
+ [m
+   if (!data) {[m
+[31m-    return <div className="h-screen flex items-center justify-center text-rose-600">?곗씠?곕? 李얠쓣 ???놁뒿?덈떎.</div>;[m
+[32m+[m[32m    return ([m
+[32m+[m[32m      <div className="flex h-screen items-center justify-center text-rose-600">[m
+[32m+[m[32m        데이터를 찾을 수 없습니다.[m
+[32m+[m[32m      </div>[m
+[32m+[m[32m    );[m
+   }[m
+ [m
+   return ([m
+     <main className="min-h-screen w-full bg-white">[m
+[31m-      <ViewerManager templateType={templateId} data={data} />[m
+[32m+[m[32m      <ViewerManager[m
+[32m+[m[32m        templateType={templateId}[m
+[32m+[m[32m        data={data}[m
+[32m+[m[32m      />[m
+     </main>[m
+   );[m
+ }[m
+ [m
+ export default function PreviewPage() {[m
+   return ([m
+[31m-    <Suspense fallback={<div className="h-screen flex items-center justify-center">濡쒕뱶 以?..</div>}>[m
+[32m+[m[32m    <Suspense[m
+[32m+[m[32m      fallback={[m
+[32m+[m[32m        <div className="flex h-screen items-center justify-center">[m
+[32m+[m[32m          로드 중...[m
+[32m+[m[32m        </div>[m
+[32m+[m[32m      }[m
+[32m+[m[32m    >[m
+       <PreviewContent />[m
+     </Suspense>[m
+   );[m
+[31m-}[m
+[32m+[m[32m}[m
+\ No newline at end of file[m
+[1mdiff --git a/src/components/builder/LivePreview.tsx b/src/components/builder/LivePreview.tsx[m
+[1mindex 1d4559a..2b68a53 100644[m
+[1m--- a/src/components/builder/LivePreview.tsx[m
+[1m+++ b/src/components/builder/LivePreview.tsx[m
+[36m@@ -1,11 +1,10 @@[m
+[31m-// src/components/builder/LivePreview.tsx[m
+[31m-[m
+ 'use client';[m
+ [m
+ import React from 'react';[m
+ import { CorporateViewer } from './CorporateViewer';[m
+ import InteriorViewer from '@/components/viewer/templates/InteriorViewer';[m
+ import LegalViewer from '@/components/viewer/templates/LegalViewer';[m
+[32m+[m[32mimport FitnessViewer from '@/components/viewers/FitnessViewer';[m
+ [m
+ interface LivePreviewProps {[m
+   data: any;[m
+[36m@@ -29,10 +28,20 @@[m [mexport default function LivePreview({[m
+ [m
+   return ([m
+     <div className="min-h-screen w-full overflow-x-hidden bg-white">[m
+[31m-      {templateType === 'interior' || templateType === 'onepage' ? ([m
+[31m-        <InteriorViewer data={data} setData={setData} editable={!published} />[m
+[32m+[m[32m      {templateType === 'fitness' ? ([m
+[32m+[m[32m        <FitnessViewer data={data} />[m
+[32m+[m[32m      ) : templateType === 'interior' || templateType === 'onepage' ? ([m
+[32m+[m[32m        <InteriorViewer[m
+[32m+[m[32m          data={data}[m
+[32m+[m[32m          setData={setData}[m
+[32m+[m[32m          editable={!published}[m
+[32m+[m[32m        />[m
+       ) : templateType === 'legal' ? ([m
+[31m-        <LegalViewer data={data} setData={setData} editable={!published} />[m
+[32m+[m[32m        <LegalViewer[m
+[32m+[m[32m          data={data}[m
+[32m+[m[32m          setData={setData}[m
+[32m+[m[32m          editable={!published}[m
+[32m+[m[32m        />[m
+       ) : ([m
+         <CorporateViewer[m
+           data={data}[m

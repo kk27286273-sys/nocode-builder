@@ -1,0 +1,114 @@
+[33mcf79e61[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m fix: 빌더 사이트 조회 오류 표시
+[33m1dfc977[m fix: 쇼룸 템플릿 데이터 및 피트니스 연결 수정
+[33m4d0649a[m fix: 피트니스 쇼룸 및 프리뷰 연결 수정
+[33m74c6b6d[m fix: preview 페이지를 ViewerManager로 통일
+[33mcd76434[m fix: FitnessViewer import 경로 수정
+[33m4af76bf[m fix: preview에서 fitness 템플릿 렌더링 + defaultData 연결
+[33mde4b9b3[m fix: 템플릿 타입별 뷰어 분기 및 DB 조회 추가
+[33m739516c[m fix: 법률형이 corporateInfo를 받지 않도록 수정
+[33m22578b9[m fix: preview 페이지 Suspense 추가
+[33m6a2fb77[m fix: preview 페이지 파일 생성 수정
+[33m9fee72c[m feat: preview 페이지에서 templateId 쿼리 파라미터 지원
+[33m6a8e20d[m fix: preview 페이지 import 경로 수정
+[33mc89864e[m feat: 빌더에 interior 템플릿 추가
+[33m6de7ae5[m feat: 메인페이지 3번째 템플릿을 상담 → 인테리어로 변경
+[33m1928975[m feat: 원페이지 포트폴리오형 히어로 + 프로젝트 스트립 + 카드 그리드 추가/삭제
+[33m2663cec[m feat: redirect corporate preview query to /preview/기업형
+[33mc3d5f8a[m fix: enable GNB navigation with state management
+[33md2a11e0[m fix: simplify preview page with direct Supabase query
+[33m54e9fb6[m fix: correct supabase import path in builder
+[33m0ff1ff4[m feat: add corporate layout condition to preview page
+[33meae77c5[m fix: apply legal-tax layout to preview page
+[33ma865096[m feat: add legal-tax dedicated layout for law & tax template
+[33md2c099a[m feat: add legal-tax dedicated layout with template data integration
+[33m2a58f0d[m fix: remove showroom slider and repair section tag structure
+[33mde79318[m feat: replace showroom slider with industry cards including live preview frames
+[33m6a7f8bb[m feat: update header and footer branding from NEXIA to THsoft, add IndustryGrid with hover details
+[33m7c2af99[m fix: remove duplicate sections and fix landing page layout
+[33m13f1008[m refactor: remove duplicate template sections from landing page
+[33m0cd38a0[m feat: showroom detail page implementation
+[33mbae8d85[m fix: 요금제 버튼을 Link로 변경하고 금액 파라미터 제거
+[33m916af54[m feat: 토스 자동결제(빌링) 연동 완료 - 빌링키 발급, 첫 결제, 월간 정기청구
+[33m50063c5[m feat: 토스 빌링결제 적용
+[33mccd2f0e[m Add privacy policy page
+[33m251e6fc[m fix: correct syntax error in builder createDefaultData
+[33mdb6469f[m fix: correct builder template data syntax
+[33m467a39d[m feat: update corporate template content
+[33maa652fb[m feat: add template selector to builder
+[33m3acf683[m feat: map korean preview slugs to supabase site IDs
+[33m51cbd22[m feat: add fitness showroom template details
+[33m8bfc423[m fix: update template preview URL
+[33mdc58c72[m feat: scroll to templates and link b2b preview
+[33m8d96f54[m fix: resolve preview data parsing and remove undefined presets
+[33m7a136bc[m feat: update Nexia homepage UI
+[33me8585b3[m fix: repair builder page publish syntax
+[33mbab1894[m fix: show published site data in preview
+[33m55a762a[m Enable scrolling in builder
+[33m7bf31f8[m Add SEO metadata generation - company name and hero title from site data
+[33m7f8bc49[m Remove preview zoom controls
+[33m51b5b5f[m Update builder
+[33ma2d62e6[m Fix published site preview and responsive layout
+[33mf54f87d[m Fix: Restore editor schema while preserving custom data
+[33m30f348e[m Fix: Remove forced legacy data override in BuilderPage
+[33m0a1ec7b[m Fix: Force LivePreview when solutionMain data exists
+[33m3c62d1f[m fix: 발행 화면 데이터 구조 보정 로직 추가 (solutionMain 하위호환)
+[33me6da61e[m Chore: 기본 템플릿 데이터의 특정 업체명 제거 및 가이드 문구로 변경
+[33m1dbe412[m fix: align initial data structure with B2BTemplateData type
+[33m8c81ee5[m fix: BuilderPage 우측 뷰어 영역 높이 제약 해제 및 min-h-0 적용
+[33m1ff65eb[m fix: force reset site data to corporate structure to resolve layout mismatch
+[33m33f7c93[m fix: remove forced templateType override to use actual DB data
+[33md727bc7[m feat: add public site viewer and open published page in new tab
+[33m53bd4e6[m fix: resolve syntax error in page.tsx and apply publish feedback
+[33md560a89[m fix: main background fit, restore navigation menu, and enhance publish feedback
+[33m30e2c1b[m[33m ([m[1;32mfix-layout[m[33m)[m fix: build errors - fix JSX tags in EditorSidebar and remove invalid import in preview page
+[33m110bb7a[m fix: 제어바 최상단 고정 및 에이텍 템플릿 구조 동기화
+[33m01ae801[m feat: 전체 구조 재설계 - 로딩 탈출, 기업형 강제, 80% 뷰포트 및 오타 완전 제거
+[33mf51d891[m fix: 무한 로딩 방지 및 사이트 선택 화면 추가
+[33m8f57613[m fix: 버튼 복구, 뱃지 복구, 80% 뷰포트 최적화 및 SOL 렌더링 통합
+[33m007709a[m fix: 제어버튼 복구, 100% 뷰포트 적용 및 SOL 페이지 실시간 렌더링 구현
+[33m7857cc9[m fix: 뒤로가기 버튼 위치를 빌더 헤더로 이동하여 뷰어 간섭 제거
+[33ma330254[m feat: 빌더-뷰어 상태 공유 구현 및 에이텍 스타일 전수 에디터 폼 구축
+[33md440281[m fix: add templateType to trigger CorporateViewer
+[33m21b13a7[m feat: hardcode corporate portal as default template
+[33m98e5056[m fix: remove actual company data and use placeholders
+[33m5be3bbb[m feat: implement enterprise portal structure (Atec style) with page transitions
+[33mc907878[m fix: use direct script loading for toss payments to avoid sdk build error
+[33ma1e0595[m fix: switch to standard payment popup (remove widget dependency)
+[33m650b32d[m fix: use standard loadPaymentWidget with ANONYMOUS key
+[33mcdba9f3[m fix: use renderPaymentWidget to bypass variantKey error
+[33m6bc0cd2[m fix: use renderPaymentMethods to avoid 404 error
+[33m9d3b503[m force: remove all SDK imports and use raw redirect
+[33m43cc85e[m force: change route to /pay to bypass vercel cache
+[33m1a931f2[m fix: change to renderPaymentWidget to bypass variantKey error
+[33m0c7f7b3[m fix: complete rewrite to eliminate variantKey and handle rendering state
+[33m1f8923a[m fix: remove variantKey and set valid guest customerKey
+[33meeb0b9b[m fix: remove incorrect second argument from loadPaymentWidget
+[33m254fe5c[m fix: resolve syntax error in checkout page
+[33m4f1dd59[m fix: add variantKey DEFAULT to toss payment widget
+[33m8cca468[m fix: add quotes to toss client key
+[33mf1e1fdc[m fix: replace test client key with actual toss client key
+[33m3214b49[m feat: implement full toss payment flow (request -> confirm -> success)
+[33m082770f[m fix: resolve footer tag mismatch and build error
+[33me664f01[m feat: update business info in footer and create terms page for PG review
+[33m3a5b728[m feat: integrate Toss Payments widget and create checkout page for review
+[33ma742236[m feat: connect ViewerManager to builder preview
+[33m149c6f6[m feat: implement industry-specific preset data for viewer
+[33m4dc893a[m fix: restore previewUrl format and fix syntax error
+[33m4fb4111[m fix: resolve syntax error and data mismatch in fitness template
+[33m5e39319[m feat: apply dynamic layout order by template category
+[33m359e056[m fix: update kakao consult url to official channel link
+[33m25d2918[m feat: complete showroom detail page with preview and cta links
+[33m253f2b4[m fix: separate showroom data and preview component logic
+[33m530ad8d[m fix: correct presets data structure and enable dynamic preview
+[33m5727527[m fix: force update for conversion elements
+[33m48f7951[m feat: add dynamic showroom detail page
+[33madf24ce[m feat: mount ShowroomSlider on landing page
+[33m31044eb[m chore: sync showroom templates with operation team specs
+[33m79d2e53[m feat: add showroom mock templates dataset
+[33mc16840b[m fix: enable global footer and fix LegalModal props
+[33m4bc6dce[m fix: correct import name in preview page
+[33me99a6e3[m fix: resolve syntax errors in EditorSidebar and sync template variable names
+[33m9c691d0[m fix: final stabilization and complete booking setup UI
+[33m8a07cb8[m feat: implement booking system settings in editor sidebar
+[33m3283f35[m feat: implement dynamic multi-page routing structure
+[33m1afeb8f[m feat: 안정화 버전 강제 반영
