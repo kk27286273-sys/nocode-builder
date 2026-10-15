@@ -7,6 +7,8 @@ interface CSPageProps {
   contactInfo?: {
     email?: string;
     phone?: string;
+    address?: string;
+    mapUrl?: string;
   };
 }
 
@@ -50,10 +52,26 @@ export default function CSPage({ guide, contactInfo }: CSPageProps) {
                 <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">전화번호</span>
                 <p className="text-lg font-bold text-slate-900">{contactInfo?.phone || '등록된 번호가 없습니다.'}</p>
               </div>
-              <div className="border-t border-slate-200 pt-4">
-                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">이메일 문의</span>
-                <p className="text-lg font-bold text-slate-900">{contactInfo?.email || '등록된 이메일이 없습니다.'}</p>
-              </div>
+<div className="border-t border-slate-200 pt-4">
+  <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">
+    사업장 주소
+  </span>
+
+  <p className="text-sm leading-6 text-slate-700">
+    {contactInfo?.address || '등록된 주소가 없습니다.'}
+  </p>
+
+  {contactInfo?.mapUrl && (
+    <a
+      href={contactInfo.mapUrl}
+      target="_blank"
+      rel="noreferrer"
+      className="mt-3 inline-flex rounded-lg bg-green-600 px-4 py-2 text-sm font-bold text-white transition hover:bg-green-700"
+    >
+      네이버 지도에서 위치 보기
+    </a>
+  )}
+</div>
             </div>
           </div>
 

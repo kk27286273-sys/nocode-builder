@@ -11,8 +11,10 @@ interface CorporateViewerProps {
 }
 
 export const CorporateViewer = ({ data, activeSection: propSection, setActiveSection: propSetSection }: CorporateViewerProps) => {
-  const { company, corporateInfo, solutions, hero, themeColor, footer } = data;
-  
+const { company, corporateInfo, solutions, hero, themeColor, footer } = data;
+
+const headOffice = corporateInfo?.location?.headOffice || {};
+const contactInfo = data.csCenter?.contactInfo || {};
   const [internalPage, setInternalPage] = useState('main');
   const activePage = propSection || internalPage;
   const setActivePage = propSetSection || setInternalPage;
@@ -279,25 +281,58 @@ const [logoFailed, setLogoFailed] = useState(false);
             } />
           )}
 
-          {activePage === 'cs' && (
-            <PageLayout title="고객 센터" content={
-              <div className="text-center space-y-8">
-                <p className="text-xl text-slate-600 leading-relaxed whitespace-pre-line">
-                  {data.csGuide || '문의 내용을 입력해주세요.'}
-                </p>
-                <div className="flex flex-col md:flex-row justify-center gap-4">
-                  <div className="p-6 border rounded-2xl space-y-2">
-                    <p className="text-sm text-slate-500">이메일 문의</p>
-                    <p className="text-lg font-bold">{data.csCenter.contactInfo.email}</p>
-                  </div>
-                  <div className="p-6 border rounded-2xl space-y-2">
-                    <p className="text-sm text-slate-500">전화 상담</p>
-                    <p className="text-lg font-bold">{data.csCenter.contactInfo.phone}</p>
-                  </div>
-                </div>
-              </div>
-            } />
-          )}
+{activePage === 'cs' && (
+  <PageLayout
+    title="고객센터"
+    content={
+      <div className="text-center space-y-8">
+        <p className="text-xl text-slate-600 leading-relaxed whitespace-pre-line">
+          {data.csGuide || '문의 내용을 입력해 주세요.'}
+        </p>
+
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div className="rounded-2xl border p-6 space-y-2">
+            <p className="text-sm text-slate-500">이메일 문의</p>
+            <p className="break-all text-lg font-bold">
+              {contactInfo.email || footer.contactEmail || '이메일 정보 없음'}
+            </p>
+          </div>
+
+          <div className="rounded-2xl border p-6 space-y-2">
+            <p className="text-sm text-slate-500">전화 상담</p>
+            <p className="text-lg font-bold">
+              {data.supportPhone ||
+                contactInfo.phone ||
+                headOffice.tel ||
+                '전화번호 없음'}
+            </p>
+          </div>
+
+          <div className="rounded-2xl border p-6 space-y-2">
+            <p className="text-sm text-slate-500">사업장 주소</p>
+            <p className="text-sm leading-6">
+              {contactInfo.address ||
+                headOffice.address ||
+                footer.address ||
+                '주소 정보 없음'}
+            </p>
+
+            {headOffice.mapUrl && (
+              <a
+                href={headOffice.mapUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-2 inline-flex rounded-lg bg-green-600 px-4 py-2 text-sm font-bold text-white transition hover:bg-green-700"
+              >
+                네이버 지도에서 위치 보기
+              </a>
+            )}
+          </div>
+        </div>
+      </div>
+    }
+  />
+)}
 
           {activePage === 'sol_detail' && <SolutionDetail key="sol_detail" />}
         </AnimatePresence>

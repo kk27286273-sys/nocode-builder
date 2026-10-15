@@ -144,17 +144,29 @@ hero={{
           )}
 
           {activePage === 'cs' && (
-            <CSPage
-              key="cs"
-              guide={data.csGuide || data.public?.notice}
-              contactInfo={
-                data.csCenter?.contactInfo ||
-                data.cs || {
-                  phone: data.supportPhone || '',
-                  email: '',
-                }
-              }
-            />
+<CSPage
+  key="cs"
+  guide={data.csGuide || data.public?.notice}
+  contactInfo={{
+    phone:
+      data.supportPhone ||
+      data.csCenter?.contactInfo?.phone ||
+      data.corporateInfo?.location?.headOffice?.tel ||
+      '',
+    email:
+      data.csCenter?.contactInfo?.email ||
+      data.footer?.contactEmail ||
+      '',
+    address:
+      data.csCenter?.contactInfo?.address ||
+      data.corporateInfo?.location?.headOffice?.address ||
+      data.footer?.address ||
+      '',
+    mapUrl:
+      data.corporateInfo?.location?.headOffice?.mapUrl ||
+      '',
+  }}
+/>
           )}
         </AnimatePresence>
       </main>
