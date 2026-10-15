@@ -102,11 +102,12 @@ export interface B2BTemplateData {
     orgChart: string;
     ciImage: string;
     location: {
-      headOffice: {
-        address: string;
-        tel: string;
-        fax: string;
-      };
+headOffice: {
+  address: string;
+  tel: string;
+  fax: string;
+  mapUrl?: string;
+};
     };
     esg: {
       environmental: { title: string; content: string; image: string };

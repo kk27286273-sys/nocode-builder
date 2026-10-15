@@ -832,17 +832,64 @@ const sections = isInterior
                 </div>
               )}
 
-              {/* 7. 고객 센터 */}
-              {active === 'cs' && (
-                <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
-                  <InputField
-                    label="대표 전화번호"
-                    value={getValue('supportPhone') || getValue('csCenter.contactInfo.phone')}
-                    onChange={(v) => { updateDeep('supportPhone', v); updateDeep('csCenter.contactInfo.phone', v); }}
-                  />
-                  <InputField label="운영 시간 가이드" value={getValue('csGuide')} onChange={(v) => updateDeep('csGuide', v)} />
-                </div>
-              )}
+{/* 7. 고객 센터 */}
+{active === 'cs' && (
+  <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
+    <InputField
+      label="대표 전화번호"
+      value={
+        getValue('supportPhone') ||
+        getValue('csCenter.contactInfo.phone')
+      }
+      onChange={(v) => {
+        updateDeep('supportPhone', v);
+        updateDeep('csCenter.contactInfo.phone', v);
+      }}
+      placeholder="02-000-0000"
+    />
+
+    <InputField
+      label="고객센터 이메일"
+      value={getValue('csCenter.contactInfo.email')}
+      onChange={(v) => {
+        updateDeep('csCenter.contactInfo.email', v);
+        updateDeep('footer.contactEmail', v);
+      }}
+      placeholder="info@example.com"
+    />
+
+    <InputField
+      label="사업장 주소"
+      value={
+        getValue('corporateInfo.location.headOffice.address') ||
+        getValue('footer.address')
+      }
+      onChange={(v) => {
+        updateDeep('corporateInfo.location.headOffice.address', v);
+        updateDeep('csCenter.contactInfo.address', v);
+        updateDeep('footer.address', v);
+      }}
+      placeholder="주소를 입력해주세요."
+    />
+
+    <InputField
+      label="네이버 지도 링크"
+      value={getValue('corporateInfo.location.headOffice.mapUrl')}
+      onChange={(v) =>
+        updateDeep('corporateInfo.location.headOffice.mapUrl', v)
+      }
+      placeholder="https://map.naver.com/"
+    />
+
+    <InputField
+      label="문의 안내 문구"
+      value={getValue('csGuide')}
+      onChange={(v) => updateDeep('csGuide', v)}
+      placeholder="문의 내용을 남겨주시면 빠르게 답변드리겠습니다."
+      h="h-24"
+    />
+  </div>
+)}
 
               {/* 8. 하단 정보 */}
               {active === 'footer' && (

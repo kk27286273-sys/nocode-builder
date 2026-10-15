@@ -188,13 +188,14 @@ function createDefaultData(template: TemplateKey): B2BTemplateData {
       orgChart: '',
       ciImage: '',
 
-      location: {
-        headOffice: {
-          address: '주소를 입력해주세요.',
-          tel: '전화번호를 입력해주세요.',
-          fax: '',
-        },
-      },
+location: {
+  headOffice: {
+    address: '주소를 입력해주세요.',
+    tel: '전화번호를 입력해주세요.',
+    fax: '',
+    mapUrl: '',
+  },
+},
 
       esg: {
         environmental: {
