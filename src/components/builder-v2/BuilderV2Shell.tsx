@@ -4,6 +4,7 @@ import { useState } from "react";
 import type { V2Page } from "@/types/builder-v2";
 import PagePanel from "./PagePanel";
 import EditorPanel from "./EditorPanel";
+import ElementEditor from "./ElementEditor";
 
 const initialPages: V2Page[] = [
   {
@@ -76,24 +77,61 @@ const initialPages: V2Page[] = [
 ];
 
 export default function BuilderV2Shell() {
+  const [pages, setPages] = useState<V2Page[]>(initialPages);
   const [selectedPageId, setSelectedPageId] = useState(initialPages[0].id);
   const [selectedSectionId, setSelectedSectionId] = useState(
     initialPages[0].sections[0].id,
   );
-
-  const selectedPage = initialPages.find(
-    (page) => page.id === selectedPageId,
+  const [selectedElementId, setSelectedElementId] = useState(
+    initialPages[0].sections[0].elements[0].id,
   );
+
+  const selectedPage = pages.find((page) => page.id === selectedPageId);
 
   const selectedSection = selectedPage?.sections.find(
     (section) => section.id === selectedSectionId,
   );
 
+  const selectedElement = selectedSection?.elements.find(
+    (element) => element.id === selectedElementId,
+  );
+
   const handleSelectPage = (pageId: string) => {
-    const nextPage = initialPages.find((page) => page.id === pageId);
+    const nextPage = pages.find((page) => page.id === pageId);
+    const nextSection = nextPage?.sections[0];
 
     setSelectedPageId(pageId);
-    setSelectedSectionId(nextPage?.sections[0]?.id ?? "");
+    setSelectedSectionId(nextSection?.id ?? "");
+    setSelectedElementId(nextSection?.elements[0]?.id ?? "");
+  };
+
+  const handleSelectSection = (sectionId: string) => {
+    const nextSection = selectedPage?.sections.find(
+      (section) => section.id === sectionId,
+    );
+
+    setSelectedSectionId(sectionId);
+    setSelectedElementId(nextSection?.elements[0]?.id ?? "");
+  };
+
+  const handleChangeElement = (content: string) => {
+    if (!selectedElementId) {
+      return;
+    }
+
+    setPages((currentPages) =>
+      currentPages.map((page) => ({
+        ...page,
+        sections: page.sections.map((section) => ({
+          ...section,
+          elements: section.elements.map((element) =>
+            element.id === selectedElementId
+              ? { ...element, content }
+              : element,
+          ),
+        })),
+      })),
+    );
   };
 
   return (
@@ -111,14 +149,24 @@ export default function BuilderV2Shell() {
 
       <div className="flex min-h-0 flex-1">
         <PagePanel
-          pages={initialPages}
+          pages={pages}
           selectedPageId={selectedPageId}
           selectedSectionId={selectedSectionId}
           onSelectPage={handleSelectPage}
-          onSelectSection={setSelectedSectionId}
+          onSelectSection={handleSelectSection}
         />
 
-        <EditorPanel page={selectedPage} section={selectedSection} />
+        <EditorPanel
+          page={selectedPage}
+          section={selectedSection}
+          selectedElementId={selectedElementId}
+          onSelectElement={setSelectedElementId}
+        />
+
+        <ElementEditor
+          element={selectedElement}
+          onChange={handleChangeElement}
+        />
       </div>
     </main>
   );
