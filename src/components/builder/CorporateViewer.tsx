@@ -10,6 +10,7 @@ import ESGPage from './corporate/pages/ESGPage';
 import PRPage from './corporate/pages/PRPage';
 import RecruitPage from './corporate/pages/RecruitPage';
 import CSPage from './corporate/pages/CSPage';
+import NaverAddressMap from '@/components/NaverAddressMap';
 
 interface CorporateViewerProps {
   data: any;
