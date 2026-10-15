@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import NaverAddressMap from '@/components/NaverAddressMap';
 
 interface CSPageProps {
   guide?: string;
@@ -276,14 +275,6 @@ export default function CSPage({ guide, contactInfo }: CSPageProps) {
               </div>
             </div>
           </div>
-
-          {contactInfo?.address && (
-            <NaverAddressMap
-              address={contactInfo.address}
-              mapUrl={contactInfo.mapUrl}
-              title="오시는 길"
-            />
-          )}
         </div>
       </section>
     </motion.div>
