@@ -1,9 +1,12 @@
 ﻿export type V2ElementType = "heading" | "text" | "image" | "button";
 
+export type V2FontFamily = "system" | "sans" | "serif" | "mono";
+
 export interface V2Element {
   id: string;
   type: V2ElementType;
   content: string;
+  fontFamily?: V2FontFamily;
 }
 
 export interface V2Section {

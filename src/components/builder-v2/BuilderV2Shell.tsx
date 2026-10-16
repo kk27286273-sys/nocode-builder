@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import { useState } from "react";
-import type { V2Page } from "@/types/builder-v2";
+import type { V2Element, V2Page } from "@/types/builder-v2";
 import PagePanel from "./PagePanel";
 import EditorPanel from "./EditorPanel";
 import ElementEditor from "./ElementEditor";
@@ -114,23 +114,37 @@ export default function BuilderV2Shell() {
     setSelectedElementId(nextSection?.elements[0]?.id ?? "");
   };
 
-  const handleChangeElement = (content: string) => {
-    if (!selectedElementId) {
+  const handleChangeElement = (
+    updates: Partial<Pick<V2Element, "content" | "fontFamily">>,
+  ) => {
+    if (!selectedPageId || !selectedSectionId || !selectedElementId) {
       return;
     }
-
+  
     setPages((currentPages) =>
-      currentPages.map((page) => ({
-        ...page,
-        sections: page.sections.map((section) => ({
-          ...section,
-          elements: section.elements.map((element) =>
-            element.id === selectedElementId
-              ? { ...element, content }
-              : element,
-          ),
-        })),
-      })),
+      currentPages.map((page) => {
+        if (page.id !== selectedPageId) {
+          return page;
+        }
+  
+        return {
+          ...page,
+          sections: page.sections.map((section) => {
+            if (section.id !== selectedSectionId) {
+              return section;
+            }
+  
+            return {
+              ...section,
+              elements: section.elements.map((element) =>
+                element.id === selectedElementId
+                  ? { ...element, ...updates }
+                  : element,
+              ),
+            };
+          }),
+        };
+      }),
     );
   };
 

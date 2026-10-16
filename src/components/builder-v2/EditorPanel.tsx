@@ -1,4 +1,5 @@
 ﻿import type { V2Page, V2Section } from "@/types/builder-v2";
+import { V2_FONT_FAMILIES } from "./font-options";
 
 interface EditorPanelProps {
   page?: V2Page;
@@ -32,6 +33,9 @@ export default function EditorPanel({
               {section.elements.map((element) => {
                 const isSelected = selectedElementId === element.id;
 
+                const fontFamily =
+                  V2_FONT_FAMILIES[element.fontFamily ?? "system"];
+
                 const elementClassName = [
                   "cursor-pointer rounded-lg border-2 p-2 transition",
                   isSelected
@@ -47,26 +51,36 @@ export default function EditorPanel({
                     onClick={() => onSelectElement(element.id)}
                     onKeyDown={(event) => {
                       if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
                         onSelectElement(element.id);
                       }
                     }}
                     className={elementClassName}
                   >
                     {element.type === "heading" && (
-                      <h3 className="text-3xl font-bold">
+                      <h3
+                        className="text-3xl font-bold"
+                        style={{ fontFamily }}
+                      >
                         {element.content}
                       </h3>
                     )}
 
                     {element.type === "button" && (
-                      <span className="inline-block rounded-lg bg-blue-600 px-5 py-3 text-white">
+                      <span
+                        className="inline-block rounded-lg bg-blue-600 px-5 py-3 text-white"
+                        style={{ fontFamily }}
+                      >
                         {element.content}
                       </span>
                     )}
 
                     {element.type !== "heading" &&
                       element.type !== "button" && (
-                        <p className="text-neutral-600">
+                        <p
+                          className="text-neutral-600"
+                          style={{ fontFamily }}
+                        >
                           {element.content}
                         </p>
                       )}
