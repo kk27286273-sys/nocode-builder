@@ -47,3 +47,7 @@ next-env.d.ts
 !.env.example
 
 first-project-git-backup/
+
+# local backup files
+*.bak
+/backup_files/
