@@ -680,8 +680,8 @@ const sections = isInterior
             </>
           )}
 
-          {/* ===== 기업형 섹션 (기존) ===== */}
-          {!isInterior && (
+{/* ===== 기업형 섹션 (기존) ===== */}
+{!isInterior && templateType !== 'legal' && templateType !== 'fitness' && (
             <>
               {/* 1. 메인 */}
               {active === 'main' && (
