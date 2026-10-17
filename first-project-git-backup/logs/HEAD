@@ -1,0 +1,311 @@
+0000000000000000000000000000000000000000 1afeb8f81f4431a0399d79da69c956d68b10d521 kk27286273-sys <kk27286273@gmail.com> 1791199306 +0900	commit (initial): feat: 안정화 버전 강제 반영
+1afeb8f81f4431a0399d79da69c956d68b10d521 0000000000000000000000000000000000000000 kk27286273-sys <kk27286273@gmail.com> 1791199413 +0900	Branch: renamed refs/heads/master to refs/heads/main
+0000000000000000000000000000000000000000 1afeb8f81f4431a0399d79da69c956d68b10d521 kk27286273-sys <kk27286273@gmail.com> 1791199413 +0900	Branch: renamed refs/heads/master to refs/heads/main
+1afeb8f81f4431a0399d79da69c956d68b10d521 3283f351c9e05fe2163ab448071311a69856a534 kk27286273-sys <kk27286273@gmail.com> 1791281954 +0900	commit: feat: implement dynamic multi-page routing structure
+3283f351c9e05fe2163ab448071311a69856a534 8e790522574d89be1b64edfd60d144518bbb1515 kk27286273-sys <kk27286273@gmail.com> 1791281986 +0900	pull origin main --rebase (start): checkout 8e790522574d89be1b64edfd60d144518bbb1515
+8e790522574d89be1b64edfd60d144518bbb1515 3283f351c9e05fe2163ab448071311a69856a534 kk27286273-sys <kk27286273@gmail.com> 1791282013 +0900	rebase (abort): returning to refs/heads/main
+3283f351c9e05fe2163ab448071311a69856a534 653c9669a1c1319372d295b802fa839bdbe8c246 kk27286273-sys <kk27286273@gmail.com> 1791282578 +0900	commit: fix: remove node_modules from git and restore package.json
+653c9669a1c1319372d295b802fa839bdbe8c246 ad9047d50bbd7bccdfec30514e37cab42399dce5 kk27286273-sys <kk27286273@gmail.com> 1791283077 +0900	commit: fix: resolve submodule issue and unify project structure
+ad9047d50bbd7bccdfec30514e37cab42399dce5 ad9047d50bbd7bccdfec30514e37cab42399dce5 kk27286273-sys <kk27286273@gmail.com> 1791283713 +0900	reset: moving to origin/main
+ad9047d50bbd7bccdfec30514e37cab42399dce5 8a07cb8e5dcfadd4680c4af2f9c8463483cce63f kk27286273-sys <kk27286273@gmail.com> 1791284970 +0900	commit: feat: implement booking system settings in editor sidebar
+8a07cb8e5dcfadd4680c4af2f9c8463483cce63f 9c691d09b029f8605d3049e2322dd58bef8f6756 kk27286273-sys <kk27286273@gmail.com> 1791285631 +0900	commit: fix: final stabilization and complete booking setup UI
+9c691d09b029f8605d3049e2322dd58bef8f6756 e99a6e3d74e327d588390a1441b974a3b3d66697 kk27286273-sys <kk27286273@gmail.com> 1791286196 +0900	commit: fix: resolve syntax errors in EditorSidebar and sync template variable names
+e99a6e3d74e327d588390a1441b974a3b3d66697 4bc6dce3336e5a35afd5ccb750c5629ee87ed0c7 kk27286273-sys <kk27286273@gmail.com> 1791286305 +0900	commit: fix: correct import name in preview page
+4bc6dce3336e5a35afd5ccb750c5629ee87ed0c7 c16840b0b380e4aec663737e2b5c301a11401dc6 kk27286273-sys <kk27286273@gmail.com> 1791286788 +0900	commit: fix: enable global footer and fix LegalModal props
+c16840b0b380e4aec663737e2b5c301a11401dc6 79d2e5350456d76c31aedb231778e7d7298e7654 kk27286273-sys <kk27286273@gmail.com> 1791287659 +0900	commit: feat: add showroom mock templates dataset
+79d2e5350456d76c31aedb231778e7d7298e7654 31044ebf28aad92f734c06cbafa5b659be486e82 kk27286273-sys <kk27286273@gmail.com> 1791287853 +0900	commit: chore: sync showroom templates with operation team specs
+31044ebf28aad92f734c06cbafa5b659be486e82 adf24cec7e9e665d455f78a84b3d706007762753 kk27286273-sys <kk27286273@gmail.com> 1791288062 +0900	commit: feat: mount ShowroomSlider on landing page
+adf24cec7e9e665d455f78a84b3d706007762753 cfdae490b806379174d7eb207f00780391d6b52e kk27286273-sys <kk27286273@gmail.com> 1791288165 +0900	commit: fix: push missing ShowroomSlider component
+cfdae490b806379174d7eb207f00780391d6b52e 48f79514f3d180c8b383393a72f0b06d6fac3e75 kk27286273-sys <kk27286273@gmail.com> 1791288279 +0900	commit: feat: add dynamic showroom detail page
+48f79514f3d180c8b383393a72f0b06d6fac3e75 dd8de7c09c75b4aab5b591fd6a545d354957dcad kk27286273-sys <kk27286273@gmail.com> 1791288372 +0900	commit: feat: make showroom slider loop infinitely
+dd8de7c09c75b4aab5b591fd6a545d354957dcad 1dcc5627c626874223ad23e08e34bcf6ebe6edaa kk27286273-sys <kk27286273@gmail.com> 1791288516 +0900	commit: style: remove duplicated items and implement smart loop
+1dcc5627c626874223ad23e08e34bcf6ebe6edaa 73cb3197814b21f119c2e150364e339a92126360 kk27286273-sys <kk27286273@gmail.com> 1791288658 +0900	commit: feat: implement auto-sliding and touch-enabled showroom
+73cb3197814b21f119c2e150364e339a92126360 369d2e5eb912dcc798aeaa30d1731e217999420e kk27286273-sys <kk27286273@gmail.com> 1791288808 +0900	commit: fix: ensure auto-scroll interval works correctly
+369d2e5eb912dcc798aeaa30d1731e217999420e 52df1b9d3777c145e15ed7b1a818e3dc7cad5b2f kk27286273-sys <kk27286273@gmail.com> 1791289000 +0900	commit: fix: remove snap and use absolute scrollTo for auto-slide
+52df1b9d3777c145e15ed7b1a818e3dc7cad5b2f 2183eec8500551453360d8d37802bcc7d31da383 kk27286273-sys <kk27286273@gmail.com> 1791289092 +0900	commit: fix: force mount trigger for auto-scroll
+2183eec8500551453360d8d37802bcc7d31da383 72257abd588f158b0e2e53cb1019ec82c5eed1fa kk27286273-sys <kk27286273@gmail.com> 1791289219 +0900	commit: debug: add logs and force scrollTo for auto-slide
+72257abd588f158b0e2e53cb1019ec82c5eed1fa f12d6c70d076a58465d2487ea46c2092b125905d kk27286273-sys <kk27286273@gmail.com> 1791289302 +0900	commit: fix: add min-width max-content to enable overflow scrolling
+f12d6c70d076a58465d2487ea46c2092b125905d 314885be1025b4b9f9c204f9881a1f50cc7d74a4 kk27286273-sys <kk27286273@gmail.com> 1791289406 +0900	commit: fix: separate scroll container and force max-content width
+314885be1025b4b9f9c204f9881a1f50cc7d74a4 1d5b5325dafd896e0751bd31534ef464a05908cc kk27286273-sys <kk27286273@gmail.com> 1791289521 +0900	commit: fix: switch slider mechanism from scroll to transform translate
+1d5b5325dafd896e0751bd31534ef464a05908cc 5d6ebbb332500fb1a6ed8998971eec03195d5a73 kk27286273-sys <kk27286273@gmail.com> 1791289697 +0900	commit: fix: complete loop gap fix with full component replace
+5d6ebbb332500fb1a6ed8998971eec03195d5a73 2907f6944c0d69f30b42edc0c5791d157b2c0937 kk27286273-sys <kk27286273@gmail.com> 1791289777 +0900	commit: fix: duplicate data array to eliminate Swiper loop warning
+2907f6944c0d69f30b42edc0c5791d157b2c0937 98d6dbcfd4e4d1f6461a68dfe9ea1c3c3b03d6bf kk27286273-sys <kk27286273@gmail.com> 1791289952 +0900	commit: style: change loop mode to linear reset for better UX
+98d6dbcfd4e4d1f6461a68dfe9ea1c3c3b03d6bf e1d505fb1d77c11730d406c837cab7c047d3cddb kk27286273-sys <kk27286273@gmail.com> 1791290018 +0900	commit: fix: correct JSX syntax error on arrow character and use swiper slideTo
+e1d505fb1d77c11730d406c837cab7c047d3cddb 5727527ad201e0b9f0e2e7ab9fae7929fccf9f31 kk27286273-sys <kk27286273@gmail.com> 1791290420 +0900	commit: fix: force update for conversion elements
+5727527ad201e0b9f0e2e7ab9fae7929fccf9f31 530ad8dcd92c1c62567dc992167c29058ed6ce97 kk27286273-sys <kk27286273@gmail.com> 1791290757 +0900	commit: fix: correct presets data structure and enable dynamic preview
+530ad8dcd92c1c62567dc992167c29058ed6ce97 253f2b4f86040655779633b5f97675424ff050fa kk27286273-sys <kk27286273@gmail.com> 1791290889 +0900	commit: fix: separate showroom data and preview component logic
+253f2b4f86040655779633b5f97675424ff050fa 25d2918d35a10a3e58ed369408b5d3f1f54137d6 kk27286273-sys <kk27286273@gmail.com> 1791292534 +0900	commit: feat: complete showroom detail page with preview and cta links
+25d2918d35a10a3e58ed369408b5d3f1f54137d6 359e056e728e9079c61f7687eb26bd2b1dee831d kk27286273-sys <kk27286273@gmail.com> 1791293153 +0900	commit: fix: update kakao consult url to official channel link
+359e056e728e9079c61f7687eb26bd2b1dee831d 5e39319854278d2ba5570ca8d51bd8a0817b37ea kk27286273-sys <kk27286273@gmail.com> 1791293285 +0900	commit: feat: apply dynamic layout order by template category
+5e39319854278d2ba5570ca8d51bd8a0817b37ea 4fb4111153fc01dbb39536c3d3bb58da9c5f04b6 kk27286273-sys <kk27286273@gmail.com> 1791293584 +0900	commit: fix: resolve syntax error and data mismatch in fitness template
+4fb4111153fc01dbb39536c3d3bb58da9c5f04b6 4dc893a0e2c1d870685503dce3abc20acce9158f kk27286273-sys <kk27286273@gmail.com> 1791293688 +0900	commit: fix: restore previewUrl format and fix syntax error
+4dc893a0e2c1d870685503dce3abc20acce9158f 149c6f62fcd83b80957bfa45257699cc242d09f6 kk27286273-sys <kk27286273@gmail.com> 1791294045 +0900	commit: feat: implement industry-specific preset data for viewer
+149c6f62fcd83b80957bfa45257699cc242d09f6 cc801a06709a112fd957012d8340f67b2cfa5c9c kk27286273-sys <kk27286273@gmail.com> 1791294416 +0900	commit: fix: remove hardcoded construction text and link to dynamic data
+cc801a06709a112fd957012d8340f67b2cfa5c9c a740a8f56bc3120d15deb7a888e3c3ebe2a9de68 kk27286273-sys <kk27286273@gmail.com> 1791297501 +0900	commit: feat: implement multi-page routing for corporate viewer and template-specific editor forms
+a740a8f56bc3120d15deb7a888e3c3ebe2a9de68 62ce30a82db9c1e2762a707c57f94301ed0ff213 kk27286273-sys <kk27286273@gmail.com> 1791297576 +0900	commit: fix: resolve unexpected token error in EditorSidebar.tsx
+62ce30a82db9c1e2762a707c57f94301ed0ff213 b2df750f6c79e4e2b05f734bbda61b6d691b9c57 kk27286273-sys <kk27286273@gmail.com> 1791297887 +0900	commit: fix: complete refactor of EditorSidebar to fix syntax errors
+b2df750f6c79e4e2b05f734bbda61b6d691b9c57 a74223650464c3adf9335289b588eeed05b879a3 kk27286273-sys <kk27286273@gmail.com> 1791298219 +0900	commit: feat: connect ViewerManager to builder preview
+a74223650464c3adf9335289b588eeed05b879a3 12dd8fed76a6d650979aa2dc074c0016ff2db97d kk27286273-sys <kk27286273@gmail.com> 1791298317 +0900	commit: feat: create ViewerManager to handle template switching
+12dd8fed76a6d650979aa2dc074c0016ff2db97d 331e97936a1f90e13e127df25a5713b942d28661 kk27286273-sys <kk27286273@gmail.com> 1791298449 +0900	commit: feat: add missing viewer components to fix build error
+331e97936a1f90e13e127df25a5713b942d28661 cb0731e88bffa0faed785f748c5f595816100240 kk27286273-sys <kk27286273@gmail.com> 1791298663 +0900	commit: fix: add safety checks to viewers to prevent runtime crash
+cb0731e88bffa0faed785f748c5f595816100240 7d773856b4f811dbf51972256e5a094e0c7845b4 kk27286273-sys <kk27286273@gmail.com> 1791298889 +0900	commit: feat: update CorporateViewer to display services and history
+7d773856b4f811dbf51972256e5a094e0c7845b4 ebf561a1e8d69015d9671b175a296e60a3d98b7a kk27286273-sys <kk27286273@gmail.com> 1791299171 +0900	commit: fix: update CorporateViewer layout and visibility
+ebf561a1e8d69015d9671b175a296e60a3d98b7a b34789904b6fd3a7d8b157e3049af94664813d18 kk27286273-sys <kk27286273@gmail.com> 1791299805 +0900	commit: fix: match data keys and fix sidebar layout
+b34789904b6fd3a7d8b157e3049af94664813d18 094b03d0f8af6c05b20c622f7116eb1fe57f288d kk27286273-sys <kk27286273@gmail.com> 1791299976 +0900	commit: fix: force data access for businessAreas
+094b03d0f8af6c05b20c622f7116eb1fe57f288d 2310e50f1752b932e285f98fd08fe08186aef76f kk27286273-sys <kk27286273@gmail.com> 1791300047 +0900	commit: fix: unify data access keys for all viewers
+2310e50f1752b932e285f98fd08fe08186aef76f 6126fe72ed8fe9cb84bfaf040fa7562bd1607052 kk27286273-sys <kk27286273@gmail.com> 1791300207 +0900	commit: fix: force create Rental and Portfolio viewers
+6126fe72ed8fe9cb84bfaf040fa7562bd1607052 85465ba77fbf66fd435bdd6a6be1a64314f74145 kk27286273-sys <kk27286273@gmail.com> 1791300473 +0900	commit: feat: update company info, add font controls and SEO settings
+85465ba77fbf66fd435bdd6a6be1a64314f74145 972219cefe8b2cc08d9a54eb4d1b53e00efd5dc7 kk27286273-sys <kk27286273@gmail.com> 1791300712 +0900	commit: fix: prevent crash when specifics is undefined
+972219cefe8b2cc08d9a54eb4d1b53e00efd5dc7 8629ab71d01e78c753344c24ff3da0a510e4798b kk27286273-sys <kk27286273@gmail.com> 1791301026 +0900	commit: feat: complete Rental & Portfolio viewers with responsive styling and font controls
+8629ab71d01e78c753344c24ff3da0a510e4798b 6372ac69c4aa8124aee3d0ed9dba8f06a0340688 kk27286273-sys <kk27286273@gmail.com> 1791301124 +0900	commit: feat: unify all viewers with professional UI and dynamic font controls
+6372ac69c4aa8124aee3d0ed9dba8f06a0340688 3a5b728788e541dea13f94892721023ad7de7fac kk27286273-sys <kk27286273@gmail.com> 1791376241 +0900	commit: feat: integrate Toss Payments widget and create checkout page for review
+3a5b728788e541dea13f94892721023ad7de7fac e664f01afe8935a6e89d453e8df9bd6f8d6499d7 kk27286273-sys <kk27286273@gmail.com> 1791376550 +0900	commit: feat: update business info in footer and create terms page for PG review
+e664f01afe8935a6e89d453e8df9bd6f8d6499d7 082770f0e544ec65dc096b87821974250551dca4 kk27286273-sys <kk27286273@gmail.com> 1791376718 +0900	commit: fix: resolve footer tag mismatch and build error
+082770f0e544ec65dc096b87821974250551dca4 3214b49f582bd6e0ae7983ae7bedbebec760995d kk27286273-sys <kk27286273@gmail.com> 1791377140 +0900	commit: feat: implement full toss payment flow (request -> confirm -> success)
+3214b49f582bd6e0ae7983ae7bedbebec760995d 57ead50c4601ae98c018ea06eb8d48b7f2c206a3 kk27286273-sys <kk27286273@gmail.com> 1791377535 +0900	commit: fix: resolve editor sidebar scroll and clipping issue while preserving all logic
+57ead50c4601ae98c018ea06eb8d48b7f2c206a3 f1e1fdcb2f0e77bc07dc9c39be02a53bdc58be3c kk27286273-sys <kk27286273@gmail.com> 1791378043 +0900	commit: fix: replace test client key with actual toss client key
+f1e1fdcb2f0e77bc07dc9c39be02a53bdc58be3c 8cca468256859cd02478a3f6040ae251d59a46df kk27286273-sys <kk27286273@gmail.com> 1791378128 +0900	commit: fix: add quotes to toss client key
+8cca468256859cd02478a3f6040ae251d59a46df 4f1dd59817cd2f7fac7da899fe5d025718059a80 kk27286273-sys <kk27286273@gmail.com> 1791378330 +0900	commit: fix: add variantKey DEFAULT to toss payment widget
+4f1dd59817cd2f7fac7da899fe5d025718059a80 254fe5c3abebc4731970d49aef51be39526da737 kk27286273-sys <kk27286273@gmail.com> 1791378400 +0900	commit: fix: resolve syntax error in checkout page
+254fe5c3abebc4731970d49aef51be39526da737 eeb0b9bf299d5fcbb9a1c31a46cd47fdc7062d63 kk27286273-sys <kk27286273@gmail.com> 1791378533 +0900	commit: fix: remove incorrect second argument from loadPaymentWidget
+eeb0b9bf299d5fcbb9a1c31a46cd47fdc7062d63 1f8923a2643167c211e9c13ac6d06a35487001ec kk27286273-sys <kk27286273@gmail.com> 1791378682 +0900	commit: fix: remove variantKey and set valid guest customerKey
+1f8923a2643167c211e9c13ac6d06a35487001ec 0c7f7b3a02752db5ca4ea57f35f3d7ede8313e6a kk27286273-sys <kk27286273@gmail.com> 1791378797 +0900	commit: fix: complete rewrite to eliminate variantKey and handle rendering state
+0c7f7b3a02752db5ca4ea57f35f3d7ede8313e6a 1a931f2ad0c619ab4c060a244a3cbe31854d9d93 kk27286273-sys <kk27286273@gmail.com> 1791379071 +0900	commit: fix: change to renderPaymentWidget to bypass variantKey error
+1a931f2ad0c619ab4c060a244a3cbe31854d9d93 43cc85efe856437337cb51a82f8c1d5b26fb4521 kk27286273-sys <kk27286273@gmail.com> 1791379342 +0900	commit: force: change route to /pay to bypass vercel cache
+43cc85efe856437337cb51a82f8c1d5b26fb4521 9d3b503b55135df03263a1a1fc151d4b4978414a kk27286273-sys <kk27286273@gmail.com> 1791379586 +0900	commit: force: remove all SDK imports and use raw redirect
+9d3b503b55135df03263a1a1fc151d4b4978414a 6bc0cd2082e6c8874842f94bdbd1b21a4700c7a8 kk27286273-sys <kk27286273@gmail.com> 1791379745 +0900	commit: fix: use renderPaymentMethods to avoid 404 error
+6bc0cd2082e6c8874842f94bdbd1b21a4700c7a8 cdba9f31128eea4ff940e5b51328b6891cdea41f kk27286273-sys <kk27286273@gmail.com> 1791380083 +0900	commit: fix: use renderPaymentWidget to bypass variantKey error
+cdba9f31128eea4ff940e5b51328b6891cdea41f 650b32d0677c4665346273bc533ded388f62e7b3 kk27286273-sys <kk27286273@gmail.com> 1791380157 +0900	commit: fix: use standard loadPaymentWidget with ANONYMOUS key
+650b32d0677c4665346273bc533ded388f62e7b3 a1e05951a5d3f0501813a78cbded1538cf8442d3 kk27286273-sys <kk27286273@gmail.com> 1791380664 +0900	commit: fix: switch to standard payment popup (remove widget dependency)
+a1e05951a5d3f0501813a78cbded1538cf8442d3 c907878294dba617559bb7bf1bc2453a2fa1c471 kk27286273-sys <kk27286273@gmail.com> 1791380896 +0900	commit: fix: use direct script loading for toss payments to avoid sdk build error
+c907878294dba617559bb7bf1bc2453a2fa1c471 020fb66d2b82ac805aaf2b14b2e28842361d70a9 kk27286273-sys <kk27286273@gmail.com> 1791381744 +0900	commit: style: implement responsive typography and smooth modal animation for CorporateViewer
+020fb66d2b82ac805aaf2b14b2e28842361d70a9 5be3bbb76d96ae5a56e45554cf84f56b88c7c5b0 kk27286273-sys <kk27286273@gmail.com> 1791382487 +0900	commit: feat: implement enterprise portal structure (Atec style) with page transitions
+5be3bbb76d96ae5a56e45554cf84f56b88c7c5b0 98e5056b7e5e63d0678bc035068f3d2c91d6bbcb kk27286273-sys <kk27286273@gmail.com> 1791382824 +0900	commit: fix: remove actual company data and use placeholders
+98e5056b7e5e63d0678bc035068f3d2c91d6bbcb 21b13a71725990a625e906bdf8159e5712a75f0b kk27286273-sys <kk27286273@gmail.com> 1791383133 +0900	commit: feat: hardcode corporate portal as default template
+21b13a71725990a625e906bdf8159e5712a75f0b d4402816e5ef633a15bc54a3fd58c5092a280360 kk27286273-sys <kk27286273@gmail.com> 1791383471 +0900	commit: fix: add templateType to trigger CorporateViewer
+d4402816e5ef633a15bc54a3fd58c5092a280360 1e73ee50aa67c4a92028207cff6ccde095ec0b50 kk27286273-sys <kk27286273@gmail.com> 1791383608 +0900	commit: feat: implement high-end corporate layout for CorporateViewer
+1e73ee50aa67c4a92028207cff6ccde095ec0b50 4bd2fbb6e877ff7eb22a7b412ab9e73964f453f6 kk27286273-sys <kk27286273@gmail.com> 1791384113 +0900	commit: fix: install framer-motion for CorporateViewer
+4bd2fbb6e877ff7eb22a7b412ab9e73964f453f6 3b2c0e8bd5ca6d27ec2d519675c3e785a7a0bcdc kk27286273-sys <kk27286273@gmail.com> 1791384209 +0900	commit: fix: force render CorporateViewer
+3b2c0e8bd5ca6d27ec2d519675c3e785a7a0bcdc 99b5e2cda0775bd2f38e60900e43bf9be29d3753 kk27286273-sys <kk27286273@gmail.com> 1791385718 +0900	commit: feat: 기업형 뷰어 뒤로가기 버튼 추가 및 에디터-뷰어 데이터 경로 동기화
+99b5e2cda0775bd2f38e60900e43bf9be29d3753 bc1c425fc8a9f3c290e231ebf6335c808ce257d7 kk27286273-sys <kk27286273@gmail.com> 1791385984 +0900	commit: feat: 기업형 뷰어 고정 뒤로가기 바 추가 및 사이드바 전수 입력 폼 완벽 동기화
+bc1c425fc8a9f3c290e231ebf6335c808ce257d7 28fe8af5ab30de4b9d5708e43018b0b028f86ed7 kk27286273-sys <kk27286273@gmail.com> 1791386399 +0900	commit: fix: 뷰어 샘플 데이터 제거 및 에디터 데이터 완전 동기화
+28fe8af5ab30de4b9d5708e43018b0b028f86ed7 a330254280a7207871915d057d6808e50847169f kk27286273-sys <kk27286273@gmail.com> 1791387798 +0900	commit: feat: 빌더-뷰어 상태 공유 구현 및 에이텍 스타일 전수 에디터 폼 구축
+a330254280a7207871915d057d6808e50847169f 7857cc9457497a9a806d3ffa32d18effa0f5f15a kk27286273-sys <kk27286273@gmail.com> 1791388338 +0900	commit: fix: 뒤로가기 버튼 위치를 빌더 헤더로 이동하여 뷰어 간섭 제거
+7857cc9457497a9a806d3ffa32d18effa0f5f15a c5ad52edac30551a4b0c356d6d00302a1c2ae993 kk27286273-sys <kk27286273@gmail.com> 1791388486 +0900	commit: fix: 뷰어 내부 뒤로가기 바 제거 및 푸터 짤림 레이아웃 수정
+c5ad52edac30551a4b0c356d6d00302a1c2ae993 da15e0065dd93054789d1494617261c7d77c64cc kk27286273-sys <kk27286273@gmail.com> 1791388660 +0900	commit: fix: ViewerManager 배율 기능 유지 및 섹션 전환 상태 연결
+da15e0065dd93054789d1494617261c7d77c64cc e84d5dec539e11865bccc50e385675e675324761 kk27286273-sys <kk27286273@gmail.com> 1791389003 +0900	commit: feat: 메인 히어로 폼 복구 및 SOL(사업소개) 전용 관리 에디터 구현
+e84d5dec539e11865bccc50e385675e675324761 007709aab6cc0a5a6789d076b75539a4f1dbc75a kk27286273-sys <kk27286273@gmail.com> 1791389575 +0900	commit: fix: 제어버튼 복구, 100% 뷰포트 적용 및 SOL 페이지 실시간 렌더링 구현
+007709aab6cc0a5a6789d076b75539a4f1dbc75a ef1c4535c91215cdc15a9d3be7ab5ce5111937d3 kk27286273-sys <kk27286273@gmail.com> 1791389716 +0900	commit: fix: footer 태그 오타 수정 (빌드 에러 해결)
+ef1c4535c91215cdc15a9d3be7ab5ce5111937d3 8f576131b4f796feed7423ba2e81cef81fbb752d kk27286273-sys <kk27286273@gmail.com> 1791390151 +0900	commit: fix: 버튼 복구, 뱃지 복구, 80% 뷰포트 최적화 및 SOL 렌더링 통합
+8f576131b4f796feed7423ba2e81cef81fbb752d 790fea5c48b3ca45ab501c17b12b65a423f3b672 kk27286273-sys <kk27286273@gmail.com> 1791390336 +0900	commit: fix: 빌드 에러 원인인 footer 태그 오타 최종 수정
+790fea5c48b3ca45ab501c17b12b65a423f3b672 f51d89137f2bd61ed44190dec5dce1426a74132f kk27286273-sys <kk27286273@gmail.com> 1791390728 +0900	commit: fix: 무한 로딩 방지 및 사이트 선택 화면 추가
+f51d89137f2bd61ed44190dec5dce1426a74132f 01ae801135227445d9c86abc16101445a6397fbf kk27286273-sys <kk27286273@gmail.com> 1791391123 +0900	commit: feat: 전체 구조 재설계 - 로딩 탈출, 기업형 강제, 80% 뷰포트 및 오타 완전 제거
+01ae801135227445d9c86abc16101445a6397fbf 110bb7ab31048be9de8fe1a67ca5a0f86c33c395 kk27286273-sys <kk27286273@gmail.com> 1791392258 +0900	commit: fix: 제어바 최상단 고정 및 에이텍 템플릿 구조 동기화
+110bb7ab31048be9de8fe1a67ca5a0f86c33c395 110bb7ab31048be9de8fe1a67ca5a0f86c33c395 kk27286273-sys <kk27286273@gmail.com> 1791392385 +0900	checkout: moving from main to fix-layout
+110bb7ab31048be9de8fe1a67ca5a0f86c33c395 30e2c1b2903261f256345e367ffbbc11e487f01e kk27286273-sys <kk27286273@gmail.com> 1791456993 +0900	commit: fix: build errors - fix JSX tags in EditorSidebar and remove invalid import in preview page
+30e2c1b2903261f256345e367ffbbc11e487f01e 110bb7ab31048be9de8fe1a67ca5a0f86c33c395 kk27286273-sys <kk27286273@gmail.com> 1791457056 +0900	checkout: moving from fix-layout to main
+110bb7ab31048be9de8fe1a67ca5a0f86c33c395 30e2c1b2903261f256345e367ffbbc11e487f01e kk27286273-sys <kk27286273@gmail.com> 1791457057 +0900	merge fix-layout: Fast-forward
+30e2c1b2903261f256345e367ffbbc11e487f01e 9f90a8da1c513322d1fa332c71c7076546497578 kk27286273-sys <kk27286273@gmail.com> 1791457179 +0900	commit: fix: severe JSX tag mismatch in EditorSidebar
+9f90a8da1c513322d1fa332c71c7076546497578 d560a89e89adebc46061bf29d13bfeb650153238 kk27286273-sys <kk27286273@gmail.com> 1791457745 +0900	commit: fix: main background fit, restore navigation menu, and enhance publish feedback
+d560a89e89adebc46061bf29d13bfeb650153238 53bd4e6af325992c7d78cf9010d352e36c12a215 kk27286273-sys <kk27286273@gmail.com> 1791457837 +0900	commit: fix: resolve syntax error in page.tsx and apply publish feedback
+53bd4e6af325992c7d78cf9010d352e36c12a215 d727bc734f36891c4eccc2fc9d6d501e06933cb0 kk27286273-sys <kk27286273@gmail.com> 1791458143 +0900	commit: feat: add public site viewer and open published page in new tab
+d727bc734f36891c4eccc2fc9d6d501e06933cb0 cfc53c4c1fe68eb661bda555c30ca6fd98fcf086 kk27286273-sys <kk27286273@gmail.com> 1791458397 +0900	commit: feat: enhance CS editor section and link support phone
+cfc53c4c1fe68eb661bda555c30ca6fd98fcf086 0f181b619631020610a86e6a988714c4acb26e11 kk27286273-sys <kk27286273@gmail.com> 1791458675 +0900	commit: fix: link CS guide text and support phone to viewer
+0f181b619631020610a86e6a988714c4acb26e11 72bf05cfbe646f04661a1096f1ee331aa2be2c8a kk27286273-sys <kk27286273@gmail.com> 1791458926 +0900	commit: fix: synchronize B2BTemplateData type and link CS guide to viewer
+72bf05cfbe646f04661a1096f1ee331aa2be2c8a df293b6efa925a5cd98c47af66dc9ca7ee00c2da kk27286273-sys <kk27286273@gmail.com> 1791459042 +0900	commit: fix: add default export to CorporateViewer to resolve build error
+df293b6efa925a5cd98c47af66dc9ca7ee00c2da 23af83d27dae6370ce72d7eef7388d38347850ca kk27286273-sys <kk27286273@gmail.com> 1791459130 +0900	commit: fix: resolve syntax error in CorporateViewer arrow icon
+23af83d27dae6370ce72d7eef7388d38347850ca 673c214a4aa173ab0b32c722ac792cfe5fda9189 kk27286273-sys <kk27286273@gmail.com> 1791459256 +0900	commit: fix: add optional chaining to prevent map error on undefined data
+673c214a4aa173ab0b32c722ac792cfe5fda9189 8de8c8118478b7c04df839797414da40c84e42da kk27286273-sys <kk27286273@gmail.com> 1791459392 +0900	commit: fix: remove syntax error and add default export
+8de8c8118478b7c04df839797414da40c84e42da 0a7dc1635e7f197e1ecda5d1e1a065e35da98907 kk27286273-sys <kk27286273@gmail.com> 1791459583 +0900	commit: fix: ensure CorporateViewer is exclusively used for corporate template
+0a7dc1635e7f197e1ecda5d1e1a065e35da98907 98b5013839462cf12ee9d27f482f7a1c6a1d0cdc kk27286273-sys <kk27286273@gmail.com> 1791459710 +0900	commit: debug: add logs to check templateType
+98b5013839462cf12ee9d27f482f7a1c6a1d0cdc a523936dd5e8a081acbecf88663c4c855775b0b2 kk27286273-sys <kk27286273@gmail.com> 1791459905 +0900	commit: fix: map navigation.navLinks to menu rendering
+a523936dd5e8a081acbecf88663c4c855775b0b2 53c7e683d3ba137bce2a01252c04811deba1f8e4 kk27286273-sys <kk27286273@gmail.com> 1791460017 +0900	commit: fix: resolve critical syntax error in arrow icon and map navLinks
+53c7e683d3ba137bce2a01252c04811deba1f8e4 f9982fb6ae9dba0dc5202d08bea69a042550252b kk27286273-sys <kk27286273@gmail.com> 1791460287 +0900	commit: fix: remove runtime error by aligning data paths with actual structure
+f9982fb6ae9dba0dc5202d08bea69a042550252b 33f7c93ff49387ee3d95aafb0206f00a59960113 kk27286273-sys <kk27286273@gmail.com> 1791460613 +0900	commit: fix: remove forced templateType override to use actual DB data
+33f7c93ff49387ee3d95aafb0206f00a59960113 1ff65eb2764bcb424191e2ec297617586978ba3d kk27286273-sys <kk27286273@gmail.com> 1791460738 +0900	commit: fix: force reset site data to corporate structure to resolve layout mismatch
+1ff65eb2764bcb424191e2ec297617586978ba3d 98df9feabbf88b14f6356c5c0f09b1c252458b65 kk27286273-sys <kk27286273@gmail.com> 1791460819 +0900	commit: debug: add visual indicator to verify which viewer is rendering
+98df9feabbf88b14f6356c5c0f09b1c252458b65 a969f54bdcd84e21e2051a1bfab7398844876bb2 kk27286273-sys <kk27286273@gmail.com> 1791460956 +0900	commit: debug: output actual data to screen to fix mapping mismatch
+a969f54bdcd84e21e2051a1bfab7398844876bb2 eff44be12b8a62097e697ab7717b16f585109969 kk27286273-sys <kk27286273@gmail.com> 1791461295 +0900	commit: feat: apply final stylized corporate layout based on actual data structure
+eff44be12b8a62097e697ab7717b16f585109969 e4502e0d10d3b4af39c331a8bde1f70a2ee3b013 kk27286273-sys <kk27286273@gmail.com> 1791461406 +0900	commit: fix: use inline styles for hero section to verify CSS loading issue
+e4502e0d10d3b4af39c331a8bde1f70a2ee3b013 eaadbdfd0e272ada62be2887b0a92cdee5ee7f48 kk27286273-sys <kk27286273@gmail.com> 1791461646 +0900	commit: fix: add tailwind config to enable component styles
+eaadbdfd0e272ada62be2887b0a92cdee5ee7f48 08419abdb873d47c5857950fcd4a498ddf8931de kk27286273-sys <kk27286273@gmail.com> 1791461876 +0900	commit: fix: fully migrate to inline styles for v4 compatibility
+08419abdb873d47c5857950fcd4a498ddf8931de e5baefd69716408c0b411157b6b0a7b0241a1543 kk27286273-sys <kk27286273@gmail.com> 1791462470 +0900	commit: fix: change to multi-page corporate structure like ATEC
+e5baefd69716408c0b411157b6b0a7b0241a1543 c065cdc4654ef5e9d275068c50c74fdaa2cb26b7 kk27286273-sys <kk27286273@gmail.com> 1791463365 +0900	commit: fix: complete multi-page corporate viewer with all editor fields mapping
+c065cdc4654ef5e9d275068c50c74fdaa2cb26b7 02207aa58f1eaf83be2a05fb5c79f4c171d6a5ee kk27286273-sys <kk27286273@gmail.com> 1791463705 +0900	commit: fix: resolve syntax error in BusinessPage closing tags
+02207aa58f1eaf83be2a05fb5c79f4c171d6a5ee da13b0a118d853816aac8c133095630e32b462a0 kk27286273-sys <kk27286273@gmail.com> 1791463999 +0900	commit: fix: improve page mapping for varied targetIds
+da13b0a118d853816aac8c133095630e32b462a0 903f0382022fb616e4cda45c0b50d52c28774197 kk27286273-sys <kk27286273@gmail.com> 1791464318 +0900	commit: fix: critical crash resolve and field mapping fix
+903f0382022fb616e4cda45c0b50d52c28774197 3a26c7a120675ab04f062f6a663467cdcec98e8d kk27286273-sys <kk27286273@gmail.com> 1791465439 +0900	commit: fix: resolve ceoGreeting crash by aligning data structure
+3a26c7a120675ab04f062f6a663467cdcec98e8d 71cb3d20aed00493e910e8f13c3651e3c7a49663 kk27286273-sys <kk27286273@gmail.com> 1791465795 +0900	commit: fix: prevent undefined spread crash in corporateInfo ceoGreeting
+71cb3d20aed00493e910e8f13c3651e3c7a49663 1928313b781be1fddad0b36c7f9e79cc24b93e9c kk27286273-sys <kk27286273@gmail.com> 1791466850 +0900	commit: feat: overhaul CorporateViewer to ATEC-style professional portal
+1928313b781be1fddad0b36c7f9e79cc24b93e9c 407d9be0729305f48e1c2afd8d246d5c86dcb58d kk27286273-sys <kk27286273@gmail.com> 1791467978 +0900	commit: feat: restructure CorporateViewer into modular components (GNB, MainPage)
+407d9be0729305f48e1c2afd8d246d5c86dcb58d da06d523c9f7daa003aacedf66d67ef3783675c3 kk27286273-sys <kk27286273@gmail.com> 1791468193 +0900	commit: style: upgrade MainPage to high-end corporate design (ATEC style)
+da06d523c9f7daa003aacedf66d67ef3783675c3 d6ce56d58300bef1b5120c40e31c9a3198ade43e kk27286273-sys <kk27286273@gmail.com> 1791468340 +0900	commit: feat: connect modular GNB and MainPage to CorporateViewer
+d6ce56d58300bef1b5120c40e31c9a3198ade43e d1d884a8bba1798760b7884cc420e99db4a62636 kk27286273-sys <kk27286273@gmail.com> 1791468527 +0900	commit: fix: remove syntax error in data check logic
+d1d884a8bba1798760b7884cc420e99db4a62636 bf5414cb1d72d656b7f9b551eebd60ab1cfb7540 kk27286273-sys <kk27286273@gmail.com> 1791469223 +0900	commit: feat: add AboutPage and connect to CorporateViewer
+bf5414cb1d72d656b7f9b551eebd60ab1cfb7540 d9e627f8f4224f267b754c83f6863e95217c8fc9 kk27286273-sys <kk27286273@gmail.com> 1791469561 +0900	commit: fix: force navigation to 'about' page for Company Introduction menu
+d9e627f8f4224f267b754c83f6863e95217c8fc9 41219c834a15f016da3a041f9782e50f1969ae91 kk27286273-sys <kk27286273@gmail.com> 1791469694 +0900	commit: fix: update GNB navigation to match 'CEO 인사말' menu label
+41219c834a15f016da3a041f9782e50f1969ae91 011863f32135303bd5105bdd5dc4722a368238c9 kk27286273-sys <kk27286273@gmail.com> 1791469872 +0900	commit: feat: implement ATEC-style SolutionPage
+011863f32135303bd5105bdd5dc4722a368238c9 d31b384aec6adf1cfe6ea7bad973d8544a226542 kk27286273-sys <kk27286273@gmail.com> 1791470236 +0900	commit: fix: pass solution index to navigateTo in MainPage
+d31b384aec6adf1cfe6ea7bad973d8544a226542 7a5964441edec1b8f76d40a497d1d3720709d1c1 kk27286273-sys <kk27286273@gmail.com> 1791470378 +0900	commit: fix: update GNB navigateTo to support solution index
+7a5964441edec1b8f76d40a497d1d3720709d1c1 9f9e33f66a3d893c23f2cc6feac565fbdeba629b kk27286273-sys <kk27286273@gmail.com> 1791470560 +0900	commit: fix: pass solution index through GNB navigateTo
+9f9e33f66a3d893c23f2cc6feac565fbdeba629b 0bd243d47d7302c6e4159f91dc649362808cad0d kk27286273-sys <kk27286273@gmail.com> 1791471372 +0900	commit: fix: SolutionPage 데이터 키 매칭 수정 (detailedFeatures 적용)
+0bd243d47d7302c6e4159f91dc649362808cad0d bf8ef16131ccbd71a4008625f9c2aadddf8291a8 kk27286273-sys <kk27286273@gmail.com> 1791471581 +0900	commit: fix: CorporateViewer 세로 스크롤 및 높이 확장 구조 정상화
+bf8ef16131ccbd71a4008625f9c2aadddf8291a8 3b879f562c1604845bf9f8e5eaa52ba06c3792b9 kk27286273-sys <kk27286273@gmail.com> 1791471844 +0900	commit: fix: LivePreview 캔버스 높이 계산 오류 수정 및 중복 섹션 제거
+3b879f562c1604845bf9f8e5eaa52ba06c3792b9 90d850a662492bc558a508b28cb6d0ea830742f4 kk27286273-sys <kk27286273@gmail.com> 1791471958 +0900	commit: fix: 캔버스 scale 래퍼 너비/높이 물리적 보정 및 스크롤 영역 해제
+90d850a662492bc558a508b28cb6d0ea830742f4 0b5b5bc0b82c0726aa77bec5c0eec501e4700ace kk27286273-sys <kk27286273@gmail.com> 1791472071 +0900	commit: fix: transform scale 제거 및 물리적 width 제어 방식으로 변경 (스크롤 잘림 원천 해결)
+0b5b5bc0b82c0726aa77bec5c0eec501e4700ace d5450e8308ac448c3bf6da9d7a2396327e7c0bf7 kk27286273-sys <kk27286273@gmail.com> 1791472214 +0900	commit: feat: 캔버스 Fit-to-Width 자동 맞춤 레이아웃 적용
+d5450e8308ac448c3bf6da9d7a2396327e7c0bf7 8c81ee541103c1bd9249a5a77bf55d70825819fa kk27286273-sys <kk27286273@gmail.com> 1791472422 +0900	commit: fix: BuilderPage 우측 뷰어 영역 높이 제약 해제 및 min-h-0 적용
+8c81ee541103c1bd9249a5a77bf55d70825819fa efe333980df5c73280376562664544257856daef kk27286273-sys <kk27286273@gmail.com> 1791472477 +0900	commit: fix: 뷰포트 렌더링 계층 단순화 및 스크롤 강제 활성화
+efe333980df5c73280376562664544257856daef b33f1cd9f29e006c7f7dca9316a0827866ca9836 kk27286273-sys <kk27286273@gmail.com> 1791472692 +0900	commit: fix: ViewerManager가 LivePreview를 거치도록 수정하여 스크롤/줌 기능 활성화
+b33f1cd9f29e006c7f7dca9316a0827866ca9836 4042437bc5fc1979637a4076a0ca37b98f189af5 kk27286273-sys <kk27286273@gmail.com> 1791473199 +0900	commit: feat: 에이텍 기준 7대 카테고리 GNB 설계 및 데이터 구조 확장
+4042437bc5fc1979637a4076a0ca37b98f189af5 4c9e2c4b6567dec2c991f2f4530e37343dfd75e3 kk27286273-sys <kk27286273@gmail.com> 1791473381 +0900	commit: fix: ESGPage 라우팅 연결 및 서브페이지 뼈대 구축
+4c9e2c4b6567dec2c991f2f4530e37343dfd75e3 28e4b6e74df1bc9fdfb8be330f962802ad76eccc kk27286273-sys <kk27286273@gmail.com> 1791473468 +0900	commit: fix: ESGPage 파일 생성하여 빌드 에러 해결
+28e4b6e74df1bc9fdfb8be330f962802ad76eccc 596c26e52b7d6b5369bb83d40ad0b5f95b260890 kk27286273-sys <kk27286273@gmail.com> 1791474191 +0900	commit: feat: 서브페이지 파일 생성 및 연결
+596c26e52b7d6b5369bb83d40ad0b5f95b260890 b299507a7df9c731b7f3a0436d10183b37d6e802 kk27286273-sys <kk27286273@gmail.com> 1791474442 +0900	commit: feat: 공시정보, 홍보센터, 인재경영 페이지 구현 및 뷰어 연결 완료
+b299507a7df9c731b7f3a0436d10183b37d6e802 7bf1442b313568788c2c51eaeceaf0ee750d3457 kk27286273-sys <kk27286273@gmail.com> 1791474921 +0900	commit: feat: 에이텍 7대 카테고리 에디터 확장 및 뷰어 연결 완료, 폰트 사이즈 컨트롤 및 신규 페이지 연결 반영
+7bf1442b313568788c2c51eaeceaf0ee750d3457 8138ac7b8a2c7ed739ab96e3945ecd6d5936e435 kk27286273-sys <kk27286273@gmail.com> 1791475069 +0900	commit: feat: 에이텍 7대 카테고리 에디터 확장 및 뷰어 연결 완료
+8138ac7b8a2c7ed739ab96e3945ecd6d5936e435 621384b75c12012f5b50124d7324e9f174ce7e5c kk27286273-sys <kk27286273@gmail.com> 1791475288 +0900	commit: fix: EditorSidebar JSX 문법 오류 수정 및 전체 구조 복구
+621384b75c12012f5b50124d7324e9f174ce7e5c c50a27536b82fe9899ec17c7427a2544004fc2d2 kk27286273-sys <kk27286273@gmail.com> 1791475754 +0900	commit: fix: disclosure section syntax error
+c50a27536b82fe9899ec17c7427a2544004fc2d2 e5616fbc4bb471f4aa59759b894fd999ca26fe96 kk27286273-sys <kk27286273@gmail.com> 1791475890 +0900	commit: fix: disclosure certifications and reports buttons syntax
+e5616fbc4bb471f4aa59759b894fd999ca26fe96 fcc28aa6686b1b7d96ee46a4dfab079b1ede4531 kk27286273-sys <kk27286273@gmail.com> 1791476009 +0900	commit: fix: EditorSidebar complete structure recovery
+fcc28aa6686b1b7d96ee46a4dfab079b1ede4531 1dbe412d97253142de9ba9c8eaa9db1d6114d90f kk27286273-sys <kk27286273@gmail.com> 1791476441 +0900	commit: fix: align initial data structure with B2BTemplateData type
+1dbe412d97253142de9ba9c8eaa9db1d6114d90f daddf26532a5095da223bd89d5b0827d1b4f86c7 kk27286273-sys <kk27286273@gmail.com> 1791476446 +0900	commit: feat: implement all editor sections and fix undefined errors
+daddf26532a5095da223bd89d5b0827d1b4f86c7 cd90a7b1dede4f086669207b52daca0a7a75bb81 kk27286273-sys <kk27286273@gmail.com> 1791540685 +0900	commit: Fix: 기업형 템플릿 7개 메뉴 동기화 및 데이터 바인딩 완료
+cd90a7b1dede4f086669207b52daca0a7a75bb81 a09403dfb0ac142bc5a9032e4e88ecebc3d6f0b0 kk27286273-sys <kk27286273@gmail.com> 1791540861 +0900	commit: Fix : 로고 하드코딩 박멸
+a09403dfb0ac142bc5a9032e4e88ecebc3d6f0b0 a4819d5cf6d41217663de00b1f51a45da405e8f6 kk27286273-sys <kk27286273@gmail.com> 1791541094 +0900	commit: Fix: 에디터-뷰어 데이터 바인딩 완벽 동기화 및 누락된 입력창 추가
+a4819d5cf6d41217663de00b1f51a45da405e8f6 e6da61e95ae60b5d0115f3741d6fc030c10bb530 kk27286273-sys <kk27286273@gmail.com> 1791542140 +0900	commit: Chore: 기본 템플릿 데이터의 특정 업체명 제거 및 가이드 문구로 변경
+e6da61e95ae60b5d0115f3741d6fc030c10bb530 2463173c25622e3c4badb48c330db72fb6f9403a kk27286273-sys <kk27286273@gmail.com> 1791542597 +0900	commit: feat: AboutPage 하드코딩 문구 제거 및 에디터 데이터 연동
+2463173c25622e3c4badb48c330db72fb6f9403a 83463216d9a757efcb77cff97ee2fd0a308bedcd kk27286273-sys <kk27286273@gmail.com> 1791543504 +0900	commit: Fix: 에디터 입력창 전면 복구 및 데이터 바인딩 경로 최적화
+83463216d9a757efcb77cff97ee2fd0a308bedcd 1d606d3dc9cacab6a253361e439f7db6f951ddb3 kk27286273-sys <kk27286273@gmail.com> 1791544040 +0900	commit: Fix: 에디터-뷰어 데이터 바인딩 경로 일치 및 추가/삭제 기능 구현
+1d606d3dc9cacab6a253361e439f7db6f951ddb3 9c594dafd58070dbea910d901ef84aea743c5016 kk27286273-sys <kk27286273@gmail.com> 1791544905 +0900	commit: Fix: EditorSidebar 데이터 경로 뷰어와 동기화 및 버그 수정
+9c594dafd58070dbea910d901ef84aea743c5016 32f67628639f39928b97065b0d7fa18a77d3137e kk27286273-sys <kk27286273@gmail.com> 1791545313 +0900	commit: Fix: 에디터에 메인 화면 설정 탭 및 입력창 추가
+32f67628639f39928b97065b0d7fa18a77d3137e cd00e643ebc5d0103540792c3bd60ea8ceda4f09 kk27286273-sys <kk27286273@gmail.com> 1791545428 +0900	commit: Fix: EditorSidebar 전체 교체 및 빌드 오류 해결
+cd00e643ebc5d0103540792c3bd60ea8ceda4f09 995ded572dd9d00b9ab902e3f64471094523d28f kk27286273-sys <kk27286273@gmail.com> 1791545954 +0900	commit: Fix: AboutPage 에디터-뷰어 데이터 키 1:1 완벽 동기화
+995ded572dd9d00b9ab902e3f64471094523d28f 2e80e3436710ea95843f35b2cf0deb7f70ebaade kk27286273-sys <kk27286273@gmail.com> 1791546877 +0900	commit: Fix: EditorSidebar 데이터 키 매칭 및 CS/PR/Recruit/ESG 연동 구조 수정
+2e80e3436710ea95843f35b2cf0deb7f70ebaade a9cdaf63ff274c0996fb78bc612ec9def2a66edf kk27286273-sys <kk27286273@gmail.com> 1791547198 +0900	commit: Fix: SolutionPage props 구조 수정 및 detailContent 연동 완료
+a9cdaf63ff274c0996fb78bc612ec9def2a66edf dff9d109f3a1cf665bf6123afef9dcef07724cd1 kk27286273-sys <kk27286273@gmail.com> 1791547377 +0900	commit: Fix: ESG 에디터-뷰어 데이터 키 값 통일 및 렌더링 수정
+dff9d109f3a1cf665bf6123afef9dcef07724cd1 e43bd5fd7c95171155b50410cc748a5e97ed666e kk27286273-sys <kk27286273@gmail.com> 1791547669 +0900	commit: Fix: CorporateViewer 문법 오류 수정 및 ESG/솔루션 데이터 렌더링 최적화
+e43bd5fd7c95171155b50410cc748a5e97ed666e c9f24be5ff81b84cfa9ea08ba9c8c4fb79d36c92 kk27286273-sys <kk27286273@gmail.com> 1791547968 +0900	commit: Fix: updateDeep 배열 복제 로직 수정하여 솔루션 데이터 타입 깨짐 해결
+c9f24be5ff81b84cfa9ea08ba9c8c4fb79d36c92 40b3324b5517c24ab9c70219e6bf67b1672d436c kk27286273-sys <kk27286273@gmail.com> 1791548293 +0900	commit: UI: 솔루션 에디터 입력 구조 변경 (상단제목/요약/상세내용 세로형 카드 레이아웃 적용)
+40b3324b5517c24ab9c70219e6bf67b1672d436c 89abfdbb990d8f968f7c4a5ef7a71617aab9ddfd kk27286273-sys <kk27286273@gmail.com> 1791548786 +0900	commit: feat: 사업소개 구조 분리 (상단 대표 정보 단일화 및 하단 상세소개 카드 리스트 구현)
+89abfdbb990d8f968f7c4a5ef7a71617aab9ddfd fce8cf20d68a9a493fca7e068ef35e4fa827d5c3 kk27286273-sys <kk27286273@gmail.com> 1791549042 +0900	commit: fix: ESG 에디터 섹션 키 매칭 및 사업소개 뷰어 data props 연동 수정
+fce8cf20d68a9a493fca7e068ef35e4fa827d5c3 3c62d1fd2031d3a212b660cff6aea05beff12904 kk27286273-sys <kk27286273@gmail.com> 1791549331 +0900	commit: fix: 발행 화면 데이터 구조 보정 로직 추가 (solutionMain 하위호환)
+3c62d1fd2031d3a212b660cff6aea05beff12904 b385063ab28a885cefd934a1496cafa5e139358d kk27286273-sys <kk27286273@gmail.com> 1791551088 +0900	commit: Fix: Force data capture and validation in EditorSidebar publish logic
+b385063ab28a885cefd934a1496cafa5e139358d 5436b770dd277e160aff42de5436da4d319d5c03 kk27286273-sys <kk27286273@gmail.com> 1791551179 +0900	commit: Fix: Change supabase client to @supabase/supabase-js to solve build error
+5436b770dd277e160aff42de5436da4d319d5c03 fa86489ca54c8042a530c77ae8974452a955e291 kk27286273-sys <kk27286273@gmail.com> 1791551609 +0900	commit: Fix: Add load verification and debug logs to EditorSidebar
+fa86489ca54c8042a530c77ae8974452a955e291 7db40b082c691d910aa852af2f60c11cecfbebe3 kk27286273-sys <kk27286273@gmail.com> 1791551826 +0900	commit: Fix: Prevent page refresh on publish button click
+7db40b082c691d910aa852af2f60c11cecfbebe3 f15775573c136a2fd5480f9d06e13fdb5fdc2b76 kk27286273-sys <kk27286273@gmail.com> 1791551974 +0900	commit: Fix: Complete removal of loop-inducing alerts and force button type
+f15775573c136a2fd5480f9d06e13fdb5fdc2b76 ab9137ae2a8245e030bac799d4c2e0fca2e52ced kk27286273-sys <kk27286273@gmail.com> 1791552043 +0900	commit: Fix: Correct syntax error in closing div tag
+ab9137ae2a8245e030bac799d4c2e0fca2e52ced 0a1ec7b0f89615f3070d0d15abc495d546d52f5d kk27286273-sys <kk27286273@gmail.com> 1791552847 +0900	commit: Fix: Force LivePreview when solutionMain data exists
+0a1ec7b0f89615f3070d0d15abc495d546d52f5d 30f348ee2ba137e1e8d42dcb6db44a6698af0a81 kk27286273-sys <kk27286273@gmail.com> 1791552995 +0900	commit: Fix: Remove forced legacy data override in BuilderPage
+30f348ee2ba137e1e8d42dcb6db44a6698af0a81 f54f87d03e847c6bd83829ae442db8ee5f75ec4c kk27286273-sys <kk27286273@gmail.com> 1791553130 +0900	commit: Fix: Restore editor schema while preserving custom data
+f54f87d03e847c6bd83829ae442db8ee5f75ec4c ef9fba91994cffc1932375e61ca57d40d771b743 kk27286273-sys <kk27286273@gmail.com> 1791553462 +0900	commit: Fix: Restore EditorSidebar data linkage and Supabase client
+ef9fba91994cffc1932375e61ca57d40d771b743 5dae75a018ac879794a0e48ac5a6ed3493377160 kk27286273-sys <kk27286273@gmail.com> 1791553964 +0900	commit: Fix: Restore full corporate builder editor sections
+5dae75a018ac879794a0e48ac5a6ed3493377160 7dfbc5b69620552d2568e8e018aadc6064a16a3e kk27286273-sys <kk27286273@gmail.com> 1791554141 +0900	commit: Fix: Restore full enterprise editor with design controls and detailed fields
+7dfbc5b69620552d2568e8e018aadc6064a16a3e 3ffc32ddd6fa02ba4b793bf325b97fd1991bf353 kk27286273-sys <kk27286273@gmail.com> 1791554506 +0900	commit: Feat: Implement tab-based corporate builder editor
+3ffc32ddd6fa02ba4b793bf325b97fd1991bf353 973303914936c7e22da4796fcd6d4f1a817f8a4e kk27286273-sys <kk27286273@gmail.com> 1791554704 +0900	commit: Fix: Resolve input focus loss and data sync issues
+973303914936c7e22da4796fcd6d4f1a817f8a4e b6f8a0760d6dc128c3f703767631d2d85ddf46bd kk27286273-sys <kk27286273@gmail.com> 1791555202 +0900	commit: Fix: Full restore of EditorSidebar with verified data paths and main section
+b6f8a0760d6dc128c3f703767631d2d85ddf46bd 0d2cee914ffb7f2e41a9a07e4475613325bc45b7 kk27286273-sys <kk27286273@gmail.com> 1791555642 +0900	commit: Fix: Align CorporateViewer data paths with EditorSidebar (solutions.list, solutionMain, etc.)
+0d2cee914ffb7f2e41a9a07e4475613325bc45b7 7b6a39cda215f2f53b5649a678e65e37343870a8 kk27286273-sys <kk27286273@gmail.com> 1791556315 +0900	commit: Fix: Correct data mapping and remove field collisions in EditorSidebar
+7b6a39cda215f2f53b5649a678e65e37343870a8 51c12591b986628511e4d81457afa8f9d6014cc8 kk27286273-sys <kk27286273@gmail.com> 1791556473 +0900	commit: Fix: Align AboutPage data paths with EditorSidebar (about, vision, since)
+51c12591b986628511e4d81457afa8f9d6014cc8 a6c8c48994fce258f12a16ef06c6435c1eb04d18 kk27286273-sys <kk27286273@gmail.com> 1791556551 +0900	commit: Fix: Isolate main hero from solutions and add detailed content input fields
+a6c8c48994fce258f12a16ef06c6435c1eb04d18 b16cdfbc0cc9360b6355a638e0372803354310cd kk27286273-sys <kk27286273@gmail.com> 1791557820 +0900	commit: Fix corporate editor fields and viewer data bindings
+b16cdfbc0cc9360b6355a638e0372803354310cd a5ca332676e2d47602ad348595002b5ce685a687 kk27286273-sys <kk27286273@gmail.com> 1791558724 +0900	commit: Fix viewer navigation and align editor data
+a5ca332676e2d47602ad348595002b5ce685a687 8a16eb95a90d283c0a23c7dd078191ddac3f3bd0 kk27286273-sys <kk27286273@gmail.com> 1791559085 +0900	commit: Sync about page inputs with representative name field
+8a16eb95a90d283c0a23c7dd078191ddac3f3bd0 a14662c026d199067b25813760cb73ffa48a7bf9 kk27286273-sys <kk27286273@gmail.com> 1791559428 +0900	commit: Fix ESG editor preview data binding
+a14662c026d199067b25813760cb73ffa48a7bf9 a2d62e696b274cb4a1dd07d51348c0a8a529a440 kk27286273-sys <kk27286273@gmail.com> 1791560598 +0900	commit: Fix published site preview and responsive layout
+a2d62e696b274cb4a1dd07d51348c0a8a529a440 185349ec45c6098e582db095c3693793a00c8bef kk27286273-sys <kk27286273@gmail.com> 1791603889 +0900	commit: Refactor builder editor sidebar
+185349ec45c6098e582db095c3693793a00c8bef 51b5b5f1c20e043ca81dad6ce55f754b94a60e16 kk27286273-sys <kk27286273@gmail.com> 1791605289 +0900	commit: Update builder
+51b5b5f1c20e043ca81dad6ce55f754b94a60e16 7f8bc49343ceb51f8f3f568b23d241b7198e1876 kk27286273-sys <kk27286273@gmail.com> 1791606182 +0900	commit: Remove preview zoom controls
+7f8bc49343ceb51f8f3f568b23d241b7198e1876 536ec0ce7908d74e67c2d44a1050014174be2a6d kk27286273-sys <kk27286273@gmail.com> 1791606753 +0900	commit: Optimize uploaded images
+536ec0ce7908d74e67c2d44a1050014174be2a6d 5cee4c04cd1260512b268b2a23a2a38c04bb57c9 kk27286273-sys <kk27286273@gmail.com> 1791609021 +0900	commit: Optimize uploaded company logos
+5cee4c04cd1260512b268b2a23a2a38c04bb57c9 8e60b7123e4ec9197e50eb234186bf9792d25779 kk27286273-sys <kk27286273@gmail.com> 1791609893 +0900	commit: Handle missing and failed template logos
+8e60b7123e4ec9197e50eb234186bf9792d25779 f16ba8f680ef799a16e568f869dfd95a29f6e8f5 kk27286273-sys <kk27286273@gmail.com> 1791611080 +0900	commit: feat: Add image upload fields for hero and solution cards
+f16ba8f680ef799a16e568f869dfd95a29f6e8f5 7630911ae010fc83e50f15c532b242be1e7ebb12 kk27286273-sys <kk27286273@gmail.com> 1791611135 +0900	commit: Optimize logo image upload and rendering
+7630911ae010fc83e50f15c532b242be1e7ebb12 df35cfee884803c0ad73dcbadf46bae74c41bcf3 kk27286273-sys <kk27286273@gmail.com> 1791611800 +0900	commit: fix: pass hero image and restore solution detail editor
+df35cfee884803c0ad73dcbadf46bae74c41bcf3 0df6e40297ede6576764da05c75fa67ffb98a042 kk27286273-sys <kk27286273@gmail.com> 1791612032 +0900	commit: fix: render uploaded images and restore solution details
+0df6e40297ede6576764da05c75fa67ffb98a042 7730d3665652a4de48512ab0c3a282895e8fef24 kk27286273-sys <kk27286273@gmail.com> 1791612510 +0900	commit: perf: optimize LCP hero image delivery and add lazy loading to solution cards
+7730d3665652a4de48512ab0c3a282895e8fef24 b9eff3c1d3001dc65672fac43994adea24f13d43 kk27286273-sys <kk27286273@gmail.com> 1791612665 +0900	commit: fix: restore MainPage solution card JSX
+b9eff3c1d3001dc65672fac43994adea24f13d43 f8ba3aa8f1e82d96065f89763a1c141287a83b5b kk27286273-sys <kk27286273@gmail.com> 1791612985 +0900	commit: perf: resize solution images for card display
+f8ba3aa8f1e82d96065f89763a1c141287a83b5b 95ab848d7c4aa9694f4512851635c286f981163c kk27286273-sys <kk27286273@gmail.com> 1791614291 +0900	commit: fix: correct solution image field in builder
+95ab848d7c4aa9694f4512851635c286f981163c 324378a482d2ee32390a368963638d0bd8c5b29e kk27286273-sys <kk27286273@gmail.com> 1791615327 +0900	commit: Show full hero and solution images
+324378a482d2ee32390a368963638d0bd8c5b29e 227c9da90570a439687eaf78d65549ff1a0d352a kk27286273-sys <kk27286273@gmail.com> 1791615666 +0900	commit: Fix malformed JSX in main page
+227c9da90570a439687eaf78d65549ff1a0d352a 6d32b5677520772f77a0a9ed713917638e8648a0 kk27286273-sys <kk27286273@gmail.com> 1791617427 +0900	commit: Improve hero title animation timing
+6d32b5677520772f77a0a9ed713917638e8648a0 7bf31f864a22a20d82404b6ac8e32f53f183bf20 kk27286273-sys <kk27286273@gmail.com> 1791619968 +0900	commit: Add SEO metadata generation - company name and hero title from site data
+7bf31f864a22a20d82404b6ac8e32f53f183bf20 55a762a803b30970ab4babf94a371a70afe7d325 kk27286273-sys <kk27286273@gmail.com> 1791623785 +0900	commit: Enable scrolling in builder
+55a762a803b30970ab4babf94a371a70afe7d325 126c3556e8a0967474cc19f0ab7e9f208682ab84 kk27286273-sys <kk27286273@gmail.com> 1791625064 +0900	commit: chore: redirect /site/builder to /preview permanently
+126c3556e8a0967474cc19f0ab7e9f208682ab84 bab1894e6f577cb325ebe0a2e244ff97096fc12b kk27286273-sys <kk27286273@gmail.com> 1791625454 +0900	commit: fix: show published site data in preview
+bab1894e6f577cb325ebe0a2e244ff97096fc12b d715a226ea774ee2fe37cdcef7f69873172ee4e6 kk27286273-sys <kk27286273@gmail.com> 1791625554 +0900	commit: chore: remove unsupported eslint config
+d715a226ea774ee2fe37cdcef7f69873172ee4e6 e8585b385f9632504cefb678a77cd580900dfe31 kk27286273-sys <kk27286273@gmail.com> 1791625741 +0900	commit: fix: repair builder page publish syntax
+e8585b385f9632504cefb678a77cd580900dfe31 7a136bccd03a0b8ec4636e1f07f9fcf4a682c172 kk27286273-sys <kk27286273@gmail.com> 1791625791 +0900	commit: feat: update Nexia homepage UI
+7a136bccd03a0b8ec4636e1f07f9fcf4a682c172 8d96f54cc618a52aeaf1fb8250679563af352e01 kk27286273-sys <kk27286273@gmail.com> 1791625964 +0900	commit: fix: resolve preview data parsing and remove undefined presets
+8d96f54cc618a52aeaf1fb8250679563af352e01 dc58c72b8d7336b404601b0f0f53c7c8f460d832 kk27286273-sys <kk27286273@gmail.com> 1791626469 +0900	commit: feat: scroll to templates and link b2b preview
+dc58c72b8d7336b404601b0f0f53c7c8f460d832 8bfc423019bc32ac250d5753a236831b422ffce6 kk27286273-sys <kk27286273@gmail.com> 1791626639 +0900	commit: fix: update template preview URL
+8bfc423019bc32ac250d5753a236831b422ffce6 51cbd2265e491a5a841d1dfd86dc6450413edb51 kk27286273-sys <kk27286273@gmail.com> 1791626916 +0900	commit: feat: add fitness showroom template details
+51cbd2265e491a5a841d1dfd86dc6450413edb51 3acf68377b3f80e29cbaedfddd250f4f52ef375b kk27286273-sys <kk27286273@gmail.com> 1791627484 +0900	commit: feat: map korean preview slugs to supabase site IDs
+3acf68377b3f80e29cbaedfddd250f4f52ef375b aa652fbe4a02903fc97bca42b0323337acfc569b kk27286273-sys <kk27286273@gmail.com> 1791627786 +0900	commit: feat: add template selector to builder
+aa652fbe4a02903fc97bca42b0323337acfc569b 467a39d23dca20cc2b7b70f71f15f32da756dc44 kk27286273-sys <kk27286273@gmail.com> 1791629537 +0900	commit: feat: update corporate template content
+467a39d23dca20cc2b7b70f71f15f32da756dc44 db6469f5f25183c8cc57c69c67ec226c656e5762 kk27286273-sys <kk27286273@gmail.com> 1791629617 +0900	commit: fix: correct builder template data syntax
+db6469f5f25183c8cc57c69c67ec226c656e5762 251e6fc2b696bf32e7064d676e0812407d03b461 kk27286273-sys <kk27286273@gmail.com> 1791629783 +0900	commit: fix: correct syntax error in builder createDefaultData
+251e6fc2b696bf32e7064d676e0812407d03b461 ccd2f0e326b44425911c3c5595d6f34f28203c34 kk27286273-sys <kk27286273@gmail.com> 1791703317 +0900	commit: Add privacy policy page
+ccd2f0e326b44425911c3c5595d6f34f28203c34 50063c55cb39feae10d68d14dc5a34f33e3db352 kk27286273-sys <kk27286273@gmail.com> 1791704216 +0900	commit: feat: 토스 빌링결제 적용
+50063c55cb39feae10d68d14dc5a34f33e3db352 916af544f2feebea60b5b310f6998b1ed5693387 kk27286273-sys <kk27286273@gmail.com> 1791705189 +0900	commit: feat: 토스 자동결제(빌링) 연동 완료 - 빌링키 발급, 첫 결제, 월간 정기청구
+916af544f2feebea60b5b310f6998b1ed5693387 a0317ed5e1a7082d4e192a6d8ecdd951df6c924e kk27286273-sys <kk27286273@gmail.com> 1791705449 +0900	commit: fix: CRON_SECRET 설정
+a0317ed5e1a7082d4e192a6d8ecdd951df6c924e bae8d85ef1511f87455e6bee642eadfc7d517b43 kk27286273-sys <kk27286273@gmail.com> 1791708880 +0900	commit: fix: 요금제 버튼을 Link로 변경하고 금액 파라미터 제거
+bae8d85ef1511f87455e6bee642eadfc7d517b43 0cd38a0272b960cee8ce384b459f058ffdffb171 kk27286273-sys <kk27286273@gmail.com> 1791710923 +0900	commit: feat: showroom detail page implementation
+0cd38a0272b960cee8ce384b459f058ffdffb171 13f1008b0d0a5319586327259311d92c6560e04c kk27286273-sys <kk27286273@gmail.com> 1791711086 +0900	commit: refactor: remove duplicate template sections from landing page
+13f1008b0d0a5319586327259311d92c6560e04c 7c2af9906459cb9476520bdde5c3630aaa39c12d kk27286273-sys <kk27286273@gmail.com> 1791711225 +0900	commit: fix: remove duplicate sections and fix landing page layout
+7c2af9906459cb9476520bdde5c3630aaa39c12d 6a7f8bbea5d9bc9b81a9a9aac1ca928415815525 kk27286273-sys <kk27286273@gmail.com> 1791712454 +0900	commit: feat: update header and footer branding from NEXIA to THsoft, add IndustryGrid with hover details
+6a7f8bbea5d9bc9b81a9a9aac1ca928415815525 5307d8e3806e6a9cd66fb31241a48cc161d31028 kk27286273-sys <kk27286273@gmail.com> 1791712564 +0900	commit: feat: add IndustryGrid component and useReveal hook
+5307d8e3806e6a9cd66fb31241a48cc161d31028 de79318f5bce215e97ff46569be6cfc8811982b5 kk27286273-sys <kk27286273@gmail.com> 1791712901 +0900	commit: feat: replace showroom slider with industry cards including live preview frames
+de79318f5bce215e97ff46569be6cfc8811982b5 2a58f0da6cdfa96ab6525a42f2e5ebc5d06a8e8d kk27286273-sys <kk27286273@gmail.com> 1791713139 +0900	commit: fix: remove showroom slider and repair section tag structure
+2a58f0da6cdfa96ab6525a42f2e5ebc5d06a8e8d d2c099a9744d776e5deb8f75bda7574f79320102 kk27286273-sys <kk27286273@gmail.com> 1791713542 +0900	commit: feat: add legal-tax dedicated layout with template data integration
+d2c099a9744d776e5deb8f75bda7574f79320102 a86509692c4b14345ddc529f42453cf8b5e7338d kk27286273-sys <kk27286273@gmail.com> 1791713864 +0900	commit: feat: add legal-tax dedicated layout for law & tax template
+a86509692c4b14345ddc529f42453cf8b5e7338d eae77c550f1fdec363079bd745e75cd684e05bab kk27286273-sys <kk27286273@gmail.com> 1791713958 +0900	commit: fix: apply legal-tax layout to preview page
+eae77c550f1fdec363079bd745e75cd684e05bab 4a2787111cfaaa84684dbd3e348fe1dcc01f580f kk27286273-sys <kk27286273@gmail.com> 1791714052 +0900	commit: feat: create LivePreview component and update preview page
+4a2787111cfaaa84684dbd3e348fe1dcc01f580f 0ff1ff4338f7aa35918ac45fb77eac48ff3391af kk27286273-sys <kk27286273@gmail.com> 1791714261 +0900	commit: feat: add corporate layout condition to preview page
+0ff1ff4338f7aa35918ac45fb77eac48ff3391af 0d60af1e1c2e76eeb7319799717bac1961d9b069 kk27286273-sys <kk27286273@gmail.com> 1791714322 +0900	commit: feat: create CorporateLayout component
+0d60af1e1c2e76eeb7319799717bac1961d9b069 dbeafc1819adadc7ac46890165955c30c91e7735 kk27286273-sys <kk27286273@gmail.com> 1791714471 +0900	commit: refactor: connect CorporateLayout to existing CorporateViewer component
+dbeafc1819adadc7ac46890165955c30c91e7735 7bc608db0cf249f7b98afd1020002105e57db676 kk27286273-sys <kk27286273@gmail.com> 1791714537 +0900	commit: fix: correct CorporateViewer import path
+7bc608db0cf249f7b98afd1020002105e57db676 dd61e8c5ab37543ff539e850fe9b55dbedfe0b60 kk27286273-sys <kk27286273@gmail.com> 1791714640 +0900	commit: fix: use named import for CorporateViewer
+dd61e8c5ab37543ff539e850fe9b55dbedfe0b60 22562caf42186a3da306d833718e1ee0e06829cf kk27286273-sys <kk27286273@gmail.com> 1791714878 +0900	commit: feat: load corporate data from Supabase
+22562caf42186a3da306d833718e1ee0e06829cf 00826c093f81724dc459e529b0fc0524b705b5e2 kk27286273-sys <kk27286273@gmail.com> 1791714971 +0900	commit: fix: correct supabase import path
+00826c093f81724dc459e529b0fc0524b705b5e2 54e9fb6468b648b69fdcf6807915cd05a34fe45c kk27286273-sys <kk27286273@gmail.com> 1791715070 +0900	commit: fix: correct supabase import path in builder
+54e9fb6468b648b69fdcf6807915cd05a34fe45c 5bc163539d88a73379d1366e4268cd87c4330917 kk27286273-sys <kk27286273@gmail.com> 1791716030 +0900	commit: fix: showroom detail page cleanup
+5bc163539d88a73379d1366e4268cd87c4330917 df1bf9038dae6737c0cba35b1878f3398bc0cfee kk27286273-sys <kk27286273@gmail.com> 1791716315 +0900	commit: chore: stop tracking .env.local
+df1bf9038dae6737c0cba35b1878f3398bc0cfee 82da513a0d9c6ef799824831c49454993d62f313 kk27286273-sys <kk27286273@gmail.com> 1791717124 +0900	commit: fix: correct Supabase anon key to match project
+82da513a0d9c6ef799824831c49454993d62f313 d2a11e00f861f7defe8892d1c2dd1ee3306a1632 kk27286273-sys <kk27286273@gmail.com> 1791718159 +0900	commit: fix: simplify preview page with direct Supabase query
+d2a11e00f861f7defe8892d1c2dd1ee3306a1632 c3d5f8ac8f8639271103fea2690042b8f1f10b12 kk27286273-sys <kk27286273@gmail.com> 1791718479 +0900	commit: fix: enable GNB navigation with state management
+c3d5f8ac8f8639271103fea2690042b8f1f10b12 2663cec15a1662548961c784e98bdc2f16e1c95f kk27286273-sys <kk27286273@gmail.com> 1791718629 +0900	commit: feat: redirect corporate preview query to /preview/기업형
+2663cec15a1662548961c784e98bdc2f16e1c95f 59860a23c41f3ab2132502563d71cb33bf20329b kk27286273-sys <kk27286273@gmail.com> 1791719105 +0900	commit: fix: PricingSection 타입 에러 수정 및 요금 정책 정합성 반영
+59860a23c41f3ab2132502563d71cb33bf20329b 6dea077087e6e3493a215030f85aca292d89af6f kk27286273-sys <kk27286273@gmail.com> 1791720301 +0900	commit: feat: OnePageViewer 구현
+6dea077087e6e3493a215030f85aca292d89af6f 420037b3938134d033b47675c4f8cf24befac23a kk27286273-sys <kk27286273@gmail.com> 1791720562 +0900	commit: feat: LivePreview에 onepage 분기 추가
+420037b3938134d033b47675c4f8cf24befac23a 19289755529e03f68f9416ec4b9f52ae9f7a7ff1 kk27286273-sys <kk27286273@gmail.com> 1791721022 +0900	commit: feat: 원페이지 포트폴리오형 히어로 + 프로젝트 스트립 + 카드 그리드 추가/삭제
+19289755529e03f68f9416ec4b9f52ae9f7a7ff1 8f885f8f9c75f829fa6b51eed0e1ebf5cef6f8ed kk27286273-sys <kk27286273@gmail.com> 1791721428 +0900	commit: feat: EditorSidebar 원페이지 분기 추가 + 프로젝트/서비스 에디터
+8f885f8f9c75f829fa6b51eed0e1ebf5cef6f8ed f043a1566cee297750b829bcdc08b20b49e0e894 kk27286273-sys <kk27286273@gmail.com> 1791722643 +0900	commit: feat: EditorSidebar에 인테리어 섹션 분기 추가
+f043a1566cee297750b829bcdc08b20b49e0e894 6de7ae59cc0aa7beea476bc04f56adf17be81be0 kk27286273-sys <kk27286273@gmail.com> 1791723283 +0900	commit: feat: 메인페이지 3번째 템플릿을 상담 → 인테리어로 변경
+6de7ae59cc0aa7beea476bc04f56adf17be81be0 c89864e0f2aa7c6dc7b7242aaea1242870c8810d kk27286273-sys <kk27286273@gmail.com> 1791723549 +0900	commit: feat: 빌더에 interior 템플릿 추가
+c89864e0f2aa7c6dc7b7242aaea1242870c8810d 6a8e20dad44068470b5d84f38b1df3daa40e8ccb kk27286273-sys <kk27286273@gmail.com> 1791724319 +0900	commit: fix: preview 페이지 import 경로 수정
+6a8e20dad44068470b5d84f38b1df3daa40e8ccb 9fee72ca3c89a435e8d8443789abc471767f6309 kk27286273-sys <kk27286273@gmail.com> 1791724479 +0900	commit: feat: preview 페이지에서 templateId 쿼리 파라미터 지원
+9fee72ca3c89a435e8d8443789abc471767f6309 6a2fb77c27e7f23337363c7b6f6c35cd52e4584d kk27286273-sys <kk27286273@gmail.com> 1791724561 +0900	commit: fix: preview 페이지 파일 생성 수정
+6a2fb77c27e7f23337363c7b6f6c35cd52e4584d dce5a911675945a4d59c3d75af3e911a54120adb kk27286273-sys <kk27286273@gmail.com> 1791724680 +0900	commit: fix: preview 페이지 재생성
+dce5a911675945a4d59c3d75af3e911a54120adb 22578b979441299d6e989fc9c027d183b08a0a9c kk27286273-sys <kk27286273@gmail.com> 1791724724 +0900	commit: fix: preview 페이지 Suspense 추가
+22578b979441299d6e989fc9c027d183b08a0a9c 8458e78ff75105b49d865f97b681f17427b14f2f kk27286273-sys <kk27286273@gmail.com> 1791724933 +0900	commit: feat: 시공사례 사진 클릭으로 Before/After 전환
+8458e78ff75105b49d865f97b681f17427b14f2f fa951948d6dd1374dc0b7574af78c89a6e0ce2dd kk27286273-sys <kk27286273@gmail.com> 1791725298 +0900	commit: feat: LivePreview에 법률형 분기 추가
+fa951948d6dd1374dc0b7574af78c89a6e0ce2dd 33273d76fa6d24231567b0ea25841140d4c54ea4 kk27286273-sys <kk27286273@gmail.com> 1791725414 +0900	commit: feat: 법률형 뷰어 파일 생성
+33273d76fa6d24231567b0ea25841140d4c54ea4 739516c7bb9cee2d80f0d89999723e0a42d887a0 kk27286273-sys <kk27286273@gmail.com> 1791725655 +0900	commit: fix: 법률형이 corporateInfo를 받지 않도록 수정
+739516c7bb9cee2d80f0d89999723e0a42d887a0 47eae66b2ae765334430f4c9e05918c553548f87 kk27286273-sys <kk27286273@gmail.com> 1791725852 +0900	commit: fix: templateId legal-tax → legal, fitness-lesson → fitness로 통일
+47eae66b2ae765334430f4c9e05918c553548f87 1d9d7e1b3c0e79942a95895c532e7fe90103bac8 kk27286273-sys <kk27286273@gmail.com> 1791726135 +0900	commit: feat: 법률형·피트니스형 에디터 섹션 추가
+1d9d7e1b3c0e79942a95895c532e7fe90103bac8 de4b9b3dce7117a488fc7cf2c2ed5c32590a93d6 kk27286273-sys <kk27286273@gmail.com> 1791726254 +0900	commit: fix: 템플릿 타입별 뷰어 분기 및 DB 조회 추가
+de4b9b3dce7117a488fc7cf2c2ed5c32590a93d6 14383631873091f3fc4b211f9b23a5e12687184c kk27286273-sys <kk27286273@gmail.com> 1791726492 +0900	commit: feat: 피트니스 템플릿 준비중으로 비활성화
+14383631873091f3fc4b211f9b23a5e12687184c 06ace177a1df5238f0c5d61db233e73e8cb606ec kk27286273-sys <kk27286273@gmail.com> 1791800507 +0900	commit: feat: 피트니스 템플릿 뷰어 완성 (templates 폴더로 이동)
+06ace177a1df5238f0c5d61db233e73e8cb606ec d64800943637add9e10bf123ddb5ae75d4b0f0d6 kk27286273-sys <kk27286273@gmail.com> 1791800672 +0900	commit: feat: ViewerManager에 LegalViewer, FitnessViewer 연결
+d64800943637add9e10bf123ddb5ae75d4b0f0d6 f23ccfa638bc98a91f41ebfdc77301e46ea36d85 kk27286273-sys <kk27286273@gmail.com> 1791800873 +0900	commit: feat: 템플릿별 기본 데이터 추가 (fitness 포함)
+f23ccfa638bc98a91f41ebfdc77301e46ea36d85 951cdad7ad4c7a42c25c059d44d9d4586940142c kk27286273-sys <kk27286273@gmail.com> 1791801046 +0900	commit: feat: 피트니스 템플릿 활성화
+951cdad7ad4c7a42c25c059d44d9d4586940142c 4af76bffcc94f3bb08ad7e208b92a084c4a2d154 kk27286273-sys <kk27286273@gmail.com> 1791801103 +0900	commit: fix: preview에서 fitness 템플릿 렌더링 + defaultData 연결
+4af76bffcc94f3bb08ad7e208b92a084c4a2d154 cd764345e0bc7af2b6ab6a92fe1d052896391b6b kk27286273-sys <kk27286273@gmail.com> 1791801250 +0900	commit: fix: FitnessViewer import 경로 수정
+cd764345e0bc7af2b6ab6a92fe1d052896391b6b 827a2cc30d4ba1e7661bafad17de62251454f09f kk27286273-sys <kk27286273@gmail.com> 1791801366 +0900	commit: feat: ViewerManager에 FitnessViewer 분기 추가
+827a2cc30d4ba1e7661bafad17de62251454f09f 74c6b6d8ee3c9ef889d9c7efbcd44074643fc177 kk27286273-sys <kk27286273@gmail.com> 1791801564 +0900	commit: fix: preview 페이지를 ViewerManager로 통일
+74c6b6d8ee3c9ef889d9c7efbcd44074643fc177 4d0649ae7a3dbb0d99a36b8a85243e93048cb1cd kk27286273-sys <kk27286273@gmail.com> 1791802227 +0900	commit: fix: 피트니스 쇼룸 및 프리뷰 연결 수정
+4d0649ae7a3dbb0d99a36b8a85243e93048cb1cd 1dfc977dfe8c333db4e10b79bbc200c9704335b8 kk27286273-sys <kk27286273@gmail.com> 1791802585 +0900	commit: fix: 쇼룸 템플릿 데이터 및 피트니스 연결 수정
+1dfc977dfe8c333db4e10b79bbc200c9704335b8 cf79e61123f41d6c256295dd4d4389bbdc1dfb97 kk27286273-sys <kk27286273@gmail.com> 1791803418 +0900	commit: fix: 빌더 사이트 조회 오류 표시

@@ -162,9 +162,20 @@ function createDefaultData(template: TemplateKey): B2BTemplateData {
       },
     ],
 
-    projects: template === 'interior' ? [] : undefined,
-    services: template === 'interior' ? [] : undefined,
-    process: template === 'interior' ? [] : undefined,
+projects: template === 'interior' ? [] : undefined,
+services:
+  template === 'interior'
+    ? []
+    : template === 'legal'
+      ? [
+          {
+            icon: '⚖️',
+            title: '법률·세무 전문가 상담',
+            description: '기업과 개인을 위한 전문적인 법률 및 세무 상담',
+          },
+        ]
+      : undefined,
+process: template === 'interior' ? [] : undefined,
 
     corporateInfo: {
       ceoGreeting: {
@@ -297,6 +308,9 @@ location: {
       businessNumber: '사업자등록번호',
       contactEmail: 'info@example.com',
       companyName: '회사명',
+    },
+    builderV2: {
+      pages: [],
     },
   };
 
