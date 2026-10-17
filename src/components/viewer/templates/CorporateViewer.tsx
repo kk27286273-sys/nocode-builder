@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { B2BTemplateData } from '@/types/template';
+import type { B2BTemplateData } from '@/types/Template';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface CorporateViewerProps {
@@ -142,31 +142,73 @@ const [logoFailed, setLogoFailed] = useState(false);
     </motion.div>
   );
 
-  const SolutionDetail = () => {
-    const sol = solutions[selectedSolution || 0];
+const SolutionDetail = () => {
+  const sol = solutions[selectedSolution ?? 0] ?? solutions[0];
+
+  if (!sol) {
     return (
-      <PageLayout title={sol.category}>
+      <PageLayout
+        title="사업 소개"
+        content={<p>등록된 사업 정보가 없습니다.</p>}
+      />
+    );
+  }
+
+return (
+  <PageLayout
+    title={sol.category ?? sol.title}
+    content={
+      <div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-16">
-          <img src={sol.image} alt={sol.title} className="rounded-2xl shadow-2xl w-full h-96 object-cover" />
+          {sol.image ? (
+            <img
+              src={sol.image}
+              alt={sol.title}
+              className="rounded-2xl shadow-2xl w-full h-96 object-cover"
+            />
+          ) : (
+            <div className="rounded-2xl bg-slate-100 w-full h-96 flex items-center justify-center text-slate-400">
+              이미지 없음
+            </div>
+          )}
+
           <div>
             <h3 className="text-3xl font-bold mb-6">{sol.title}</h3>
-            <p className="text-lg text-slate-600 leading-relaxed mb-8">{sol.description}</p>
-            <button onClick={() => navigateTo('cs')} className="px-8 py-4 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition-colors">
+
+            <p className="text-lg text-slate-600 leading-relaxed mb-8">
+              {sol.description}
+            </p>
+
+            <button
+              onClick={() => navigateTo('cs')}
+              className="px-8 py-4 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition-colors"
+            >
               문의하기
             </button>
           </div>
         </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {sol.detailedFeatures.map((feat, idx) => (
-            <div key={idx} className="p-6 border border-slate-200 rounded-xl hover:border-blue-400 transition-colors">
-              <h4 className="text-xl font-bold mb-2">{feat.featureTitle}</h4>
-              <p className="text-slate-600">{feat.featureContent}</p>
+          {(sol.detailedFeatures ?? []).map((feat, idx) => (
+            <div
+              key={idx}
+              className="p-6 border border-slate-200 rounded-xl hover:border-blue-400 transition-colors"
+            >
+              <h4 className="text-xl font-bold mb-2">
+                {feat.featureTitle}
+              </h4>
+
+              <p className="text-slate-600">
+                {feat.featureContent}
+              </p>
             </div>
           ))}
         </div>
-      </PageLayout>
-    );
-  };
+      </div>
+    }
+  />
+);
+};
 
   return (
     <div className="min-h-screen bg-white text-slate-900 font-sans">
@@ -236,7 +278,7 @@ const [logoFailed, setLogoFailed] = useState(false);
           {activePage === 'disclosure' && (
             <PageLayout title="공시 정보" content={
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {corporateInfo.disclosure.certifications.map((cert, idx) => (
+                {(corporateInfo.disclosure?.certifications ?? []).map((cert, idx) => (
                   <div key={idx} className="p-6 border rounded-xl text-center space-y-4">
                     <img src={cert.image} className="w-full h-40 object-contain mb-4" />
                     <h4 className="font-bold">{cert.name}</h4>

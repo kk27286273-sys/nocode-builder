@@ -5,7 +5,7 @@ import { useParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase/client';
 import CorporateViewer from '@/components/builder/CorporateViewer';
 import LivePreview from '@/components/builder/LivePreview';
-import { B2BTemplateData } from '@/types/template';
+import { B2BTemplateData } from '@/types/Template';
 
 export default function PublicSitePage() {
   const params = useParams();

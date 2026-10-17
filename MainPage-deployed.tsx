@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React from 'react';
 import { motion } from 'framer-motion';
@@ -20,7 +20,7 @@ export default function MainPage({
         {hero?.mediaUrl && (
           <img
             src={hero.mediaUrl}
-            alt={hero?.title || '?덉뼱濡?諛곌꼍'}
+            alt={hero?.title || 'Build a better future'}
             fetchPriority="high"
             loading="eager"
             decoding="sync"
@@ -45,7 +45,7 @@ export default function MainPage({
             transition={{ delay: 0.2 }}
             className="mb-6 text-5xl font-black leading-tight tracking-tighter md:text-7xl"
           >
-            {hero?.title || '湲곗뾽??誘몃옒瑜??ㅺ퀎?⑸땲??}
+            {hero?.title || 'Build a better future'}
           </motion.h1>
 
           <motion.p
@@ -56,7 +56,7 @@ export default function MainPage({
           >
             {hero?.subtitle ||
               hero?.description ||
-              '理쒓퀬??湲곗닠?κ낵 寃쏀뿕?쇰줈 理쒖쟻???붾（?섏쓣 ?쒓났?⑸땲??'}
+              'We provide optimal solutions with technology and experience.'}
           </motion.p>
         </div>
       </section>
@@ -103,7 +103,7 @@ export default function MainPage({
                   </p>
 
                   <div className="mt-8 flex items-center gap-2 text-sm font-bold text-blue-600 transition-all duration-300 group-hover:gap-3">
-                    ?곸꽭蹂닿린 <span>??/span>
+                    상세보기 <span>→</span>
                   </div>
                 </motion.div>
               ),

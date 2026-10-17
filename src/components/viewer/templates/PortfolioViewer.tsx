@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SiteData } from '@/types/template';
+import { SiteData } from '@/types/Template';
 
 export const PortfolioViewer = ({ data }: { data: SiteData }) => {
   const { company, style, specifics } = data;

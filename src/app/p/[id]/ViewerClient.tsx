@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
-import { B2BTemplateData, defaultB2BTemplateData } from '@/data/templates';
+import { defaultB2BTemplateData } from '@/data/templates';
+import type { B2BTemplateData } from '@/types/Template';
 import { supabase } from '@/lib/supabase/client';
 import LivePreview from '@/components/builder/LivePreview';
 

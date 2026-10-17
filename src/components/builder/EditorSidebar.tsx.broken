@@ -1,0 +1,910 @@
+// src/components/builder/EditorSidebar.tsx
+
+'use client';
+
+import React, { useState } from 'react';
+import { InputField, TextAreaField } from './editor/FormControls';
+import ImageUploadField from './editor/ImageUploadField';
+
+interface EditorSidebarProps {
+  data: any;
+  setData: React.Dispatch<React.SetStateAction<any>>;
+  siteId?: string | null;
+  refreshSites?: () => void;
+  activeSection?: string;
+  setActiveSection?: (section: string) => void;
+}
+
+export default function EditorSidebar({
+  data,
+  setData,
+  siteId,
+  activeSection = 'main',
+  setActiveSection,
+}: EditorSidebarProps) {
+  const [currentTab, setCurrentTab] = useState('main');
+
+  const active = setActiveSection ? activeSection : currentTab;
+  const setTab = (tabId: string) => {
+    if (setActiveSection) setActiveSection(tabId);
+    else setCurrentTab(tabId);
+  };
+
+  const updateDeep = (path: string, value: any) => {
+    const keys = path.split('.');
+    setData((prev: any) => {
+      const next = { ...(prev || {}) };
+      let source: any = prev || {};
+      let target: any = next;
+
+      for (let i = 0; i < keys.length - 1; i++) {
+        const key = keys[i];
+        const sourceValue = source?.[key];
+        target[key] = Array.isArray(sourceValue)
+          ? [...sourceValue]
+          : sourceValue && typeof sourceValue === 'object'
+          ? { ...sourceValue }
+          : {};
+        source = sourceValue || {};
+        target = target[key];
+      }
+
+      target[keys[keys.length - 1]] = value;
+      return next;
+    });
+  };
+
+  const getValue = (path: string) =>
+    path.split('.').reduce((val: any, k) => val?.[k], data);
+
+  const getArray = (path: string): any[] => {
+    const val = getValue(path);
+    return Array.isArray(val) ? val : [];
+  };
+
+  // ===== 怨듯넻 ?⑥닔 =====
+  const addHistory = () => {
+    updateDeep('corporateInfo.history', [...getArray('corporateInfo.history'), { year: '', event: '' }]);
+  };
+  const removeHistory = (index: number) => {
+    updateDeep('corporateInfo.history', getArray('corporateInfo.history').filter((_, i) => i !== index));
+  };
+
+  const addOpenPosition = () => {
+    updateDeep('recruit.openPositions', [
+      ...getArray('recruit.openPositions'),
+      { title: '', department: '', deadline: '', link: '' },
+    ]);
+  };
+  const removeOpenPosition = (index: number) => {
+    updateDeep('recruit.openPositions', getArray('recruit.openPositions').filter((_, i) => i !== index));
+  };
+
+  const addSolutionCard = () => {
+    updateDeep('solutions', [
+      ...getArray('solutions'),
+      { title: '???붾（??, category: '?좉퇋湲곗닠', description: '', detailContent: '', image: '' },
+    ]);
+  };
+  const removeSolutionCard = (index: number) => {
+    updateDeep('solutions', getArray('solutions').filter((_, i) => i !== index));
+  };
+
+  const addProject = () => {
+    updateDeep('projects', [
+      ...getArray('projects'),
+      { name: '???꾨줈?앺듃', area: '', tags: [], duration: '', beforeImage: '', afterImage: '', description: '', images: [] },
+    ]);
+  };
+  const removeProject = (index: number) => {
+    updateDeep('projects', getArray('projects').filter((_, i) => i !== index));
+  };
+
+  const addService = () => {
+    updateDeep('services', [
+      ...getArray('services'),
+      { icon: '?룧', title: '???쒕퉬??, description: '' },
+    ]);
+  };
+  const removeService = (index: number) => {
+    updateDeep('services', getArray('services').filter((_, i) => i !== index));
+  };
+
+  const addProcess = () => {
+    updateDeep('process', [
+      ...getArray('process'),
+      { step: getArray('process').length + 1, title: '', description: '' },
+    ]);
+  };
+  const removeProcess = (index: number) => {
+    updateDeep('process', getArray('process').filter((_, i) => i !== index));
+  };
+
+// ===== ?쒗뵆由?????뺤씤 =====
+const templateType = data?.templateType;
+const isInterior = templateType === 'interior' || templateType === 'onepage';
+
+// ===== ?뱀뀡 紐⑸줉 (?쒗뵆由용퀎) =====
+const sections = isInterior
+  ? [
+      { id: 'main', label: '?덉뼱濡? },
+      { id: 'projects', label: '?쒓났 ?щ?' },
+      { id: 'services', label: '?쒕퉬?? },
+      { id: 'process', label: '?쒓났 ?덉감' },
+      { id: 'estimate', label: '寃ъ쟻 臾몄쓽' },
+      { id: 'contact', label: '?곕씫泥? },
+      { id: 'footer', label: '?섎떒 ?뺣낫' },
+    ]
+  : templateType === 'legal'
+  ? [
+      { id: 'main', label: '硫붿씤 ?붾㈃' },
+      { id: 'contact', label: '?곕씫泥? },
+      { id: 'footer', label: '?섎떒 ?뺣낫' },
+    ]
+  : templateType === 'fitness'
+  ? [
+      { id: 'main', label: '硫붿씤 ?붾㈃' },
+      { id: 'services', label: '?대옒?? },
+      { id: 'contact', label: '?곕씫泥? },
+      { id: 'footer', label: '?섎떒 ?뺣낫' },
+    ]
+  : [
+      { id: 'main', label: '硫붿씤 ?붾㈃' },
+      { id: 'about', label: '?뚯궗 ?뚭컻' },
+      { id: 'sol_detail', label: '?ъ뾽 ?뚭컻' },
+      { id: 'esg', label: '吏?띻??κ꼍?? },
+      { id: 'pr', label: '?띾낫 ?쇳꽣' },
+      { id: 'recruit', label: '?몄옱 寃쎌쁺' },
+      { id: 'cs', label: '怨좉컼 ?쇳꽣' },
+      { id: 'footer', label: '?섎떒 ?뺣낫' },
+    ];
+
+  return (
+    <div className="flex h-full w-full overflow-hidden bg-white">
+      {/* ???ㅻ퉬寃뚯씠??*/}
+      <div className="flex w-36 shrink-0 flex-col border-r border-slate-200 bg-slate-50">
+        <nav className="flex-1 space-y-1 overflow-y-auto p-2">
+          {sections.map((sec) => (
+            <button
+              key={sec.id}
+              type="button"
+              onClick={() => setTab(sec.id)}
+              className={`w-full rounded-md px-3 py-2.5 text-left text-xs font-bold transition-all ${
+                active === sec.id ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-200'
+              }`}
+            >
+              {sec.label}
+            </button>
+          ))}
+        </nav>
+      </div>
+
+      {/* ?ㅼ젙 ??蹂몃Ц */}
+      <div className="min-w-0 flex-1 overflow-y-auto bg-slate-50 p-4">
+        <div className="space-y-4">
+          <div className="border-b border-slate-200 pb-2">
+            <h3 className="text-sm font-bold text-slate-800">
+              {sections.find((s) => s.id === active)?.label} ?ㅼ젙
+            </h3>
+          </div>
+
+          {/* ===== 踰뺣쪧???뱀뀡 ===== */}
+          {templateType === 'legal' && (
+            <>
+              {/* 1. 硫붿씤 */}
+              {active === 'main' && (
+                <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
+                  <InputField
+                    label="硫붿씤 ?쒕ぉ"
+                    value={getValue('hero.title')}
+                    onChange={(v) => updateDeep('hero.title', v)}
+                    placeholder="?좊ː?????덈뒗 踰뺣쪧 ?뚰듃??
+                  />
+                  <TextAreaField
+                    label="?ㅻ챸"
+                    value={getValue('hero.subtitle')}
+                    onChange={(v) => updateDeep('hero.subtitle', v)}
+                    placeholder="?섎ː?몄쓽 沅뚮━瑜?吏?ㅻ뒗 ?꾨Ц?곸씤 踰뺣쪧 ?쒕퉬??
+                  />
+                </div>
+              )}
+
+              {/* 2. ?곕씫泥?*/}
+              {active === 'contact' && (
+                <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
+                  <InputField
+                    label="?대찓??
+                    value={getValue('csCenter.contactInfo.email')}
+                    onChange={(v) => updateDeep('csCenter.contactInfo.email', v)}
+                  />
+                  <InputField
+                    label="?꾪솕"
+                    value={getValue('csCenter.contactInfo.phone')}
+                    onChange={(v) => updateDeep('csCenter.contactInfo.phone', v)}
+                  />
+                  <InputField
+                    label="二쇱냼"
+                    value={getValue('csCenter.contactInfo.address')}
+                    onChange={(v) => updateDeep('csCenter.contactInfo.address', v)}
+                  />
+                </div>
+              )}
+
+              {/* 3. ?섎떒 ?뺣낫 */}
+              {active === 'footer' && (
+                <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
+                  <InputField
+                    label="?뚯궗紐?
+                    value={getValue('footer.companyName')}
+                    onChange={(v) => updateDeep('footer.companyName', v)}
+                  />
+                  <InputField
+                    label="二쇱냼"
+                    value={getValue('footer.address')}
+                    onChange={(v) => updateDeep('footer.address', v)}
+                  />
+                </div>
+              )}
+            </>
+          )}
+
+          {/* ===== ?쇳듃?덉뒪???뱀뀡 ===== */}
+          {templateType === 'fitness' && (
+            <>
+              {/* 1. 硫붿씤 */}
+              {active === 'main' && (
+                <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
+                  <InputField
+                    label="硫붿씤 ?쒕ぉ"
+                    value={getValue('hero.title')}
+                    onChange={(v) => updateDeep('hero.title', v)}
+                    placeholder="嫄닿컯??蹂?붾? ?쒖옉?섏꽭??
+                  />
+                  <TextAreaField
+                    label="?ㅻ챸"
+                    value={getValue('hero.subtitle')}
+                    onChange={(v) => updateDeep('hero.subtitle', v)}
+                    placeholder="?꾨Ц 肄붿튂? ?④퍡?섎뒗 留욎땄???대룞 ?꾨줈洹몃옩"
+                  />
+                </div>
+              )}
+
+              {/* 2. ?대옒??*/}
+              {active === 'services' && (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-slate-700">?대옒??/span>
+                    <button
+                      type="button"
+                      onClick={addService}
+                      className="rounded bg-blue-600 px-2.5 py-1 text-[11px] font-bold text-white hover:bg-blue-700"
+                    >
+                      + ?대옒??異붽?
+                    </button>
+                  </div>
+                  {getArray('services').map((item: any, idx: number) => (
+                    <div
+                      key={idx}
+                      className="relative space-y-2 rounded-xl border border-slate-200 bg-white p-4"
+                    >
+                      <button
+                        type="button"
+                        onClick={() => removeService(idx)}
+                        className="absolute right-3 top-3 text-xs font-bold text-slate-400 hover:text-rose-500"
+                      >
+                        횞
+                      </button>
+                      <InputField
+                        label="?대옒?ㅻ챸"
+                        value={item.title}
+                        onChange={(v) => updateDeep(`services.${idx}.title`, v)}
+                      />
+                      <TextAreaField
+                        label="?ㅻ챸"
+                        value={item.description}
+                        onChange={(v) => updateDeep(`services.${idx}.description`, v)}
+                        h="h-16"
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* 3. ?곕씫泥?*/}
+              {active === 'contact' && (
+                <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
+                  <InputField
+                    label="?대찓??
+                    value={getValue('csCenter.contactInfo.email')}
+                    onChange={(v) => updateDeep('csCenter.contactInfo.email', v)}
+                  />
+                  <InputField
+                    label="?꾪솕"
+                    value={getValue('csCenter.contactInfo.phone')}
+                    onChange={(v) => updateDeep('csCenter.contactInfo.phone', v)}
+                  />
+                  <InputField
+                    label="二쇱냼"
+                    value={getValue('csCenter.contactInfo.address')}
+                    onChange={(v) => updateDeep('csCenter.contactInfo.address', v)}
+                  />
+                </div>
+              )}
+
+              {/* 4. ?섎떒 ?뺣낫 */}
+              {active === 'footer' && (
+                <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
+                  <InputField
+                    label="?뚯궗紐?
+                    value={getValue('footer.companyName')}
+                    onChange={(v) => updateDeep('footer.companyName', v)}
+                  />
+                  <InputField
+                    label="二쇱냼"
+                    value={getValue('footer.address')}
+                    onChange={(v) => updateDeep('footer.address', v)}
+                  />
+                </div>
+              )}
+            </>
+          )}
+
+          {/* ===== ?명뀒由ъ뼱/?먰럹?댁? ?뱀뀡 ===== */}
+          {isInterior && (
+            <>
+              {/* 1. ?덉뼱濡?*/}
+              {active === 'main' && (
+                <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
+                  <InputField
+                    label="硫붿씤 ?쒕ぉ"
+                    value={getValue('hero.title')}
+                    onChange={(v) => updateDeep('hero.title', v)}
+                    placeholder="?뱀떊??轅덉쓽 怨듦컙??留뚮벊?덈떎"
+                  />
+                  <TextAreaField
+                    label="?ㅻ챸"
+                    value={getValue('hero.subtitle')}
+                    onChange={(v) => updateDeep('hero.subtitle', v)}
+                    placeholder="?꾨Ц?곸씤 ?쒓났?쇰줈 媛移??덈뒗 ?명뀒由ъ뼱"
+                  />
+                  <ImageUploadField
+                    label="?덉뼱濡?諛곌꼍 ?대?吏"
+                    value={getValue('hero.mediaUrl') || ''}
+                    onChange={(result) => updateDeep('hero.mediaUrl', result?.url || '')}
+                    siteId={siteId}
+                    purpose="general"
+                  />
+                </div>
+              )}
+
+              {/* 2. ?쒓났 ?щ? */}
+              {active === 'projects' && (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-slate-700">?쒓났 ?щ?</span>
+                    <button
+                      type="button"
+                      onClick={addProject}
+                      className="rounded bg-blue-600 px-2.5 py-1 text-[11px] font-bold text-white hover:bg-blue-700"
+                    >
+                      + ?щ? 異붽?
+                    </button>
+                  </div>
+                  {getArray('projects').map((item: any, idx: number) => (
+                    <div
+                      key={idx}
+                      className="relative space-y-2 rounded-xl border border-slate-200 bg-white p-4"
+                    >
+                      <button
+                        type="button"
+                        onClick={() => removeProject(idx)}
+                        className="absolute right-3 top-3 text-xs font-bold text-slate-400 hover:text-rose-500"
+                      >
+                        횞
+                      </button>
+                      <InputField
+                        label="?꾨줈?앺듃紐?
+                        value={item.name}
+                        onChange={(v) => updateDeep(`projects.${idx}.name`, v)}
+                      />
+                      <InputField
+                        label="?됱닔"
+                        value={item.area}
+                        onChange={(v) => updateDeep(`projects.${idx}.area`, v)}
+                        placeholder="?? 84??
+                      />
+                      <InputField
+                        label="?쒓났 湲곌컙"
+                        value={item.duration}
+                        onChange={(v) => updateDeep(`projects.${idx}.duration`, v)}
+                        placeholder="?? 3媛쒖썡"
+                      />
+                      <InputField
+                        label="?쒓렇 (?쇳몴濡?援щ텇)"
+                        value={(item.tags || []).join(', ')}
+                        onChange={(v) => updateDeep(`projects.${idx}.tags`, v.split(',').map((t: string) => t.trim()))}
+                        placeholder="?由щえ?몃쭅, 嫄곗떎"
+                      />
+                      <TextAreaField
+                        label="?ㅻ챸"
+                        value={item.description || ''}
+                        onChange={(v) => updateDeep(`projects.${idx}.description`, v)}
+                        h="h-16"
+                      />
+                      <ImageUploadField
+                        label="Before ?대?吏"
+                        value={item.beforeImage || ''}
+                        onChange={(result) => updateDeep(`projects.${idx}.beforeImage`, result?.url || '')}
+                        siteId={siteId}
+                        purpose="general"
+                      />
+                      <ImageUploadField
+                        label="After ?대?吏"
+                        value={item.afterImage || ''}
+                        onChange={(result) => updateDeep(`projects.${idx}.afterImage`, result?.url || '')}
+                        siteId={siteId}
+                        purpose="general"
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* 3. ?쒕퉬??*/}
+              {active === 'services' && (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-slate-700">?쒕퉬??/span>
+                    <button
+                      type="button"
+                      onClick={addService}
+                      className="rounded bg-blue-600 px-2.5 py-1 text-[11px] font-bold text-white hover:bg-blue-700"
+                    >
+                      + ?쒕퉬??異붽?
+                    </button>
+                  </div>
+                  {getArray('services').map((item: any, idx: number) => (
+                    <div
+                      key={idx}
+                      className="relative space-y-2 rounded-xl border border-slate-200 bg-white p-4"
+                    >
+                      <button
+                        type="button"
+                        onClick={() => removeService(idx)}
+                        className="absolute right-3 top-3 text-xs font-bold text-slate-400 hover:text-rose-500"
+                      >
+                        횞
+                      </button>
+                      <InputField
+                        label="?꾩씠肄?(?대え吏)"
+                        value={item.icon || ''}
+                        onChange={(v) => updateDeep(`services.${idx}.icon`, v)}
+                        placeholder="?룧"
+                      />
+                      <InputField
+                        label="?쒕ぉ"
+                        value={item.title}
+                        onChange={(v) => updateDeep(`services.${idx}.title`, v)}
+                      />
+                      <TextAreaField
+                        label="?ㅻ챸"
+                        value={item.description}
+                        onChange={(v) => updateDeep(`services.${idx}.description`, v)}
+                        h="h-16"
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* 4. ?쒓났 ?덉감 */}
+              {active === 'process' && (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-slate-700">?쒓났 ?덉감</span>
+                    <button
+                      type="button"
+                      onClick={addProcess}
+                      className="rounded bg-blue-600 px-2.5 py-1 text-[11px] font-bold text-white hover:bg-blue-700"
+                    >
+                      + ?④퀎 異붽?
+                    </button>
+                  </div>
+                  {getArray('process').map((item: any, idx: number) => (
+                    <div
+                      key={idx}
+                      className="relative space-y-2 rounded-xl border border-slate-200 bg-white p-4"
+                    >
+                      <button
+                        type="button"
+                        onClick={() => removeProcess(idx)}
+                        className="absolute right-3 top-3 text-xs font-bold text-slate-400 hover:text-rose-500"
+                      >
+                        횞
+                      </button>
+                      <InputField
+                        label="?④퀎 踰덊샇"
+                        type="number"
+                        value={item.step}
+                        onChange={(v) => updateDeep(`process.${idx}.step`, parseInt(v))}
+                      />
+                      <InputField
+                        label="?쒕ぉ"
+                        value={item.title}
+                        onChange={(v) => updateDeep(`process.${idx}.title`, v)}
+                      />
+                      <TextAreaField
+                        label="?ㅻ챸"
+                        value={item.description}
+                        onChange={(v) => updateDeep(`process.${idx}.description`, v)}
+                        h="h-16"
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* 5. 寃ъ쟻 臾몄쓽 */}
+              {active === 'estimate' && (
+                <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
+                  <p className="text-xs text-slate-600">
+                    寃ъ쟻 臾몄쓽 ?쇱? ?꾨━酉곗뿉???먮룞?쇰줈 ?뚮뜑留곷맗?덈떎. 異붽? ?ㅼ젙???꾩슂?섎㈃ ?뚮젮二쇱꽭??
+                  </p>
+                </div>
+              )}
+
+              {/* 6. ?곕씫泥?*/}
+              {active === 'contact' && (
+                <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
+                  <InputField
+                    label="?대찓??
+                    value={getValue('csCenter.contactInfo.email')}
+                    onChange={(v) => updateDeep('csCenter.contactInfo.email', v)}
+                  />
+                  <InputField
+                    label="?꾪솕"
+                    value={getValue('csCenter.contactInfo.phone')}
+                    onChange={(v) => updateDeep('csCenter.contactInfo.phone', v)}
+                  />
+                  <InputField
+                    label="二쇱냼"
+                    value={getValue('csCenter.contactInfo.address')}
+                    onChange={(v) => updateDeep('csCenter.contactInfo.address', v)}
+                  />
+                </div>
+              )}
+
+              {/* 7. ?섎떒 ?뺣낫 */}
+              {active === 'footer' && (
+                <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
+                  <InputField
+                    label="?뚯궗紐?
+                    value={getValue('footer.companyName')}
+                    onChange={(v) => updateDeep('footer.companyName', v)}
+                  />
+                  <InputField
+                    label="二쇱냼"
+                    value={getValue('footer.address')}
+                    onChange={(v) => updateDeep('footer.address', v)}
+                  />
+                  <InputField
+                    label="?ъ뾽?먮벑濡앸쾲??
+                    value={getValue('footer.businessNumber')}
+                    onChange={(v) => updateDeep('footer.businessNumber', v)}
+                  />
+                </div>
+              )}
+            </>
+          )}
+
+          {/* ===== 湲곗뾽???뱀뀡 (湲곗〈) ===== */}
+          {!isInterior && (
+            <>
+              {/* 1. 硫붿씤 */}
+              {active === 'main' && (
+                <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
+                  <InputField label="硫붿씤 諛곗?" value={getValue('hero.badge')} onChange={(v) => updateDeep('hero.badge', v)} />
+                  <InputField label="硫붿씤 ??댄?" value={getValue('hero.title')} onChange={(v) => updateDeep('hero.title', v)} />
+                  <TextAreaField label="硫붿씤 ?쒕툕 ??댄?" value={getValue('hero.subtitle')} onChange={(v) => updateDeep('hero.subtitle', v)} />
+                  <ImageUploadField
+                    label="硫붿씤 ?덉뼱濡?諛곌꼍 ?대?吏"
+                    value={getValue('hero.mediaUrl') || ''}
+                    onChange={(result) => {
+                      updateDeep('hero.mediaUrl', result?.url || '');
+                      updateDeep('hero.mediaSrcSet', result?.srcSet || '');
+                    }}
+                    siteId={siteId}
+                    purpose="general"
+                  />
+                </div>
+              )}
+
+              {/* 2. ?뚯궗 ?뚭컻 */}
+              {active === 'about' && (
+                <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
+                  <InputField label="?뚯궗紐? value={getValue('company.name')} onChange={(v) => updateDeep('company.name', v)} />
+                  <InputField
+                    label="??쒖씠???깅챸"
+                    value={getValue('corporateInfo.representativeName') || getValue('footer.ownerName')}
+                    onChange={(v) => {
+                      updateDeep('corporateInfo.representativeName', v);
+                      updateDeep('corporateInfo.ceoGreeting.name', v);
+                      updateDeep('footer.ownerName', v);
+                    }}
+                  />
+                  <ImageUploadField
+                    label="?뚯궗 濡쒓퀬 (GNB)"
+                    value={getValue('company.logoUrl') || ''}
+                    onChange={(result) => {
+                      updateDeep('company.logoUrl', result?.url || '');
+                      updateDeep('company.logoSrcSet', result?.srcSet || '');
+                    }}
+                    siteId={siteId}
+                    purpose="logo"
+                  />
+                  <ImageUploadField
+                    label="??쒖씠???ъ쭊 (?뚭컻 ?섏씠吏)"
+                    value={getValue('corporateInfo.ceoGreeting.image') || ''}
+                    onChange={(result) => updateDeep('corporateInfo.ceoGreeting.image', result?.url || '')}
+                    siteId={siteId}
+                    purpose="general"
+                  />
+                  <InputField label="?щ줈嫄? value={getValue('corporateInfo.about')} onChange={(v) => updateDeep('corporateInfo.about', v)} />
+                  <InputField
+                    label="?듭떖 鍮꾩쟾"
+                    value={getValue('corporateInfo.vision') || getValue('corporateInfo.missionVision.vision')}
+                    onChange={(v) => {
+                      updateDeep('corporateInfo.vision', v);
+                      updateDeep('corporateInfo.missionVision.vision', v);
+                    }}
+                  />
+                  <TextAreaField
+                    label="????몄궗留?
+                    value={getValue('corporateInfo.ceoMessage') || getValue('corporateInfo.ceoGreeting.content')}
+                    onChange={(v) => {
+                      updateDeep('corporateInfo.ceoMessage', v);
+                      updateDeep('corporateInfo.ceoGreeting.content', v);
+                    }}
+                    h="h-32"
+                  />
+
+                  {/* ?고쁺 ?뱀뀡 */}
+                  <div className="space-y-3 border-t border-slate-100 pt-4">
+                    <div className="flex items-center justify-between">
+                      <h4 className="text-xs font-bold text-slate-700">?뚯궗 ?고쁺</h4>
+                      <button type="button" onClick={addHistory} className="rounded bg-blue-600 px-2.5 py-1.5 text-[11px] font-bold text-white hover:bg-blue-700">
+                        + ?고쁺 異붽?
+                      </button>
+                    </div>
+                    {getArray('corporateInfo.history').map((item: any, idx: number) => (
+                      <div key={idx} className="relative space-y-2 rounded-lg border border-slate-200 p-3">
+                        <button type="button" onClick={() => removeHistory(idx)} className="absolute right-3 top-3 text-xs font-bold text-slate-400 hover:text-rose-600">
+                          ??젣
+                        </button>
+                        <InputField label="?곕룄" value={item?.year} onChange={(v) => updateDeep(`corporateInfo.history.${idx}.year`, v)} />
+                        <TextAreaField label="?댁슜" value={item?.event} onChange={(v) => updateDeep(`corporateInfo.history.${idx}.event`, v)} h="h-16" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* 3. ?ъ뾽 ?뚭컻 */}
+              {active === 'sol_detail' && (
+                <div className="space-y-4">
+                  <div className="space-y-3 rounded-xl border border-slate-200 bg-white p-4">
+                    <InputField label="????쒕ぉ" value={getValue('solutionMain.title')} onChange={(v) => updateDeep('solutionMain.title', v)} />
+                    <TextAreaField label="????붿빟" value={getValue('solutionMain.description')} onChange={(v) => updateDeep('solutionMain.description', v)} />
+                  </div>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-slate-700">?붾（??移대뱶 紐⑸줉</span>
+                      <button type="button" onClick={addSolutionCard} className="rounded bg-blue-600 px-2.5 py-1 text-[11px] font-bold text-white hover:bg-blue-700">
+                        + 移대뱶 異붽?
+                      </button>
+                    </div>
+                    {getArray('solutions').map((item: any, idx: number) => (
+                      <div
+                        key={idx}
+                        className="relative space-y-2 rounded-xl border border-slate-200 bg-white p-4"
+                      >
+                        <button
+                          type="button"
+                          onClick={() => removeSolutionCard(idx)}
+                          className="absolute right-3 top-3 text-xs font-bold text-slate-400 hover:text-rose-500"
+                        >
+                          횞
+                        </button>
+
+                        <InputField
+                          label="移대뱶 ?쒕ぉ"
+                          value={item.title}
+                          onChange={(v) => updateDeep(`solutions.${idx}.title`, v)}
+                        />
+
+                        <TextAreaField
+                          label="?붿빟 ?ㅻ챸"
+                          value={item.description}
+                          onChange={(v) => updateDeep(`solutions.${idx}.description`, v)}
+                          h="h-16"
+                        />
+
+                        <TextAreaField
+                          label="?곸꽭 ?ㅻ챸"
+                          value={item.detailContent || ''}
+                          onChange={(v) => updateDeep(`solutions.${idx}.detailContent`, v)}
+                        />
+
+                        <ImageUploadField
+                          label="?붾（???대?吏"
+                          value={item.image || ''}
+                          onChange={(result) => {
+                            updateDeep(`solutions.${idx}.image`, result?.url || '');
+                            updateDeep(`solutions.${idx}.imageSrcSet`, result?.srcSet || '');
+                          }}
+                          siteId={siteId}
+                          purpose="solution"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* 4. ESG */}
+              {active === 'esg' && (
+                <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
+                  <InputField
+                    label="?섏씠吏 ?쒕ぉ"
+                    value={getValue('corporateInfo.esg.mainTitle')}
+                    onChange={(v) => updateDeep('corporateInfo.esg.mainTitle', v)}
+                  />
+
+                  <TextAreaField
+                    label="?섏씠吏 ?ㅻ챸"
+                    value={getValue('corporateInfo.esg.mainDesc')}
+                    onChange={(v) => updateDeep('corporateInfo.esg.mainDesc', v)}
+                    h="h-20"
+                  />
+
+                  <InputField label="?섍꼍寃쎌쁺 ?곷Ц ?쇰꺼" value={getValue('corporateInfo.esg.goals.0.label')} onChange={(v) => updateDeep('corporateInfo.esg.goals.0.label', v)} />
+                  <InputField label="?섍꼍寃쎌쁺 ?쒕ぉ" value={getValue('corporateInfo.esg.goals.0.title')} onChange={(v) => updateDeep('corporateInfo.esg.goals.0.title', v)} />
+                  <TextAreaField label="?섍꼍寃쎌쁺 ?댁슜" value={getValue('corporateInfo.esg.goals.0.content')} onChange={(v) => updateDeep('corporateInfo.esg.goals.0.content', v)} />
+
+                  <InputField label="?ы쉶怨듯뿄 ?곷Ц ?쇰꺼" value={getValue('corporateInfo.esg.goals.1.label')} onChange={(v) => updateDeep('corporateInfo.esg.goals.1.label', v)} />
+                  <InputField label="?ы쉶怨듯뿄 ?쒕ぉ" value={getValue('corporateInfo.esg.goals.1.title')} onChange={(v) => updateDeep('corporateInfo.esg.goals.1.title', v)} />
+                  <TextAreaField label="?ы쉶怨듯뿄 ?댁슜" value={getValue('corporateInfo.esg.goals.1.content')} onChange={(v) => updateDeep('corporateInfo.esg.goals.1.content', v)} />
+
+                  <InputField label="吏諛곌뎄議??곷Ц ?쇰꺼" value={getValue('corporateInfo.esg.goals.2.label')} onChange={(v) => updateDeep('corporateInfo.esg.goals.2.label', v)} />
+                  <InputField label="?щ챸寃쎌쁺 ?쒕ぉ" value={getValue('corporateInfo.esg.goals.2.title')} onChange={(v) => updateDeep('corporateInfo.esg.goals.2.title', v)} />
+                  <TextAreaField label="?щ챸寃쎌쁺 ?댁슜" value={getValue('corporateInfo.esg.goals.2.content')} onChange={(v) => updateDeep('corporateInfo.esg.goals.2.content', v)} />
+                </div>
+              )}
+
+              {/* 5. PR ?쇳꽣 */}
+              {active === 'pr' && (
+                <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
+                  <InputField label="?댁뒪 ????쒕ぉ" value={getValue('prCenter.news.0.title')} onChange={(v) => updateDeep('prCenter.news.0.title', v)} />
+                  <TextAreaField label="?댁뒪 ????붿빟" value={getValue('prCenter.news.0.summary')} onChange={(v) => updateDeep('prCenter.news.0.summary', v)} />
+                </div>
+              )}
+
+              {/* 6. ?몄옱 寃쎌쁺 */}
+              {active === 'recruit' && (
+                <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
+                  <TextAreaField
+                    label="?몄옱??
+                    value={getValue('recruit.talentValue') || getValue('talentValue')}
+                    onChange={(v) => { updateDeep('recruit.talentValue', v); updateDeep('talentValue', v); }}
+                  />
+                  <TextAreaField
+                    label="蹂듬━?꾩깮"
+                    value={getValue('recruit.benefitInfo') || getValue('benefitInfo')}
+                    onChange={(v) => { updateDeep('recruit.benefitInfo', v); updateDeep('benefitInfo', v); }}
+                  />
+
+                  {/* 梨꾩슜 怨듦퀬 ?뱀뀡 */}
+                  <div className="space-y-3 border-t border-slate-100 pt-4">
+                    <div className="flex items-center justify-between">
+                      <h4 className="text-xs font-bold text-slate-700">梨꾩슜 ?ъ???/h4>
+                      <button type="button" onClick={addOpenPosition} className="rounded bg-blue-600 px-2.5 py-1.5 text-[11px] font-bold text-white hover:bg-blue-700">
+                        + ?ъ???異붽?
+                      </button>
+                    </div>
+                    {getArray('recruit.openPositions').map((item: any, idx: number) => (
+                      <div key={idx} className="relative space-y-2 rounded-lg border border-slate-200 p-3">
+                        <button type="button" onClick={() => removeOpenPosition(idx)} className="absolute right-3 top-3 text-xs font-bold text-slate-400 hover:text-rose-600">
+                          ??젣
+                        </button>
+                        <InputField label="吏곷Т紐? value={item?.title} onChange={(v) => updateDeep(`recruit.openPositions.${idx}.title`, v)} />
+                        <InputField label="遺?? value={item?.department} onChange={(v) => updateDeep(`recruit.openPositions.${idx}.department`, v)} />
+                        <InputField label="留덇컧?? value={item?.deadline} onChange={(v) => updateDeep(`recruit.openPositions.${idx}.deadline`, v)} />
+                        <InputField label="吏??留곹겕" value={item?.link} onChange={(v) => updateDeep(`recruit.openPositions.${idx}.link`, v)} placeholder="https://" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+{/* 7. 怨좉컼 ?쇳꽣 */}
+{active === 'cs' && (
+  <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
+    <InputField
+      label="????꾪솕踰덊샇"
+      value={
+        getValue('supportPhone') ||
+        getValue('csCenter.contactInfo.phone')
+      }
+      onChange={(v) => {
+        updateDeep('supportPhone', v);
+        updateDeep('csCenter.contactInfo.phone', v);
+      }}
+      placeholder="02-000-0000"
+    />
+
+    <InputField
+      label="怨좉컼?쇳꽣 ?대찓??
+      value={getValue('csCenter.contactInfo.email')}
+      onChange={(v) => {
+        updateDeep('csCenter.contactInfo.email', v);
+        updateDeep('footer.contactEmail', v);
+      }}
+      placeholder="info@example.com"
+    />
+
+    <InputField
+      label="?ъ뾽??二쇱냼"
+      value={
+        getValue('corporateInfo.location.headOffice.address') ||
+        getValue('footer.address')
+      }
+      onChange={(v) => {
+        updateDeep('corporateInfo.location.headOffice.address', v);
+        updateDeep('csCenter.contactInfo.address', v);
+        updateDeep('footer.address', v);
+      }}
+      placeholder="二쇱냼瑜??낅젰?댁＜?몄슂."
+    />
+
+    <InputField
+      label="?ㅼ씠踰?吏??留곹겕"
+      value={getValue('corporateInfo.location.headOffice.mapUrl')}
+      onChange={(v) =>
+        updateDeep('corporateInfo.location.headOffice.mapUrl', v)
+      }
+      placeholder="https://map.naver.com/"
+    />
+
+    <InputField
+      label="臾몄쓽 ?덈궡 臾멸뎄"
+      value={getValue('csGuide')}
+      onChange={(v) => updateDeep('csGuide', v)}
+      placeholder="臾몄쓽 ?댁슜???④꺼二쇱떆硫?鍮좊Ⅴ寃??듬??쒕━寃좎뒿?덈떎."
+    />
+  </div>
+)}
+
+              {/* 8. ?섎떒 ?뺣낫 */}
+              {active === 'footer' && (
+                <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
+                  <InputField label="?ъ뾽?먮벑濡앸쾲?? value={getValue('footer.businessNumber')} onChange={(v) => updateDeep('footer.businessNumber', v)} />
+                  <InputField
+                    label="??쒖옄 ?깅챸"
+                    value={getValue('footer.ownerName')}
+                    onChange={(v) => {
+                      updateDeep('footer.ownerName', v);
+                      updateDeep('corporateInfo.representativeName', v);
+                      updateDeep('corporateInfo.ceoGreeting.name', v);
+                    }}
+                  />
+                  <InputField label="?ъ뾽??二쇱냼" value={getValue('footer.address')} onChange={(v) => updateDeep('footer.address', v)} />
+                  <InputField label="????대찓?? value={getValue('footer.contactEmail')} onChange={(v) => updateDeep('footer.contactEmail', v)} />
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}

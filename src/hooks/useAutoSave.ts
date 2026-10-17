@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
-import { B2BTemplateData } from "@/data/templates";
+import type { B2BTemplateData } from '@/types/Template';
 
 const STORAGE_KEY_PREFIX = "b2b_builder_draft_";
 

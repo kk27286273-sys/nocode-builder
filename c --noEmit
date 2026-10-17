@@ -1,0 +1,14 @@
+[35m"erskk272Desktopfirst project\357\200\242"[m[36m:[m[32m180[m[36m:[m[35msrc/app/Site/[id]/page.tsx[m[36m:[m[32m8[m[36m:[mimport { B2BTemplate[1;31mData[m } from '[1;31m@/types/template[m';
+[35m"erskk272Desktopfirst project\357\200\242"[m[36m:[m[32m383[m[36m:[m[35msrc/app/builder/page.tsx.bak[m[36m:[m[32m3[m[36m:[mimport { B2BTemplate[1;31mData[m } from '[1;31m@/types/template[m';
+[35m"erskk272Desktopfirst project\357\200\242"[m[36m:[m[32m545[m[36m:[m[35msrc/components/builder/PortfolioViewer.tsx[m[36m:[m[32m4[m[36m:[mimport { B2BTemplate[1;31mData[m } from '[1;31m@/types/template[m';
+[35m"erskk272Desktopfirst project\357\200\242"[m[36m:[m[32m562[m[36m:[m[35msrc/components/builder/RentalViewer.tsx[m[36m:[m[32m4[m[36m:[mimport { B2BTemplate[1;31mData[m } from '[1;31m@/types/template[m';
+[35m"erskk272Desktopfirst project\357\200\242"[m[36m:[m[32m598[m[36m:[m[35msrc/components/builder/corporate/pages/CustomerPage.tsx[m[36m:[m[32m4[m[36m:[mimport { B2BTemplate[1;31mData[m } from '[1;31m@/types/template[m';
+[35m"erskk272Desktopfirst project\357\200\242"[m[36m:[m[32m670[m[36m:[m[35msrc/components/viewer/templates/CorporateViewer.tsx[m[36m:[m[32m4[m[36m:[mimport { B2BTemplate[1;31mData[m } from '[1;31m@/types/template[m';
+[35msrc/app/Site/[id]/page.tsx[m[36m:[m[32m8[m[36m:[mimport { B2BTemplateData } from '[1;31m@/types/template[m';
+[35msrc/components/builder/PortfolioViewer.tsx[m[36m:[m[32m4[m[36m:[mimport { B2BTemplateData } from '[1;31m@/types/template[m';
+[35msrc/components/builder/RentalViewer.tsx[m[36m:[m[32m4[m[36m:[mimport { B2BTemplateData } from '[1;31m@/types/template[m';
+[35msrc/components/builder/TemplateSelector.tsx[m[36m:[m[32m2[m[36m:[mimport { TemplateType } from '[1;31m@/types/template[m';
+[35msrc/components/builder/corporate/pages/CustomerPage.tsx[m[36m:[m[32m4[m[36m:[mimport { B2BTemplateData } from '[1;31m@/types/template[m';
+[35msrc/components/viewer/templates/CorporateViewer.tsx[m[36m:[m[32m4[m[36m:[mimport { B2BTemplateData } from '[1;31m@/types/template[m';
+[35msrc/components/viewer/templates/PortfolioViewer.tsx[m[36m:[m[32m2[m[36m:[mimport { SiteData } from '[1;31m@/types/template[m';
+[35msrc/components/viewer/templates/RentalViewer.tsx[m[36m:[m[32m2[m[36m:[mimport { SiteData } from '[1;31m@/types/template[m';

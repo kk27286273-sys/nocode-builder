@@ -1,4 +1,4 @@
-import { B2BTemplateData } from "@/data/templates";
+import type { B2BTemplateData } from '@/types/Template';
 
 interface PublishResponse {
   success: boolean;

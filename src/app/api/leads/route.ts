@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/lib/supabase/admin';
+import { supabaseAdmin } from '@/lib/supabaseAdmin';
 import { sendLeadNotification } from '@/utils/sendNotification';
 
 export async function POST(req: NextRequest) {
@@ -13,20 +13,24 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 1. Supabase leads 테이블에 저장
-    const { error: dbError } = await supabaseAdmin.from('leads').insert([
-      {
-        site_id: siteId,
-        name: name.trim(),
-        phone: phone.trim(),
-        message: message?.trim() || '',
-      },
-    ]);
+    const db = supabaseAdmin as any;
 
-    if (dbError) throw dbError;
+    const lead = {
+      site_id: siteId,
+      name: String(name).trim(),
+      phone: String(phone).trim(),
+      message: message ? String(message).trim() : '',
+    };
 
-    // 2. 사이트 정보 조회 (알림 텍스트용)
-    const { data: site } = await supabaseAdmin
+    const { error: dbError } = await db
+      .from('leads')
+      .insert([lead]);
+
+    if (dbError) {
+      throw dbError;
+    }
+
+    const { data: site } = await db
       .from('sites')
       .select('title')
       .eq('id', siteId)
@@ -34,19 +38,27 @@ export async function POST(req: NextRequest) {
 
     const siteTitle = site?.title || '미지정 사이트';
 
-    // 3. 실시간 알림 발송 (백그라운드 비동기)
-    sendLeadNotification({
+    void sendLeadNotification({
       siteTitle,
-      name,
-      phone,
-      message,
-    }).catch(console.error);
+      name: lead.name,
+      phone: lead.phone,
+      message: lead.message,
+    }).catch((error) => {
+      console.error('[LEAD_NOTIFICATION_ERROR]', error);
+    });
 
-    return NextResponse.json({ success: true, message: '문의가 정상 접수되었습니다.' });
+    return NextResponse.json({
+      success: true,
+      message: '문의가 정상 접수되었습니다.',
+    });
   } catch (error: any) {
     console.error('[LEAD_SUBMIT_API_ERROR]', error);
+
     return NextResponse.json(
-      { error: error.message || '상담 신청 접수 중 오류가 발생했습니다.' },
+      {
+        error:
+          error?.message || '상담 신청 접수 중 오류가 발생했습니다.',
+      },
       { status: 500 }
     );
   }
