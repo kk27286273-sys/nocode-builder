@@ -1,5 +1,3 @@
-// src/components/builder/EditorSidebar.tsx
-
 'use client';
 
 import React, { useState } from 'react';
@@ -202,12 +200,12 @@ const sections = isInterior
                     placeholder="신뢰할 수 있는 법률 파트너"
                   />
 
-<InputField
-  label="메인 뱃지"
-  value={getValue('hero.badge')}
-  onChange={(v) => updateDeep('hero.badge', v)}
-  placeholder="LAW & TAX"
-/>
+                  <InputField
+                    label="메인 뱃지"
+                    value={getValue('hero.badge')}
+                    onChange={(v) => updateDeep('hero.badge', v)}
+                    placeholder="LAW & TAX"
+                  />
 
                   <TextAreaField
                     label="설명"
@@ -218,79 +216,79 @@ const sections = isInterior
                 </div>
               )}
 
-{/* 2. 서비스 */}
-{active === 'services' && (
-  <div className="space-y-4">
-    <div className="flex items-center justify-between">
-      <span className="text-xs font-bold text-slate-700">
-        서비스 목록
-      </span>
+              {/* 2. 서비스 */}
+              {active === 'services' && (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-slate-700">
+                      서비스 목록
+                    </span>
 
-      <button
-        type="button"
-        onClick={() =>
-          updateDeep('services', [
-            ...getArray('services'),
-            {
-              icon: '⚖️',
-              title: '새 서비스',
-              description: '',
-            },
-          ])
-        }
-        className="rounded bg-blue-600 px-2.5 py-1 text-[11px] font-bold text-white hover:bg-blue-700"
-      >
-        + 서비스 추가
-      </button>
-    </div>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        updateDeep('services', [
+                          ...getArray('services'),
+                          {
+                            icon: '⚖️',
+                            title: '새 서비스',
+                            description: '',
+                          },
+                        ])
+                      }
+                      className="rounded bg-blue-600 px-2.5 py-1 text-[11px] font-bold text-white hover:bg-blue-700"
+                    >
+                      + 서비스 추가
+                    </button>
+                  </div>
 
-    {getArray('services').map((item: any, idx: number) => (
-      <div
-        key={idx}
-        className="relative space-y-2 rounded-xl border border-slate-200 bg-white p-4"
-      >
-        <button
-          type="button"
-          onClick={() =>
-            updateDeep(
-              'services',
-              getArray('services').filter((_, i) => i !== idx)
-            )
-          }
-          className="absolute right-3 top-3 text-xs font-bold text-slate-400 hover:text-rose-500"
-        >
-          ×
-        </button>
+                  {getArray('services').map((item: any, idx: number) => (
+                    <div
+                      key={idx}
+                      className="relative space-y-2 rounded-xl border border-slate-200 bg-white p-4"
+                    >
+                      <button
+                        type="button"
+                        onClick={() =>
+                          updateDeep(
+                            'services',
+                            getArray('services').filter((_, i) => i !== idx)
+                          )
+                        }
+                        className="absolute right-3 top-3 text-xs font-bold text-slate-400 hover:text-rose-500"
+                      >
+                        ×
+                      </button>
 
-        <InputField
-          label="아이콘"
-          value={item?.icon || ''}
-          onChange={(v) =>
-            updateDeep(`services.${idx}.icon`, v)
-          }
-          placeholder="⚖️"
-        />
+                      <InputField
+                        label="아이콘"
+                        value={item?.icon || ''}
+                        onChange={(v) =>
+                          updateDeep(`services.${idx}.icon`, v)
+                        }
+                        placeholder="⚖️"
+                      />
 
-        <InputField
-          label="서비스명"
-          value={item?.title || ''}
-          onChange={(v) =>
-            updateDeep(`services.${idx}.title`, v)
-          }
-        />
+                      <InputField
+                        label="서비스명"
+                        value={item?.title || ''}
+                        onChange={(v) =>
+                          updateDeep(`services.${idx}.title`, v)
+                        }
+                      />
 
-        <TextAreaField
-          label="서비스 설명"
-          value={item?.description || ''}
-          onChange={(v) =>
-            updateDeep(`services.${idx}.description`, v)
-          }
-          h="h-20"
-        />
-      </div>
-    ))}
-  </div>
-)}
+                      <TextAreaField
+                        label="서비스 설명"
+                        value={item?.description || ''}
+                        onChange={(v) =>
+                          updateDeep(`services.${idx}.description`, v)
+                        }
+                        h="h-20"
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
 
               {/* 3. 연락처 */}
               {active === 'contact' && (
@@ -533,8 +531,8 @@ const sections = isInterior
                 </div>
               )}
 
-{/* 3. 서비스 */}
-{templateType === 'legal' && active === 'services' && (
+              {/* 3. 서비스 */}
+              {active === 'services' && (
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-bold text-slate-700">서비스</span>
@@ -680,8 +678,8 @@ const sections = isInterior
             </>
           )}
 
-{/* ===== 기업형 섹션 (기존) ===== */}
-{!isInterior && templateType !== 'legal' && templateType !== 'fitness' && (
+          {/* ===== 기업형 섹션 (기존) ===== */}
+          {!isInterior && templateType !== 'legal' && templateType !== 'fitness' && (
             <>
               {/* 1. 메인 */}
               {active === 'main' && (
@@ -909,63 +907,63 @@ const sections = isInterior
                 </div>
               )}
 
-{/* 7. 고객 센터 */}
-{active === 'cs' && (
-  <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
-    <InputField
-      label="대표 전화번호"
-      value={
-        getValue('supportPhone') ||
-        getValue('csCenter.contactInfo.phone')
-      }
-      onChange={(v) => {
-        updateDeep('supportPhone', v);
-        updateDeep('csCenter.contactInfo.phone', v);
-      }}
-      placeholder="02-000-0000"
-    />
+              {/* 7. 고객 센터 */}
+              {active === 'cs' && (
+                <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
+                  <InputField
+                    label="대표 전화번호"
+                    value={
+                      getValue('supportPhone') ||
+                      getValue('csCenter.contactInfo.phone')
+                    }
+                    onChange={(v) => {
+                      updateDeep('supportPhone', v);
+                      updateDeep('csCenter.contactInfo.phone', v);
+                    }}
+                    placeholder="02-000-0000"
+                  />
 
-    <InputField
-      label="고객센터 이메일"
-      value={getValue('csCenter.contactInfo.email')}
-      onChange={(v) => {
-        updateDeep('csCenter.contactInfo.email', v);
-        updateDeep('footer.contactEmail', v);
-      }}
-      placeholder="info@example.com"
-    />
+                  <InputField
+                    label="고객센터 이메일"
+                    value={getValue('csCenter.contactInfo.email')}
+                    onChange={(v) => {
+                      updateDeep('csCenter.contactInfo.email', v);
+                      updateDeep('footer.contactEmail', v);
+                    }}
+                    placeholder="info@example.com"
+                  />
 
-    <InputField
-      label="사업장 주소"
-      value={
-        getValue('corporateInfo.location.headOffice.address') ||
-        getValue('footer.address')
-      }
-      onChange={(v) => {
-        updateDeep('corporateInfo.location.headOffice.address', v);
-        updateDeep('csCenter.contactInfo.address', v);
-        updateDeep('footer.address', v);
-      }}
-      placeholder="주소를 입력해주세요."
-    />
+                  <InputField
+                    label="사업장 주소"
+                    value={
+                      getValue('corporateInfo.location.headOffice.address') ||
+                      getValue('footer.address')
+                    }
+                    onChange={(v) => {
+                      updateDeep('corporateInfo.location.headOffice.address', v);
+                      updateDeep('csCenter.contactInfo.address', v);
+                      updateDeep('footer.address', v);
+                    }}
+                    placeholder="주소를 입력해주세요."
+                  />
 
-    <InputField
-      label="네이버 지도 링크"
-      value={getValue('corporateInfo.location.headOffice.mapUrl')}
-      onChange={(v) =>
-        updateDeep('corporateInfo.location.headOffice.mapUrl', v)
-      }
-      placeholder="https://map.naver.com/"
-    />
+                  <InputField
+                    label="네이버 지도 링크"
+                    value={getValue('corporateInfo.location.headOffice.mapUrl')}
+                    onChange={(v) =>
+                      updateDeep('corporateInfo.location.headOffice.mapUrl', v)
+                    }
+                    placeholder="https://map.naver.com/"
+                  />
 
-    <InputField
-      label="문의 안내 문구"
-      value={getValue('csGuide')}
-      onChange={(v) => updateDeep('csGuide', v)}
-      placeholder="문의 내용을 남겨주시면 빠르게 답변드리겠습니다."
-    />
-  </div>
-)}
+                  <InputField
+                    label="문의 안내 문구"
+                    value={getValue('csGuide')}
+                    onChange={(v) => updateDeep('csGuide', v)}
+                    placeholder="문의 내용을 남겨주시면 빠르게 답변드리겠습니다."
+                  />
+                </div>
+              )}
 
               {/* 8. 하단 정보 */}
               {active === 'footer' && (
