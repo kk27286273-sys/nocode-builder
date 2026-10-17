@@ -534,7 +534,7 @@ const sections = isInterior
               )}
 
 {/* 3. 서비스 */}
-{active === 'services' && (
+{templateType === 'legal' && active === 'services' && (
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-bold text-slate-700">서비스</span>
