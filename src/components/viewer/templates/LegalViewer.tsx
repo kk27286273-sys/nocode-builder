@@ -35,23 +35,25 @@ export default function LegalViewer({ data, setData, editable = false }: Props) 
     },
   ];
 
-  const services = [
-    {
-      icon: '⚖️',
-      title: '법무법인 대표변호사',
-      desc: '15년 이상 기업법·상사법 전담',
-    },
-    {
-      icon: '📊',
-      title: '공인회계사·세무사 겸임',
-      desc: '재무·세무 자문 통합 서비스',
-    },
-    {
-      icon: '🔒',
-      title: '비밀 보장 1:1 상담',
-      desc: '변호사 비밀유지 특권으로 완벽하게 보호',
-    },
-  ];
+const services = Array.isArray(data?.services)
+  ? data.services
+  : [
+      {
+        icon: '⚖️',
+        title: '법률·세무 전문가 상담',
+        description: '기업과 개인을 위한 전문적인 법률 및 세무 상담',
+      },
+      {
+        icon: '📄',
+        title: '계약 및 문서 검토',
+        description: '중요 계약서와 법률 문서를 안전하게 검토합니다.',
+      },
+      {
+        icon: '🔒',
+        title: '비밀 보장 1:1 상담',
+        description: '상담 내용과 개인정보를 안전하게 보호합니다.',
+      },
+    ];
 
   return (
     <div className="min-h-screen w-full bg-slate-950 text-white">
@@ -59,9 +61,9 @@ export default function LegalViewer({ data, setData, editable = false }: Props) 
       <section className="border-b border-slate-800 px-6 py-24 md:py-32">
         <div className="mx-auto max-w-6xl">
           <div className="max-w-3xl">
-            <p className="text-xs font-bold uppercase tracking-widest text-blue-400">
-              Law & Tax
-            </p>
+<p className="text-xs font-bold uppercase tracking-widest text-blue-400">
+  {data?.hero?.badge || 'LAW & TAX'}
+</p>
             <h1 className="mt-4 text-5xl font-bold tracking-tight md:text-6xl">
               {data?.hero?.title || '신뢰할 수 있는 법률 파트너'}
             </h1>
@@ -80,13 +82,22 @@ export default function LegalViewer({ data, setData, editable = false }: Props) 
         <div className="mx-auto max-w-6xl">
           <h2 className="text-3xl font-bold">전문성으로 신뢰를 쌓습니다</h2>
           <div className="mt-12 grid gap-8 md:grid-cols-3">
-            {services.map((s, idx) => (
-              <div key={idx} className="rounded-xl border border-slate-800 bg-slate-900 p-6">
-                <div className="text-4xl">{s.icon}</div>
-                <h3 className="mt-4 font-bold">{s.title}</h3>
-                <p className="mt-2 text-sm text-slate-400">{s.desc}</p>
-              </div>
-            ))}
+{services.map((s: any, idx: number) => (
+  <div
+    key={idx}
+    className="rounded-xl border border-slate-800 bg-slate-900 p-6"
+  >
+    <div className="text-4xl">{s.icon || '⚖️'}</div>
+
+    <h3 className="mt-4 font-bold">
+      {s.title || '서비스'}
+    </h3>
+
+    <p className="mt-2 text-sm text-slate-400">
+      {s.description || s.desc || ''}
+    </p>
+  </div>
+))}
           </div>
         </div>
       </section>

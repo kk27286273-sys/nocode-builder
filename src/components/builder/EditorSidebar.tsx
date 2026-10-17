@@ -137,10 +137,11 @@ const sections = isInterior
     ]
   : templateType === 'legal'
   ? [
-      { id: 'main', label: '메인 화면' },
-      { id: 'contact', label: '연락처' },
-      { id: 'footer', label: '하단 정보' },
-    ]
+  { id: 'main', label: '메인 화면' },
+  { id: 'services', label: '서비스' },
+  { id: 'contact', label: '연락처' },
+  { id: 'footer', label: '하단 정보' },
+]
   : templateType === 'fitness'
   ? [
       { id: 'main', label: '메인 화면' },
@@ -200,17 +201,98 @@ const sections = isInterior
                     onChange={(v) => updateDeep('hero.title', v)}
                     placeholder="신뢰할 수 있는 법률 파트너"
                   />
+
+<InputField
+  label="메인 뱃지"
+  value={getValue('hero.badge')}
+  onChange={(v) => updateDeep('hero.badge', v)}
+  placeholder="LAW & TAX"
+/>
+
                   <TextAreaField
                     label="설명"
                     value={getValue('hero.subtitle')}
                     onChange={(v) => updateDeep('hero.subtitle', v)}
-                    h="h-24"
                     placeholder="의뢰인의 권리를 지키는 전문적인 법률 서비스"
                   />
                 </div>
               )}
 
-              {/* 2. 연락처 */}
+{/* 2. 서비스 */}
+{active === 'services' && (
+  <div className="space-y-4">
+    <div className="flex items-center justify-between">
+      <span className="text-xs font-bold text-slate-700">
+        서비스 목록
+      </span>
+
+      <button
+        type="button"
+        onClick={() =>
+          updateDeep('services', [
+            ...getArray('services'),
+            {
+              icon: '⚖️',
+              title: '새 서비스',
+              description: '',
+            },
+          ])
+        }
+        className="rounded bg-blue-600 px-2.5 py-1 text-[11px] font-bold text-white hover:bg-blue-700"
+      >
+        + 서비스 추가
+      </button>
+    </div>
+
+    {getArray('services').map((item: any, idx: number) => (
+      <div
+        key={idx}
+        className="relative space-y-2 rounded-xl border border-slate-200 bg-white p-4"
+      >
+        <button
+          type="button"
+          onClick={() =>
+            updateDeep(
+              'services',
+              getArray('services').filter((_, i) => i !== idx)
+            )
+          }
+          className="absolute right-3 top-3 text-xs font-bold text-slate-400 hover:text-rose-500"
+        >
+          ×
+        </button>
+
+        <InputField
+          label="아이콘"
+          value={item?.icon || ''}
+          onChange={(v) =>
+            updateDeep(`services.${idx}.icon`, v)
+          }
+          placeholder="⚖️"
+        />
+
+        <InputField
+          label="서비스명"
+          value={item?.title || ''}
+          onChange={(v) =>
+            updateDeep(`services.${idx}.title`, v)
+          }
+        />
+
+        <TextAreaField
+          label="서비스 설명"
+          value={item?.description || ''}
+          onChange={(v) =>
+            updateDeep(`services.${idx}.description`, v)
+          }
+          h="h-20"
+        />
+      </div>
+    ))}
+  </div>
+)}
+
+              {/* 3. 연락처 */}
               {active === 'contact' && (
                 <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
                   <InputField
@@ -231,7 +313,7 @@ const sections = isInterior
                 </div>
               )}
 
-              {/* 3. 하단 정보 */}
+              {/* 4. 하단 정보 */}
               {active === 'footer' && (
                 <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
                   <InputField
@@ -265,7 +347,6 @@ const sections = isInterior
                     label="설명"
                     value={getValue('hero.subtitle')}
                     onChange={(v) => updateDeep('hero.subtitle', v)}
-                    h="h-24"
                     placeholder="전문 코치와 함께하는 맞춤형 운동 프로그램"
                   />
                 </div>
@@ -367,7 +448,6 @@ const sections = isInterior
                     label="설명"
                     value={getValue('hero.subtitle')}
                     onChange={(v) => updateDeep('hero.subtitle', v)}
-                    h="h-24"
                     placeholder="전문적인 시공으로 가치 있는 인테리어"
                   />
                   <ImageUploadField
@@ -736,7 +816,6 @@ const sections = isInterior
                           label="상세 설명"
                           value={item.detailContent || ''}
                           onChange={(v) => updateDeep(`solutions.${idx}.detailContent`, v)}
-                          h="h-24"
                         />
 
                         <ImageUploadField
@@ -800,13 +879,11 @@ const sections = isInterior
                     label="인재상"
                     value={getValue('recruit.talentValue') || getValue('talentValue')}
                     onChange={(v) => { updateDeep('recruit.talentValue', v); updateDeep('talentValue', v); }}
-                    h="h-24"
                   />
                   <TextAreaField
                     label="복리후생"
                     value={getValue('recruit.benefitInfo') || getValue('benefitInfo')}
                     onChange={(v) => { updateDeep('recruit.benefitInfo', v); updateDeep('benefitInfo', v); }}
-                    h="h-24"
                   />
 
                   {/* 채용 공고 섹션 */}
@@ -886,7 +963,6 @@ const sections = isInterior
       value={getValue('csGuide')}
       onChange={(v) => updateDeep('csGuide', v)}
       placeholder="문의 내용을 남겨주시면 빠르게 답변드리겠습니다."
-      h="h-24"
     />
   </div>
 )}
