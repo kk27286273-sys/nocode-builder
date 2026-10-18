@@ -5,12 +5,15 @@ import type { V2Element, V2Page, V2Section } from "@/types/builder-v2";
 import PagePanel from "./PagePanel";
 import EditorPanel from "./EditorPanel";
 import ElementEditor from "./ElementEditor";
+import InteriorViewer from "@/components/viewer/templates/InteriorViewer";
+import LegalViewer from "@/components/viewer/templates/LegalViewer";
 
 const initialPages: V2Page[] = [
   {
     id: "home",
     name: "메인",
     slug: "/",
+    templateType: "interior", // 템플릿 타입 지정
     sections: [
       {
         id: "hero",
@@ -56,6 +59,7 @@ const initialPages: V2Page[] = [
     id: "contact",
     name: "고객센터",
     slug: "/contact",
+    templateType: "interior",
     sections: [
       {
         id: "contact-info",
@@ -161,18 +165,18 @@ export default function BuilderV2Shell() {
 
   const selectedPage = pages.find((page) => page.id === selectedPageId);
 
-  const selectedSection = selectedPage?.sections.find(
+  const selectedSection = selectedPage?.sections?.find(
     (section) => section.id === selectedSectionId,
   );
 
-  const selectedElement = selectedSection?.elements.find(
+  const selectedElement = selectedSection?.elements?.find(
     (element) => element.id === selectedElementId,
   );
 
   const handleSelectPage = (pageId: string) => {
     const nextPage = pages.find((page) => page.id === pageId);
-    const nextSection = nextPage?.sections[0];
-    const nextElement = nextSection?.elements[0];
+    const nextSection = nextPage?.sections?.[0];
+    const nextElement = nextSection?.elements?.[0];
 
     setSelectedPageId(pageId);
     setSelectedSectionId(nextSection?.id ?? "");
@@ -180,16 +184,16 @@ export default function BuilderV2Shell() {
   };
 
   const handleSelectSection = (sectionId: string) => {
-    const nextSection = selectedPage?.sections.find(
+    const nextSection = selectedPage?.sections?.find(
       (section) => section.id === sectionId,
     );
 
     setSelectedSectionId(sectionId);
-    setSelectedElementId(nextSection?.elements[0]?.id ?? "");
+    setSelectedElementId(nextSection?.elements?.[0]?.id ?? "");
   };
 
   const handleChangeElement = (
-    updates: Partial<Pick<V2Element, "content" | "fontFamily">>,
+    updates: Partial<Pick<V2Element, "content" | "fontFamily" | "metadata" | "alt">>,
   ) => {
     if (!selectedPageId || !selectedSectionId || !selectedElementId) {
       return;
@@ -205,14 +209,14 @@ export default function BuilderV2Shell() {
 
         return {
           ...page,
-          sections: page.sections.map((section) => {
+          sections: page.sections?.map((section) => {
             if (section.id !== selectedSectionId) {
               return section;
             }
 
             return {
               ...section,
-              elements: section.elements.map((element) =>
+              elements: section.elements?.map((element) =>
                 element.id === selectedElementId
                   ? { ...element, ...updates }
                   : element,
@@ -250,7 +254,7 @@ export default function BuilderV2Shell() {
 
         return {
           ...page,
-          sections: [...page.sections, newSection],
+          sections: [...(page.sections || []), newSection],
         };
       }),
     );
@@ -360,7 +364,8 @@ export default function BuilderV2Shell() {
         }
 
         const updatedSections = [...page.sections];
-        const targetIndex = direction === "up" ? sectionIndex - 1 : sectionIndex + 1;
+        const targetIndex =
+          direction === "up" ? sectionIndex - 1 : sectionIndex + 1;
 
         [updatedSections[sectionIndex], updatedSections[targetIndex]] = [
           updatedSections[targetIndex],
@@ -427,6 +432,44 @@ export default function BuilderV2Shell() {
           ? "text-blue-600"
           : "text-red-600";
 
+  // ===== 뷰어 렌더링 함수 =====
+  const renderViewer = () => {
+    if (!selectedPage) {
+      return (
+        <div className="flex flex-1 items-center justify-center bg-neutral-50">
+          <p className="text-sm text-neutral-500">페이지를 선택하세요.</p>
+        </div>
+      );
+    }
+
+    const templateType = selectedPage.templateType || "interior";
+
+    switch (templateType) {
+      case "interior":
+        return (
+          <InteriorViewer
+            page={selectedPage}
+            isEditing={true}
+          />
+        );
+      case "legal":
+        return (
+          <LegalViewer
+            page={selectedPage}
+            isEditing={true}
+          />
+        );
+      default:
+        return (
+          <div className="flex flex-1 items-center justify-center bg-neutral-50">
+            <p className="text-sm text-neutral-500">
+              지원하지 않는 템플릿입니다.
+            </p>
+          </div>
+        );
+    }
+  };
+
   return (
     <main className="flex min-h-screen flex-col bg-neutral-100">
       <header className="flex h-16 items-center justify-between border-b border-neutral-200 bg-white px-6">
@@ -469,6 +512,11 @@ export default function BuilderV2Shell() {
           onDuplicateSection={handleDuplicateSection}
           onMoveSection={handleMoveSection}
         />
+
+        {/* 뷰어 영역 */}
+        <div className="flex-1 overflow-auto bg-white">
+          {renderViewer()}
+        </div>
 
         <EditorPanel
           page={selectedPage}
