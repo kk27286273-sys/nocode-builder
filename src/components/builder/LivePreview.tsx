@@ -28,25 +28,28 @@ export default function LivePreview({
 
   return (
     <div className="min-h-screen w-full overflow-x-hidden bg-white">
-{templateType === 'fitness' ? (
-  <FitnessViewer data={data} sectionsVisible={data?.sectionsVisible} />
+      {templateType === 'fitness' ? (
+        <FitnessViewer data={data} sectionsVisible={data?.sectionsVisible} />
       ) : templateType === 'interior' || templateType === 'onepage' ? (
         <InteriorViewer
           data={data}
           setData={setData}
           editable={!published}
+          sectionsVisible={data?.sectionsVisible}
         />
       ) : templateType === 'legal' ? (
         <LegalViewer
           data={data}
           setData={setData}
           editable={!published}
+          sectionsVisible={data?.sectionsVisible}
         />
       ) : (
         <CorporateViewer
           data={data}
           activeSection={activeSection}
           setActiveSection={setActiveSection}
+          sectionsVisible={data?.sectionsVisible}
         />
       )}
     </div>
