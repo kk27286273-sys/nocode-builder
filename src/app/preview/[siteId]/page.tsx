@@ -7,8 +7,8 @@ import ViewerManager from '@/components/builder/ViewerManager';
 import { B2BTemplateData } from '@/types/Template';
 
 function PreviewContent() {
-  const params = useParams();
-  const siteId = params?.siteId as string;
+const params = useParams();
+const siteId = decodeURIComponent((params?.siteId as string) || '');
 
   const [data, setData] = useState<B2BTemplateData | null>(null);
   const [activeSection, setActiveSection] = useState('main');
