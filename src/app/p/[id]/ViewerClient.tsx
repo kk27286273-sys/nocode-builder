@@ -83,43 +83,43 @@ export default function ViewerClient({ data: initialData, siteId: propSiteId }: 
 
   const [loading, setLoading] = useState<boolean>(!initialData && !!siteId);
 
-  useEffect(() => {
-    if (initialData) {
-      setData(initialData);
-      setLoading(false);
-      return;
-    }
+// ViewerClient.tsx 라인 약 80~95
+useEffect(() => {
+  if (initialData) {
+    setData(initialData);
+    setLoading(false);
+    return;
+  }
 
-    if (siteId) {
-      setLoading(true);
-      supabase
-        .from('sites')
-        .select('content')
-        .eq('id', siteId)
-        .single()
-        .then(({ data: siteRecord }) => {
-          if (siteRecord?.content) {
-            const content = siteRecord.content;
+  if (siteId) {
+    setLoading(true);
+    supabase
+      .from('sites')
+      .select('data')  // ← 'content' → 'data' 변경
+      .eq('id', siteId)
+      .single()
+      .then(({ data: siteRecord }) => {
+        if (siteRecord?.data) {  // ← 'content' → 'data' 변경
+          const content = siteRecord.data;  // ← 변수명은 유지 (내부 로직 안 깨짐)
 
-            // solutionMain이 없는 구버전 데이터 구조를 보정합니다.
-            if (!content.solutionMain && content.solutions && content.solutions.length > 0) {
-              const firstSol = content.solutions[0];
-              content.solutionMain = {
-                title: firstSol.title || '사업 소개',
-                description: firstSol.description || '솔루션 상세 안내',
-                detailContent: firstSol.detailContent || '상세 내용을 확인하세요.',
-              };
-            }
-
-            setData(content);
-          } else {
-            setData(getPresetData(siteId));
+          if (!content.solutionMain && content.solutions && content.solutions.length > 0) {
+            const firstSol = content.solutions[0];
+            content.solutionMain = {
+              title: firstSol.title || '사업 소개',
+              description: firstSol.description || '솔루션 상세 안내',
+              detailContent: firstSol.detailContent || '상세 내용을 확인하세요.',
+            };
           }
 
-          setLoading(false);
-        });
-    }
-  }, [initialData, siteId]);
+          setData(content);
+        } else {
+          setData(getPresetData(siteId));
+        }
+
+        setLoading(false);
+      });
+  }
+}, [initialData, siteId]);
 
   if (loading) {
     return (
