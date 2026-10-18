@@ -150,34 +150,34 @@ export default function EditorSidebar({
     updateDeep('corporateInfo.disclosure.certifications', getArray('corporateInfo.disclosure.certifications').filter((_, i) => i !== index));
   };
 
-  // ===== 섹션 공개·비공개 토글 (기업형) =====
-  const VisibilityToggle = ({ sectionKey, label }: { sectionKey: string; label: string }) => {
-    const visible = getValue(`sectionsVisible.${sectionKey}`) !== false;
-    return (
-      <div className="flex items-center justify-between rounded-xl border border-slate-200 bg-white px-4 py-3">
-        <div>
-          <p className="text-xs font-bold text-slate-800">{label} 공개</p>
-          <p className="mt-0.5 text-[11px] text-slate-500">
-            {visible ? '사이트와 상단 메뉴에 노출됩니다.' : '비공개 — 상단 메뉴에서도 숨겨집니다.'}
-          </p>
-        </div>
-        <button
-          type="button"
-          onClick={() => updateDeep(`sectionsVisible.${sectionKey}`, !visible)}
-          className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${
-            visible ? 'bg-blue-600' : 'bg-slate-300'
-          }`}
-          aria-pressed={visible}
-        >
-          <span
-            className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-all ${
-              visible ? 'left-[22px]' : 'left-0.5'
-            }`}
-          />
-        </button>
+// ===== 섹션 공개·비공개 토글 (법률형) =====
+const VisibilityToggle = ({ sectionKey, label }: { sectionKey: string; label: string }) => {
+  const visible = getValue(`sectionsVisible.${sectionKey}`) !== false;
+  return (
+    <div className="flex items-center justify-between rounded-xl border border-slate-200 bg-white px-4 py-3">
+      <div>
+        <p className="text-xs font-bold text-slate-800">{label} 공개</p>
+        <p className="mt-0.5 text-[11px] text-slate-500">
+          {visible ? '사이트에 노출됩니다.' : '비공개 — 표시되지 않습니다.'}
+        </p>
       </div>
-    );
-  };
+      <button
+        type="button"
+        onClick={() => updateDeep(`sectionsVisible.${sectionKey}`, !visible)}
+        className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${
+          visible ? 'bg-blue-600' : 'bg-slate-300'
+        }`}
+        aria-pressed={visible}
+      >
+        <span
+          className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-all ${
+            visible ? 'left-[22px]' : 'left-0.5'
+          }`}
+        />
+      </button>
+    </div>
+  );
+};
 
   // ===== 템플릿 타입 확인 =====
   const templateType = data?.templateType;
@@ -252,226 +252,245 @@ export default function EditorSidebar({
             </h3>
           </div>
 
-          {/* ===== 법률형 섹션 ===== */}
-          {templateType === 'legal' && (
-            <>
-              {/* 1. 메인 */}
-              {active === 'main' && (
-                <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
-                  <InputField
-                    label="메인 제목"
-                    value={getValue('hero.title')}
-                    onChange={(v) => updateDeep('hero.title', v)}
-                    placeholder="신뢰할 수 있는 법률 파트너"
-                  />
+{/* ===== 법률형 섹션 ===== */}
+{templateType === 'legal' && (
+  <>
+    {/* 1. 메인 */}
+    {active === 'main' && (
+      <div className="space-y-4">
+        <VisibilityToggle sectionKey="hero" label="메인 히어로" />
 
-                  <InputField
-                    label="메인 뱃지"
-                    value={getValue('hero.badge')}
-                    onChange={(v) => updateDeep('hero.badge', v)}
-                    placeholder="LAW & TAX"
-                  />
+        <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
+          <InputField
+            label="메인 제목"
+            value={getValue('hero.title')}
+            onChange={(v) => updateDeep('hero.title', v)}
+            placeholder="신뢰할 수 있는 법률 파트너"
+          />
 
-                  <TextAreaField
-                    label="설명"
-                    value={getValue('hero.subtitle')}
-                    onChange={(v) => updateDeep('hero.subtitle', v)}
-                    placeholder="의뢰인의 권리를 지키는 전문적인 법률 서비스"
-                  />
-                </div>
-              )}
+          <InputField
+            label="메인 뱃지"
+            value={getValue('hero.badge')}
+            onChange={(v) => updateDeep('hero.badge', v)}
+            placeholder="LAW & TAX"
+          />
 
-              {/* 2. 서비스 */}
-              {active === 'services' && (
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-slate-700">
-                      서비스 목록
-                    </span>
+          <TextAreaField
+            label="설명"
+            value={getValue('hero.subtitle')}
+            onChange={(v) => updateDeep('hero.subtitle', v)}
+            placeholder="의뢰인의 권리를 지키는 전문적인 법률 서비스"
+          />
+        </div>
+      </div>
+    )}
 
-                    <button
-                      type="button"
-                      onClick={() =>
-                        updateDeep('services', [
-                          ...getArray('services'),
-                          {
-                            icon: '⚖️',
-                            title: '새 서비스',
-                            description: '',
-                          },
-                        ])
-                      }
-                      className="rounded bg-blue-600 px-2.5 py-1 text-[11px] font-bold text-white hover:bg-blue-700"
-                    >
-                      + 서비스 추가
-                    </button>
-                  </div>
+    {/* 2. 서비스 */}
+    {active === 'services' && (
+      <div className="space-y-4">
+        <VisibilityToggle sectionKey="services" label="서비스" />
 
-                  {getArray('services').map((item: any, idx: number) => (
-                    <div
-                      key={idx}
-                      className="relative space-y-2 rounded-xl border border-slate-200 bg-white p-4"
-                    >
-                      <button
-                        type="button"
-                        onClick={() =>
-                          updateDeep(
-                            'services',
-                            getArray('services').filter((_, i) => i !== idx)
-                          )
-                        }
-                        className="absolute right-3 top-3 text-xs font-bold text-slate-400 hover:text-rose-500"
-                      >
-                        ×
-                      </button>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-slate-700">
+              서비스 목록
+            </span>
 
-                      <InputField
-                        label="아이콘"
-                        value={item?.icon || ''}
-                        onChange={(v) =>
-                          updateDeep(`services.${idx}.icon`, v)
-                        }
-                        placeholder="⚖️"
-                      />
+            <button
+              type="button"
+              onClick={() =>
+                updateDeep('services', [
+                  ...getArray('services'),
+                  {
+                    icon: '⚖️',
+                    title: '새 서비스',
+                    description: '',
+                  },
+                ])
+              }
+              className="rounded bg-blue-600 px-2.5 py-1 text-[11px] font-bold text-white hover:bg-blue-700"
+            >
+              + 서비스 추가
+            </button>
+          </div>
 
-                      <InputField
-                        label="서비스명"
-                        value={item?.title || ''}
-                        onChange={(v) =>
-                          updateDeep(`services.${idx}.title`, v)
-                        }
-                      />
+          {getArray('services').map((item: any, idx: number) => (
+            <div
+              key={idx}
+              className="relative space-y-2 rounded-xl border border-slate-200 bg-white p-4"
+            >
+              <button
+                type="button"
+                onClick={() =>
+                  updateDeep(
+                    'services',
+                    getArray('services').filter((_, i) => i !== idx)
+                  )
+                }
+                className="absolute right-3 top-3 text-xs font-bold text-slate-400 hover:text-rose-500"
+              >
+                ×
+              </button>
 
-                      <TextAreaField
-                        label="서비스 설명"
-                        value={item?.description || ''}
-                        onChange={(v) =>
-                          updateDeep(`services.${idx}.description`, v)
-                        }
-                        h="h-20"
-                      />
-                    </div>
-                  ))}
-                </div>
-              )}
+              <InputField
+                label="아이콘"
+                value={item?.icon || ''}
+                onChange={(v) =>
+                  updateDeep(`services.${idx}.icon`, v)
+                }
+                placeholder="⚖️"
+              />
 
-              {/* 3. 성공 사례 */}
-              {active === 'successCases' && (
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-slate-700">
-                      성공 사례 목록
-                    </span>
+              <InputField
+                label="서비스명"
+                value={item?.title || ''}
+                onChange={(v) =>
+                  updateDeep(`services.${idx}.title`, v)
+                }
+              />
 
-                    <button
-                      type="button"
-                      onClick={addSuccessCase}
-                      className="rounded bg-blue-600 px-2.5 py-1 text-[11px] font-bold text-white hover:bg-blue-700"
-                    >
-                      + 사례 추가
-                    </button>
-                  </div>
+              <TextAreaField
+                label="서비스 설명"
+                value={item?.description || ''}
+                onChange={(v) =>
+                  updateDeep(`services.${idx}.description`, v)
+                }
+                h="h-20"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
 
-                  {getArray('successCases').map((item: any, idx: number) => (
-                    <div
-                      key={idx}
-                      className="relative space-y-2 rounded-xl border border-slate-200 bg-white p-4"
-                    >
-                      <button
-                        type="button"
-                        onClick={() => removeSuccessCase(idx)}
-                        className="absolute right-3 top-3 text-xs font-bold text-slate-400 hover:text-rose-500"
-                      >
-                        ×
-                      </button>
+    {/* 3. 성공 사례 */}
+    {active === 'successCases' && (
+      <div className="space-y-4">
+        <VisibilityToggle sectionKey="successCases" label="성공 사례" />
 
-                      <InputField
-                        label="분야"
-                        value={item?.category || ''}
-                        onChange={(v) =>
-                          updateDeep(`successCases.${idx}.category`, v)
-                        }
-                        placeholder="세무, 노무, 법무"
-                      />
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-slate-700">
+              성공 사례 목록
+            </span>
 
-                      <InputField
-                        label="사례명"
-                        value={item?.title || ''}
-                        onChange={(v) =>
-                          updateDeep(`successCases.${idx}.title`, v)
-                        }
-                      />
+            <button
+              type="button"
+              onClick={addSuccessCase}
+              className="rounded bg-blue-600 px-2.5 py-1 text-[11px] font-bold text-white hover:bg-blue-700"
+            >
+              + 사례 추가
+            </button>
+          </div>
 
-                      <InputField
-                        label="연도"
-                        value={item?.year || ''}
-                        onChange={(v) =>
-                          updateDeep(`successCases.${idx}.year`, v)
-                        }
-                        placeholder="2024"
-                      />
+          {getArray('successCases').map((item: any, idx: number) => (
+            <div
+              key={idx}
+              className="relative space-y-2 rounded-xl border border-slate-200 bg-white p-4"
+            >
+              <button
+                type="button"
+                onClick={() => removeSuccessCase(idx)}
+                className="absolute right-3 top-3 text-xs font-bold text-slate-400 hover:text-rose-500"
+              >
+                ×
+              </button>
 
-                      <InputField
-                        label="결과"
-                        value={item?.result || ''}
-                        onChange={(v) =>
-                          updateDeep(`successCases.${idx}.result`, v)
-                        }
-                        placeholder="절세액 3.2억 원"
-                      />
+              <InputField
+                label="분야"
+                value={item?.category || ''}
+                onChange={(v) =>
+                  updateDeep(`successCases.${idx}.category`, v)
+                }
+                placeholder="세무, 노무, 법무"
+              />
 
-                      <TextAreaField
-                        label="상세 설명"
-                        value={item?.description || ''}
-                        onChange={(v) =>
-                          updateDeep(`successCases.${idx}.description`, v)
-                        }
-                        h="h-20"
-                      />
-                    </div>
-                  ))}
-                </div>
-              )}
+              <InputField
+                label="사례명"
+                value={item?.title || ''}
+                onChange={(v) =>
+                  updateDeep(`successCases.${idx}.title`, v)
+                }
+              />
 
-              {/* 4. 연락처 */}
-              {active === 'contact' && (
-                <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
-                  <InputField
-                    label="이메일"
-                    value={getValue('csCenter.contactInfo.email')}
-                    onChange={(v) => updateDeep('csCenter.contactInfo.email', v)}
-                  />
-                  <InputField
-                    label="전화"
-                    value={getValue('csCenter.contactInfo.phone')}
-                    onChange={(v) => updateDeep('csCenter.contactInfo.phone', v)}
-                  />
-                  <InputField
-                    label="주소"
-                    value={getValue('csCenter.contactInfo.address')}
-                    onChange={(v) => updateDeep('csCenter.contactInfo.address', v)}
-                  />
-                </div>
-              )}
+              <InputField
+                label="연도"
+                value={item?.year || ''}
+                onChange={(v) =>
+                  updateDeep(`successCases.${idx}.year`, v)
+                }
+                placeholder="2024"
+              />
 
-              {/* 5. 하단 정보 */}
-              {active === 'footer' && (
-                <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
-                  <InputField
-                    label="회사명"
-                    value={getValue('footer.companyName')}
-                    onChange={(v) => updateDeep('footer.companyName', v)}
-                  />
-                  <InputField
-                    label="주소"
-                    value={getValue('footer.address')}
-                    onChange={(v) => updateDeep('footer.address', v)}
-                  />
-                </div>
-              )}
-            </>
-          )}
+              <InputField
+                label="결과"
+                value={item?.result || ''}
+                onChange={(v) =>
+                  updateDeep(`successCases.${idx}.result`, v)
+                }
+                placeholder="절세액 3.2억 원"
+              />
 
+              <TextAreaField
+                label="상세 설명"
+                value={item?.description || ''}
+                onChange={(v) =>
+                  updateDeep(`successCases.${idx}.description`, v)
+                }
+                h="h-20"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+
+    {/* 4. 연락처 */}
+    {active === 'contact' && (
+      <div className="space-y-4">
+        <VisibilityToggle sectionKey="consult" label="상담 폼" />
+
+        <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
+          <InputField
+            label="이메일"
+            value={getValue('csCenter.contactInfo.email')}
+            onChange={(v) => updateDeep('csCenter.contactInfo.email', v)}
+          />
+          <InputField
+            label="전화"
+            value={getValue('csCenter.contactInfo.phone')}
+            onChange={(v) => updateDeep('csCenter.contactInfo.phone', v)}
+          />
+          <InputField
+            label="주소"
+            value={getValue('csCenter.contactInfo.address')}
+            onChange={(v) => updateDeep('csCenter.contactInfo.address', v)}
+          />
+        </div>
+      </div>
+    )}
+
+    {/* 5. 하단 정보 */}
+    {active === 'footer' && (
+      <div className="space-y-4">
+        <VisibilityToggle sectionKey="footer" label="하단 정보" />
+
+        <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
+          <InputField
+            label="회사명"
+            value={getValue('footer.companyName')}
+            onChange={(v) => updateDeep('footer.companyName', v)}
+          />
+          <InputField
+            label="주소"
+            value={getValue('footer.address')}
+            onChange={(v) => updateDeep('footer.address', v)}
+          />
+        </div>
+      </div>
+    )}
+  </>
+)}
           {/* ===== 피트니스형 섹션 ===== */}
           {templateType === 'fitness' && (
             <>
@@ -698,254 +717,281 @@ export default function EditorSidebar({
             </>
           )}
 
-          {/* ===== 인테리어/원페이지 섹션 ===== */}
-          {isInterior && (
-            <>
-              {/* 1. 히어로 */}
-              {active === 'main' && (
-                <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
-                  <InputField
-                    label="메인 제목"
-                    value={getValue('hero.title')}
-                    onChange={(v) => updateDeep('hero.title', v)}
-                    placeholder="당신의 꿈의 공간을 만듭니다"
-                  />
-                  <TextAreaField
-                    label="설명"
-                    value={getValue('hero.subtitle')}
-                    onChange={(v) => updateDeep('hero.subtitle', v)}
-                    placeholder="전문적인 시공으로 가치 있는 인테리어"
-                  />
-                  <ImageUploadField
-                    label="히어로 배경 이미지"
-                    value={getValue('hero.mediaUrl') || ''}
-                    onChange={(result) => updateDeep('hero.mediaUrl', result?.url || '')}
-                    siteId={siteId}
-                    purpose="general"
-                  />
-                </div>
-              )}
+{/* ===== 인테리어/원페이지 섹션 ===== */}
+{isInterior && (
+  <>
+    {/* 1. 히어로 */}
+    {active === 'main' && (
+      <div className="space-y-4">
+        <VisibilityToggle sectionKey="hero" label="메인 히어로" />
 
-              {/* 2. 시공 사례 */}
-              {active === 'projects' && (
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-slate-700">시공 사례</span>
-                    <button
-                      type="button"
-                      onClick={addProject}
-                      className="rounded bg-blue-600 px-2.5 py-1 text-[11px] font-bold text-white hover:bg-blue-700"
-                    >
-                      + 사례 추가
-                    </button>
-                  </div>
-                  {getArray('projects').map((item: any, idx: number) => (
-                    <div
-                      key={idx}
-                      className="relative space-y-2 rounded-xl border border-slate-200 bg-white p-4"
-                    >
-                      <button
-                        type="button"
-                        onClick={() => removeProject(idx)}
-                        className="absolute right-3 top-3 text-xs font-bold text-slate-400 hover:text-rose-500"
-                      >
-                        ×
-                      </button>
-                      <InputField
-                        label="프로젝트명"
-                        value={item.name}
-                        onChange={(v) => updateDeep(`projects.${idx}.name`, v)}
-                      />
-                      <InputField
-                        label="평수"
-                        value={item.area}
-                        onChange={(v) => updateDeep(`projects.${idx}.area`, v)}
-                        placeholder="예: 84㎡"
-                      />
-                      <InputField
-                        label="시공 기간"
-                        value={item.duration}
-                        onChange={(v) => updateDeep(`projects.${idx}.duration`, v)}
-                        placeholder="예: 3개월"
-                      />
-                      <InputField
-                        label="태그 (쉼표로 구분)"
-                        value={(item.tags || []).join(', ')}
-                        onChange={(v) => updateDeep(`projects.${idx}.tags`, v.split(',').map((t: string) => t.trim()))}
-                        placeholder="풀리모델링, 거실"
-                      />
-                      <TextAreaField
-                        label="설명"
-                        value={item.description || ''}
-                        onChange={(v) => updateDeep(`projects.${idx}.description`, v)}
-                        h="h-16"
-                      />
-                      <ImageUploadField
-                        label="Before 이미지"
-                        value={item.beforeImage || ''}
-                        onChange={(result) => updateDeep(`projects.${idx}.beforeImage`, result?.url || '')}
-                        siteId={siteId}
-                        purpose="general"
-                      />
-                      <ImageUploadField
-                        label="After 이미지"
-                        value={item.afterImage || ''}
-                        onChange={(result) => updateDeep(`projects.${idx}.afterImage`, result?.url || '')}
-                        siteId={siteId}
-                        purpose="general"
-                      />
-                    </div>
-                  ))}
-                </div>
-              )}
+        <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
+          <InputField
+            label="메인 제목"
+            value={getValue('hero.title')}
+            onChange={(v) => updateDeep('hero.title', v)}
+            placeholder="당신의 꿈의 공간을 만듭니다"
+          />
+          <TextAreaField
+            label="설명"
+            value={getValue('hero.subtitle')}
+            onChange={(v) => updateDeep('hero.subtitle', v)}
+            placeholder="전문적인 시공으로 가치 있는 인테리어"
+          />
+          <ImageUploadField
+            label="히어로 배경 이미지"
+            value={getValue('hero.mediaUrl') || ''}
+            onChange={(result) => updateDeep('hero.mediaUrl', result?.url || '')}
+            siteId={siteId}
+            purpose="general"
+          />
+        </div>
+      </div>
+    )}
 
-              {/* 3. 서비스 */}
-              {active === 'services' && (
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-slate-700">서비스</span>
-                    <button
-                      type="button"
-                      onClick={addService}
-                      className="rounded bg-blue-600 px-2.5 py-1 text-[11px] font-bold text-white hover:bg-blue-700"
-                    >
-                      + 서비스 추가
-                    </button>
-                  </div>
-                  {getArray('services').map((item: any, idx: number) => (
-                    <div
-                      key={idx}
-                      className="relative space-y-2 rounded-xl border border-slate-200 bg-white p-4"
-                    >
-                      <button
-                        type="button"
-                        onClick={() => removeService(idx)}
-                        className="absolute right-3 top-3 text-xs font-bold text-slate-400 hover:text-rose-500"
-                      >
-                        ×
-                      </button>
-                      <InputField
-                        label="아이콘 (이모지)"
-                        value={item.icon || ''}
-                        onChange={(v) => updateDeep(`services.${idx}.icon`, v)}
-                        placeholder="🏠"
-                      />
-                      <InputField
-                        label="제목"
-                        value={item.title}
-                        onChange={(v) => updateDeep(`services.${idx}.title`, v)}
-                      />
-                      <TextAreaField
-                        label="설명"
-                        value={item.description}
-                        onChange={(v) => updateDeep(`services.${idx}.description`, v)}
-                        h="h-16"
-                      />
-                    </div>
-                  ))}
-                </div>
-              )}
+    {/* 2. 시공 사례 */}
+    {active === 'projects' && (
+      <div className="space-y-4">
+        <VisibilityToggle sectionKey="projects" label="시공 사례" />
 
-              {/* 4. 시공 절차 */}
-              {active === 'process' && (
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-slate-700">시공 절차</span>
-                    <button
-                      type="button"
-                      onClick={addProcess}
-                      className="rounded bg-blue-600 px-2.5 py-1 text-[11px] font-bold text-white hover:bg-blue-700"
-                    >
-                      + 단계 추가
-                    </button>
-                  </div>
-                  {getArray('process').map((item: any, idx: number) => (
-                    <div
-                      key={idx}
-                      className="relative space-y-2 rounded-xl border border-slate-200 bg-white p-4"
-                    >
-                      <button
-                        type="button"
-                        onClick={() => removeProcess(idx)}
-                        className="absolute right-3 top-3 text-xs font-bold text-slate-400 hover:text-rose-500"
-                      >
-                        ×
-                      </button>
-                      <InputField
-                        label="단계 번호"
-                        type="number"
-                        value={item.step}
-                        onChange={(v) => updateDeep(`process.${idx}.step`, parseInt(v))}
-                      />
-                      <InputField
-                        label="제목"
-                        value={item.title}
-                        onChange={(v) => updateDeep(`process.${idx}.title`, v)}
-                      />
-                      <TextAreaField
-                        label="설명"
-                        value={item.description}
-                        onChange={(v) => updateDeep(`process.${idx}.description`, v)}
-                        h="h-16"
-                      />
-                    </div>
-                  ))}
-                </div>
-              )}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-slate-700">시공 사례</span>
+            <button
+              type="button"
+              onClick={addProject}
+              className="rounded bg-blue-600 px-2.5 py-1 text-[11px] font-bold text-white hover:bg-blue-700"
+            >
+              + 사례 추가
+            </button>
+          </div>
+          {getArray('projects').map((item: any, idx: number) => (
+            <div
+              key={idx}
+              className="relative space-y-2 rounded-xl border border-slate-200 bg-white p-4"
+            >
+              <button
+                type="button"
+                onClick={() => removeProject(idx)}
+                className="absolute right-3 top-3 text-xs font-bold text-slate-400 hover:text-rose-500"
+              >
+                ×
+              </button>
+              <InputField
+                label="프로젝트명"
+                value={item.name}
+                onChange={(v) => updateDeep(`projects.${idx}.name`, v)}
+              />
+              <InputField
+                label="평수"
+                value={item.area}
+                onChange={(v) => updateDeep(`projects.${idx}.area`, v)}
+                placeholder="예: 84㎡"
+              />
+              <InputField
+                label="시공 기간"
+                value={item.duration}
+                onChange={(v) => updateDeep(`projects.${idx}.duration`, v)}
+                placeholder="예: 3개월"
+              />
+              <InputField
+                label="태그 (쉼표로 구분)"
+                value={(item.tags || []).join(', ')}
+                onChange={(v) => updateDeep(`projects.${idx}.tags`, v.split(',').map((t: string) => t.trim()))}
+                placeholder="풀리모델링, 거실"
+              />
+              <TextAreaField
+                label="설명"
+                value={item.description || ''}
+                onChange={(v) => updateDeep(`projects.${idx}.description`, v)}
+                h="h-16"
+              />
+              <ImageUploadField
+                label="Before 이미지"
+                value={item.beforeImage || ''}
+                onChange={(result) => updateDeep(`projects.${idx}.beforeImage`, result?.url || '')}
+                siteId={siteId}
+                purpose="general"
+              />
+              <ImageUploadField
+                label="After 이미지"
+                value={item.afterImage || ''}
+                onChange={(result) => updateDeep(`projects.${idx}.afterImage`, result?.url || '')}
+                siteId={siteId}
+                purpose="general"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
 
-              {/* 5. 견적 문의 */}
-              {active === 'estimate' && (
-                <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
-                  <p className="text-xs text-slate-600">
-                    견적 문의 폼은 프리뷰에서 자동으로 렌더링됩니다. 추가 설정이 필요하면 알려주세요.
-                  </p>
-                </div>
-              )}
+    {/* 3. 서비스 */}
+    {active === 'services' && (
+      <div className="space-y-4">
+        <VisibilityToggle sectionKey="services" label="서비스" />
 
-              {/* 6. 연락처 */}
-              {active === 'contact' && (
-                <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
-                  <InputField
-                    label="이메일"
-                    value={getValue('csCenter.contactInfo.email')}
-                    onChange={(v) => updateDeep('csCenter.contactInfo.email', v)}
-                  />
-                  <InputField
-                    label="전화"
-                    value={getValue('csCenter.contactInfo.phone')}
-                    onChange={(v) => updateDeep('csCenter.contactInfo.phone', v)}
-                  />
-                  <InputField
-                    label="주소"
-                    value={getValue('csCenter.contactInfo.address')}
-                    onChange={(v) => updateDeep('csCenter.contactInfo.address', v)}
-                  />
-                </div>
-              )}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-slate-700">서비스</span>
+            <button
+              type="button"
+              onClick={addService}
+              className="rounded bg-blue-600 px-2.5 py-1 text-[11px] font-bold text-white hover:bg-blue-700"
+            >
+              + 서비스 추가
+            </button>
+          </div>
+          {getArray('services').map((item: any, idx: number) => (
+            <div
+              key={idx}
+              className="relative space-y-2 rounded-xl border border-slate-200 bg-white p-4"
+            >
+              <button
+                type="button"
+                onClick={() => removeService(idx)}
+                className="absolute right-3 top-3 text-xs font-bold text-slate-400 hover:text-rose-500"
+              >
+                ×
+              </button>
+              <InputField
+                label="아이콘 (이모지)"
+                value={item.icon || ''}
+                onChange={(v) => updateDeep(`services.${idx}.icon`, v)}
+                placeholder="🏠"
+              />
+              <InputField
+                label="제목"
+                value={item.title}
+                onChange={(v) => updateDeep(`services.${idx}.title`, v)}
+              />
+              <TextAreaField
+                label="설명"
+                value={item.description}
+                onChange={(v) => updateDeep(`services.${idx}.description`, v)}
+                h="h-16"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
 
-              {/* 7. 하단 정보 */}
-              {active === 'footer' && (
-                <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
-                  <InputField
-                    label="회사명"
-                    value={getValue('footer.companyName')}
-                    onChange={(v) => updateDeep('footer.companyName', v)}
-                  />
-                  <InputField
-                    label="주소"
-                    value={getValue('footer.address')}
-                    onChange={(v) => updateDeep('footer.address', v)}
-                  />
-                  <InputField
-                    label="사업자등록번호"
-                    value={getValue('footer.businessNumber')}
-                    onChange={(v) => updateDeep('footer.businessNumber', v)}
-                  />
-                </div>
-              )}
-            </>
-          )}
+    {/* 4. 시공 절차 */}
+    {active === 'process' && (
+      <div className="space-y-4">
+        <VisibilityToggle sectionKey="process" label="시공 절차" />
 
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-slate-700">시공 절차</span>
+            <button
+              type="button"
+              onClick={addProcess}
+              className="rounded bg-blue-600 px-2.5 py-1 text-[11px] font-bold text-white hover:bg-blue-700"
+            >
+              + 단계 추가
+            </button>
+          </div>
+          {getArray('process').map((item: any, idx: number) => (
+            <div
+              key={idx}
+              className="relative space-y-2 rounded-xl border border-slate-200 bg-white p-4"
+            >
+              <button
+                type="button"
+                onClick={() => removeProcess(idx)}
+                className="absolute right-3 top-3 text-xs font-bold text-slate-400 hover:text-rose-500"
+              >
+                ×
+              </button>
+              <InputField
+                label="단계 번호"
+                type="number"
+                value={item.step}
+                onChange={(v) => updateDeep(`process.${idx}.step`, parseInt(v))}
+              />
+              <InputField
+                label="제목"
+                value={item.title}
+                onChange={(v) => updateDeep(`process.${idx}.title`, v)}
+              />
+              <TextAreaField
+                label="설명"
+                value={item.description}
+                onChange={(v) => updateDeep(`process.${idx}.description`, v)}
+                h="h-16"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+
+    {/* 5. 견적 문의 */}
+    {active === 'estimate' && (
+      <div className="space-y-4">
+        <VisibilityToggle sectionKey="estimate" label="견적 문의 폼" />
+
+        <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
+          <p className="text-xs text-slate-600">
+            견적 문의 폼은 프리뷰에서 자동으로 렌더링됩니다. 추가 설정이 필요하면 알려주세요.
+          </p>
+        </div>
+      </div>
+    )}
+
+    {/* 6. 연락처 */}
+    {active === 'contact' && (
+      <div className="space-y-4">
+        <VisibilityToggle sectionKey="contact" label="연락처" />
+
+        <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
+          <InputField
+            label="이메일"
+            value={getValue('csCenter.contactInfo.email')}
+            onChange={(v) => updateDeep('csCenter.contactInfo.email', v)}
+          />
+          <InputField
+            label="전화"
+            value={getValue('csCenter.contactInfo.phone')}
+            onChange={(v) => updateDeep('csCenter.contactInfo.phone', v)}
+          />
+          <InputField
+            label="주소"
+            value={getValue('csCenter.contactInfo.address')}
+            onChange={(v) => updateDeep('csCenter.contactInfo.address', v)}
+          />
+        </div>
+      </div>
+    )}
+
+    {/* 7. 하단 정보 */}
+    {active === 'footer' && (
+      <div className="space-y-4">
+        <VisibilityToggle sectionKey="footer" label="하단 정보" />
+
+        <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
+          <InputField
+            label="회사명"
+            value={getValue('footer.companyName')}
+            onChange={(v) => updateDeep('footer.companyName', v)}
+          />
+          <InputField
+            label="주소"
+            value={getValue('footer.address')}
+            onChange={(v) => updateDeep('footer.address', v)}
+          />
+          <InputField
+            label="사업자등록번호"
+            value={getValue('footer.businessNumber')}
+            onChange={(v) => updateDeep('footer.businessNumber', v)}
+          />
+        </div>
+      </div>
+    )}
+  </>
+)}
           {/* ===== 기업형 섹션 ===== */}
           {!isInterior && templateType !== 'legal' && templateType !== 'fitness' && (
             <>
