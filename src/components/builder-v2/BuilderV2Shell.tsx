@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import { useEffect, useState } from "react";
-import type { V2Element, V2Page } from "@/types/builder-v2";
+import type { V2Element, V2Page, V2Section } from "@/types/builder-v2";
 import PagePanel from "./PagePanel";
 import EditorPanel from "./EditorPanel";
 import ElementEditor from "./ElementEditor";
@@ -224,137 +224,155 @@ export default function BuilderV2Shell() {
     );
   };
 
-  const handleSave = async () => {
-    if (!siteId || isSaving) {
+  const handleAddSection = () => {
+    if (!selectedPageId) return;
+
+    const newSectionId = `section-${Date.now()}`;
+    const newSection: V2Section = {
+      id: newSectionId,
+      name: "새 섹션",
+      elements: [
+        {
+          id: `element-${Date.now()}`,
+          type: "heading",
+          content: "제목을 입력하세요",
+        },
+      ],
+    };
+
+    setSaveMessage("저장되지 않은 변경사항이 있습니다.");
+
+    setPages((currentPages) =>
+      currentPages.map((page) => {
+        if (page.id !== selectedPageId) {
+          return page;
+        }
+
+        return {
+          ...page,
+          sections: [...page.sections, newSection],
+        };
+      }),
+    );
+
+    setSelectedSectionId(newSectionId);
+    setSelectedElementId(newSection.elements[0]?.id ?? "");
+  };
+
+  const handleDeleteSection = (sectionId: string) => {
+    if (!selectedPageId || !confirm("이 섹션을 삭제하시겠습니까?")) {
       return;
     }
 
-    setIsSaving(true);
-    setSaveMessage("저장 중입니다...");
+    setSaveMessage("저장되지 않은 변경사항이 있습니다.");
 
-    try {
-      const response = await fetch("/api/builder-data", {
-        method: "PUT",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          siteId,
-          pages,
-        }),
-      });
+    setPages((currentPages) =>
+      currentPages.map((page) => {
+        if (page.id !== selectedPageId) {
+          return page;
+        }
 
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(
-          result?.error ?? "사이트 데이터를 저장하지 못했습니다.",
+        const updatedSections = page.sections.filter(
+          (section) => section.id !== sectionId,
         );
-      }
 
-      setSaveMessage("저장이 완료되었습니다.");
-    } catch (error) {
-      console.error("V2 사이트 데이터 저장 오류:", error);
+        if (selectedSectionId === sectionId) {
+          const nextSection = updatedSections[0];
+          setSelectedSectionId(nextSection?.id ?? "");
+          setSelectedElementId(nextSection?.elements[0]?.id ?? "");
+        }
 
-      setSaveMessage(
-        error instanceof Error
-          ? error.message
-          : "사이트 데이터를 저장하지 못했습니다.",
-      );
-    } finally {
-      setIsSaving(false);
-    }
+        return {
+          ...page,
+          sections: updatedSections,
+        };
+      }),
+    );
   };
 
-  if (isLoading) {
-    return (
-      <main className="flex min-h-screen items-center justify-center bg-neutral-100">
-        <p className="text-sm text-neutral-600">
-          사이트 데이터를 불러오는 중입니다...
-        </p>
-      </main>
+  const handleDuplicateSection = (sectionId: string) => {
+    if (!selectedPageId) return;
+
+    const sectionToDuplicate = selectedPage?.sections.find(
+      (section) => section.id === sectionId,
     );
-  }
 
-  if (loadError) {
-    return (
-      <main className="flex min-h-screen items-center justify-center bg-neutral-100">
-        <div className="rounded-lg border border-red-200 bg-white p-6 text-center shadow-sm">
-          <p className="font-semibold text-red-600">
-            사이트 데이터를 불러오지 못했습니다.
-          </p>
+    if (!sectionToDuplicate) return;
 
-          <p className="mt-2 text-sm text-neutral-600">{loadError}</p>
+    const newSectionId = `section-${Date.now()}`;
+    const newSection: V2Section = {
+      ...sectionToDuplicate,
+      id: newSectionId,
+      elements: sectionToDuplicate.elements.map((element, idx) => ({
+        ...element,
+        id: `element-${Date.now()}-${idx}`,
+      })),
+    };
 
-          <p className="mt-3 text-xs text-neutral-400">
-            siteId: {siteId || "없음"}
-          </p>
-        </div>
-      </main>
+    setSaveMessage("저장되지 않은 변경사항이 있습니다.");
+
+    setPages((currentPages) =>
+      currentPages.map((page) => {
+        if (page.id !== selectedPageId) {
+          return page;
+        }
+
+        const sectionIndex = page.sections.findIndex(
+          (section) => section.id === sectionId,
+        );
+
+        const updatedSections = [...page.sections];
+        updatedSections.splice(sectionIndex + 1, 0, newSection);
+
+        return {
+          ...page,
+          sections: updatedSections,
+        };
+      }),
     );
-  }
 
-  const saveMessageClassName =
-    saveMessage === "저장이 완료되었습니다."
-      ? "text-green-600"
-      : saveMessage.includes("저장되지 않은")
-        ? "text-amber-600"
-        : saveMessage === "저장 중입니다..."
-          ? "text-blue-600"
-          : "text-red-600";
+    setSelectedSectionId(newSectionId);
+    setSelectedElementId(newSection.elements[0]?.id ?? "");
+  };
 
-  return (
-    <main className="flex min-h-screen flex-col bg-neutral-100">
-      <header className="flex h-16 items-center justify-between border-b border-neutral-200 bg-white px-6">
-        <div>
-          <p className="text-xs font-semibold text-blue-600">NEXIA</p>
-          <h1 className="text-lg font-bold text-neutral-900">Builder V2</h1>
-        </div>
+  const handleMoveSection = (sectionId: string, direction: "up" | "down") => {
+    if (!selectedPageId || !selectedPage) return;
 
-        <div className="flex items-center gap-3">
-          {saveMessage && (
-            <p className={`text-xs ${saveMessageClassName}`}>
-              {saveMessage}
-            </p>
-          )}
+    const sectionIndex = selectedPage.sections.findIndex(
+      (section) => section.id === sectionId,
+    );
 
-          <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-700">
-            개발 버전
-          </span>
+    if (sectionIndex === -1) return;
 
-          <button
-            type="button"
-            onClick={handleSave}
-            disabled={isSaving || !siteId}
-            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-neutral-300"
-          >
-            {isSaving ? "저장 중..." : "저장"}
-          </button>
-        </div>
-      </header>
+    const isFirst = sectionIndex === 0;
+    const isLast = sectionIndex === selectedPage.sections.length - 1;
 
-      <div className="flex min-h-0 flex-1">
-        <PagePanel
-          pages={pages}
-          selectedPageId={selectedPageId}
-          selectedSectionId={selectedSectionId}
-          onSelectPage={handleSelectPage}
-          onSelectSection={handleSelectSection}
-        />
+    if ((direction === "up" && isFirst) || (direction === "down" && isLast)) {
+      return;
+    }
 
-        <EditorPanel
-          page={selectedPage}
-          section={selectedSection}
-          selectedElementId={selectedElementId}
-          onSelectElement={setSelectedElementId}
-        />
+    setSaveMessage("저장되지 않은 변경사항이 있습니다.");
 
-        <ElementEditor
-          element={selectedElement}
-          onChange={handleChangeElement}
-        />
-      </div>
-    </main>
-  );
-}
+    setPages((currentPages) =>
+      currentPages.map((page) => {
+        if (page.id !== selectedPageId) {
+          return page;
+        }
+
+        const updatedSections = [...page.sections];
+        const targetIndex = direction === "up" ? sectionIndex - 1 : sectionIndex + 1;
+
+        [updatedSections[sectionIndex], updatedSections[targetIndex]] = [
+          updatedSections[targetIndex],
+          updatedSections[sectionIndex],
+        ];
+
+        return {
+          ...page,
+          sections: updatedSections,
+        };
+      }),
+    );
+  };
+
+  const handleSave = async () => {
