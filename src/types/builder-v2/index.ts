@@ -1,6 +1,8 @@
-﻿export type V2ElementType = "heading" | "text" | "image" | "button";
+﻿// src/types/builder-v2/index.tsx
 
 export type V2FontFamily = "system" | "sans" | "serif" | "mono";
+
+export type V2ElementType = "heading" | "text" | "image" | "button";
 
 export interface V2Element {
   id: string;
