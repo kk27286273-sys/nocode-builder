@@ -376,6 +376,48 @@ export default function BuilderV2Shell() {
   };
 
   const handleSave = async () => {
+    if (!siteId || isSaving) {
+      return;
+    }
+
+    setIsSaving(true);
+    setSaveMessage("저장 중입니다...");
+
+    try {
+      const response = await fetch("/api/builder-data", {
+        method: "PUT",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          siteId,
+          pages,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          result?.error ?? "사이트 데이터를 저장하지 못했습니다.",
+        );
+      }
+
+      setSaveMessage("저장이 완료되었습니다.");
+    } catch (error) {
+      console.error("V2 사이트 데이터 저장 오류:", error);
+
+      setSaveMessage(
+        error instanceof Error
+          ? error.message
+          : "사이트 데이터를 저장하지 못했습니다.",
+      );
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   const saveMessageClassName =
     saveMessage === "저장이 완료되었습니다."
       ? "text-green-600"
