@@ -9,6 +9,7 @@ interface GNBProps {
   themeColor: string;
   activePage: string;
   navigateTo: (id: string, index?: number) => void;
+  sectionsVisible?: Record<string, boolean>;
 }
 
 export default function GNB({
@@ -17,18 +18,24 @@ export default function GNB({
   themeColor,
   activePage,
   navigateTo,
+  sectionsVisible = {},
 }: GNBProps) {
   const [logoFailed, setLogoFailed] = useState(false);
   const hasLogo = Boolean(company?.logoUrl) && !logoFailed;
 
-  const mainMenus = [
-    { label: '회사소개', id: 'about' },
-    { label: '사업소개', id: 'sol_detail' },
-    { label: '지속가능경영', id: 'esg' },
-    { label: '홍보센터', id: 'pr' },
-    { label: '인재경영', id: 'recruit' },
-    { label: '고객센터', id: 'cs' },
+  const isVisible = (key: string) => sectionsVisible[key] !== false;
+
+  const allMenus = [
+    { label: '회사소개', id: 'about', sectionKey: 'corporateInfo' },
+    { label: '사업소개', id: 'sol_detail', sectionKey: 'solutions' },
+    { label: '공시정보', id: 'disclosure', sectionKey: 'disclosure' },
+    { label: '지속가능경영', id: 'esg', sectionKey: 'esg' },
+    { label: '홍보센터', id: 'pr', sectionKey: 'pr' },
+    { label: '인재경영', id: 'recruit', sectionKey: 'recruit' },
+    { label: '고객센터', id: 'cs', sectionKey: 'cs' },
   ];
+
+  const mainMenus = allMenus.filter((menu) => isVisible(menu.sectionKey));
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-slate-100 bg-white shadow-sm">

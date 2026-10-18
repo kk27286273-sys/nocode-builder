@@ -7,6 +7,7 @@ import GNB from './corporate/GNB';
 import MainPage from './corporate/pages/MainPage';
 import AboutPage from './corporate/pages/AboutPage';
 import SolutionPage from './corporate/pages/SolutionPage';
+import DisclosurePage from './corporate/pages/DisclosurePage';
 import ESGPage from './corporate/pages/ESGPage';
 import PRPage from './corporate/pages/PRPage';
 import RecruitPage from './corporate/pages/RecruitPage';
@@ -16,18 +17,22 @@ interface CorporateViewerProps {
   data: any;
   activeSection?: string;
   setActiveSection?: (section: string) => void;
+  sectionsVisible?: Record<string, boolean>;
 }
 
 export const CorporateViewer = ({
   data,
   activeSection: propSection,
   setActiveSection: propSetSection,
+  sectionsVisible = {},
 }: CorporateViewerProps) => {
   const [internalPage, setInternalPage] = useState('main');
   const [, setSelectedSolutionId] = useState<number | null>(null);
 
   const activePage = propSection || internalPage;
   const setActivePage = propSetSection || setInternalPage;
+
+  const isVisible = (key: string) => sectionsVisible[key] !== false;
 
   if (!data) {
     return (
@@ -121,6 +126,12 @@ export const CorporateViewer = ({
     }
   };
 
+  // 비공개 페이지 접근 시 홈으로 리다이렉트
+  const currentPage =
+    activePage !== 'main' && !isVisible(activePage)
+      ? 'main'
+      : activePage;
+
   return (
     <div
       id="corporate-viewer-root"
@@ -131,14 +142,15 @@ export const CorporateViewer = ({
           company={company}
           navigation={navigation}
           themeColor={themeColor}
-          activePage={activePage}
+          activePage={currentPage}
           navigateTo={navigateTo}
+          sectionsVisible={sectionsVisible}
         />
       </header>
 
       <main className="w-full">
         <AnimatePresence mode="wait">
-          {activePage === 'main' && (
+          {currentPage === 'main' && (
             <MainPage
               key="main"
               hero={{
@@ -155,7 +167,7 @@ export const CorporateViewer = ({
             />
           )}
 
-          {activePage === 'about' && (
+          {currentPage === 'about' && isVisible('corporateInfo') && (
             <AboutPage
               key="about"
               corporateInfo={corporateInfo}
@@ -163,7 +175,7 @@ export const CorporateViewer = ({
             />
           )}
 
-          {activePage === 'sol_detail' && (
+          {currentPage === 'sol_detail' && isVisible('solutions') && (
             <SolutionPage
               key="sol_detail"
               data={{
@@ -173,14 +185,21 @@ export const CorporateViewer = ({
             />
           )}
 
-          {activePage === 'esg' && (
+          {currentPage === 'disclosure' && isVisible('disclosure') && (
+            <DisclosurePage
+              key="disclosure"
+              disclosureData={corporateInfo.disclosure || { certifications: [] }}
+            />
+          )}
+
+          {currentPage === 'esg' && isVisible('esg') && (
             <ESGPage
               key="esg"
               esgData={corporateInfo.esg || data.esg}
             />
           )}
 
-          {activePage === 'pr' && (
+          {currentPage === 'pr' && isVisible('pr') && (
             <PRPage
               key="pr"
               prData={
@@ -193,7 +212,7 @@ export const CorporateViewer = ({
             />
           )}
 
-          {activePage === 'recruit' && (
+          {currentPage === 'recruit' && isVisible('recruit') && (
             <RecruitPage
               key="recruit"
               recruitData={
@@ -206,7 +225,7 @@ export const CorporateViewer = ({
             />
           )}
 
-          {activePage === 'cs' && (
+          {currentPage === 'cs' && isVisible('cs') && (
             <CSPage
               key="cs"
               guide={data.csGuide || data.public?.notice || ''}
@@ -216,89 +235,95 @@ export const CorporateViewer = ({
         </AnimatePresence>
       </main>
 
-      <footer className="w-full border-t border-slate-800 bg-slate-900 px-4 py-8 text-slate-400 md:px-8 md:py-12">
-        <div className="mx-auto grid max-w-screen-2xl grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3 md:gap-12">
-          <div className="space-y-3">
-            <div className="text-lg font-bold text-white md:text-2xl">
-              {company.name || 'COMPANY'}
+      {isVisible('footer') && (
+        <footer className="w-full border-t border-slate-800 bg-slate-900 px-4 py-8 text-slate-400 md:px-8 md:py-12">
+          <div className="mx-auto grid max-w-screen-2xl grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3 md:gap-12">
+            <div className="space-y-3">
+              <div className="text-lg font-bold text-white md:text-2xl">
+                {company.name || 'COMPANY'}
+              </div>
+
+              <p className="text-xs leading-relaxed opacity-70 md:text-sm">
+                {footer.address || '주소 정보가 등록되지 않았습니다.'}
+                <br />
+                사업자 등록번호:{' '}
+                {footer.businessNumber ||
+                  footer.bizNumber ||
+                  '미등록'}
+                <br />
+                대표자명: {representativeName}
+                <br />
+                TEL: {footerPhone}
+              </p>
             </div>
 
-            <p className="text-xs leading-relaxed opacity-70 md:text-sm">
-              {footer.address || '주소 정보가 등록되지 않았습니다.'}
-              <br />
-              사업자 등록번호:{' '}
-              {footer.businessNumber ||
-                footer.bizNumber ||
-                '미등록'}
-              <br />
-              대표자명: {representativeName}
-              <br />
-              TEL: {footerPhone}
-            </p>
-          </div>
+            <div className="space-y-3">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-white md:mb-4 md:text-sm">
+                Quick Links
+              </h4>
 
-          <div className="space-y-3">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-white md:mb-4 md:text-sm">
-              Quick Links
-            </h4>
+              <ul className="space-y-2 text-xs md:space-y-3 md:text-sm">
+                <li>
+                  <button
+                    type="button"
+                    className="transition-colors hover:text-white"
+                    onClick={() => navigateTo('main')}
+                  >
+                    홈으로
+                  </button>
+                </li>
 
-            <ul className="space-y-2 text-xs md:space-y-3 md:text-sm">
-              <li>
-                <button
-                  type="button"
-                  className="transition-colors hover:text-white"
-                  onClick={() => navigateTo('main')}
-                >
-                  홈으로
-                </button>
-              </li>
+                {isVisible('solutions') && (
+                  <li>
+                    <button
+                      type="button"
+                      className="transition-colors hover:text-white"
+                      onClick={() => navigateTo('sol_detail', 0)}
+                    >
+                      사업소개
+                    </button>
+                  </li>
+                )}
 
-              <li>
-                <button
-                  type="button"
-                  className="transition-colors hover:text-white"
-                  onClick={() => navigateTo('sol_detail', 0)}
-                >
-                  사업소개
-                </button>
-              </li>
+                {isVisible('cs') && (
+                  <li>
+                    <button
+                      type="button"
+                      className="transition-colors hover:text-white"
+                      onClick={() => navigateTo('cs')}
+                    >
+                      고객센터
+                    </button>
+                  </li>
+                )}
+              </ul>
+            </div>
 
-              <li>
-                <button
-                  type="button"
-                  className="transition-colors hover:text-white"
-                  onClick={() => navigateTo('cs')}
-                >
-                  고객센터
-                </button>
-              </li>
-            </ul>
-          </div>
+            <div className="col-span-2 space-y-3 md:col-span-1">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-white md:mb-4 md:text-sm">
+                Customer Support
+              </h4>
 
-          <div className="col-span-2 space-y-3 md:col-span-1">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-white md:mb-4 md:text-sm">
-              Customer Support
-            </h4>
-
-            <p className="text-xl font-bold text-white md:text-3xl">
-              {footerPhone}
-            </p>
-
-            {footerEmail && (
-              <p className="break-all text-xs opacity-70 md:text-sm">
-                {footerEmail}
+              <p className="text-xl font-bold text-white md:text-3xl">
+                {footerPhone}
               </p>
-            )}
-          </div>
-        </div>
 
-        <div className="mx-auto mt-8 max-w-screen-2xl border-t border-slate-800 pt-5 text-xs md:mt-12 md:pt-8 md:text-sm">
-          {footer.copyright ||
-            `© ${new Date().getFullYear()} ${
-              company.name || 'COMPANY'
-            }. All rights reserved.`}
-        </div>
-      </footer>
+              {footerEmail && (
+                <p className="break-all text-xs opacity-70 md:text-sm">
+                  {footerEmail}
+                </p>
+              )}
+            </div>
+          </div>
+
+          <div className="mx-auto mt-8 max-w-screen-2xl border-t border-slate-800 pt-5 text-xs md:mt-12 md:pt-8 md:text-sm">
+            {footer.copyright ||
+              `© ${new Date().getFullYear()} ${
+                company.name || 'COMPANY'
+              }. All rights reserved.`}
+          </div>
+        </footer>
+      )}
     </div>
   );
 };
