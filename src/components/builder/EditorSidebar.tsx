@@ -1,3 +1,5 @@
+// src/components/EditorSidebar.tsx
+
 'use client';
 
 import React, { useState } from 'react';
@@ -118,6 +120,26 @@ export default function EditorSidebar({
     updateDeep('process', getArray('process').filter((_, i) => i !== index));
   };
 
+  const addMembership = () => {
+    updateDeep('memberships', [
+      ...getArray('memberships'),
+      { id: Date.now().toString(), name: '새 이용권', price: 0, duration: 1, classes: 0, features: [], popular: false },
+    ]);
+  };
+  const removeMembership = (index: number) => {
+    updateDeep('memberships', getArray('memberships').filter((_, i) => i !== index));
+  };
+
+  const addSuccessCase = () => {
+    updateDeep('successCases', [
+      ...getArray('successCases'),
+      { category: '신규', title: '새 사례', year: new Date().getFullYear().toString(), result: '', description: '' },
+    ]);
+  };
+  const removeSuccessCase = (index: number) => {
+    updateDeep('successCases', getArray('successCases').filter((_, i) => i !== index));
+  };
+
 // ===== 템플릿 타입 확인 =====
 const templateType = data?.templateType;
 const isInterior = templateType === 'interior' || templateType === 'onepage';
@@ -135,15 +157,17 @@ const sections = isInterior
     ]
   : templateType === 'legal'
   ? [
-  { id: 'main', label: '메인 화면' },
-  { id: 'services', label: '서비스' },
-  { id: 'contact', label: '연락처' },
-  { id: 'footer', label: '하단 정보' },
-]
+      { id: 'main', label: '메인 화면' },
+      { id: 'services', label: '서비스' },
+      { id: 'successCases', label: '성공 사례' },
+      { id: 'contact', label: '연락처' },
+      { id: 'footer', label: '하단 정보' },
+    ]
   : templateType === 'fitness'
   ? [
       { id: 'main', label: '메인 화면' },
       { id: 'services', label: '클래스' },
+      { id: 'memberships', label: '이용권' },
       { id: 'contact', label: '연락처' },
       { id: 'footer', label: '하단 정보' },
     ]
@@ -290,7 +314,85 @@ const sections = isInterior
                 </div>
               )}
 
-              {/* 3. 연락처 */}
+              {/* 3. 성공 사례 */}
+              {active === 'successCases' && (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-slate-700">
+                      성공 사례 목록
+                    </span>
+
+                    <button
+                      type="button"
+                      onClick={addSuccessCase}
+                      className="rounded bg-blue-600 px-2.5 py-1 text-[11px] font-bold text-white hover:bg-blue-700"
+                    >
+                      + 사례 추가
+                    </button>
+                  </div>
+
+                  {getArray('successCases').map((item: any, idx: number) => (
+                    <div
+                      key={idx}
+                      className="relative space-y-2 rounded-xl border border-slate-200 bg-white p-4"
+                    >
+                      <button
+                        type="button"
+                        onClick={() => removeSuccessCase(idx)}
+                        className="absolute right-3 top-3 text-xs font-bold text-slate-400 hover:text-rose-500"
+                      >
+                        ×
+                      </button>
+
+                      <InputField
+                        label="분야"
+                        value={item?.category || ''}
+                        onChange={(v) =>
+                          updateDeep(`successCases.${idx}.category`, v)
+                        }
+                        placeholder="세무, 노무, 법무"
+                      />
+
+                      <InputField
+                        label="사례명"
+                        value={item?.title || ''}
+                        onChange={(v) =>
+                          updateDeep(`successCases.${idx}.title`, v)
+                        }
+                      />
+
+                      <InputField
+                        label="연도"
+                        value={item?.year || ''}
+                        onChange={(v) =>
+                          updateDeep(`successCases.${idx}.year`, v)
+                        }
+                        placeholder="2024"
+                      />
+
+                      <InputField
+                        label="결과"
+                        value={item?.result || ''}
+                        onChange={(v) =>
+                          updateDeep(`successCases.${idx}.result`, v)
+                        }
+                        placeholder="절세액 3.2억 원"
+                      />
+
+                      <TextAreaField
+                        label="상세 설명"
+                        value={item?.description || ''}
+                        onChange={(v) =>
+                          updateDeep(`successCases.${idx}.description`, v)
+                        }
+                        h="h-20"
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* 4. 연락처 */}
               {active === 'contact' && (
                 <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
                   <InputField
@@ -311,7 +413,7 @@ const sections = isInterior
                 </div>
               )}
 
-              {/* 4. 하단 정보 */}
+              {/* 5. 하단 정보 */}
               {active === 'footer' && (
                 <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
                   <InputField
@@ -391,7 +493,99 @@ const sections = isInterior
                 </div>
               )}
 
-              {/* 3. 연락처 */}
+              {/* 3. 이용권 */}
+              {active === 'memberships' && (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-slate-700">이용권</span>
+                    <button
+                      type="button"
+                      onClick={addMembership}
+                      className="rounded bg-blue-600 px-2.5 py-1 text-[11px] font-bold text-white hover:bg-blue-700"
+                    >
+                      + 이용권 추가
+                    </button>
+                  </div>
+                  {getArray('memberships').map((item: any, idx: number) => (
+                    <div
+                      key={idx}
+                      className="relative space-y-2 rounded-xl border border-slate-200 bg-white p-4"
+                    >
+                      <button
+                        type="button"
+                        onClick={() => removeMembership(idx)}
+                        className="absolute right-3 top-3 text-xs font-bold text-slate-400 hover:text-rose-500"
+                      >
+                        ×
+                      </button>
+
+                      <InputField
+                        label="이용권명"
+                        value={item?.name || ''}
+                        onChange={(v) =>
+                          updateDeep(`memberships.${idx}.name`, v)
+                        }
+                        placeholder="월간 기본"
+                      />
+
+                      <InputField
+                        label="가격 (원)"
+                        type="number"
+                        value={item?.price || 0}
+                        onChange={(v) =>
+                          updateDeep(`memberships.${idx}.price`, parseInt(v) || 0)
+                        }
+                      />
+
+                      <InputField
+                        label="기간 (개월)"
+                        type="number"
+                        value={item?.duration || 1}
+                        onChange={(v) =>
+                          updateDeep(`memberships.${idx}.duration`, parseInt(v) || 1)
+                        }
+                      />
+
+                      <InputField
+                        label="클래스 횟수"
+                        type="number"
+                        value={item?.classes || 0}
+                        onChange={(v) =>
+                          updateDeep(`memberships.${idx}.classes`, parseInt(v) || 0)
+                        }
+                        placeholder="무제한은 999"
+                      />
+
+                      <TextAreaField
+                        label="특징 (줄바꿈으로 구분)"
+                        value={(item?.features || []).join('\n')}
+                        onChange={(v) =>
+                          updateDeep(
+                            `memberships.${idx}.features`,
+                            v.split('\n').filter((f: string) => f.trim())
+                          )
+                        }
+                        h="h-20"
+                        placeholder="무제한 시설 이용&#10;월 12회 클래스&#10;기본 운동 상담"
+                      />
+
+                      <label className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          checked={item?.popular || false}
+                          onChange={(e) =>
+                            updateDeep(`memberships.${idx}.popular`, e.target.checked)
+                          }
+                          className="rounded"
+                        />
+                        <span className="text-xs font-semibold text-slate-700">인기 이용권으로 표시</span>
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* 4. 연락처 */}
               {active === 'contact' && (
                 <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
                   <InputField
@@ -412,7 +606,7 @@ const sections = isInterior
                 </div>
               )}
 
-              {/* 4. 하단 정보 */}
+              {/* 5. 하단 정보 */}
               {active === 'footer' && (
                 <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
                   <InputField
