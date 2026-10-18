@@ -1,3 +1,5 @@
+// src/components/viewer/templates/LegalViewer.tsx
+
 'use client';
 
 import React, { useState } from 'react';
@@ -10,48 +12,6 @@ interface Props {
 
 export default function LegalViewer({ data, setData, editable = false }: Props) {
   const [selectedCase, setSelectedCase] = useState<number | null>(null);
-
-  const successCases = [
-    {
-      category: '세무',
-      title: '대규모 상속세 감면 성공',
-      year: '2024',
-      result: '절세액 3.2억 원',
-      description: '재산가 상속 건에서 절세 전략 수립으로 3억 원 이상 절감',
-    },
-    {
-      category: '노무',
-      title: '근로자 부당해고 판정 취소',
-      year: '2024',
-      result: '원직복직 + 배상금 확보',
-      description: '부당해고 사건에서 1심 승소, 원직복직 및 손해배상 확보',
-    },
-    {
-      category: '법무',
-      title: '기업 인수합병 계약 체결',
-      year: '2024',
-      result: '거래액 50억 원 성사',
-      description: '복잡한 인수합병 절차를 신속하고 안전하게 진행',
-    },
-  ];
-
-  const services = [
-    {
-      icon: '⚖️',
-      title: '법무법인 대표변호사',
-      desc: '15년 이상 기업법·상사법 전담',
-    },
-    {
-      icon: '📊',
-      title: '공인회계사·세무사 겸임',
-      desc: '재무·세무 자문 통합 서비스',
-    },
-    {
-      icon: '🔒',
-      title: '비밀 보장 1:1 상담',
-      desc: '변호사 비밀유지 특권으로 완벽하게 보호',
-    },
-  ];
 
   return (
     <div className="min-h-screen w-full bg-slate-950 text-white">
@@ -75,28 +35,28 @@ export default function LegalViewer({ data, setData, editable = false }: Props) 
         </div>
       </section>
 
-{/* ===== 서비스 ===== */}
-<section className="border-b border-slate-800 px-6 py-20 md:py-24">
-  <div className="mx-auto max-w-6xl">
-    <h2 className="text-3xl font-bold">전문성으로 신뢰를 쌓습니다</h2>
-    <div className="mt-12 grid gap-8 md:grid-cols-3">
-      {(data?.services || []).map((s: any, idx: number) => (
-        <div key={idx} className="rounded-xl border border-slate-800 bg-slate-900 p-6">
-          <div className="text-4xl">{s.icon}</div>
-          <h3 className="mt-4 font-bold">{s.title}</h3>
-          <p className="mt-2 text-sm text-slate-400">{s.description}</p>
+      {/* ===== 서비스 ===== */}
+      <section className="border-b border-slate-800 px-6 py-20 md:py-24">
+        <div className="mx-auto max-w-6xl">
+          <h2 className="text-3xl font-bold">전문성으로 신뢰를 쌓습니다</h2>
+          <div className="mt-12 grid gap-8 md:grid-cols-3">
+            {(data?.services || []).map((s: any, idx: number) => (
+              <div key={idx} className="rounded-xl border border-slate-800 bg-slate-900 p-6">
+                <div className="text-4xl">{s.icon}</div>
+                <h3 className="mt-4 font-bold">{s.title}</h3>
+                <p className="mt-2 text-sm text-slate-400">{s.description}</p>
+              </div>
+            ))}
+          </div>
         </div>
-      ))}
-    </div>
-  </div>
-</section>
+      </section>
 
       {/* ===== 성공 사례 ===== */}
       <section className="border-b border-slate-800 px-6 py-20 md:py-24">
         <div className="mx-auto max-w-6xl">
           <h2 className="text-3xl font-bold">최근 성공 사례</h2>
           <div className="mt-12 grid gap-6 md:grid-cols-3">
-            {successCases.map((c, idx) => (
+            {(data?.successCases || []).map((c: any, idx: number) => (
               <div
                 key={idx}
                 onClick={() => setSelectedCase(idx)}
@@ -178,7 +138,7 @@ export default function LegalViewer({ data, setData, editable = false }: Props) 
       </footer>
 
       {/* ===== 사례 상세 모달 ===== */}
-      {selectedCase !== null && (
+      {selectedCase !== null && (data?.successCases || []).length > 0 && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
           onClick={() => setSelectedCase(null)}
@@ -194,14 +154,14 @@ export default function LegalViewer({ data, setData, editable = false }: Props) 
               ×
             </button>
             <p className="text-xs font-bold uppercase tracking-wider text-blue-400">
-              {successCases[selectedCase].category}
+              {data?.successCases?.[selectedCase]?.category}
             </p>
-            <h3 className="mt-3 text-2xl font-bold">{successCases[selectedCase].title}</h3>
+            <h3 className="mt-3 text-2xl font-bold">{data?.successCases?.[selectedCase]?.title}</h3>
             <p className="mt-4 rounded-lg bg-blue-600/10 px-3 py-2 text-sm font-semibold text-blue-300">
-              ✓ {successCases[selectedCase].result}
+              ✓ {data?.successCases?.[selectedCase]?.result}
             </p>
-            <p className="mt-4 text-slate-400">{successCases[selectedCase].description}</p>
-            <p className="mt-6 text-xs text-slate-500">{successCases[selectedCase].year}</p>
+            <p className="mt-4 text-slate-400">{data?.successCases?.[selectedCase]?.description}</p>
+            <p className="mt-6 text-xs text-slate-500">{data?.successCases?.[selectedCase]?.year}</p>
           </div>
         </div>
       )}

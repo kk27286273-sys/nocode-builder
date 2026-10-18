@@ -223,24 +223,24 @@ export default function FitnessViewer({ data = {} }: { data?: FitnessData }) {
         </section>
       )}
 
-{/* Classes */}
-{merged.services && merged.services.length > 0 && (
-  <section className="bg-slate-50 px-6 py-20 md:py-28">
-    <div className="mx-auto max-w-6xl">
-      <h2 className="text-4xl font-black text-slate-900">클래스</h2>
-      <p className="mt-2 text-lg text-slate-600">다양한 프로그램 중 당신에게 맞는 클래스를 선택하세요</p>
+      {/* Classes */}
+      {merged.services && merged.services.length > 0 && (
+        <section className="bg-slate-50 px-6 py-20 md:py-28">
+          <div className="mx-auto max-w-6xl">
+            <h2 className="text-4xl font-black text-slate-900">클래스</h2>
+            <p className="mt-2 text-lg text-slate-600">다양한 프로그램 중 당신에게 맞는 클래스를 선택하세요</p>
 
-      <div className="mt-12 grid gap-6 md:grid-cols-2">
-        {merged.services.map((service: any, idx: number) => (
-          <div key={idx} className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-lg transition">
-            <h3 className="text-xl font-bold text-slate-900">{service.title}</h3>
-            <p className="mt-2 text-sm text-slate-600">{service.description}</p>
+            <div className="mt-12 grid gap-6 md:grid-cols-2">
+              {merged.services.map((service: any, idx: number) => (
+                <div key={idx} className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-lg transition">
+                  <h3 className="text-xl font-bold text-slate-900">{service.title}</h3>
+                  <p className="mt-2 text-sm text-slate-600">{service.description}</p>
+                </div>
+              ))}
+            </div>
           </div>
-        ))}
-      </div>
-    </div>
-  </section>
-)}
+        </section>
+      )}
 
       {/* Memberships */}
       {merged.memberships && merged.memberships.length > 0 && (
@@ -250,7 +250,7 @@ export default function FitnessViewer({ data = {} }: { data?: FitnessData }) {
             <p className="mt-2 text-lg text-slate-600">당신의 목표에 맞는 이용권을 선택하세요</p>
 
             <div className="mt-12 grid gap-8 md:grid-cols-3">
-              {merged.memberships.map((mem) => (
+              {merged.memberships.map((mem: any) => (
                 <div
                   key={mem.id}
                   className={`relative rounded-2xl border-2 p-8 transition ${
@@ -278,7 +278,7 @@ export default function FitnessViewer({ data = {} }: { data?: FitnessData }) {
                   </div>
 
                   <div className="mt-6 space-y-3">
-                    {mem.features.map((feature, idx) => (
+                    {mem.features.map((feature: string, idx: number) => (
                       <p key={idx} className="flex items-start gap-3 text-slate-700">
                         <span
                           className="mt-1 inline-block h-2 w-2 rounded-full flex-shrink-0"
