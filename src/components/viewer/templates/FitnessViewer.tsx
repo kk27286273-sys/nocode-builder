@@ -162,9 +162,17 @@ const DEFAULT_FITNESS_DATA: FitnessData = {
   themeColor: '#EA580C',
 };
 
-export default function FitnessViewer({ data = {} }: { data?: FitnessData }) {
+export default function FitnessViewer({ 
+  data = {}, 
+  sectionsVisible = {} 
+}: { 
+  data?: FitnessData;
+  sectionsVisible?: Record<string, boolean>;
+}) {
   const merged = { ...DEFAULT_FITNESS_DATA, ...data };
   const [selectedMembership, setSelectedMembership] = useState<string | null>(null);
+
+  const isVisible = (key: string) => sectionsVisible[key] !== false;
 
   const levelBadge = (level: string) => {
     const styles = {
@@ -187,29 +195,31 @@ export default function FitnessViewer({ data = {} }: { data?: FitnessData }) {
   return (
     <div className="w-full bg-white">
       {/* Hero */}
-      <section
-        className="relative min-h-[500px] flex items-center justify-center bg-gradient-to-br from-orange-500 to-orange-600 px-6 py-20 text-center text-white"
-        style={{ backgroundColor: merged.themeColor || '#EA580C' }}
-      >
-        {merged.hero?.backgroundImage && (
-          <Image
-            src={merged.hero.backgroundImage}
-            alt="hero"
-            fill
-            className="absolute inset-0 object-cover opacity-30"
-          />
-        )}
-        <div className="relative z-10 max-w-2xl">
-          <h1 className="text-5xl font-black leading-tight md:text-6xl">{merged.hero?.title}</h1>
-          <p className="mt-6 text-lg leading-relaxed opacity-90">{merged.hero?.subtitle}</p>
-          <button className="mt-8 rounded-xl bg-white px-8 py-4 font-bold text-orange-600 transition hover:bg-gray-100">
-            지금 시작하기
-          </button>
-        </div>
-      </section>
+      {isVisible('hero') && (
+        <section
+          className="relative min-h-[500px] flex items-center justify-center bg-gradient-to-br from-orange-500 to-orange-600 px-6 py-20 text-center text-white"
+          style={{ backgroundColor: merged.themeColor || '#EA580C' }}
+        >
+          {merged.hero?.backgroundImage && (
+            <Image
+              src={merged.hero.backgroundImage}
+              alt="hero"
+              fill
+              className="absolute inset-0 object-cover opacity-30"
+            />
+          )}
+          <div className="relative z-10 max-w-2xl">
+            <h1 className="text-5xl font-black leading-tight md:text-6xl">{merged.hero?.title}</h1>
+            <p className="mt-6 text-lg leading-relaxed opacity-90">{merged.hero?.subtitle}</p>
+            <button className="mt-8 rounded-xl bg-white px-8 py-4 font-bold text-orange-600 transition hover:bg-gray-100">
+              지금 시작하기
+            </button>
+          </div>
+        </section>
+      )}
 
       {/* About */}
-      {merged.about && (
+      {isVisible('about') && merged.about && (
         <section className="px-6 py-20 md:py-28">
           <div className="mx-auto max-w-4xl">
             <h2 className="text-4xl font-black text-slate-900">{merged.about.title}</h2>
@@ -224,7 +234,7 @@ export default function FitnessViewer({ data = {} }: { data?: FitnessData }) {
       )}
 
       {/* Classes */}
-      {merged.services && merged.services.length > 0 && (
+      {isVisible('classes') && merged.services && merged.services.length > 0 && (
         <section className="bg-slate-50 px-6 py-20 md:py-28">
           <div className="mx-auto max-w-6xl">
             <h2 className="text-4xl font-black text-slate-900">클래스</h2>
@@ -243,7 +253,7 @@ export default function FitnessViewer({ data = {} }: { data?: FitnessData }) {
       )}
 
       {/* Memberships */}
-      {merged.memberships && merged.memberships.length > 0 && (
+      {isVisible('memberships') && merged.memberships && merged.memberships.length > 0 && (
         <section className="px-6 py-20 md:py-28">
           <div className="mx-auto max-w-6xl">
             <h2 className="text-4xl font-black text-slate-900">이용권</h2>
@@ -309,7 +319,7 @@ export default function FitnessViewer({ data = {} }: { data?: FitnessData }) {
       )}
 
       {/* Schedule */}
-      {merged.schedule && (
+      {isVisible('schedule') && merged.schedule && (
         <section className="bg-slate-50 px-6 py-20 md:py-28">
           <div className="mx-auto max-w-4xl">
             <h2 className="text-4xl font-black text-slate-900">{merged.schedule.title}</h2>
@@ -330,7 +340,7 @@ export default function FitnessViewer({ data = {} }: { data?: FitnessData }) {
       )}
 
       {/* Location */}
-      {merged.location && (
+      {isVisible('location') && merged.location && (
         <section className="px-6 py-20 md:py-28">
           <div className="mx-auto max-w-4xl">
             <h2 className="text-4xl font-black text-slate-900">위치 & 연락처</h2>
@@ -369,51 +379,55 @@ export default function FitnessViewer({ data = {} }: { data?: FitnessData }) {
       )}
 
       {/* CTA */}
-      <section
-        className="px-6 py-20 text-center text-white md:py-28"
-        style={{ backgroundColor: merged.themeColor || '#EA580C' }}
-      >
-        <h2 className="text-4xl font-black">지금 시작하세요</h2>
-        <p className="mt-4 text-lg opacity-90">당신의 건강한 삶을 위해 저희가 함께하겠습니다</p>
+      {isVisible('cta') && (
+        <section
+          className="px-6 py-20 text-center text-white md:py-28"
+          style={{ backgroundColor: merged.themeColor || '#EA580C' }}
+        >
+          <h2 className="text-4xl font-black">지금 시작하세요</h2>
+          <p className="mt-4 text-lg opacity-90">당신의 건강한 삶을 위해 저희가 함께하겠습니다</p>
 
-        <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:justify-center">
-          <button className="rounded-xl bg-white px-8 py-4 font-bold text-orange-600 transition hover:bg-gray-100">
-            상담 신청
-          </button>
-          {merged.kakaoLink && (
-            <a
-              href={merged.kakaoLink}
-              target="_blank"
-              rel="noreferrer"
-              className="rounded-xl border-2 border-white px-8 py-4 font-bold text-white transition hover:bg-white/10"
-            >
-              카톡 상담
-            </a>
-          )}
-        </div>
-      </section>
+          <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:justify-center">
+            <button className="rounded-xl bg-white px-8 py-4 font-bold text-orange-600 transition hover:bg-gray-100">
+              상담 신청
+            </button>
+            {merged.kakaoLink && (
+              <a
+                href={merged.kakaoLink}
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-xl border-2 border-white px-8 py-4 font-bold text-white transition hover:bg-white/10"
+              >
+                카톡 상담
+              </a>
+            )}
+          </div>
+        </section>
+      )}
 
       {/* Footer */}
-      <footer className="border-t border-slate-200 bg-slate-900 px-6 py-12 text-white">
-        <div className="mx-auto max-w-6xl">
-          <div className="grid gap-8 md:grid-cols-3">
-            <div>
-              <p className="font-bold">{merged.footer?.companyName}</p>
-              <p className="mt-2 text-sm text-slate-400">{merged.footer?.address}</p>
-            </div>
-            <div>
-              <p className="text-sm font-bold uppercase tracking-widest text-slate-400">연락처</p>
-              <a href={`tel:${merged.footer?.phone}`} className="mt-2 text-sm hover:text-white">
-                {merged.footer?.phone}
-              </a>
-            </div>
-            <div>
-              <p className="text-sm font-bold uppercase tracking-widest text-slate-400">정보</p>
-              <p className="mt-2 text-sm text-slate-400">© 2026 All rights reserved.</p>
+      {isVisible('footer') && (
+        <footer className="border-t border-slate-200 bg-slate-900 px-6 py-12 text-white">
+          <div className="mx-auto max-w-6xl">
+            <div className="grid gap-8 md:grid-cols-3">
+              <div>
+                <p className="font-bold">{merged.footer?.companyName}</p>
+                <p className="mt-2 text-sm text-slate-400">{merged.footer?.address}</p>
+              </div>
+              <div>
+                <p className="text-sm font-bold uppercase tracking-widest text-slate-400">연락처</p>
+                <a href={`tel:${merged.footer?.phone}`} className="mt-2 text-sm hover:text-white">
+                  {merged.footer?.phone}
+                </a>
+              </div>
+              <div>
+                <p className="text-sm font-bold uppercase tracking-widest text-slate-400">정보</p>
+                <p className="mt-2 text-sm text-slate-400">© 2026 All rights reserved.</p>
+              </div>
             </div>
           </div>
-        </div>
-      </footer>
+        </footer>
+      )}
     </div>
   );
 }
