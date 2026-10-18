@@ -75,21 +75,21 @@ export default function LegalViewer({ data, setData, editable = false }: Props) 
         </div>
       </section>
 
-      {/* ===== 서비스 ===== */}
-      <section className="border-b border-slate-800 px-6 py-20 md:py-24">
-        <div className="mx-auto max-w-6xl">
-          <h2 className="text-3xl font-bold">전문성으로 신뢰를 쌓습니다</h2>
-          <div className="mt-12 grid gap-8 md:grid-cols-3">
-            {services.map((s, idx) => (
-              <div key={idx} className="rounded-xl border border-slate-800 bg-slate-900 p-6">
-                <div className="text-4xl">{s.icon}</div>
-                <h3 className="mt-4 font-bold">{s.title}</h3>
-                <p className="mt-2 text-sm text-slate-400">{s.desc}</p>
-              </div>
-            ))}
-          </div>
+{/* ===== 서비스 ===== */}
+<section className="border-b border-slate-800 px-6 py-20 md:py-24">
+  <div className="mx-auto max-w-6xl">
+    <h2 className="text-3xl font-bold">전문성으로 신뢰를 쌓습니다</h2>
+    <div className="mt-12 grid gap-8 md:grid-cols-3">
+      {(data?.services || []).map((s: any, idx: number) => (
+        <div key={idx} className="rounded-xl border border-slate-800 bg-slate-900 p-6">
+          <div className="text-4xl">{s.icon}</div>
+          <h3 className="mt-4 font-bold">{s.title}</h3>
+          <p className="mt-2 text-sm text-slate-400">{s.description}</p>
         </div>
-      </section>
+      ))}
+    </div>
+  </div>
+</section>
 
       {/* ===== 성공 사례 ===== */}
       <section className="border-b border-slate-800 px-6 py-20 md:py-24">

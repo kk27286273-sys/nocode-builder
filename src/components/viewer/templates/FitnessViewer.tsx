@@ -223,46 +223,24 @@ export default function FitnessViewer({ data = {} }: { data?: FitnessData }) {
         </section>
       )}
 
-      {/* Classes */}
-      {merged.classes && merged.classes.length > 0 && (
-        <section className="bg-slate-50 px-6 py-20 md:py-28">
-          <div className="mx-auto max-w-6xl">
-            <h2 className="text-4xl font-black text-slate-900">클래스</h2>
-            <p className="mt-2 text-lg text-slate-600">다양한 프로그램 중 당신에게 맞는 클래스를 선택하세요</p>
+{/* Classes */}
+{merged.services && merged.services.length > 0 && (
+  <section className="bg-slate-50 px-6 py-20 md:py-28">
+    <div className="mx-auto max-w-6xl">
+      <h2 className="text-4xl font-black text-slate-900">클래스</h2>
+      <p className="mt-2 text-lg text-slate-600">다양한 프로그램 중 당신에게 맞는 클래스를 선택하세요</p>
 
-            <div className="mt-12 grid gap-6 md:grid-cols-2">
-              {merged.classes.map((cls) => (
-                <div key={cls.id} className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-lg transition">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <h3 className="text-xl font-bold text-slate-900">{cls.name}</h3>
-                      <p className="mt-1 text-sm text-slate-600">강사: {cls.instructor}</p>
-                    </div>
-                    {levelBadge(cls.level)}
-                  </div>
-
-                  <div className="mt-4 space-y-2">
-                    <p className="text-sm text-slate-600">⏰ {cls.time}</p>
-                    <p className="text-sm text-slate-600">
-                      👥 {cls.enrolled}/{cls.capacity}명 (자리 {cls.capacity - cls.enrolled}개)
-                    </p>
-                  </div>
-
-                  <div className="mt-4 h-2 w-full rounded-full bg-slate-200">
-                    <div
-                      className="h-full rounded-full transition-all"
-                      style={{
-                        width: `${(cls.enrolled / cls.capacity) * 100}%`,
-                        backgroundColor: merged.themeColor || '#EA580C',
-                      }}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
+      <div className="mt-12 grid gap-6 md:grid-cols-2">
+        {merged.services.map((service: any, idx: number) => (
+          <div key={idx} className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-lg transition">
+            <h3 className="text-xl font-bold text-slate-900">{service.title}</h3>
+            <p className="mt-2 text-sm text-slate-600">{service.description}</p>
           </div>
-        </section>
-      )}
+        ))}
+      </div>
+    </div>
+  </section>
+)}
 
       {/* Memberships */}
       {merged.memberships && merged.memberships.length > 0 && (
