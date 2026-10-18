@@ -1,21 +1,21 @@
 'use client';
 
 import React, { useState, useEffect, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import ViewerManager from '@/components/builder/ViewerManager';
 import { B2BTemplateData } from '@/types/Template';
 
 function PreviewContent() {
-  const searchParams = useSearchParams();
-  const templateId = searchParams?.get('templateId') as string;
+  const params = useParams();
+  const siteId = params?.siteId as string;
 
   const [data, setData] = useState<B2BTemplateData | null>(null);
   const [activeSection, setActiveSection] = useState('main');
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (!templateId) {
+    if (!siteId) {
       setIsLoading(false);
       return;
     }
@@ -24,7 +24,7 @@ function PreviewContent() {
       const { data: sites, error } = await supabase
         .from('sites')
         .select('data')
-        .eq('template_type', templateId)
+        .eq('id', siteId)
         .single();
 
       if (error) {
@@ -37,7 +37,7 @@ function PreviewContent() {
     }
 
     void fetchTemplateData();
-  }, [templateId]);
+  }, [siteId]);
 
   if (isLoading) {
     return <div className="h-screen flex items-center justify-center">로드 중...</div>;
