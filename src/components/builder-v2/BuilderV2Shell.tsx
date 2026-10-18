@@ -376,3 +376,70 @@ export default function BuilderV2Shell() {
   };
 
   const handleSave = async () => {
+  const saveMessageClassName =
+    saveMessage === "저장이 완료되었습니다."
+      ? "text-green-600"
+      : saveMessage.includes("저장되지 않은")
+        ? "text-amber-600"
+        : saveMessage === "저장 중입니다..."
+          ? "text-blue-600"
+          : "text-red-600";
+
+  return (
+    <main className="flex min-h-screen flex-col bg-neutral-100">
+      <header className="flex h-16 items-center justify-between border-b border-neutral-200 bg-white px-6">
+        <div>
+          <p className="text-xs font-semibold text-blue-600">NEXIA</p>
+          <h1 className="text-lg font-bold text-neutral-900">Builder V2</h1>
+        </div>
+
+        <div className="flex items-center gap-3">
+          {saveMessage && (
+            <p className={`text-xs ${saveMessageClassName}`}>
+              {saveMessage}
+            </p>
+          )}
+
+          <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-700">
+            개발 버전
+          </span>
+
+          <button
+            type="button"
+            onClick={handleSave}
+            disabled={isSaving || !siteId}
+            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-neutral-300"
+          >
+            {isSaving ? "저장 중..." : "저장"}
+          </button>
+        </div>
+      </header>
+
+      <div className="flex min-h-0 flex-1">
+        <PagePanel
+          pages={pages}
+          selectedPageId={selectedPageId}
+          selectedSectionId={selectedSectionId}
+          onSelectPage={handleSelectPage}
+          onSelectSection={handleSelectSection}
+          onAddSection={handleAddSection}
+          onDeleteSection={handleDeleteSection}
+          onDuplicateSection={handleDuplicateSection}
+          onMoveSection={handleMoveSection}
+        />
+
+        <EditorPanel
+          page={selectedPage}
+          section={selectedSection}
+          selectedElementId={selectedElementId}
+          onSelectElement={setSelectedElementId}
+        />
+
+        <ElementEditor
+          element={selectedElement}
+          onChange={handleChangeElement}
+        />
+      </div>
+    </main>
+  );
+}
