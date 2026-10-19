@@ -133,77 +133,47 @@ export const CorporateViewer = ({
 
   const MainHome = () => (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-{isVisible('hero') && (
-  <section className="relative h-[700px] flex items-center justify-center text-white overflow-hidden">
-    <div className="absolute inset-0 z-0">
-      <img
-        src={hero.mediaUrl}
-        alt="hero"
-        className="w-full h-full object-cover"
-      />
-    </div>
-
-    <div
-      data-overlay-gradient
-      className="absolute inset-0 z-10 bg-gradient-to-b transition-opacity duration-300"
-      style={{
-        backgroundImage: `linear-gradient(to bottom, rgba(15, 23, 42, ${(hero.overlayOpacity || 0.6) * 0.4}), rgba(15, 23, 42, ${hero.overlayOpacity || 0.6}), rgba(15, 23, 42, ${(hero.overlayOpacity || 0.6) * 1.33}))`,
-      }}
-    />
-
-    <div className="relative z-20 text-center px-4">
-      <motion.span
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        className="inline-block px-4 py-1 rounded-full bg-blue-600 text-sm font-bold mb-6"
-      >
-        {hero.badge}
-      </motion.span>
-      <motion.h1
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.2 }}
-        className="text-5xl md:text-7xl font-extrabold mb-6 leading-tight whitespace-pre-line"
-      >
-        {hero.title}
-      </motion.h1>
-      <motion.p
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.4 }}
-        className="text-lg md:text-xl text-slate-200 max-w-3xl mx-auto leading-relaxed whitespace-pre-line"
-      >
-        {hero.subtitle}
-      </motion.p>
-    </div>
-  </section>
-)}
-
-          <div className="absolute bottom-6 left-6 right-6 z-30 flex items-center gap-4 rounded-lg bg-slate-800/90 px-4 py-3 backdrop-blur md:bottom-8 md:left-8 md:right-8">
-            <label className="whitespace-nowrap text-xs font-semibold text-slate-300 md:text-sm">
-              오버레이
-            </label>
-            <input
-              type="range"
-              min="0"
-              max="1"
-              step="0.05"
-              defaultValue="0.6"
-              onChange={(e) => {
-                const opacity = parseFloat(e.target.value);
-                const start = Math.round(opacity * 0.4 * 100) / 100;
-                const mid = opacity;
-                const end = Math.round(opacity * 1.33 * 100) / 100;
-                const overlay = document.querySelector('[data-overlay-gradient]') as HTMLElement;
-                if (overlay) {
-                  overlay.style.backgroundImage = `linear-gradient(to bottom, rgba(15, 23, 42, ${start}), rgba(15, 23, 42, ${mid}), rgba(15, 23, 42, ${end}))`;
-                }
-              }}
-              className="h-2 flex-1 cursor-pointer appearance-none rounded-lg bg-slate-600 accent-blue-600"
+      {isVisible('hero') && (
+        <section className="relative h-[700px] flex items-center justify-center text-white overflow-hidden">
+          <div className="absolute inset-0 z-0">
+            <img
+              src={hero.mediaUrl}
+              alt="hero"
+              className="w-full h-full object-cover"
             />
-            <span className="w-12 text-right text-xs font-bold text-blue-400 md:text-sm">
-              60%
-            </span>
+          </div>
+
+          <div
+            className="absolute inset-0 z-10 bg-gradient-to-b"
+            style={{
+              backgroundImage: `linear-gradient(to bottom, rgba(15, 23, 42, ${(hero.overlayOpacity || 0.6) * 0.4}), rgba(15, 23, 42, ${hero.overlayOpacity || 0.6}), rgba(15, 23, 42, ${(hero.overlayOpacity || 0.6) * 1.33}))`,
+            }}
+          />
+
+          <div className="relative z-20 text-center px-4">
+            <motion.span
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              className="inline-block px-4 py-1 rounded-full bg-blue-600 text-sm font-bold mb-6"
+            >
+              {hero.badge}
+            </motion.span>
+            <motion.h1
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.2 }}
+              className="text-5xl md:text-7xl font-extrabold mb-6 leading-tight whitespace-pre-line"
+            >
+              {hero.title}
+            </motion.h1>
+            <motion.p
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.4 }}
+              className="text-lg md:text-xl text-slate-200 max-w-3xl mx-auto leading-relaxed whitespace-pre-line"
+            >
+              {hero.subtitle}
+            </motion.p>
           </div>
         </section>
       )}

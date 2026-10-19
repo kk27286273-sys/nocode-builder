@@ -1065,20 +1065,39 @@ const VisibilityToggle = ({ sectionKey, label }: { sectionKey: string; label: st
       <label className="block text-sm font-medium mb-2">
         오버레이 불투명도: {Math.round((data.hero?.overlayOpacity || 0.6) * 100)}%
       </label>
-      <input
-        type="range"
-        min="0"
-        max="1"
-        step="0.05"
-        value={data.hero?.overlayOpacity || 0.6}
-        onChange={(e) =>
-          setData({
-            ...data,
-            hero: { ...data.hero, overlayOpacity: parseFloat(e.target.value) },
-          })
-        }
-        className="w-full h-2 bg-slate-300 rounded-lg appearance-none cursor-pointer accent-blue-600"
-      />
+      <div className="flex gap-2">
+        <input
+          type="range"
+          min="0"
+          max="1"
+          step="0.05"
+          value={data.hero?.overlayOpacity || 0.6}
+          onChange={(e) =>
+            setData({
+              ...data,
+              hero: { ...data.hero, overlayOpacity: parseFloat(e.target.value) },
+            })
+          }
+          className="flex-1 h-2 bg-slate-300 rounded-lg appearance-none cursor-pointer accent-blue-600"
+        />
+        <input
+          type="number"
+          min="0"
+          max="1"
+          step="0.05"
+          value={Math.round((data.hero?.overlayOpacity || 0.6) * 100) / 100}
+          onChange={(e) => {
+            const val = parseFloat(e.target.value);
+            if (!isNaN(val) && val >= 0 && val <= 1) {
+              setData({
+                ...data,
+                hero: { ...data.hero, overlayOpacity: val },
+              });
+            }
+          }}
+          className="w-16 px-2 py-1 text-sm font-semibold text-slate-900 rounded border border-slate-300"
+        />
+      </div>
     </div>
   </div>
 )}
