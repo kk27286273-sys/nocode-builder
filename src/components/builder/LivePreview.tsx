@@ -5,6 +5,7 @@ import { CorporateViewer } from './CorporateViewer';
 import InteriorViewer from '@/components/viewer/templates/InteriorViewer';
 import LegalViewer from '@/components/viewer/templates/LegalViewer';
 import FitnessViewer from '@/components/viewer/templates/FitnessViewer';
+import MedinsureViewer from '@/components/viewer/templates/MedinsureViewer';
 
 interface LivePreviewProps {
   data: any;
@@ -28,6 +29,15 @@ export default function LivePreview({
 
   return (
     <div className="min-h-screen w-full overflow-x-hidden bg-white">
+
+{templateType === 'medinsure' ? (
+  <MedinsureViewer
+    data={data}
+    setData={setData}
+    activeSection={activeSection}
+    setActiveSection={setActiveSection}
+    sectionsVisible={data?.sectionsVisible}
+  />
       {templateType === 'fitness' ? (
         <FitnessViewer data={data} sectionsVisible={data?.sectionsVisible} />
       ) : templateType === 'interior' || templateType === 'onepage' ? (
