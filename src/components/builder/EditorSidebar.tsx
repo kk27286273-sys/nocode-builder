@@ -5,6 +5,7 @@
 import React, { useState } from 'react';
 import { InputField, TextAreaField } from './editor/FormControls';
 import ImageUploadField from './editor/ImageUploadField';
+import NavigationEditor from './editor/NavigationEditor';
 
 interface EditorSidebarProps {
   data: any;
@@ -211,17 +212,17 @@ const VisibilityToggle = ({ sectionKey, label }: { sectionKey: string; label: st
         { id: 'footer', label: '하단 정보' },
         { id: 'visibility', label: '공개·비공개' },
       ]
-    : [
-        { id: 'main', label: '메인 화면' },
-        { id: 'about', label: '회사 소개' },
-        { id: 'sol_detail', label: '사업 소개' },
-        { id: 'disclosure', label: '공시 정보' },
-        { id: 'esg', label: '지속가능경영' },
-        { id: 'pr', label: '홍보 센터' },
-        { id: 'recruit', label: '인재 경영' },
-        { id: 'cs', label: '고객 센터' },
-        { id: 'footer', label: '하단 정보' },
-      ];
+  : [
+      { id: 'main', label: '메인 화면' },
+      { id: 'about', label: '회사 소개' },
+      { id: 'sol_detail', label: '사업 소개' },
+      { id: 'esg', label: '지속가능경영' },
+      { id: 'pr', label: '홍보 센터' },
+      { id: 'recruit', label: '인재 경영' },
+      { id: 'cs', label: '고객 센터' },
+      { id: 'navigation', label: '상단 메뉴' },
+      { id: 'footer', label: '하단 정보' },
+    ];
 
   return (
     <div className="flex h-full w-full overflow-hidden bg-white">
@@ -1298,6 +1299,11 @@ const VisibilityToggle = ({ sectionKey, label }: { sectionKey: string; label: st
                     </div>
                   </div>
                 </div>
+              )}
+
+              {/* 7-1. 상단 메뉴 */}
+              {active === 'navigation' && (
+                <NavigationEditor data={data} setData={setData} />
               )}
 
               {/* 8. 고객 센터 */}
