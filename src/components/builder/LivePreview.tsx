@@ -49,7 +49,7 @@ export default function LivePreview({
   data={data}
   activeSection={activeSection}
   setActiveSection={setActiveSection}
-  sectionsVisible={sectionsVisible}
+  sectionsVisible={data?.sectionsVisible}
 />
       )}
     </div>
