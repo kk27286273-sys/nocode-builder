@@ -25,12 +25,12 @@ export default function InteriorViewer({ page, data, editable = false }: Props) 
   });
 
   // 섹션별 요소 추출
-  const heroSection = page?.sections?.find((s) => s.id === 'hero');
-  const gallerySection = page?.sections?.find((s) => s.id === 'gallery');
-  const servicesSection = page?.sections?.find((s) => s.id === 'services');
-  const processSection = page?.sections?.find((s) => s.id === 'process');
-  const contactSection = page?.sections?.find((s) => s.id === 'contact');
-  const footerSection = page?.sections?.find((s) => s.id === 'footer');
+const heroSection = page?.sections?.find((s) => s.type === 'hero');
+const gallerySection = page?.sections?.find((s) => s.type === 'gallery');
+const servicesSection = page?.sections?.find((s) => s.type === 'services');
+const processSection = page?.sections?.find((s) => s.type === 'process');
+const contactSection = page?.sections?.find((s) => s.type === 'contact');
+const footerSection = page?.sections?.find((s) => s.type === 'footer');
 
   // 히어로 요소
   const heroBg = heroSection?.elements?.find((e) => e.id === 'hero-bg');

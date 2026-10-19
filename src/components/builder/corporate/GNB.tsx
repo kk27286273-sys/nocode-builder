@@ -11,6 +11,15 @@ interface GNBProps {
   navigateTo: (id: string, index?: number) => void;
 }
 
+const DEFAULT_MENUS = [
+  { label: '회사소개', id: 'about' },
+  { label: '사업소개', id: 'sol_detail' },
+  { label: '지속가능경영', id: 'esg' },
+  { label: '홍보센터', id: 'pr' },
+  { label: '인재경영', id: 'recruit' },
+  { label: '고객센터', id: 'cs' },
+];
+
 export default function GNB({
   company,
   navigation,
@@ -21,14 +30,17 @@ export default function GNB({
   const [logoFailed, setLogoFailed] = useState(false);
   const hasLogo = Boolean(company?.logoUrl) && !logoFailed;
 
-  const mainMenus = [
-    { label: '회사소개', id: 'about' },
-    { label: '사업소개', id: 'sol_detail' },
-    { label: '지속가능경영', id: 'esg' },
-    { label: '홍보센터', id: 'pr' },
-    { label: '인재경영', id: 'recruit' },
-    { label: '고객센터', id: 'cs' },
-  ];
+  // navigation.menus에서 읽고, 없으면 DEFAULT_MENUS 사용
+  const rawMenus = Array.isArray(navigation?.menus) ? navigation.menus : [];
+  
+  const mainMenus = rawMenus.length > 0
+    ? rawMenus
+        .filter((m: any) => m?.label)
+        .map((m: any, i: number) => ({
+          label: m.label,
+          id: m.targetId || DEFAULT_MENUS[i]?.id || `menu_${i}`,
+        }))
+    : DEFAULT_MENUS;
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-slate-100 bg-white shadow-sm">
@@ -69,9 +81,9 @@ export default function GNB({
         aria-label="주요 메뉴"
         className="flex w-full gap-2 overflow-x-auto border-t border-slate-100 px-3 py-2 lg:justify-center lg:gap-8"
       >
-        {mainMenus.map((menu) => (
+        {mainMenus.map((menu, idx) => (
           <button
-            key={menu.id}
+            key={`${menu.id}-${idx}`}
             type="button"
             onClick={() => navigateTo(menu.id, 0)}
             aria-current={activePage === menu.id ? 'page' : undefined}

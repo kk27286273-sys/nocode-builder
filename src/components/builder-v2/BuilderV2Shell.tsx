@@ -13,11 +13,12 @@ const initialPages: V2Page[] = [
     id: "home",
     name: "메인",
     slug: "/",
-    templateType: "interior", // 템플릿 타입 지정
+    templateType: "interior",
     sections: [
       {
         id: "hero",
         name: "메인 배너",
+        type: "hero", // 추가
         elements: [
           {
             id: "hero-title",
@@ -40,6 +41,7 @@ const initialPages: V2Page[] = [
       {
         id: "about",
         name: "회사 소개",
+        type: "services", // 추가
         elements: [
           {
             id: "about-title",
@@ -64,6 +66,7 @@ const initialPages: V2Page[] = [
       {
         id: "contact-info",
         name: "연락처",
+        type: "contact", // 추가
         elements: [
           {
             id: "contact-title",
@@ -228,40 +231,52 @@ export default function BuilderV2Shell() {
     );
   };
 
-  const handleAddSection = () => {
-    if (!selectedPageId) return;
+const handleAddSection = () => {
+  if (!selectedPageId) return;
 
-    const newSectionId = `section-${Date.now()}`;
-    const newSection: V2Section = {
-      id: newSectionId,
-      name: "새 섹션",
-      elements: [
-        {
-          id: `element-${Date.now()}`,
-          type: "heading",
-          content: "제목을 입력하세요",
-        },
-      ],
-    };
+  // 섹션 타입 선택 (간단한 prompt 또는 모달)
+  const sectionType = prompt(
+    "섹션 타입을 선택하세요:\nhero, gallery, services, process, contact, footer",
+    "gallery"
+  );
 
-    setSaveMessage("저장되지 않은 변경사항이 있습니다.");
+  if (!sectionType || !["hero", "gallery", "services", "process", "contact", "footer"].includes(sectionType)) {
+    alert("올바른 타입을 입력하세요.");
+    return;
+  }
 
-    setPages((currentPages) =>
-      currentPages.map((page) => {
-        if (page.id !== selectedPageId) {
-          return page;
-        }
-
-        return {
-          ...page,
-          sections: [...(page.sections || []), newSection],
-        };
-      }),
-    );
-
-    setSelectedSectionId(newSectionId);
-    setSelectedElementId(newSection.elements[0]?.id ?? "");
+  const newSectionId = `section-${Date.now()}`;
+  const newSection: V2Section = {
+    id: newSectionId,
+    name: sectionType.charAt(0).toUpperCase() + sectionType.slice(1),
+    type: sectionType as any, // 타입 지정
+    elements: [
+      {
+        id: `element-${Date.now()}`,
+        type: sectionType === "gallery" ? "image" : "heading",
+        content: sectionType === "gallery" ? "" : "제목을 입력하세요",
+      },
+    ],
   };
+
+  setSaveMessage("저장되지 않은 변경사항이 있습니다.");
+
+  setPages((currentPages) =>
+    currentPages.map((page) => {
+      if (page.id !== selectedPageId) {
+        return page;
+      }
+
+      return {
+        ...page,
+        sections: [...(page.sections || []), newSection],
+      };
+    }),
+  );
+
+  setSelectedSectionId(newSectionId);
+  setSelectedElementId(newSection.elements[0]?.id ?? "");
+};
 
   const handleDeleteSection = (sectionId: string) => {
     if (!selectedPageId || !confirm("이 섹션을 삭제하시겠습니까?")) {
@@ -380,48 +395,131 @@ export default function BuilderV2Shell() {
     );
   };
 
-  const handleSave = async () => {
-    if (!siteId || isSaving) {
+  const handleAddElement = (sectionId: string) => {
+    if (!selectedPageId) return;
+
+    const elementType = prompt(
+      "요소 타입을 선택하세요:\nheading, text, image, button, video",
+      "text"
+    );
+
+    if (
+      !elementType ||
+      !["heading", "text", "image", "button", "video"].includes(elementType)
+    ) {
+      alert("올바른 타입을 입력하세요.");
       return;
     }
 
-    setIsSaving(true);
-    setSaveMessage("저장 중입니다...");
+    const newElementId = `element-${Date.now()}`;
+    const newElement: V2Element = {
+      id: newElementId,
+      type: elementType as any,
+      content: elementType === "image" ? "" : "내용을 입력하세요",
+    };
 
-    try {
-      const response = await fetch("/api/builder-data", {
-        method: "PUT",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          siteId,
-          pages,
-        }),
-      });
+    setSaveMessage("저장되지 않은 변경사항이 있습니다.");
 
-      const result = await response.json();
+    setPages((currentPages) =>
+      currentPages.map((page) => {
+        if (page.id !== selectedPageId) return page;
 
-      if (!response.ok) {
-        throw new Error(
-          result?.error ?? "사이트 데이터를 저장하지 못했습니다.",
-        );
-      }
+        return {
+          ...page,
+          sections: page.sections.map((section) => {
+            if (section.id !== sectionId) return section;
 
-      setSaveMessage("저장이 완료되었습니다.");
-    } catch (error) {
-      console.error("V2 사이트 데이터 저장 오류:", error);
+            return {
+              ...section,
+              elements: [...(section.elements || []), newElement],
+            };
+          }),
+        };
+      }),
+    );
 
-      setSaveMessage(
-        error instanceof Error
-          ? error.message
-          : "사이트 데이터를 저장하지 못했습니다.",
-      );
-    } finally {
-      setIsSaving(false);
-    }
+    setSelectedElementId(newElementId);
   };
+
+  const handleDeleteElement = (sectionId: string, elementId: string) => {
+    if (!confirm("이 요소를 삭제하시겠습니까?")) return;
+
+    setSaveMessage("저장되지 않은 변경사항이 있습니다.");
+
+    setPages((currentPages) =>
+      currentPages.map((page) => {
+        if (page.id !== selectedPageId) return page;
+
+        return {
+          ...page,
+          sections: page.sections.map((section) => {
+            if (section.id !== sectionId) return section;
+
+            const updatedElements = section.elements.filter(
+              (element) => element.id !== elementId,
+            );
+
+            if (selectedElementId === elementId) {
+              setSelectedElementId(updatedElements[0]?.id ?? "");
+            }
+
+            return {
+              ...section,
+              elements: updatedElements,
+            };
+          }),
+        };
+      }),
+    );
+  };
+
+const handleSave = async () => {
+  if (!siteId || isSaving) {
+    return;
+  }
+
+  setIsSaving(true);
+  setSaveMessage("저장 중입니다...");
+
+  try {
+    const response = await fetch("/api/builder-data", {
+      method: "PUT",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        siteId,
+        pages,
+      }),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        result?.error ?? "사이트 데이터를 저장하지 못했습니다.",
+      );
+    }
+
+    setSaveMessage("저장이 완료되었습니다.");
+
+    // 2초 후 메시지 초기화
+    setTimeout(() => {
+      setSaveMessage("");
+    }, 2000);
+  } catch (error) {
+    console.error("V2 사이트 데이터 저장 오류:", error);
+
+    setSaveMessage(
+      error instanceof Error
+        ? error.message
+        : "사이트 데이터를 저장하지 못했습니다.",
+    );
+  } finally {
+    setIsSaving(false);
+  }
+};
 
   const saveMessageClassName =
     saveMessage === "저장이 완료되었습니다."
@@ -505,9 +603,13 @@ export default function BuilderV2Shell() {
           pages={pages}
           selectedPageId={selectedPageId}
           selectedSectionId={selectedSectionId}
+          selectedElementId={selectedElementId}
           onSelectPage={handleSelectPage}
           onSelectSection={handleSelectSection}
+          onSelectElement={setSelectedElementId}
           onAddSection={handleAddSection}
+          onAddElement={handleAddElement}
+          onDeleteElement={handleDeleteElement}
           onDeleteSection={handleDeleteSection}
           onDuplicateSection={handleDuplicateSection}
           onMoveSection={handleMoveSection}

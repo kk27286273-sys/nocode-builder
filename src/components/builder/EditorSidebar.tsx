@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { InputField, TextAreaField } from './editor/FormControls';
 import ImageUploadField from './editor/ImageUploadField';
+import NavigationEditor from './editor/NavigationEditor';
 
 interface EditorSidebarProps {
   data: any;
@@ -155,6 +156,7 @@ const sections = isInterior
       { id: 'pr', label: '홍보 센터' },
       { id: 'recruit', label: '인재 경영' },
       { id: 'cs', label: '고객 센터' },
+      { id: 'navigation', label: '상단 메뉴' },
       { id: 'footer', label: '하단 정보' },
     ];
 
@@ -963,6 +965,11 @@ const sections = isInterior
                     placeholder="문의 내용을 남겨주시면 빠르게 답변드리겠습니다."
                   />
                 </div>
+              )}
+
+              {/* 7-1. 상단 메뉴 */}
+              {active === 'navigation' && (
+                <NavigationEditor data={data} setData={setData} />
               )}
 
               {/* 8. 하단 정보 */}
