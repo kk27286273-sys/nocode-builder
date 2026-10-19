@@ -11,13 +11,15 @@ interface CorporateViewerProps {
   activeSection?: string;
   setActiveSection?: (section: string) => void;
   sectionsVisible?: Record<string, boolean>;
+  setData?: React.Dispatch<React.SetStateAction<any>>;
 }
 
 export const CorporateViewer = ({ 
   data, 
   activeSection: propSection, 
   setActiveSection: propSetSection,
-  sectionsVisible = {}
+  sectionsVisible = {},
+  setData
 }: CorporateViewerProps) => {
   const { company, corporateInfo, solutions, hero, themeColor, footer } = data;
 
