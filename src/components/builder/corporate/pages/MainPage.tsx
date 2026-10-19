@@ -76,6 +76,7 @@ export default function MainPage({
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0, duration: 0.3, ease: 'easeOut' }}
             className="mb-6 text-5xl font-black leading-tight tracking-tighter md:text-7xl"
+            style={{ color: hero?.textColor || '#ffffff' }}
           >
             {hero?.title || '기업의 미래를 설계합니다'}
           </motion.h1>
@@ -85,6 +86,7 @@ export default function MainPage({
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
             className="mx-auto max-w-3xl text-lg font-light leading-relaxed text-slate-300 md:text-2xl"
+            style={{ color: hero?.textColor || 'rgba(203, 213, 225, 0.8)' }}
           >
             {hero?.subtitle ||
               hero?.description ||

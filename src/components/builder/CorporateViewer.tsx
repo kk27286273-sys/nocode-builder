@@ -160,6 +160,7 @@ hero={{
   mediaUrl: data.hero?.mediaUrl || '',
   mediaSrcSet: data.hero?.mediaSrcSet || '',
   overlayOpacity: data.hero?.overlayOpacity,
+  textColor: data.hero?.textColor,
 }}
               solutions={solutionList}
               navigateTo={navigateTo}

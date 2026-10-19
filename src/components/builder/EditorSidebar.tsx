@@ -1099,9 +1099,37 @@ const VisibilityToggle = ({ sectionKey, label }: { sectionKey: string; label: st
         />
       </div>
     </div>
+
+    <div>
+      <label className="block text-sm font-medium mb-2">히어로 글자색</label>
+      <div className="flex gap-2 items-center">
+        <input
+          type="color"
+          value={data.hero?.textColor || '#ffffff'}
+          onChange={(e) =>
+            setData({
+              ...data,
+              hero: { ...data.hero, textColor: e.target.value },
+            })
+          }
+          className="w-12 h-10 rounded cursor-pointer border border-slate-300"
+        />
+        <input
+          type="text"
+          value={data.hero?.textColor || '#ffffff'}
+          onChange={(e) =>
+            setData({
+              ...data,
+              hero: { ...data.hero, textColor: e.target.value },
+            })
+          }
+          className="flex-1 px-3 py-2 border rounded-lg text-sm font-mono"
+          placeholder="#ffffff"
+        />
+      </div>
+    </div>
   </div>
-)}
-              {/* 2. 회사 소개 */}
+)}              {/* 2. 회사 소개 */}
               {active === 'about' && (
                 <div className="space-y-4">
                   <VisibilityToggle sectionKey="corporateInfo" label="기업 소개" />
