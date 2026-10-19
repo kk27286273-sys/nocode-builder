@@ -5,7 +5,7 @@ import { CorporateViewer } from './CorporateViewer';
 import InteriorViewer from '@/components/viewer/templates/InteriorViewer';
 import LegalViewer from '@/components/viewer/templates/LegalViewer';
 import FitnessViewer from '@/components/viewer/templates/FitnessViewer';
-import { CorporateViewer } from './viewer/templates/CorporateViewer';
+import { CorporateViewer } from '@/components/viewer/templates/CorporateViewer';
 
 interface LivePreviewProps {
   data: any;
