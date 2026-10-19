@@ -723,24 +723,56 @@ export default function BuilderPage() {
               ))}
             </select>
 
-            <select
-              value={siteId || ''}
-              onChange={(event) => void loadSiteData(event.target.value)}
-              disabled={isLoading || templateSites.length === 0}
-              aria-label={`${selectedTemplateLabel} 사이트 선택`}
-              className="max-w-[120px] cursor-pointer truncate rounded border border-slate-700 bg-slate-800 px-2 py-1.5 text-xs text-white outline-none disabled:opacity-50"
-            >
-              <option value="">
-                {templateSites.length ? '사이트 선택' : '사이트 없음'}
-              </option>
+<div className="flex items-center gap-1">
+  <select
+    value={siteId || ''}
+    onChange={(event) => void loadSiteData(event.target.value)}
+    disabled={isLoading || templateSites.length === 0}
+    aria-label={`${selectedTemplateLabel} 사이트 선택`}
+    className="max-w-[100px] cursor-pointer truncate rounded border border-slate-700 bg-slate-800 px-2 py-1.5 text-xs text-white outline-none disabled:opacity-50"
+  >
+    <option value="">
+      {templateSites.length ? '사이트 선택' : '사이트 없음'}
+    </option>
 
-              {templateSites.map((site) => (
-                <option key={site.id} value={site.id}>
-                  {site.name || site.id}
-                </option>
-              ))}
-            </select>
-          </div>
+    {templateSites.map((site) => (
+      <option key={site.id} value={site.id}>
+        {site.name || site.id}
+      </option>
+    ))}
+  </select>
+
+  <button
+    type="button"
+    onClick={async () => {
+      const newSiteId = prompt('새 사이트 ID를 입력하세요 (예: medinsure):');
+      if (!newSiteId) return;
+
+      const { error } = await supabase
+        .from('sites')
+        .insert([
+          {
+            id: newSiteId.toLowerCase(),
+            name: newSiteId,
+            template_type: selectedTemplate,
+            updated_at: new Date().toISOString(),
+          },
+        ]);
+
+      if (error) {
+        alert('사이트 추가 실패: ' + error.message);
+        return;
+      }
+
+      alert('사이트가 추가되었습니다.');
+      await fetchSites();
+    }}
+    disabled={isLoading}
+    className="rounded bg-green-600 px-2 py-1.5 text-xs font-bold text-white hover:bg-green-500 disabled:opacity-50"
+  >
+    +
+  </button>
+</div>
 
           <div className="flex shrink-0 items-center gap-1.5">
             <button
