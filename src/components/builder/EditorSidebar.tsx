@@ -997,29 +997,91 @@ const VisibilityToggle = ({ sectionKey, label }: { sectionKey: string; label: st
           {!isInterior && templateType !== 'legal' && templateType !== 'fitness' && (
             <>
               {/* 1. 메인 */}
-              {active === 'main' && (
-                <div className="space-y-4">
-                  <VisibilityToggle sectionKey="hero" label="메인 히어로" />
-                  <VisibilityToggle sectionKey="mainSolutions" label="홈 - Solutions 영역" />
+{activeSection === 'hero' && (
+  <div className="space-y-4">
+    <div>
+      <label className="block text-sm font-medium mb-2">배지</label>
+      <input
+        type="text"
+        value={data.hero?.badge || ''}
+        onChange={(e) =>
+          setData({
+            ...data,
+            hero: { ...data.hero, badge: e.target.value },
+          })
+        }
+        className="w-full px-3 py-2 border rounded-lg"
+        placeholder="배지 텍스트"
+      />
+    </div>
 
-                  <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
-                    <InputField label="메인 배지" value={getValue('hero.badge')} onChange={(v) => updateDeep('hero.badge', v)} />
-                    <InputField label="메인 타이틀" value={getValue('hero.title')} onChange={(v) => updateDeep('hero.title', v)} />
-                    <TextAreaField label="메인 서브 타이틀" value={getValue('hero.subtitle')} onChange={(v) => updateDeep('hero.subtitle', v)} />
-                    <ImageUploadField
-                      label="메인 히어로 배경 이미지"
-                      value={getValue('hero.mediaUrl') || ''}
-                      onChange={(result) => {
-                        updateDeep('hero.mediaUrl', result?.url || '');
-                        updateDeep('hero.mediaSrcSet', result?.srcSet || '');
-                      }}
-                      siteId={siteId}
-                      purpose="general"
-                    />
-                  </div>
-                </div>
-              )}
+    <div>
+      <label className="block text-sm font-medium mb-2">타이틀</label>
+      <textarea
+        value={data.hero?.title || ''}
+        onChange={(e) =>
+          setData({
+            ...data,
+            hero: { ...data.hero, title: e.target.value },
+          })
+        }
+        className="w-full px-3 py-2 border rounded-lg h-20"
+        placeholder="메인 타이틀"
+      />
+    </div>
 
+    <div>
+      <label className="block text-sm font-medium mb-2">서브 타이틀</label>
+      <textarea
+        value={data.hero?.subtitle || ''}
+        onChange={(e) =>
+          setData({
+            ...data,
+            hero: { ...data.hero, subtitle: e.target.value },
+          })
+        }
+        className="w-full px-3 py-2 border rounded-lg h-20"
+        placeholder="서브 타이틀"
+      />
+    </div>
+
+    <div>
+      <label className="block text-sm font-medium mb-2">배경 이미지 URL</label>
+      <input
+        type="text"
+        value={data.hero?.mediaUrl || ''}
+        onChange={(e) =>
+          setData({
+            ...data,
+            hero: { ...data.hero, mediaUrl: e.target.value },
+          })
+        }
+        className="w-full px-3 py-2 border rounded-lg"
+        placeholder="https://..."
+      />
+    </div>
+
+    <div>
+      <label className="block text-sm font-medium mb-2">
+        오버레이 불투명도: {Math.round((data.hero?.overlayOpacity || 0.6) * 100)}%
+      </label>
+      <input
+        type="range"
+        min="0"
+        max="1"
+        step="0.05"
+        value={data.hero?.overlayOpacity || 0.6}
+        onChange={(e) =>
+          setData({
+            ...data,
+            hero: { ...data.hero, overlayOpacity: parseFloat(e.target.value) },
+          })
+        }
+        className="w-full h-2 bg-slate-300 rounded-lg appearance-none cursor-pointer accent-blue-600"
+      />
+    </div>
+  </div>
+)}
               {/* 2. 회사 소개 */}
               {active === 'about' && (
                 <div className="space-y-4">

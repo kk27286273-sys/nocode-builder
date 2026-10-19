@@ -45,12 +45,12 @@ export default function LivePreview({
           sectionsVisible={data?.sectionsVisible}
         />
       ) : (
-        <CorporateViewer
-          data={data}
-          activeSection={activeSection}
-          setActiveSection={setActiveSection}
-          sectionsVisible={data?.sectionsVisible}
-        />
+<CorporateViewer 
+  data={data}
+  activeSection={activeSection}
+  setActiveSection={setActiveSection}
+  sectionsVisible={sectionsVisible}
+/>
       )}
     </div>
   );

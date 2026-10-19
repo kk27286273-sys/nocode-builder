@@ -133,49 +133,51 @@ export const CorporateViewer = ({
 
   const MainHome = () => (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-      {isVisible('hero') && (
-        <section className="relative h-[700px] flex items-center justify-center text-white overflow-hidden">
-          <div className="absolute inset-0 z-0">
-            <img
-              src={hero.mediaUrl}
-              alt="hero"
-              className="w-full h-full object-cover"
-            />
-          </div>
+{isVisible('hero') && (
+  <section className="relative h-[700px] flex items-center justify-center text-white overflow-hidden">
+    <div className="absolute inset-0 z-0">
+      <img
+        src={hero.mediaUrl}
+        alt="hero"
+        className="w-full h-full object-cover"
+      />
+    </div>
 
-          <div
-            data-overlay-gradient
-            className="absolute inset-0 z-10 bg-gradient-to-b transition-opacity duration-300"
-            style={{
-              backgroundImage: `linear-gradient(to bottom, rgba(15, 23, 42, 0.24), rgba(15, 23, 42, 0.6), rgba(15, 23, 42, 0.8))`,
-            }}
-          />
+    <div
+      data-overlay-gradient
+      className="absolute inset-0 z-10 bg-gradient-to-b transition-opacity duration-300"
+      style={{
+        backgroundImage: `linear-gradient(to bottom, rgba(15, 23, 42, ${(hero.overlayOpacity || 0.6) * 0.4}), rgba(15, 23, 42, ${hero.overlayOpacity || 0.6}), rgba(15, 23, 42, ${(hero.overlayOpacity || 0.6) * 1.33}))`,
+      }}
+    />
 
-          <div className="relative z-20 text-center px-4">
-            <motion.span
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              className="inline-block px-4 py-1 rounded-full bg-blue-600 text-sm font-bold mb-6"
-            >
-              {hero.badge}
-            </motion.span>
-            <motion.h1
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.2 }}
-              className="text-5xl md:text-7xl font-extrabold mb-6 leading-tight whitespace-pre-line"
-            >
-              {hero.title}
-            </motion.h1>
-            <motion.p
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.4 }}
-              className="text-lg md:text-xl text-slate-200 max-w-3xl mx-auto leading-relaxed whitespace-pre-line"
-            >
-              {hero.subtitle}
-            </motion.p>
-          </div>
+    <div className="relative z-20 text-center px-4">
+      <motion.span
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        className="inline-block px-4 py-1 rounded-full bg-blue-600 text-sm font-bold mb-6"
+      >
+        {hero.badge}
+      </motion.span>
+      <motion.h1
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.2 }}
+        className="text-5xl md:text-7xl font-extrabold mb-6 leading-tight whitespace-pre-line"
+      >
+        {hero.title}
+      </motion.h1>
+      <motion.p
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.4 }}
+        className="text-lg md:text-xl text-slate-200 max-w-3xl mx-auto leading-relaxed whitespace-pre-line"
+      >
+        {hero.subtitle}
+      </motion.p>
+    </div>
+  </section>
+)}
 
           <div className="absolute bottom-6 left-6 right-6 z-30 flex items-center gap-4 rounded-lg bg-slate-800/90 px-4 py-3 backdrop-blur md:bottom-8 md:left-8 md:right-8">
             <label className="whitespace-nowrap text-xs font-semibold text-slate-300 md:text-sm">
