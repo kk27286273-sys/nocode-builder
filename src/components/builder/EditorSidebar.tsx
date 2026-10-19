@@ -997,7 +997,7 @@ const VisibilityToggle = ({ sectionKey, label }: { sectionKey: string; label: st
           {!isInterior && templateType !== 'legal' && templateType !== 'fitness' && (
             <>
               {/* 1. 메인 */}
-{activeSection === 'hero' && (
+{active === 'main' && (
   <div className="space-y-4">
     <div>
       <label className="block text-sm font-medium mb-2">배지</label>
