@@ -153,15 +153,14 @@ export const CorporateViewer = ({
           {currentPage === 'main' && (
             <MainPage
               key="main"
-              hero={{
-                title: data.hero?.title || solutionMain.title,
-                subtitle:
-                  data.hero?.subtitle ||
-                  solutionMain.description,
-                badge: data.hero?.badge || 'Since 1990',
-                mediaUrl: data.hero?.mediaUrl || '',
-                mediaSrcSet: data.hero?.mediaSrcSet || '',
-              }}
+hero={{
+  title: data.hero?.title || solutionMain.title,
+  subtitle: data.hero?.subtitle || solutionMain.description,
+  badge: data.hero?.badge || 'Since 1990',
+  mediaUrl: data.hero?.mediaUrl || '',
+  mediaSrcSet: data.hero?.mediaSrcSet || '',
+  overlayOpacity: data.hero?.overlayOpacity,
+}}
               solutions={solutionList}
               navigateTo={navigateTo}
             />

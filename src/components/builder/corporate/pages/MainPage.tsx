@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 
 interface MainPageProps {
@@ -17,6 +17,13 @@ export default function MainPage({
   onHeroOverlayChange,
 }: MainPageProps) {
   const [overlayOpacity, setOverlayOpacity] = React.useState(0.6);
+
+  // hero에서 전달된 overlayOpacity 값으로 초기화
+  useEffect(() => {
+    if (hero?.overlayOpacity !== undefined) {
+      setOverlayOpacity(hero.overlayOpacity);
+    }
+  }, [hero?.overlayOpacity]);
 
   const handleOverlayChange = (value: number) => {
     setOverlayOpacity(value);
