@@ -1,11 +1,10 @@
 'use client';
 
 import React from 'react';
-import { CorporateViewer } from './CorporateViewer';
+import CorporateViewer from './CorporateViewer';
 import InteriorViewer from '@/components/viewer/templates/InteriorViewer';
 import LegalViewer from '@/components/viewer/templates/LegalViewer';
 import FitnessViewer from '@/components/viewer/templates/FitnessViewer';
-import { CorporateViewer } from '@/components/viewer/templates/CorporateViewer';
 
 interface LivePreviewProps {
   data: any;
@@ -46,13 +45,12 @@ export default function LivePreview({
           sectionsVisible={data?.sectionsVisible}
         />
       ) : (
-<CorporateViewer
-  data={data}
-  activeSection={activeSection}
-  setActiveSection={setActiveSection}
-  sectionsVisible={data?.sectionsVisible}
-  setData={setData}
-/>
+        <CorporateViewer
+          data={data}
+          activeSection={activeSection}
+          setActiveSection={setActiveSection}
+          sectionsVisible={data?.sectionsVisible}
+        />
       )}
     </div>
   );
