@@ -47,6 +47,7 @@ export default function LivePreview({
       ) : (
 <CorporateViewer 
   data={data}
+  setData={setData}
   activeSection={activeSection}
   setActiveSection={setActiveSection}
   sectionsVisible={data?.sectionsVisible}
