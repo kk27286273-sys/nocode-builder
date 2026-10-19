@@ -702,26 +702,27 @@ export default function BuilderPage() {
     <div className="relative z-[9999] flex min-h-screen w-full overflow-y-auto bg-slate-100">
       <div className="relative z-20 flex min-h-screen w-[430px] shrink-0 flex-col border-r border-slate-300 bg-white shadow-2xl">
         <div className="flex h-14 shrink-0 items-center justify-between border-b border-slate-800 bg-slate-900 px-4">
-          <div className="flex min-w-0 items-center gap-2">
-            <span className="shrink-0 text-[11px] font-black uppercase tracking-wider text-slate-400">
-              템플릿
-            </span>
+<div className="flex min-w-0 items-center gap-2">
+  <span className="shrink-0 text-[11px] font-black uppercase tracking-wider text-slate-400">
+    템플릿
+  </span>
 
-            <select
-              value={selectedTemplate}
-              onChange={(event) =>
-                void handleTemplateChange(event.target.value as TemplateKey)
-              }
-              disabled={isLoading}
-              aria-label="편집할 템플릿 선택"
-              className="max-w-[145px] cursor-pointer truncate rounded border border-slate-700 bg-slate-800 px-2 py-1.5 text-xs text-white outline-none disabled:opacity-50"
-            >
-              {TEMPLATE_OPTIONS.map((option) => (
-                <option key={option.key} value={option.key}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+  <select
+    value={selectedTemplate}
+    onChange={(event) =>
+      void handleTemplateChange(event.target.value as TemplateKey)
+    }
+    disabled={isLoading}
+    aria-label="편집할 템플릿 선택"
+    className="max-w-[145px] cursor-pointer truncate rounded border border-slate-700 bg-slate-800 px-2 py-1.5 text-xs text-white outline-none disabled:opacity-50"
+  >
+    {TEMPLATE_OPTIONS.map((option) => (
+      <option key={option.key} value={option.key}>
+        {option.label}
+      </option>
+    ))}
+  </select>
+</div>
 
 <div className="flex items-center gap-1">
   <select
@@ -773,7 +774,6 @@ export default function BuilderPage() {
     +
   </button>
 </div>
-
           <div className="flex shrink-0 items-center gap-1.5">
             <button
               type="button"
