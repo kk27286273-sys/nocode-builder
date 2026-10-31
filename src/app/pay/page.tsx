@@ -40,8 +40,8 @@ function PayContent() {
   const [formData, setFormData] = useState({ email: '', name: '', phone: '' });
 
   const plan = searchParams.get('plan') || 'pro';
-  const { setupFee, monthlyFee, name } = getPlan(plan);
-  const totalFirstPayment = setupFee + monthlyFee;
+const { monthlyFee, name } = getPlan(plan);
+const totalFirstPayment = monthlyFee;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -107,14 +107,10 @@ function PayContent() {
 
         <h1 className="text-2xl font-bold">Nexia {name} 결제</h1>
         <p className="mt-2 text-sm text-slate-500">
-          구축비 + 첫 달 구독료를 한 번에 결제합니다.
+          첫 달 구독료를 결제합니다.
         </p>
 
         <div className="mt-8 space-y-4 rounded-2xl bg-slate-100 p-6">
-          <div className="flex justify-between">
-            <span className="text-slate-600">구축비</span>
-            <span className="font-semibold">{setupFee.toLocaleString()}원</span>
-          </div>
           <div className="flex justify-between">
             <span className="text-slate-600">첫 달 구독료</span>
             <span className="font-semibold">{monthlyFee.toLocaleString()}원</span>
@@ -169,9 +165,9 @@ function PayContent() {
         </button>
 
         <p className="mt-4 text-center text-xs text-slate-500">
-          카드 등록 후 첫 결제 {totalFirstPayment.toLocaleString()}원이 청구되며,
-          <br />
-          다음 달부터 매월 {monthlyFee.toLocaleString()}원이 자동 결제됩니다.
+카드 등록 후 첫 달 구독료 {monthlyFee.toLocaleString()}원이 청구되며,
+<br />
+다음 달부터 매월 {monthlyFee.toLocaleString()}원이 자동 결제됩니다.
         </p>
 
         <div className="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-4">

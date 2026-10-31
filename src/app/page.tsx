@@ -191,7 +191,7 @@ function PricingSection() {
       revision: '단순 수정 24시간 이내',
       report: '제공',
       optimization: '정기 점검',
-      setupFee: '120만 원~ 별도 협의',
+      setupFee: '120만 원 (부가세 포함)',
       monthlyFee: '99,000원',
       description:
         '다양한 콘텐츠와 사업 분야를 운영하는 기업을 위한 확장형입니다.',
