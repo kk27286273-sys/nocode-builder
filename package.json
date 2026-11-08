@@ -6,7 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "node --test tests/security.cjs tests/database.cjs",
+    "test:http": "node --test tests/http-flow.cjs",
+    "test:setup": "npm install --prefix .test-tools @electric-sql/pglite@0.5.15 playwright-core@1.64.1 --ignore-scripts --no-audit --no-fund",
+    "typecheck": "tsc --noEmit",
+    "build:verify": "node scripts/build-local.cjs"
   },
   "dependencies": {
     "@portone/browser-sdk": "^0.1.13",

@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { B2BTemplateData, defaultB2BTemplateData } from '@/data/templates';
-import { supabase } from '@/lib/supabase/client';
 import LivePreview from '@/components/builder/LivePreview';
 
 // 업종별 기본 데이터를 매칭하기 위한 헬퍼 함수
@@ -81,6 +80,7 @@ export default function ViewerClient({ data: initialData, siteId: propSiteId }: 
     return defaultB2BTemplateData;
   });
 
+  const [unavailable, setUnavailable] = useState(false);
   const [loading, setLoading] = useState<boolean>(!initialData && !!siteId);
 
 // ViewerClient.tsx 라인 약 80~95
@@ -93,11 +93,8 @@ useEffect(() => {
 
   if (siteId) {
     setLoading(true);
-    supabase
-      .from('sites')
-      .select('data')  // ← 'content' → 'data' 변경
-      .eq('id', siteId)
-      .single()
+    fetch('/api/public-site?siteId=' + encodeURIComponent(siteId), { cache: 'no-store' })
+      .then(async response => ({ data: response.ok ? { data: await response.json() } : null }))
       .then(({ data: siteRecord }) => {
         if (siteRecord?.data) {  // ← 'content' → 'data' 변경
           const content = siteRecord.data;  // ← 변수명은 유지 (내부 로직 안 깨짐)
@@ -113,7 +110,7 @@ useEffect(() => {
 
           setData(content);
         } else {
-          setData(getPresetData(siteId));
+          setUnavailable(true);
         }
 
         setLoading(false);
@@ -121,6 +118,7 @@ useEffect(() => {
   }
 }, [initialData, siteId]);
 
+  if (unavailable) return <p>사이트를 찾을 수 없습니다.</p>;
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">

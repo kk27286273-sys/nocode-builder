@@ -5,10 +5,11 @@ import { motion } from 'framer-motion';
 
 interface GNBProps {
   company: any;
-  navigation: any;
+  navigation: { menus?: Array<{ label?: string; targetId?: string }> };
   themeColor: string;
   activePage: string;
   navigateTo: (id: string, index?: number) => void;
+  canNavigate: (id: string) => boolean;
 }
 
 const DEFAULT_MENUS = [
@@ -26,20 +27,20 @@ export default function GNB({
   themeColor,
   activePage,
   navigateTo,
+  canNavigate,
 }: GNBProps) {
-  const [logoFailed, setLogoFailed] = useState(false);
-  const hasLogo = Boolean(company?.logoUrl) && !logoFailed;
+  const logoSource = JSON.stringify([company?.logoUrl, company?.logoSrcSet]);
+  const [failedLogo, setFailedLogo] = useState<string | null>(null);
+  const hasLogo = Boolean(company?.logoUrl) && failedLogo !== logoSource;
 
   // navigation.menus에서 읽고, 없으면 DEFAULT_MENUS 사용
   const rawMenus = Array.isArray(navigation?.menus) ? navigation.menus : [];
   
   const mainMenus = rawMenus.length > 0
     ? rawMenus
-        .filter((m: any) => m?.label)
-        .map((m: any, i: number) => ({
-          label: m.label,
-          id: m.targetId || DEFAULT_MENUS[i]?.id || `menu_${i}`,
-        }))
+        .flatMap((menu, index) => menu?.label
+          ? [{ label: menu.label, id: menu.targetId || DEFAULT_MENUS[index]?.id || `menu_${index}` }]
+          : [])
     : DEFAULT_MENUS;
 
   return (
@@ -54,11 +55,13 @@ export default function GNB({
           {hasLogo ? (
             <img
               src={company.logoUrl}
+              srcSet={company.logoSrcSet || undefined}
+              sizes="144px"
               alt={`${company?.name || '회사'} 로고`}
               width={144}
               height={40}
-              onError={() => setLogoFailed(true)}
-              className="h-8 w-36 shrink-0 object-contain object-left md:h-10"
+              onError={() => setFailedLogo(logoSource)}
+              className="h-8 w-auto max-w-36 shrink-0 object-contain object-left md:h-10"
             />
           ) : null}
 
@@ -67,21 +70,21 @@ export default function GNB({
           </span>
         </button>
 
-        <button
+        {canNavigate('cs') && <button
           type="button"
           onClick={() => navigateTo('cs')}
           style={{ backgroundColor: themeColor }}
           className="shrink-0 rounded-full px-4 py-2 text-xs font-bold text-white shadow-sm transition hover:opacity-90"
         >
           문의하기
-        </button>
+        </button>}
       </div>
 
       <nav
         aria-label="주요 메뉴"
         className="flex w-full gap-2 overflow-x-auto border-t border-slate-100 px-3 py-2 lg:justify-center lg:gap-8"
       >
-        {mainMenus.map((menu, idx) => (
+        {mainMenus.filter(menu => canNavigate(menu.id)).map((menu, idx) => (
           <button
             key={`${menu.id}-${idx}`}
             type="button"

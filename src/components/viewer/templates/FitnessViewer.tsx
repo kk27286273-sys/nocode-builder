@@ -30,6 +30,8 @@ type FitnessData = {
     title: string;
     subtitle: string;
     backgroundImage?: string;
+    mediaSrcSet?: string;
+    backgroundScroll?: boolean;
   };
   about?: {
     title: string;
@@ -37,6 +39,7 @@ type FitnessData = {
     image?: string;
   };
   classes?: Class[];
+  services?: Array<{ title: string; description?: string }>;
   memberships?: Membership[];
   schedule?: {
     title: string;
@@ -170,6 +173,11 @@ export default function FitnessViewer({
   sectionsVisible?: Record<string, boolean>;
 }) {
   const merged = { ...DEFAULT_FITNESS_DATA, ...data };
+  const classCards = Array.isArray(data.classes)
+    ? data.classes.map(item => ({ title: item.name, description: [item.instructor, item.time].filter(Boolean).join(' · ') }))
+    : Array.isArray(data.services)
+      ? data.services
+      : (DEFAULT_FITNESS_DATA.classes ?? []).map(item => ({ title: item.name, description: `${item.instructor} · ${item.time}` }));
   const [selectedMembership, setSelectedMembership] = useState<string | null>(null);
 
   const isVisible = (key: string) => sectionsVisible[key] !== false;
@@ -197,15 +205,17 @@ export default function FitnessViewer({
       {/* Hero */}
       {isVisible('hero') && (
         <section
-          className="relative min-h-[500px] flex items-center justify-center bg-gradient-to-br from-orange-500 to-orange-600 px-6 py-20 text-center text-white"
+          className="relative min-h-[500px] flex items-center justify-center overflow-hidden bg-gradient-to-br from-orange-500 to-orange-600 px-6 py-20 text-center text-white"
           style={{ backgroundColor: merged.themeColor || '#EA580C' }}
         >
           {merged.hero?.backgroundImage && (
-            <Image
+            <img
               src={merged.hero.backgroundImage}
-              alt="hero"
-              fill
-              className="absolute inset-0 object-cover opacity-30"
+              srcSet={merged.hero.mediaSrcSet || undefined}
+              sizes="100vw"
+              alt=""
+              className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-30"
+              data-background-scroll={merged.hero.backgroundScroll === true || undefined}
             />
           )}
           <div className="relative z-10 max-w-2xl">
@@ -234,14 +244,14 @@ export default function FitnessViewer({
       )}
 
       {/* Classes */}
-      {isVisible('classes') && merged.services && merged.services.length > 0 && (
+      {isVisible('classes') && classCards.length > 0 && (
         <section className="bg-slate-50 px-6 py-20 md:py-28">
           <div className="mx-auto max-w-6xl">
             <h2 className="text-4xl font-black text-slate-900">클래스</h2>
             <p className="mt-2 text-lg text-slate-600">다양한 프로그램 중 당신에게 맞는 클래스를 선택하세요</p>
 
             <div className="mt-12 grid gap-6 md:grid-cols-2">
-              {merged.services.map((service: any, idx: number) => (
+              {classCards.map((service, idx) => (
                 <div key={idx} className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-lg transition">
                   <h3 className="text-xl font-bold text-slate-900">{service.title}</h3>
                   <p className="mt-2 text-sm text-slate-600">{service.description}</p>

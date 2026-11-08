@@ -1,3 +1,4 @@
+import { getPublication } from '@/lib/public-sites';
 import { Metadata } from 'next';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import ViewerClient from './ViewerClient';
@@ -11,11 +12,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
 
   try {
-    const { data: site } = await supabaseAdmin
-      .from('sites')
-      .select('title, content')
-      .eq('id', id)
-      .single();
+    const publication = await getPublication(id);
+    const site = publication ? { title: '', content: publication.data } : null;
 
     if (!site || !site.content) {
       return {

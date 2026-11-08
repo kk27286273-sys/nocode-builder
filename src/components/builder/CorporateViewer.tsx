@@ -33,6 +33,10 @@ export const CorporateViewer = ({
   const setActivePage = propSetSection || setInternalPage;
 
   const isVisible = (key: string) => sectionsVisible[key] !== false;
+  const canNavigate = (page: string) => {
+    const section = page === 'about' ? 'corporateInfo' : page === 'sol_detail' ? 'solutions' : page;
+    return page === 'main' || (isVisible(page) && isVisible(section));
+  };
 
   if (!data) {
     return (
@@ -108,7 +112,7 @@ export const CorporateViewer = ({
       setSelectedSolutionId(solutionIndex);
     }
 
-    setActivePage(targetId);
+    setActivePage(canNavigate(targetId) ? targetId : 'main');
 
     if (typeof window !== 'undefined') {
       window.scrollTo({
@@ -127,10 +131,7 @@ export const CorporateViewer = ({
   };
 
   // 비공개 페이지 접근 시 홈으로 리다이렉트
-  const currentPage =
-    activePage !== 'main' && !isVisible(activePage)
-      ? 'main'
-      : activePage;
+  const currentPage = canNavigate(activePage) ? activePage : 'main';
 
   return (
     <div
@@ -144,7 +145,7 @@ export const CorporateViewer = ({
           themeColor={themeColor}
           activePage={currentPage}
           navigateTo={navigateTo}
-          sectionsVisible={sectionsVisible}
+          canNavigate={canNavigate}
         />
       </header>
 
@@ -159,6 +160,7 @@ hero={{
   badge: data.hero?.badge || 'Since 1990',
   mediaUrl: data.hero?.mediaUrl || '',
   mediaSrcSet: data.hero?.mediaSrcSet || '',
+  backgroundScroll: data.hero?.backgroundScroll === true,
   overlayOpacity: data.hero?.overlayOpacity,
   textColor: data.hero?.textColor,
 }}

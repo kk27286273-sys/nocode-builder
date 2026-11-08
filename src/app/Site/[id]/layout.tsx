@@ -1,3 +1,4 @@
+import { getPublication } from '@/lib/public-sites';
 import type { Metadata } from 'next';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { ReactNode } from 'react';
@@ -10,12 +11,7 @@ export async function generateMetadata({
   const { id } = await params;
 
   try {
-    const supabase = createAdminClient();
-    const { data: siteRecord } = await supabase
-      .from('sites')
-      .select('data')
-      .eq('id', id)
-      .single();
+    const siteRecord = await getPublication(id);
 
     if (!siteRecord?.data) {
       return {

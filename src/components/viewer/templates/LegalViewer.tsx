@@ -20,8 +20,13 @@ export default function LegalViewer({ data, setData, editable = false, sectionsV
     <div className="min-h-screen w-full bg-slate-950 text-white">
       {/* ===== HERO ===== */}
       {isVisible('hero') && (
-        <section className="border-b border-slate-800 px-6 py-24 md:py-32">
-          <div className="mx-auto max-w-6xl">
+        <section className="relative overflow-hidden border-b border-slate-800 px-6 py-24 md:py-32">
+          {data?.hero?.mediaUrl && (
+            <img src={data.hero.mediaUrl} srcSet={data.hero.mediaSrcSet || undefined} sizes="100vw"
+              alt="" className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-35"
+              data-background-scroll={data.hero.backgroundScroll === true || undefined} />
+          )}
+          <div className="relative mx-auto max-w-6xl">
             <div className="max-w-3xl">
               <p className="text-xs font-bold uppercase tracking-widest text-blue-400">
                 Law & Tax

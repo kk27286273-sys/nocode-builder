@@ -2,10 +2,9 @@
 
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { supabase } from '@/lib/supabase/client';
 import CorporateViewer from '@/components/builder/CorporateViewer';
 import LivePreview from '@/components/builder/LivePreview';
-import { B2BTemplateData } from '@/types/template';
+import { B2BTemplateData } from '@/types/Template';
 
 export default function PublicSitePage() {
   const params = useParams();
@@ -22,11 +21,9 @@ export default function PublicSitePage() {
     async function fetchSite() {
       setLoading(true);
 
-      const { data: siteRecord, error } = await supabase
-        .from('sites')
-        .select('data')
-        .eq('id', siteId)
-        .single();
+      const response = await fetch('/api/public-site?siteId=' + encodeURIComponent(siteId), { cache: 'no-store' });
+      const siteRecord = response.ok ? { data: await response.json() } : null;
+      const error = !response.ok;
 
       if (error || !siteRecord?.data) {
         setNotFound(true);

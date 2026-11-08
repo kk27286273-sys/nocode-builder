@@ -4,7 +4,7 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import { B2BTemplateData } from '@/types/Template';
-import { supabase } from '@/lib/supabase';
+import { listSites, getSite, changeSite } from '@/lib/builder-client';
 import EditorSidebar from '@/components/builder/EditorSidebar';
 import ViewerManager from '@/components/builder/ViewerManager';
 
@@ -444,10 +444,7 @@ export default function BuilderPage() {
     setIsLoading(true);
     setLoadError(null);
 
-    const { data: sites, error } = await supabase
-      .from('sites')
-      .select('id, name, data, template_type')
-      .order('name');
+    const { data: sites, error } = await listSites();
 
     if (error) {
       console.error('사이트 목록 로드 에러:', error);
@@ -511,11 +508,7 @@ export default function BuilderPage() {
     setSiteId(id);
     setSelectedTemplate(template);
 
-    const { data: siteData, error } = await supabase
-      .from('sites')
-      .select('id, name, data, template_type')
-      .eq('id', id)
-      .single();
+    const { data: siteData, error } = await getSite(id);
 
     if (error) {
       console.error('데이터 로드 에러:', error);
@@ -575,14 +568,7 @@ export default function BuilderPage() {
         templateType: selectedTemplate,
       };
 
-      const { error } = await supabase
-        .from('sites')
-        .update({
-          data: publishData,
-          template_type: selectedTemplate,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', siteId);
+      const { error } = await changeSite('publish', siteId, publishData, selectedTemplate);
 
       if (error) {
         console.error('발행 실패:', error);
@@ -591,7 +577,7 @@ export default function BuilderPage() {
         return;
       }
 
-      alert(`${templateLabel} 홈페이지를 저장했습니다.`);
+      alert(`${templateLabel} 홈페이지를 저장·발행했습니다.`);
 
       window.open(
         `/preview/${encodeURIComponent(siteId)}`,
@@ -613,6 +599,18 @@ export default function BuilderPage() {
     }
   }
 
+  async function saveOnly(action: 'save' | 'unpublish') {
+    if (!siteId || !data) return;
+    if (action === 'unpublish' && !confirm('공개를 중단하시겠습니까?')) return;
+    setIsLoading(true);
+    try {
+      const response = await fetch('/api/manage/sites', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action, siteId, data: { ...data, templateType: selectedTemplate }, templateType: selectedTemplate }) });
+      const body = await response.json(); if (!response.ok) throw new Error(body.error);
+      alert(action === 'save' ? '임시 저장했습니다. 공개 화면은 변경되지 않습니다.' : '공개를 중단했습니다.');
+    } catch (error) { alert(error instanceof Error ? error.message : '저장 실패'); }
+    finally { setIsLoading(false); }
+  }
+
   async function deleteSite() {
     if (!siteId || !confirm('정말 선택한 사이트를 삭제하시겠습니까?')) {
       return;
@@ -621,10 +619,7 @@ export default function BuilderPage() {
     setIsLoading(true);
     setLoadError(null);
 
-    const { error } = await supabase
-      .from('sites')
-      .delete()
-      .eq('id', siteId);
+    const { error } = await changeSite('delete', siteId);
 
     if (error) {
       console.error('사이트 삭제 에러:', error);
@@ -749,16 +744,7 @@ export default function BuilderPage() {
       const newSiteId = prompt('새 사이트 ID를 입력하세요 (예: medinsure):');
       if (!newSiteId) return;
 
-      const { error } = await supabase
-        .from('sites')
-        .insert([
-          {
-            id: newSiteId.toLowerCase(),
-            name: newSiteId,
-            template_type: selectedTemplate,
-            updated_at: new Date().toISOString(),
-          },
-        ]);
+      const { error } = await changeSite('create', newSiteId.toLowerCase(), undefined, selectedTemplate);
 
       if (error) {
         alert('사이트 추가 실패: ' + error.message);
@@ -805,12 +791,18 @@ export default function BuilderPage() {
 
         <div className="flex-1 overflow-y-auto">
           <EditorSidebar
+            key={siteId}
             data={data}
             setData={setData}
             siteId={siteId}
             refreshSites={fetchSites}
             activeSection={activeSection}
             setActiveSection={setActiveSection}
+            publication={{
+              busy: isLoading,
+              onSaveDraft: () => void saveOnly('save'),
+              onUnpublish: () => void saveOnly('unpublish'),
+            }}
           />
         </div>
       </div>

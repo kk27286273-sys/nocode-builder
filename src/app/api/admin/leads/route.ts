@@ -1,7 +1,9 @@
+import { requireAdmin } from '@/lib/admin-auth';
 ﻿import { NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
 
 export async function GET(request: Request) {
+  const denied = requireAdmin(request); if (denied) return denied;
   try {
     const { searchParams } = new URL(request.url);
     const siteId = searchParams.get('siteId');
@@ -25,6 +27,7 @@ export async function GET(request: Request) {
 }
 
 export async function PATCH(request: Request) {
+  const denied = requireAdmin(request); if (denied) return denied;
   try {
     const body = await request.json();
     const { id, status } = body;

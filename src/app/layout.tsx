@@ -1,4 +1,6 @@
 import type { Metadata } from 'next';
+import { headers } from 'next/headers';
+import { isPlatformHost, requestHost } from '@/lib/site-policy';
 import React from 'react';
 import './globals.css';
 
@@ -54,19 +56,20 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const platform = isPlatformHost(requestHost({ headers: new Headers(await headers()) }));
   return (
     <html lang="ko">
       <body className="antialiased">
         {children}
 
-        <GlobalFooter />
+        {platform && <GlobalFooter />}
 
-        <KakaoChatButton />
+        {platform && <KakaoChatButton />}
       </body>
     </html>
   );

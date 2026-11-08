@@ -6,7 +6,7 @@ import { useSearchParams } from 'next/navigation';
 
 function Content() {
   const sp = useSearchParams();
-  const [status, setStatus] = useState<'loading' | 'done' | 'error'>('loading');
+  const [status, setStatus] = useState<'loading' | 'done' | 'error' | 'review'>('loading');
   const [message, setMessage] = useState('');
   const [amount, setAmount] = useState<number | null>(null);
   const [orderId, setOrderId] = useState<string | null>(null);
@@ -38,7 +38,7 @@ function Content() {
         if (cancelled) return;
 
         if (!res.ok) {
-          setStatus('error');
+          setStatus(result.code === 'BILLING_REVIEW_REQUIRED' ? 'review' : 'error');
           setMessage(result.message || '결제 승인에 실패했습니다.');
           return;
         }
@@ -47,8 +47,8 @@ function Content() {
         setStatus('done');
       } catch (e) {
         if (!cancelled) {
-          setStatus('error');
-          setMessage('결제 승인 요청 중 오류가 발생했습니다.');
+          setStatus('review');
+          setMessage('결제 요청 결과를 확인하지 못했습니다. 다시 결제하지 말고 주문번호로 문의해 주세요.');
         }
       }
     })();
@@ -72,6 +72,19 @@ function Content() {
           className="inline-block rounded-xl bg-black px-6 py-3 font-bold text-white"
         >
           다시 시도하기
+        </Link>
+      </>
+    );
+  }
+
+  if (status === 'review') {
+    return (
+      <>
+        <h1 className="mb-2 text-2xl font-bold">결제 상태 확인 필요</h1>
+        <p className="mb-4 text-slate-500">{message}</p>
+        <p className="mb-8 text-sm">주문번호 {orderId}</p>
+        <Link href="/" className="inline-block rounded-xl bg-black px-6 py-3 font-bold text-white">
+          홈으로 돌아가기
         </Link>
       </>
     );

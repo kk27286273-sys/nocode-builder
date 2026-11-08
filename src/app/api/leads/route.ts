@@ -1,12 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { sendLeadNotification } from '@/utils/sendNotification';
+import { findDomain, getPublication } from '@/lib/public-sites';
+import { isPlatformHost, requestHost, validSiteId } from '@/lib/site-policy';
 
 export async function POST(req: NextRequest) {
   try {
-    const { siteId, name, phone, message } = await req.json();
+    const { siteId: requestedSiteId, name, phone, message } = await req.json();
+    const host = requestHost(req);
+    const mapping = isPlatformHost(host) ? null : await findDomain(host);
+    const siteId = isPlatformHost(host) ? requestedSiteId : mapping?.site_id;
+    if (!validSiteId(siteId) || !(await getPublication(siteId))) {
+      return NextResponse.json({ error: '공개된 사이트를 찾을 수 없습니다.' }, { status: 404 });
+    }
 
-    if (!siteId || !name || !phone) {
+    if (typeof name !== 'string' || !name.trim() || name.length > 100 || typeof phone !== 'string' || !phone.trim() || phone.length > 50 || (message !== undefined && (typeof message !== 'string' || message.length > 5000))) {
       return NextResponse.json(
         { error: '성함과 연락처는 필수 입력 항목입니다.' },
         { status: 400 }

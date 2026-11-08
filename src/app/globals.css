@@ -24,3 +24,19 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@keyframes hero-background-drift {
+  from { transform: scale(1.08); }
+  to { transform: translateY(3%) scale(1.08); }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    [data-background-scroll="true"] {
+      animation: hero-background-drift linear both;
+      animation-duration: auto;
+      animation-timeline: view();
+      animation-range: exit 0% exit 100%;
+    }
+  }
+}

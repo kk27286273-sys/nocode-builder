@@ -7,9 +7,9 @@ import { getPlan } from '@/lib/plans';
 export async function GET(req: NextRequest) {
   // CRON_SECRET 검증
   const authHeader = req.headers.get('authorization');
-  const expectedAuth = `Bearer ${process.env.CRON_SECRET}`;
+  const secret = process.env.CRON_SECRET;
 
-  if (!authHeader || authHeader !== expectedAuth) {
+  if (!secret || authHeader !== `Bearer ${secret}`) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 

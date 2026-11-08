@@ -6,6 +6,7 @@ import React, { useState } from 'react';
 import { InputField, TextAreaField } from './editor/FormControls';
 import ImageUploadField from './editor/ImageUploadField';
 import NavigationEditor from './editor/NavigationEditor';
+import DomainManager from './DomainManager';
 
 interface EditorSidebarProps {
   data: any;
@@ -14,6 +15,11 @@ interface EditorSidebarProps {
   refreshSites?: () => void;
   activeSection?: string;
   setActiveSection?: (section: string) => void;
+  publication?: {
+    busy: boolean;
+    onSaveDraft: () => void;
+    onUnpublish: () => void;
+  };
 }
 
 export default function EditorSidebar({
@@ -22,6 +28,7 @@ export default function EditorSidebar({
   siteId,
   activeSection = 'main',
   setActiveSection,
+  publication,
 }: EditorSidebarProps) {
   const [currentTab, setCurrentTab] = useState('main');
 
@@ -182,6 +189,7 @@ const VisibilityToggle = ({ sectionKey, label }: { sectionKey: string; label: st
 
   // ===== 템플릿 타입 확인 =====
   const templateType = data?.templateType;
+  const backgroundPath = templateType === 'fitness' ? 'hero.backgroundImage' : 'hero.mediaUrl';
   const isInterior = templateType === 'interior' || templateType === 'onepage';
 
   // ===== 섹션 목록 (템플릿별) =====
@@ -225,7 +233,23 @@ const VisibilityToggle = ({ sectionKey, label }: { sectionKey: string; label: st
     ];
 
   return (
-    <div className="flex h-full w-full overflow-hidden bg-white">
+    <>
+      {publication && siteId && (
+        <section aria-labelledby="editor-publication-heading" className="border-b border-slate-200 px-3 py-3">
+          <h2 id="editor-publication-heading" className="text-sm font-bold text-slate-800">공개 설정</h2>
+          <p className="mt-1 text-xs text-slate-600">임시 저장은 편집본만 저장합니다. 상단의 저장·발행을 누르면 공개본도 갱신됩니다.</p>
+          <div className="mt-2 flex flex-wrap gap-2">
+            <button type="button" disabled={publication.busy} onClick={publication.onSaveDraft} className="rounded border border-slate-300 px-2 py-1 text-sm disabled:opacity-50">
+              임시 저장
+            </button>
+            <button type="button" disabled={publication.busy} onClick={publication.onUnpublish} className="rounded border border-slate-300 px-2 py-1 text-sm disabled:opacity-50">
+              공개 중단
+            </button>
+          </div>
+          <DomainManager key={siteId} siteId={siteId} />
+        </section>
+      )}
+      <div className="flex h-full w-full overflow-hidden bg-white">
       {/* 탭 네비게이션 */}
       <div className="flex w-36 shrink-0 flex-col border-r border-slate-200 bg-slate-50">
         <nav className="flex-1 space-y-1 overflow-y-auto p-2">
@@ -252,6 +276,29 @@ const VisibilityToggle = ({ sectionKey, label }: { sectionKey: string; label: st
               {sections.find((s) => s.id === active)?.label} 설정
             </h3>
           </div>
+          {active === 'main' && (
+            <section aria-label="메인 배경 설정" className="space-y-3 rounded-xl border border-slate-200 bg-white p-4">
+              <ImageUploadField
+                label="메인 배경 이미지"
+                value={getValue(backgroundPath) || ''}
+                siteId={siteId}
+                onChange={(image) => {
+                  updateDeep(backgroundPath, image?.url || '');
+                  updateDeep('hero.mediaSrcSet', image?.srcSet || '');
+                }}
+              />
+              <InputField label="배경 이미지 URL" value={getValue(backgroundPath) || ''} onChange={(url) => {
+                updateDeep(backgroundPath, url);
+                updateDeep('hero.mediaSrcSet', '');
+              }} placeholder="https://..." />
+              <label className="flex items-center gap-2 text-sm text-slate-700">
+                <input type="checkbox" checked={getValue('hero.backgroundScroll') === true}
+                  onChange={(event) => updateDeep('hero.backgroundScroll', event.target.checked)} />
+                스크롤에 따라 배경 이동
+              </label>
+              <p className="text-xs text-slate-500">오른쪽 미리보기를 아래로 스크롤해 확인하세요.</p>
+            </section>
+          )}
 
 {/* ===== 법률형 섹션 ===== */}
 {templateType === 'legal' && (
@@ -739,13 +786,6 @@ const VisibilityToggle = ({ sectionKey, label }: { sectionKey: string; label: st
             onChange={(v) => updateDeep('hero.subtitle', v)}
             placeholder="전문적인 시공으로 가치 있는 인테리어"
           />
-          <ImageUploadField
-            label="히어로 배경 이미지"
-            value={getValue('hero.mediaUrl') || ''}
-            onChange={(result) => updateDeep('hero.mediaUrl', result?.url || '')}
-            siteId={siteId}
-            purpose="general"
-          />
         </div>
       </div>
     )}
@@ -1046,22 +1086,6 @@ const VisibilityToggle = ({ sectionKey, label }: { sectionKey: string; label: st
     </div>
 
     <div>
-      <label className="block text-sm font-medium mb-2">배경 이미지 URL</label>
-      <input
-        type="text"
-        value={data.hero?.mediaUrl || ''}
-        onChange={(e) =>
-          setData({
-            ...data,
-            hero: { ...data.hero, mediaUrl: e.target.value },
-          })
-        }
-        className="w-full px-3 py-2 border rounded-lg"
-        placeholder="https://..."
-      />
-    </div>
-
-    <div>
       <label className="block text-sm font-medium mb-2">
         오버레이 불투명도: {Math.round((data.hero?.overlayOpacity || 0.6) * 100)}%
       </label>
@@ -1146,7 +1170,7 @@ const VisibilityToggle = ({ sectionKey, label }: { sectionKey: string; label: st
                       }}
                     />
                     <ImageUploadField
-                      label="회사 로고 (GNB)"
+                      label="회사 로고 (페이지 상단 메뉴 왼쪽)"
                       value={getValue('company.logoUrl') || ''}
                       onChange={(result) => {
                         updateDeep('company.logoUrl', result?.url || '');
@@ -1155,6 +1179,7 @@ const VisibilityToggle = ({ sectionKey, label }: { sectionKey: string; label: st
                       siteId={siteId}
                       purpose="logo"
                     />
+                    <p className="text-xs text-slate-500">업로드하면 오른쪽 미리보기 상단의 회사명 옆에 표시됩니다. 공개 화면에는 저장·발행 후 반영됩니다.</p>
                     <ImageUploadField
                       label="대표이사 사진 (소개 페이지)"
                       value={getValue('corporateInfo.ceoGreeting.image') || ''}
@@ -1502,6 +1527,7 @@ const VisibilityToggle = ({ sectionKey, label }: { sectionKey: string; label: st
           )}
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 }

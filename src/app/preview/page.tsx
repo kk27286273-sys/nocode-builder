@@ -2,7 +2,6 @@
 
 import React, { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
 import { ViewerManager } from '@/components/viewer/ViewerManager';
 import { getDefaultData } from '@/lib/defaultData';
 
@@ -20,12 +19,9 @@ function PreviewContent() {
       setIsLoading(true);
 
       try {
-        const { data: site, error } = await supabase
-          .from('sites')
-          .select('data, template_type')
-          .eq('template_type', templateId)
-          .limit(1)
-          .maybeSingle();
+        const response = await fetch('/api/public-template?templateId=' + encodeURIComponent(templateId), { cache: 'no-store' });
+        const site = response.ok ? await response.json() : null;
+        const error = !response.ok;
 
         if (cancelled) return;
 

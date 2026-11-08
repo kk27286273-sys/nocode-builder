@@ -23,7 +23,7 @@ export function createAdminClient() {
  * 기존 `supabaseAdmin.from(...)` 등의 호출 형태를 유지하면서,
  * 실제 속성을 사용할 때만 관리자 클라이언트를 생성합니다.
  */
-export const supabaseAdmin = new Proxy({} as ReturnType<typeof createClient>, {
+export const supabaseAdmin = new Proxy({} as ReturnType<typeof createAdminClient>, {
   get(_target, property) {
     const client = createAdminClient();
     const value = Reflect.get(client, property, client);

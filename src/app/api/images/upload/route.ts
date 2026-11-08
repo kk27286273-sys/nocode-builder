@@ -1,6 +1,8 @@
+import { requireAdmin } from '@/lib/admin-auth';
 import { NextResponse } from 'next/server';
 import sharp from 'sharp';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { validSiteId } from '@/lib/site-policy';
 
 export const runtime = 'nodejs';
 
@@ -24,6 +26,7 @@ function errorResponse(message: string, status: number) {
 }
 
 export async function POST(request: Request) {
+  const denied = requireAdmin(request); if (denied) return denied;
   try {
     const formData = await request.formData();
     const file = formData.get('file');
@@ -34,8 +37,8 @@ export async function POST(request: Request) {
       return errorResponse('이미지 파일을 찾을 수 없습니다.', 400);
     }
 
-    if (typeof rawSiteId !== 'string' || !rawSiteId.trim()) {
-      return errorResponse('사이트 ID가 필요합니다.', 400);
+    if (!validSiteId(rawSiteId)) {
+      return errorResponse('사이트 ID 형식이 올바르지 않습니다.', 400);
     }
 
     if (!ALLOWED_TYPES.has(file.type)) {
@@ -46,10 +49,11 @@ export async function POST(request: Request) {
       return errorResponse('이미지는 10MB 이하만 업로드할 수 있습니다.', 400);
     }
 
-    const siteId = rawSiteId.replace(/[^a-zA-Z0-9_-]/g, '');
-    if (!siteId) {
-      return errorResponse('사이트 ID 형식이 올바르지 않습니다.', 400);
-    }
+    const siteId = rawSiteId;
+    // Storage keys remain ASCII without changing the ID used to look up the site.
+    const storagePrefix = /[가-힣]/.test(siteId)
+      ? `unicode/${Buffer.from(siteId, 'utf8').toString('hex')}`
+      : siteId;
 
     const purpose =
       typeof rawPurpose === 'string' && rawPurpose in VARIANT_WIDTHS
@@ -57,12 +61,15 @@ export async function POST(request: Request) {
         : 'general';
 
     const supabase = createAdminClient();
+    const { data: site, error: siteError } = await supabase.from('sites').select('id').eq('id', siteId).maybeSingle();
+    if (siteError) return errorResponse('사이트 조회를 사용할 수 없습니다.', 503);
+    if (!site) return errorResponse('사이트를 찾을 수 없습니다.', 404);
     const input = Buffer.from(await file.arrayBuffer());
     const uploadId = `${Date.now()}-${crypto.randomUUID()}`;
 
     // GIF는 애니메이션 보존을 위해 원본 그대로 저장합니다.
     if (file.type === 'image/gif') {
-      const path = `${siteId}/${uploadId}-original.gif`;
+      const path = `${storagePrefix}/${uploadId}-original.gif`;
       const { error } = await supabase.storage.from(BUCKET).upload(path, input, {
         cacheControl: '31536000',
         contentType: 'image/gif',
@@ -100,7 +107,7 @@ export async function POST(request: Request) {
           ? 'webp'
           : 'jpg';
 
-    const originalPath = `${siteId}/${uploadId}-original.${originalExtension}`;
+    const originalPath = `${storagePrefix}/${uploadId}-original.${originalExtension}`;
     const { error: originalError } = await supabase.storage
       .from(BUCKET)
       .upload(originalPath, input, {
@@ -130,7 +137,7 @@ export async function POST(request: Request) {
         })
         .toBuffer();
 
-      const path = `${siteId}/${uploadId}-${width}.webp`;
+      const path = `${storagePrefix}/${uploadId}-${width}.webp`;
       const { error } = await supabase.storage.from(BUCKET).upload(path, output, {
         cacheControl: '31536000',
         contentType: 'image/webp',

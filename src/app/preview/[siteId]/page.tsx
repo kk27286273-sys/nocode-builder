@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, Suspense } from 'react';
 import { useParams } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
 import ViewerManager from '@/components/builder/ViewerManager';
 import { B2BTemplateData } from '@/types/Template';
 
@@ -21,11 +20,9 @@ const siteId = decodeURIComponent((params?.siteId as string) || '');
     }
 
     async function fetchTemplateData() {
-      const { data: sites, error } = await supabase
-        .from('sites')
-        .select('data')
-        .eq('id', siteId)
-        .single();
+      const response = await fetch('/api/public-site?siteId=' + encodeURIComponent(siteId), { cache: 'no-store' });
+      const sites = response.ok ? { data: await response.json() } : null;
+      const error = !response.ok;
 
       if (error) {
         console.error('Supabase error:', error);

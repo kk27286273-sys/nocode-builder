@@ -51,7 +51,8 @@ export default function MainPage({
             fetchPriority="high"
             loading="eager"
             decoding="async"
-            className="absolute inset-0 h-full w-full bg-slate-900 object-contain"
+            className="pointer-events-none absolute inset-0 h-full w-full bg-slate-900 object-contain"
+            data-background-scroll={hero.backgroundScroll === true || undefined}
           />
         )}
 

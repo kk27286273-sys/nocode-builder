@@ -55,11 +55,16 @@ export default function InteriorViewer({ data, setData, editable = false, sectio
       {/* ===== HERO (Full Screen) ===== */}
       {isVisible('hero') && (
         <section
-          className="relative flex h-screen w-full items-center justify-center bg-cover bg-center"
-          style={{
-            backgroundImage: `url('${data?.hero?.mediaUrl || 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1600&h=900&fit=crop'}')`,
-          }}
+          className="relative flex h-screen w-full items-center justify-center overflow-hidden bg-slate-900"
         >
+          <img
+            src={data?.hero?.mediaUrl || 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1600&h=900&fit=crop'}
+            srcSet={data?.hero?.mediaSrcSet || undefined}
+            sizes="100vw"
+            alt=""
+            className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+            data-background-scroll={data?.hero?.backgroundScroll === true || undefined}
+          />
           <div className="absolute inset-0 bg-black/40" />
           <div className="relative z-10 text-center text-white">
             <h1 className="text-5xl font-bold md:text-6xl">

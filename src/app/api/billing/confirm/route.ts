@@ -53,82 +53,57 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    const { data: customer } = await supabaseAdmin
+    const review = () => NextResponse.json({
+      code: 'BILLING_REVIEW_REQUIRED',
+      message: '주문 상태 확인이 필요합니다. 다시 결제하지 말고 주문번호로 문의해 주세요.',
+    }, { status: 503 });
+
+    if (order.status !== 'pending') return review();
+
+    const { data: customer, error: customerError } = await supabaseAdmin
       .from('customers')
-      .select('*')
+      .select('email,name')
       .eq('customer_key', customerKey)
       .single();
+    if (customerError || !customer) {
+      return NextResponse.json({ message: '고객 정보를 확인할 수 없습니다.' }, { status: 503 });
+    }
+
+    const { data: claimed, error: claimError } = await supabaseAdmin.rpc('claim_first_billing', {
+      p_order_id: orderId, p_customer_key: customerKey, p_amount: billingAmount,
+    });
+    if (claimError || claimed !== true) return review();
 
     try {
-      // 1) 빌링키 발급
-      const { billingKey } = await issueBillingKey(
-        authKey,
-        customerKey
-      );
-
-      // 2) 첫 결제: 구축비 제외, 첫 달 구독료만 결제
+      const { billingKey } = await issueBillingKey(authKey, customerKey);
       const planInfo = getPlan(order.plan);
-
-      const result = await chargeBilling({
+      const payment = await chargeBilling({
         billingKey,
         customerKey,
         amount: billingAmount,
-        orderId: order.order_id,
-        orderName: `Nexia ${planInfo.name} 첫 달 구독료`,
-        customerEmail: customer?.email,
-        customerName: customer?.name,
+        orderId,
+        orderName: 'Nexia ' + planInfo.name + ' 첫 달 구독료',
+        customerEmail: customer.email,
+        customerName: customer.name,
       });
 
-      // 3) 구독 등록
-      // 다음 결제일은 한 달 뒤
       const next = new Date();
       next.setMonth(next.getMonth() + 1);
-
-      await supabaseAdmin.from('subscriptions').upsert(
-        {
-          customer_key: customerKey,
-          billing_key: billingKey,
-          plan: order.plan,
-          monthly_fee: order.monthly_fee,
-          status: 'active',
-          next_billing_at: next.toISOString().slice(0, 10),
-        },
-        {
-          onConflict: 'customer_key',
-        }
-      );
-
-      // 4) 주문 상태 업데이트
-      await supabaseAdmin
-        .from('orders')
-        .update({ status: 'paid' })
-        .eq('order_id', orderId);
-
-      // 5) 결제 이력 저장
-      // 구축비 제외, 월 구독료만 저장
-      await supabaseAdmin.from('payments').insert({
-        order_id: orderId,
-        customer_key: customerKey,
-        payment_key: result.paymentKey,
-        amount: billingAmount,
-        kind: 'first',
-        status: result.status,
-        raw: result,
+      const { error: completionError } = await supabaseAdmin.rpc('complete_first_billing', {
+        p_order_id: orderId,
+        p_customer_key: customerKey,
+        p_billing_key: billingKey,
+        p_next_billing_at: next.toISOString().slice(0, 10),
+        p_payment: payment,
       });
-
-      // 결제 완료창에도 월 구독료만 전달
-      return NextResponse.json({
-        amount: billingAmount,
-      });
-    } catch (tosError: any) {
-      console.error('토스 API 오류:', tosError);
-
-      return NextResponse.json(
-        {
-          message: tosError.message || '결제 처리 실패',
-        },
-        { status: 500 }
-      );
+      if (completionError) {
+        console.error('첫 결제 저장 실패', { orderId, code: completionError.code });
+        return review();
+      }
+      return NextResponse.json({ amount: billingAmount });
+    } catch {
+      console.error('첫 결제 상태 확인 필요', { orderId });
+      return review();
     }
   } catch (e: any) {
     console.error('빌링 승인 중 오류:', e);
