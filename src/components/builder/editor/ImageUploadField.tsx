@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 interface ImageUploadResult {
   url: string;
@@ -34,6 +34,9 @@ export default function ImageUploadField({
 }: ImageUploadFieldProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const inputRef = useRef<HTMLInputElement>(null);
+  const requestRef = useRef<AbortController | null>(null);
+  useEffect(() => () => requestRef.current?.abort(), []);
 
   const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     setErrorMsg('');
@@ -61,6 +64,8 @@ export default function ImageUploadField({
     }
 
     setIsUploading(true);
+    const controller = new AbortController();
+    requestRef.current = controller;
 
     try {
       const formData = new FormData();
@@ -71,6 +76,7 @@ export default function ImageUploadField({
       const response = await fetch('/api/images/upload', {
         method: 'POST',
         body: formData,
+        signal: controller.signal,
       });
 
       const result = (await response.json()) as
@@ -85,15 +91,17 @@ export default function ImageUploadField({
         );
       }
 
-      onChange(result);
+      if (!controller.signal.aborted) onChange(result);
     } catch (error) {
+      if (controller.signal.aborted) return;
       setErrorMsg(
         error instanceof Error
           ? error.message
           : '이미지 업로드에 실패했습니다.',
       );
     } finally {
-      setIsUploading(false);
+      if (!controller.signal.aborted) setIsUploading(false);
+      if (requestRef.current === controller) requestRef.current = null;
       input.value = '';
     }
   };
@@ -121,16 +129,13 @@ export default function ImageUploadField({
       )}
 
       <div className="flex items-center gap-2">
-        <label className="cursor-pointer rounded bg-blue-600 px-3 py-1.5 text-xs font-bold text-white transition hover:bg-blue-700">
-          {isUploading ? '업로드 중…' : value ? '이미지 변경' : '이미지 업로드'}
-          <input
-            type="file"
-            accept="image/jpeg,image/png,image/webp,image/gif"
-            disabled={isUploading}
-            className="hidden"
-            onChange={handleUpload}
-          />
-        </label>
+        <input ref={inputRef} type="file" aria-label={label} accept="image/jpeg,image/png,image/webp,image/gif"
+          disabled={isUploading} hidden onChange={handleUpload} />
+        <button type="button" onClick={() => inputRef.current?.click()} disabled={isUploading || !siteId}
+          aria-label={`${label} 파일 선택`}
+          className="rounded bg-blue-600 px-3 py-1.5 text-xs font-bold text-white transition hover:bg-blue-700 disabled:opacity-50">
+          {isUploading ? '업로드 중…' : '파일 선택'}
+        </button>
 
         {value && (
           <button
@@ -144,7 +149,7 @@ export default function ImageUploadField({
         )}
       </div>
 
-      {errorMsg && <p className="text-[11px] text-rose-600">{errorMsg}</p>}
+      {errorMsg && <p role="alert" className="text-[11px] text-rose-600">{errorMsg}</p>}
     </div>
   );
 }

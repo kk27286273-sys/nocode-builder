@@ -805,6 +805,7 @@ export default function BuilderPage() {
 
         <div className="flex-1 overflow-y-auto">
           <EditorSidebar
+            key={siteId}
             data={data}
             setData={setData}
             siteId={siteId}

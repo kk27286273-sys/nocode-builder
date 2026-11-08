@@ -30,6 +30,8 @@ type FitnessData = {
     title: string;
     subtitle: string;
     backgroundImage?: string;
+    mediaSrcSet?: string;
+    backgroundScroll?: boolean;
   };
   about?: {
     title: string;
@@ -197,15 +199,17 @@ export default function FitnessViewer({
       {/* Hero */}
       {isVisible('hero') && (
         <section
-          className="relative min-h-[500px] flex items-center justify-center bg-gradient-to-br from-orange-500 to-orange-600 px-6 py-20 text-center text-white"
+          className="relative min-h-[500px] flex items-center justify-center overflow-hidden bg-gradient-to-br from-orange-500 to-orange-600 px-6 py-20 text-center text-white"
           style={{ backgroundColor: merged.themeColor || '#EA580C' }}
         >
           {merged.hero?.backgroundImage && (
-            <Image
+            <img
               src={merged.hero.backgroundImage}
-              alt="hero"
-              fill
-              className="absolute inset-0 object-cover opacity-30"
+              srcSet={merged.hero.mediaSrcSet || undefined}
+              sizes="100vw"
+              alt=""
+              className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-30"
+              data-background-scroll={merged.hero.backgroundScroll === true || undefined}
             />
           )}
           <div className="relative z-10 max-w-2xl">

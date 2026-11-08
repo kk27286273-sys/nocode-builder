@@ -27,8 +27,9 @@ export default function GNB({
   activePage,
   navigateTo,
 }: GNBProps) {
-  const [logoFailed, setLogoFailed] = useState(false);
-  const hasLogo = Boolean(company?.logoUrl) && !logoFailed;
+  const logoSource = JSON.stringify([company?.logoUrl, company?.logoSrcSet]);
+  const [failedLogo, setFailedLogo] = useState<string | null>(null);
+  const hasLogo = Boolean(company?.logoUrl) && failedLogo !== logoSource;
 
   // navigation.menus에서 읽고, 없으면 DEFAULT_MENUS 사용
   const rawMenus = Array.isArray(navigation?.menus) ? navigation.menus : [];
@@ -54,11 +55,13 @@ export default function GNB({
           {hasLogo ? (
             <img
               src={company.logoUrl}
+              srcSet={company.logoSrcSet || undefined}
+              sizes="144px"
               alt={`${company?.name || '회사'} 로고`}
               width={144}
               height={40}
-              onError={() => setLogoFailed(true)}
-              className="h-8 w-36 shrink-0 object-contain object-left md:h-10"
+              onError={() => setFailedLogo(logoSource)}
+              className="h-8 w-auto max-w-36 shrink-0 object-contain object-left md:h-10"
             />
           ) : null}
 

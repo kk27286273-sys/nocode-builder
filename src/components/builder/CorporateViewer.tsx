@@ -159,6 +159,7 @@ hero={{
   badge: data.hero?.badge || 'Since 1990',
   mediaUrl: data.hero?.mediaUrl || '',
   mediaSrcSet: data.hero?.mediaSrcSet || '',
+  backgroundScroll: data.hero?.backgroundScroll === true,
   overlayOpacity: data.hero?.overlayOpacity,
   textColor: data.hero?.textColor,
 }}

@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import sharp from 'sharp';
 import { createAdminClient } from '@/lib/supabase/admin';
 
@@ -23,7 +23,12 @@ function errorResponse(message: string, status: number) {
   return NextResponse.json({ error: message }, { status });
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  const accessToken = process.env.ADMIN_ACCESS_TOKEN;
+  if (!accessToken || request.cookies.get('nexia_admin_session')?.value !== accessToken) {
+    return errorResponse('빌더에 로그인해 주세요.', 401);
+  }
+
   try {
     const formData = await request.formData();
     const file = formData.get('file');
@@ -46,13 +51,15 @@ export async function POST(request: Request) {
       return errorResponse('이미지는 10MB 이하만 업로드할 수 있습니다.', 400);
     }
 
-    const siteId = rawSiteId.replace(/[^a-zA-Z0-9_-]/g, '');
-    if (!siteId) {
+    if (rawSiteId.length > 100 || /[^a-zA-Z0-9가-힣_-]/.test(rawSiteId)) {
       return errorResponse('사이트 ID 형식이 올바르지 않습니다.', 400);
     }
+    const storagePrefix = /[가-힣]/.test(rawSiteId)
+      ? `unicode/${Buffer.from(rawSiteId, 'utf8').toString('hex')}`
+      : rawSiteId;
 
     const purpose =
-      typeof rawPurpose === 'string' && rawPurpose in VARIANT_WIDTHS
+      typeof rawPurpose === 'string' && Object.hasOwn(VARIANT_WIDTHS, rawPurpose)
         ? rawPurpose
         : 'general';
 
@@ -62,7 +69,7 @@ export async function POST(request: Request) {
 
     // GIF는 애니메이션 보존을 위해 원본 그대로 저장합니다.
     if (file.type === 'image/gif') {
-      const path = `${siteId}/${uploadId}-original.gif`;
+      const path = `${storagePrefix}/${uploadId}-original.gif`;
       const { error } = await supabase.storage.from(BUCKET).upload(path, input, {
         cacheControl: '31536000',
         contentType: 'image/gif',
@@ -100,7 +107,7 @@ export async function POST(request: Request) {
           ? 'webp'
           : 'jpg';
 
-    const originalPath = `${siteId}/${uploadId}-original.${originalExtension}`;
+    const originalPath = `${storagePrefix}/${uploadId}-original.${originalExtension}`;
     const { error: originalError } = await supabase.storage
       .from(BUCKET)
       .upload(originalPath, input, {
@@ -130,7 +137,7 @@ export async function POST(request: Request) {
         })
         .toBuffer();
 
-      const path = `${siteId}/${uploadId}-${width}.webp`;
+      const path = `${storagePrefix}/${uploadId}-${width}.webp`;
       const { error } = await supabase.storage.from(BUCKET).upload(path, output, {
         cacheControl: '31536000',
         contentType: 'image/webp',
