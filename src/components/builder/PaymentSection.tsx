@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Fragment, type ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { getPageSections, type PricingSection } from '@/lib/pricing-sections';
 import { medinsurePlans } from '@/lib/medinsure/plans';
 
@@ -51,9 +51,12 @@ export function PricingCards({ section, checkout, onSelect, selected }: {
 }
 
 export default function PaymentSection({ data, siteId, children }: {
-  data: Parameters<typeof getPageSections>[0]; siteId?: string | null; children: ReactNode;
+  data: Parameters<typeof getPageSections>[0]; siteId?: string | null;
+  children: (beforeMain: ReactNode, afterMain: ReactNode) => ReactNode;
 }) {
-  return getPageSections(data, siteId).map((section) => section.pricing
-    ? <PricingCards key={section.id} section={section.pricing} checkout={siteId === 'medinsure'} />
-    : <Fragment key={section.id}>{children}</Fragment>);
+  const sections = getPageSections(data, siteId);
+  const main = sections.findIndex((section) => !section.pricing);
+  const render = (items: typeof sections) => items.map((section) => section.pricing &&
+    <PricingCards key={section.id} section={section.pricing} checkout={siteId === 'medinsure'} />);
+  return children(render(sections.slice(0, main)), render(sections.slice(main + 1)));
 }

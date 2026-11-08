@@ -18,6 +18,8 @@ interface CorporateViewerProps {
   activeSection?: string;
   setActiveSection?: (section: string) => void;
   sectionsVisible?: Record<string, boolean>;
+  beforeMain?: React.ReactNode;
+  afterMain?: React.ReactNode;
 }
 
 export const CorporateViewer = ({
@@ -25,6 +27,8 @@ export const CorporateViewer = ({
   activeSection: propSection,
   setActiveSection: propSetSection,
   sectionsVisible = {},
+  beforeMain,
+  afterMain,
 }: CorporateViewerProps) => {
   const [internalPage, setInternalPage] = useState('main');
   const [, setSelectedSolutionId] = useState<number | null>(null);
@@ -149,6 +153,7 @@ export const CorporateViewer = ({
       </header>
 
       <main className="w-full">
+        {currentPage === 'main' && beforeMain}
         <AnimatePresence mode="wait">
           {currentPage === 'main' && (
             <MainPage
@@ -234,6 +239,7 @@ hero={{
             />
           )}
         </AnimatePresence>
+        {currentPage === 'main' && afterMain}
       </main>
 
       {isVisible('footer') && (

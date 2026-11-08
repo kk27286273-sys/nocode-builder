@@ -62,18 +62,20 @@ const siteId = decodeURIComponent((params?.siteId as string) || '');
     <main className="min-h-screen w-full bg-white">
       {siteId === 'medinsure' && (
         <nav aria-label="MedinSure 서비스" className="flex flex-wrap justify-center gap-4 border-b bg-slate-50 px-4 py-3 text-sm font-semibold text-blue-900">
-          <Link href={firstPricing ? `#${firstPricing.id}` : '/medinsure#plans'}>요금제</Link>
+          <Link href={firstPricing && activeSection === 'main' ? `#${firstPricing.id}` : '/medinsure#plans'}>요금제</Link>
           <Link href="/organization">로그인·조직 관리</Link>
           <Link href="/medinsure/download">프로그램 다운로드</Link>
         </nav>
       )}
       <PaymentSection data={data as Parameters<typeof getPageSections>[0]} siteId={siteId}>
-      <ViewerManager
-        data={data}
-        activeSection={activeSection}
-        setActiveSection={setActiveSection}
-        published
-      />
+        {(beforeMain, afterMain) => <ViewerManager
+          data={data}
+          activeSection={activeSection}
+          setActiveSection={setActiveSection}
+          beforeMain={beforeMain}
+          afterMain={afterMain}
+          published
+        />}
       </PaymentSection>
     </main>
   );

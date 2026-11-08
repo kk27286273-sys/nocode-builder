@@ -844,12 +844,14 @@ export default function BuilderPage() {
 
       <main className="relative z-10 min-h-screen flex-1 bg-slate-200">
         <PaymentSection data={data as Parameters<typeof getPageSections>[0]} siteId={siteId}>
-        <ViewerManager
-          data={data}
-          setData={setData}
-          activeSection={activeSection}
-          setActiveSection={setActiveSection}
-        />
+          {(beforeMain, afterMain) => <ViewerManager
+            data={data}
+            setData={setData}
+            activeSection={activeSection}
+            setActiveSection={setActiveSection}
+            beforeMain={beforeMain}
+            afterMain={afterMain}
+          />}
         </PaymentSection>
       </main>
     </div>

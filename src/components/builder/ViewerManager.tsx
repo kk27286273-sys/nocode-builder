@@ -9,6 +9,8 @@ interface ViewerManagerProps {
   activeSection?: string;
   setActiveSection?: (section: string) => void;
   published?: boolean;
+  beforeMain?: React.ReactNode;
+  afterMain?: React.ReactNode;
 }
 
 export default function ViewerManager({
@@ -17,6 +19,8 @@ export default function ViewerManager({
   activeSection,
   setActiveSection,
   published = false,
+  beforeMain,
+  afterMain,
 }: ViewerManagerProps) {
   if (!data) {
     return (
@@ -33,6 +37,8 @@ export default function ViewerManager({
       activeSection={activeSection}
       setActiveSection={setActiveSection}
       published={published}
+      beforeMain={beforeMain}
+      afterMain={afterMain}
     />
   );
 }

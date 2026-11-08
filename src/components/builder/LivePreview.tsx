@@ -15,6 +15,8 @@ interface LivePreviewProps {
   setActiveSection?: (section: string) => void;
   currentPageId?: string;
   published?: boolean;
+  beforeMain?: React.ReactNode;
+  afterMain?: React.ReactNode;
 }
 
 export default function LivePreview({
@@ -23,11 +25,15 @@ export default function LivePreview({
   activeSection,
   setActiveSection,
   published = false,
+  beforeMain,
+  afterMain,
 }: LivePreviewProps) {
   const templateType = data?.templateType;
+  const hasSeparateViewer = ['fitness', 'interior', 'onepage', 'legal'].includes(templateType);
 
   return (
     <div className="min-h-screen w-full overflow-x-hidden bg-white">
+      {hasSeparateViewer && beforeMain}
       {templateType === 'fitness' ? (
         <FitnessViewer data={data} sectionsVisible={data?.sectionsVisible} />
       ) : templateType === 'interior' || templateType === 'onepage' ? (
@@ -50,8 +56,11 @@ export default function LivePreview({
   activeSection={activeSection}
   setActiveSection={setActiveSection}
   sectionsVisible={data?.sectionsVisible}
+  beforeMain={beforeMain}
+  afterMain={afterMain}
 />
       )}
+      {hasSeparateViewer && afterMain}
     </div>
   );
 }
