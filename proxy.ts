@@ -3,6 +3,9 @@ import { NextRequest, NextResponse } from 'next/server';
 const COOKIE_NAME = 'nexia_admin_session';
 
 export function proxy(request: NextRequest) {
+  if (process.env.NEXT_PUBLIC_PRICING_REVIEW === 'true' && request.nextUrl.pathname === '/builder') {
+    return NextResponse.next();
+  }
   const accessToken = process.env.ADMIN_ACCESS_TOKEN;
   const sessionValue = request.cookies.get(COOKIE_NAME)?.value;
 

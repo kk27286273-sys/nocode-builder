@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { medinsurePlans, quoteMedinsure } from '@/lib/medinsure/plans';
+import { PricingCards } from '@/components/builder/PaymentSection';
+import { defaultMedinsurePricing } from '@/lib/pricing-sections';
 import { supabase } from '@/lib/supabase/client';
 
 const won = (value: number) => `${value.toLocaleString('ko-KR')}원`;
@@ -40,6 +42,8 @@ export default function MedinsurePage() {
   const dialog = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
+    const fromCard = medinsurePlans.find((item) => item.id === new URLSearchParams(window.location.search).get('plan'));
+    if (fromCard) { setPlan(fromCard); setSeats(fromCard.minimum); return; }
     try {
       const stored = JSON.parse(sessionStorage.getItem('medinsure-quote') || 'null');
       const saved = quoteMedinsure(stored?.plan, stored?.seats);
@@ -109,21 +113,13 @@ export default function MedinsurePage() {
           <a href="#plans" className="mt-8 inline-block rounded-lg bg-blue-600 px-5 py-3 font-bold text-white">요금제 보기</a>
         </div>
       </section>
-      <section id="plans" className="mx-auto max-w-6xl px-6 py-14">
-        <h2 className="text-3xl font-bold">월 구독 요금제</h2>
-        <p className="mt-2 text-sm text-slate-600">부가세 포함 · 2~29명 단체 계약 방식은 확정 중입니다.</p>
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {medinsurePlans.map((item) => (
-            <button key={item.id} type="button" aria-pressed={plan.id === item.id} onClick={() => {
-              setPlan(item); setSeats(item.minimum); setError('');
-            }} className={`rounded-xl border bg-white p-5 text-left ${plan.id === item.id ? 'border-blue-700 ring-2 ring-blue-100' : 'border-slate-200'}`}>
-              <strong className="text-lg">{item.name}</strong>
-              <span className="mt-3 block text-xl font-bold">{won(item.unit)}<small className="ml-1 text-sm font-normal">/인·월</small></span>
-              <span className="mt-2 block text-sm text-slate-600">최소 {item.minimum}명 · 할인 {item.discount}%</span>
-              <span className="mt-1 block text-sm text-slate-600">최소 월 {won(item.unit * item.minimum)}</span>
-            </button>
-          ))}
-        </div>
+      <div id="plans">
+        <PricingCards section={defaultMedinsurePricing} selected={plan.id} onSelect={(product) => {
+          const next = medinsurePlans.find((item) => item.id === product);
+          if (next) { setPlan(next); setSeats(next.minimum); setError(''); document.getElementById('quote-controls')?.scrollIntoView({ block: 'center' }); }
+        }} />
+      </div>
+      <section id="quote-controls" aria-label="계약 인원과 주문 확인" className="mx-auto max-w-6xl px-6 pb-14">
         <div className="mt-6 flex flex-wrap items-end gap-4 rounded-xl border border-slate-200 bg-white p-5">
           <label className="text-sm font-semibold">계약 인원
             <input className="mt-1 block w-28 rounded border border-slate-300 p-2" type="number" min={plan.minimum} disabled={plan.id === 'solo'} value={Number.isNaN(seats) ? '' : seats} onChange={(e) => setSeats(e.currentTarget.valueAsNumber)} />

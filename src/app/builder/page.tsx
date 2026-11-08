@@ -8,7 +8,10 @@ import { supabase } from '@/lib/supabase';
 import EditorSidebar from '@/components/builder/EditorSidebar';
 import ViewerManager from '@/components/builder/ViewerManager';
 import MedinsureReleaseManager from '@/components/builder/MedinsureReleaseManager';
-import PaymentSection, { type PaymentSectionSettings } from '@/components/builder/PaymentSection';
+import PaymentSection from '@/components/builder/PaymentSection';
+import PricingSectionEditor from '@/components/builder/PricingSectionEditor';
+import { pricingReview, reviewSite, reviewStorageKey } from '@/lib/pricing-review';
+import type { getPageSections } from '@/lib/pricing-sections';
 
 type TemplateKey =
   | 'onepage'
@@ -446,6 +449,16 @@ export default function BuilderPage() {
     setIsLoading(true);
     setLoadError(null);
 
+    if (pricingReview) {
+      const site = reviewSite();
+      setSitesList([site]);
+      setSiteId(site.id);
+      setSelectedTemplate('corporate');
+      setData(mergeWithDefaultData('corporate', site.data));
+      setIsLoading(false);
+      return;
+    }
+
     const { data: sites, error } = await supabase
       .from('sites')
       .select('id, name, data, template_type')
@@ -497,7 +510,7 @@ export default function BuilderPage() {
   }, [fetchSites]);
 
   async function loadSiteData(id: string) {
-    if (!id) return;
+    if (!id || pricingReview) return;
 
     const selectedSite = sitesList.find((site) => site.id === id);
 
@@ -577,6 +590,12 @@ export default function BuilderPage() {
         templateType: selectedTemplate,
       };
 
+      if (pricingReview) {
+        localStorage.setItem(reviewStorageKey, JSON.stringify(publishData));
+        window.open('/preview/medinsure', '_blank', 'noopener,noreferrer');
+        return;
+      }
+
       const { error } = await supabase
         .from('sites')
         .update({
@@ -616,7 +635,7 @@ export default function BuilderPage() {
   }
 
   async function deleteSite() {
-    if (!siteId || !confirm('정말 선택한 사이트를 삭제하시겠습니까?')) {
+    if (pricingReview || !siteId || !confirm('정말 선택한 사이트를 삭제하시겠습니까?')) {
       return;
     }
 
@@ -748,6 +767,7 @@ export default function BuilderPage() {
   <button
     type="button"
     onClick={async () => {
+      if (pricingReview) return;
       const newSiteId = prompt('새 사이트 ID를 입력하세요 (예: medinsure):');
       if (!newSiteId) return;
 
@@ -770,7 +790,7 @@ export default function BuilderPage() {
       alert('사이트가 추가되었습니다.');
       await fetchSites();
     }}
-    disabled={isLoading}
+    disabled={pricingReview || isLoading}
     className="rounded bg-green-600 px-2 py-1.5 text-xs font-bold text-white hover:bg-green-500 disabled:opacity-50"
   >
     +
@@ -794,12 +814,12 @@ export default function BuilderPage() {
               {isLoading ? '저장...' : '저장·발행'}
             </button>
 
-            {siteId === 'medinsure' && <MedinsureReleaseManager />}
+            {!pricingReview && siteId === 'medinsure' && <MedinsureReleaseManager />}
 
             <button
               type="button"
               onClick={deleteSite}
-              disabled={!siteId || isLoading}
+              disabled={pricingReview || !siteId || isLoading}
               className="rounded bg-rose-600 px-2 py-1.5 text-xs font-medium text-white transition hover:bg-rose-700 disabled:bg-slate-800"
             >
               삭제
@@ -808,6 +828,8 @@ export default function BuilderPage() {
         </div>
 
         <div className="flex-1 overflow-y-auto">
+          {pricingReview && <p className="bg-amber-100 p-3 text-xs font-bold text-slate-900">검토용 샘플 · 저장은 이 브라우저에만 반영됩니다.</p>}
+          {data && <PricingSectionEditor data={data as Parameters<typeof getPageSections>[0]} siteId={siteId} setData={setData} />}
           <EditorSidebar
             key={siteId}
             data={data}
@@ -821,14 +843,14 @@ export default function BuilderPage() {
       </div>
 
       <main className="relative z-10 min-h-screen flex-1 bg-slate-200">
-        <PaymentSection settings={(data as (B2BTemplateData & { paymentSection?: PaymentSectionSettings }) | null)?.paymentSection}
-          checkoutPath={siteId === 'medinsure' ? '/medinsure#plans' : undefined} />
+        <PaymentSection data={data as Parameters<typeof getPageSections>[0]} siteId={siteId}>
         <ViewerManager
           data={data}
           setData={setData}
           activeSection={activeSection}
           setActiveSection={setActiveSection}
         />
+        </PaymentSection>
       </main>
     </div>
   );
