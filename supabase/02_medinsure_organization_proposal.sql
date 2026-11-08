@@ -333,6 +333,8 @@ create table public.medinsure_test_orders (
   customer_key uuid not null unique,
   plan text not null,
   seats integer not null check (seats between 1 and 10000),
+  months integer not null default 1 check (months between 1 and 36),
+  pricing_version integer not null default 0,
   amount integer not null check (amount > 0),
   organization_name text not null,
   consent_version text not null,
@@ -360,12 +362,12 @@ begin
   if not found then raise exception 'invalid_test_order' using errcode = '23514'; end if;
   insert into medinsure.organizations(name) values (selected.organization_name) returning id into new_org;
   insert into medinsure.memberships values (new_org, buyer,
-    case when selected.plan = 'solo' then 'agent' else 'branch_manager' end, true);
+    case when (selected.plan = 'solo' or selected.plan like 'personal-%') then 'agent' else 'branch_manager' end, true);
   insert into medinsure.organization_subscriptions
     (organization_id, seat_limit, status, paid_through, plan, monthly_amount)
   values (new_org, selected.seats, 'active',
-    ((now() at time zone 'Asia/Seoul') + interval '1 month') at time zone 'Asia/Seoul', selected.plan, selected.amount);
-  if selected.plan = 'solo' then
+    ((now() at time zone 'Asia/Seoul') + make_interval(months => selected.months)) at time zone 'Asia/Seoul', selected.plan, selected.amount);
+  if (selected.plan = 'solo' or selected.plan like 'personal-%') then
     insert into medinsure.seat_assignments(organization_id, user_id) values (new_org, buyer);
   end if;
   update public.medinsure_test_orders set status = 'paid', payment_key = confirmed_payment where id = order_id;

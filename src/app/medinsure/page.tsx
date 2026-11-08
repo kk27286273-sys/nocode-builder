@@ -2,9 +2,9 @@
 
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
-import { medinsurePlans, quoteMedinsure } from '@/lib/medinsure/plans';
-import { PricingCards } from '@/components/builder/PaymentSection';
-import { defaultMedinsurePricing } from '@/lib/pricing-sections';
+import { plansFor, quoteMedinsure } from '@/lib/medinsure/plans';
+import { PricingCards, usePricing } from '@/components/builder/PaymentSection';
+import { medinsurePricing } from '@/lib/pricing-sections';
 import { supabase } from '@/lib/supabase/client';
 
 const won = (value: number) => `${value.toLocaleString('ko-KR')}원`;
@@ -29,9 +29,12 @@ function billingSdk() {
 }
 
 export default function MedinsurePage() {
-  const [plan, setPlan] = useState<(typeof medinsurePlans)[number]>(medinsurePlans[0]);
+  const policy = usePricing();
+  const medinsurePlans = plansFor(policy);
+  const [planId, setPlanId] = useState('');
+  const plan = medinsurePlans.find((item) => item.id === planId) ?? medinsurePlans[0];
   const [seats, setSeats] = useState(1);
-  const [quote, setQuote] = useState<ReturnType<typeof quoteMedinsure>>(null);
+  const [quote, setQuote] = useState<(NonNullable<ReturnType<typeof quoteMedinsure>> & { pricingVersion: number }) | null>(null);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
   const [checkoutEnabled, setCheckoutEnabled] = useState(false);
@@ -43,13 +46,13 @@ export default function MedinsurePage() {
 
   useEffect(() => {
     const fromCard = medinsurePlans.find((item) => item.id === new URLSearchParams(window.location.search).get('plan'));
-    if (fromCard) { setPlan(fromCard); setSeats(fromCard.minimum); return; }
+    if (fromCard) { setPlanId(fromCard.id); setSeats(fromCard.minimum); return; }
     try {
       const stored = JSON.parse(sessionStorage.getItem('medinsure-quote') || 'null');
-      const saved = quoteMedinsure(stored?.plan, stored?.seats);
-      if (saved) { setPlan(saved.plan); setSeats(saved.seats); }
+      const saved = quoteMedinsure(stored?.plan, stored?.seats, policy);
+      if (saved) { setPlanId(saved.plan.id); setSeats(saved.seats); }
     } catch { /* Ignore an invalid browser draft. */ }
-  }, []);
+  }, [policy]);
 
   async function openOrder() {
     setError('');
@@ -81,7 +84,7 @@ export default function MedinsurePage() {
       if (!session) { setNeedsLogin(true); return; }
       const response = await fetch('/api/medinsure/test-checkout', {
         method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session.access_token}` },
-        body: JSON.stringify({ action: 'prepare', plan: quote.plan.id, seats: quote.seats, organization, termsAccepted, billingAccepted }),
+        body: JSON.stringify({ action: 'prepare', plan: quote.plan.id, seats: quote.seats, pricingVersion: quote.pricingVersion, organization, termsAccepted, billingAccepted }),
       });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error);
@@ -114,15 +117,15 @@ export default function MedinsurePage() {
         </div>
       </section>
       <div id="plans">
-        <PricingCards section={defaultMedinsurePricing} selected={plan.id} onSelect={(product) => {
+        <PricingCards section={medinsurePricing(policy)} policy={policy} selected={plan.id} onSelect={(product) => {
           const next = medinsurePlans.find((item) => item.id === product);
-          if (next) { setPlan(next); setSeats(next.minimum); setError(''); document.getElementById('quote-controls')?.scrollIntoView({ block: 'center' }); }
+          if (next) { setPlanId(next.id); setSeats(next.minimum); setError(''); document.getElementById('quote-controls')?.scrollIntoView({ block: 'center' }); }
         }} />
       </div>
       <section id="quote-controls" aria-label="계약 인원과 주문 확인" className="mx-auto max-w-6xl px-6 pb-14">
         <div className="mt-6 flex flex-wrap items-end gap-4 rounded-xl border border-slate-200 bg-white p-5">
           <label className="text-sm font-semibold">계약 인원
-            <input className="mt-1 block w-28 rounded border border-slate-300 p-2" type="number" min={plan.minimum} disabled={plan.id === 'solo'} value={Number.isNaN(seats) ? '' : seats} onChange={(e) => setSeats(e.currentTarget.valueAsNumber)} />
+            <input className="mt-1 block w-28 rounded border border-slate-300 p-2" type="number" min={plan.group === 'individual' ? 1 : 2} disabled={plan.group === 'individual'} value={Number.isNaN(seats) ? '' : seats} onChange={(e) => setSeats(e.currentTarget.valueAsNumber)} />
           </label>
           <button type="button" disabled={busy} onClick={openOrder} className="rounded-lg bg-blue-700 px-5 py-2 font-bold text-white disabled:opacity-50">주문 확인</button>
           {error && <p role="alert" className="text-sm text-red-700">{error}</p>}
@@ -137,8 +140,8 @@ export default function MedinsurePage() {
         <h2 id="order-title" className="text-xl font-bold">주문 확인</h2>
         {quote && <div className="mt-4 space-y-2">
           <p>{quote.plan.name} · {quote.seats}명 · 1인 {won(quote.plan.unit)} · 할인 {quote.plan.discount}%</p>
-          <p className="font-bold">월 {won(quote.amount)} (VAT 포함)</p>
-          <p className="text-sm">매월 자동 갱신 · 다음 갱신 중단 가능</p>
+          <p className="font-bold">{quote.plan.months}개월 결제액 {won(quote.amount)} (VAT 포함)</p>
+          <p className="text-sm">동일 기간 자동 갱신 · 다음 갱신 중단 가능</p>
           <div className="flex flex-wrap gap-3 text-sm text-blue-800">
             <Link href="/medinsure/legal/terms">이용약관</Link>
             <Link href="/medinsure/legal/privacy">개인정보처리방침</Link>
@@ -146,9 +149,9 @@ export default function MedinsurePage() {
           </div>
           {checkoutEnabled ? <div className="space-y-3 rounded bg-slate-50 p-3 text-sm">
             <p>테스트 모드 · 실제 청구와 자동 갱신은 발생하지 않습니다.</p>
-            {quote.plan.id !== 'solo' && <label className="block">조직명<input className="mt-1 block w-full rounded border p-2" maxLength={100} value={organization} onChange={(e) => setOrganization(e.target.value)} /></label>}
+            {quote.plan.group === 'ga' && <label className="block">조직명<input className="mt-1 block w-full rounded border p-2" maxLength={100} value={organization} onChange={(e) => setOrganization(e.target.value)} /></label>}
             <label className="flex gap-2"><input type="checkbox" checked={termsAccepted} onChange={(e) => setTermsAccepted(e.target.checked)} /> 이용약관을 확인했습니다.</label>
-            <label className="flex gap-2"><input type="checkbox" checked={billingAccepted} onChange={(e) => setBillingAccepted(e.target.checked)} /> 위 금액의 월 정기결제 조건과 테스트 카드 등록에 동의합니다.</label>
+            <label className="flex gap-2"><input type="checkbox" checked={billingAccepted} onChange={(e) => setBillingAccepted(e.target.checked)} /> 위 금액의 정기결제 조건과 테스트 카드 등록에 동의합니다.</label>
             <button type="button" className="rounded bg-blue-700 px-4 py-2 font-bold text-white disabled:opacity-50" disabled={!termsAccepted || !billingAccepted || busy}
               onClick={startCheckout}>토스 테스트 결제</button>
             {needsLogin && <Link className="block text-blue-800 underline" href="/organization?checkout=1">로그인 후 이어서 진행</Link>}

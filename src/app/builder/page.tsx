@@ -10,6 +10,7 @@ import ViewerManager from '@/components/builder/ViewerManager';
 import MedinsureReleaseManager from '@/components/builder/MedinsureReleaseManager';
 import PaymentSection from '@/components/builder/PaymentSection';
 import PricingSectionEditor from '@/components/builder/PricingSectionEditor';
+import MedinsurePricingEditor from '@/components/builder/MedinsurePricingEditor';
 import { pricingReview, reviewSite, reviewStorageKey } from '@/lib/pricing-review';
 import type { getPageSections } from '@/lib/pricing-sections';
 
@@ -830,6 +831,7 @@ export default function BuilderPage() {
         <div className="flex-1 overflow-y-auto">
           {pricingReview && <p className="bg-amber-100 p-3 text-xs font-bold text-slate-900">검토용 샘플 · 저장은 이 브라우저에만 반영됩니다.</p>}
           {data && <PricingSectionEditor data={data as Parameters<typeof getPageSections>[0]} siteId={siteId} setData={setData} />}
+          {siteId === 'medinsure' && <MedinsurePricingEditor />}
           <EditorSidebar
             key={siteId}
             data={data}

@@ -7,7 +7,7 @@ export async function GET() {
     const release = await getPublicRelease();
     if (!release) return Response.json({ error: '공개 설치 파일이 없습니다.' }, { status: 404, headers });
     const { data, error } = await createAdminClient().storage.from(releaseBucket)
-      .createSignedUrl(release.object_path, 60, { download: `MedinSure-${release.version}.exe` });
+      .createSignedUrl(release.object_path, 60, { download: `MedinSure-${release.version}.${release.object_path.endsWith('.zip') ? 'zip' : 'exe'}` });
     if (error) throw error;
     return new Response(null, { status: 302, headers: { ...headers, Location: data.signedUrl } });
   } catch {

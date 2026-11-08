@@ -2,7 +2,8 @@
 
 import type { Dispatch, SetStateAction } from 'react';
 import { getPageSections, moveItem, newPricingCard, type PageSection, type PricingCard, type PricingSection } from '@/lib/pricing-sections';
-import { medinsurePlans } from '@/lib/medinsure/plans';
+import { plansFor } from '@/lib/medinsure/plans';
+import { usePricing } from './PaymentSection';
 
 const control = 'rounded border border-slate-300 px-2 py-1 text-xs disabled:opacity-30';
 const input = 'mt-1 block w-full rounded border border-slate-300 px-2 py-1.5 text-sm';
@@ -28,6 +29,7 @@ export default function PricingSectionEditor({ data, siteId, setData }: {
   setData: Dispatch<SetStateAction<any>>;
 }) {
   const sections = getPageSections(data, siteId);
+  const catalog = plansFor(usePricing());
   const update = (edit: (sections: PageSection[]) => PageSection[]) => {
     setData((previous: Parameters<typeof getPageSections>[0]) => ({ ...previous, inlineSections: edit(getPageSections(previous, siteId)) }));
   };
@@ -86,18 +88,21 @@ export default function PricingSectionEditor({ data, siteId, setData }: {
                         highlighted: section.highlighted === card.id ? '' : section.highlighted,
                         cards: section.cards.filter((item) => item.id !== card.id) }))} />
                     {([['title', '카드 제목'], ['description', '카드 설명'], ['badge', '인원 배지'],
-                      ['price', '표시 요금'], ['button', '버튼 문구']] as const).map(([key, label]) =>
-                      <Field key={key} label={label} value={card[key]} onChange={(value) => editCard((current) => ({ ...current, [key]: value }))} />)}
+                      ['price', '표시 요금'], ['button', '버튼 문구']] as const)
+                      .filter(([key]) => key !== 'price' || siteId !== 'medinsure' || !card.product)
+                      .map(([key, label]) => <Field key={key} label={label} value={card[key]} onChange={(value) => editCard((current) => ({ ...current, [key]: value }))} />)}
                     {siteId === 'medinsure' && <label className="block text-xs font-semibold">서버 상품
                       <select className={input} value={card.product || ''} onChange={(event) => {
                         const product = event.target.value;
                         editCard((current) => ({ ...current, product }));
                       }}>
                         <option value="">연결 없음</option>
-                        {medinsurePlans.map((plan) => <option key={plan.id} value={plan.id}>{plan.name}</option>)}
+                        {catalog.map((plan) => <option key={plan.id} value={plan.id}>{plan.name}</option>)}
                       </select>
                     </label>}
-                    <p className="text-xs text-slate-600">표시 요금은 실제 청구 금액에 영향을 주지 않습니다.</p>
+                    <p className="text-xs text-slate-600">{siteId === 'medinsure' && card.product
+                      ? '연결된 상품의 금액은 MedinSure 요금 정책에서 변경합니다.'
+                      : '표시 요금은 실제 청구 금액에 영향을 주지 않습니다.'}</p>
                     <fieldset className="space-y-2 border-t pt-2">
                       <legend className="text-xs font-bold">정보 행</legend>
                       {card.rows.map((row, rowIndex) => <div key={row.id} className="space-y-1 rounded bg-slate-50 p-2">

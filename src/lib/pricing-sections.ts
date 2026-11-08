@@ -1,4 +1,4 @@
-import { medinsurePlans } from './medinsure/plans';
+import { initialPolicy, plansFor, type PricingPolicy } from './medinsure/plans';
 
 export type PricingCard = {
   id: string;
@@ -21,25 +21,28 @@ type PricingData = {
 const main: PageSection = { id: 'main-content' };
 const won = (value: number) => `${value.toLocaleString('ko-KR')}원`;
 
-export const defaultMedinsurePricing: PricingSection = {
+export function medinsurePricing(policy: PricingPolicy): PricingSection {
+  return {
   id: 'medinsure-pricing',
   title: 'MedinSure 요금제',
-  description: '모든 금액은 부가세 포함이며, 모든 요금제에서 동일한 프로그램 기능을 이용할 수 있습니다.',
-  highlighted: 'team',
-  cards: medinsurePlans.map((plan, index) => ({
+  description: 'VAT 포함 · 개인은 선택 기간 전액 선결제 및 동일 기간 자동갱신 · GA는 월 단위 결제',
+  highlighted: 'personal-3',
+  cards: plansFor(policy).map((plan) => ({
     id: plan.id, product: plan.id, title: plan.name,
-    description: ['개인 설계사용', '소규모 조직용', '중규모 조직용', '대규모 조직용'][index],
-    badge: plan.id === 'solo' ? '1명' : `${plan.minimum}명 이상`,
-    price: `${won(plan.unit)} / ${plan.id === 'solo' ? '월' : '인·월'}`,
+    description: plan.group === 'individual' ? '개인 설계사용' : 'GA 조직용',
+    badge: plan.group === 'individual' ? '1명' : `${plan.minimum}명 이상`,
+    price: plan.group === 'individual' ? won(plan.unit * plan.months) : `${won(plan.unit)} / 인·월`,
     button: '요금제 선택',
     rows: [
-      { id: 'minimum', label: '최소 월 결제액', value: won(plan.minimum * plan.unit) },
+      { id: 'minimum', label: plan.group === 'individual' ? '기간 전액' : '최소 월 결제액', value: won(plan.minimum * plan.unit * plan.months) },
       { id: 'discount', label: '할인', value: `${plan.discount}%` },
-      { id: 'billing', label: '결제 주기', value: '월 단위' },
+      { id: 'billing', label: '결제 주기', value: `${plan.months}개월` },
     ],
     features: [{ id: 'analysis', text: 'MedinSure 전체 분석 기능' }, { id: 'documents', text: 'PDF·Excel 자료 분석' }],
   })),
-};
+  };
+}
+export const defaultMedinsurePricing = medinsurePricing(initialPolicy);
 
 export function newPricingCard(): PricingCard {
   return { id: crypto.randomUUID(), title: '새 요금제', description: '', badge: '', price: '',

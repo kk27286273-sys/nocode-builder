@@ -1,9 +1,9 @@
 import { createHash, randomUUID } from 'node:crypto';
 import { NextRequest } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { releaseBucket } from '@/lib/medinsure/releases';
+import { compareVersions, releaseBucket, validVersion } from '@/lib/medinsure/releases';
 
-const limit = 100 * 1024 * 1024;
+const limit = 50 * 1024 * 1024;
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 export async function POST(request: NextRequest) {
@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
   const token = process.env.ADMIN_ACCESS_TOKEN;
   if (!token || request.cookies.get('nexia_admin_session')?.value !== token) return error('빌더 관리자 로그인이 필요합니다.', 401);
   if (request.headers.get('sec-fetch-site') === 'cross-site') return error('잘못된 요청입니다.', 403);
-  if (process.env.MEDINSURE_RELEASES_ENABLED !== 'true') return error('설치 파일 저장소가 설정되지 않았습니다.', 503);
+  if (process.env.VERCEL_ENV === 'preview') return error('설치 파일 저장소가 설정되지 않았습니다.', 503);
   const body = await request.json().catch(() => null);
 
   try {
@@ -20,24 +20,25 @@ export async function POST(request: NextRequest) {
     switch (body?.action) {
       case 'list': {
         const { data: releases, error: listError } = await db.from('medinsure_releases')
-          .select('id, version, notes, size_bytes, sha256, created_at').order('created_at', { ascending: false }).limit(100);
-        const { data: channel, error: channelError } = await db.from('medinsure_release_channel').select('release_id').maybeSingle();
+          .select('id, version, notes, size_bytes, sha256, created_at, object_path').order('created_at', { ascending: false }).limit(100);
+        const { data: policies, error: channelError } = await db.from('medinsure_release_policies').select('id,release_id,minimum_version,created_at').order('id', { ascending: false }).limit(100);
         if (listError || channelError) throw listError || channelError;
-        return Response.json({ releases, current: channel?.release_id || null });
+        return Response.json({ releases, policies, current: policies?.[0]?.release_id || null });
       }
       case 'prepare': {
-        if (typeof body.name !== 'string' || !/\.exe$/i.test(body.name) ||
-          !Number.isSafeInteger(body.size) || body.size < 64 || body.size > limit) return error('100MB 이하의 EXE 파일을 선택해 주세요.');
+        const extension = typeof body.name === 'string' ? body.name.match(/\.(exe|zip)$/i)?.[1].toLowerCase() : null;
+        if (!extension ||
+          !Number.isSafeInteger(body.size) || body.size < 64 || body.size > limit) return error('50MB 이하의 EXE 또는 ZIP 파일을 선택해 주세요.');
         const id = randomUUID();
-        const { data, error: uploadError } = await storage.createSignedUploadUrl(`staged/${id}.exe`, { upsert: false });
+        const { data, error: uploadError } = await storage.createSignedUploadUrl(`staged/${id}.${extension}`, { upsert: false });
         if (uploadError) throw uploadError;
-        return Response.json({ id, token: data.token });
+        return Response.json({ id, path: data.path, token: data.token });
       }
       case 'register': {
         if (typeof body.id !== 'string' || !uuid.test(body.id) ||
-          typeof body.version !== 'string' || !/^\d{1,5}\.\d{1,5}\.\d{1,5}$/.test(body.version) ||
+          !['exe', 'zip'].includes(body.extension) || !validVersion(body.version) ||
           typeof body.notes !== 'string' || body.notes.length > 3000) return error('버전과 설명을 확인해 주세요.');
-        const path = `staged/${body.id}.exe`;
+        const path = `staged/${body.id}.${body.extension}`;
         const { data, error: urlError } = await storage.createSignedUrl(path, 60);
         if (urlError) throw urlError;
         const file = await fetch(data.signedUrl, { cache: 'no-store' });
@@ -58,8 +59,9 @@ export async function POST(request: NextRequest) {
           }
         } finally { await reader.cancel(); }
         const pe = prefix.readUInt32LE(60);
-        if (received !== size || prefix.toString('ascii', 0, 2) !== 'MZ' || pe < 64 || pe + 4 > prefix.length ||
-          prefix.readUInt32LE(pe) !== 0x4550) return error('Windows PE 실행 파일이 아닙니다.');
+        const peValid = prefix.toString('ascii', 0, 2) === 'MZ' && pe >= 64 && pe + 4 <= prefix.length && prefix.readUInt32LE(pe) === 0x4550;
+        const zipValid = prefix.readUInt32LE(0) === 0x04034b50;
+        if (received !== size || (body.extension === 'zip' ? !zipValid : !peValid)) return error('파일 형식이 올바르지 않습니다.');
         const { error: insertError } = await db.from('medinsure_releases').insert({
           id: body.id, version: body.version, notes: body.notes, object_path: path, size_bytes: size, sha256: hash.digest('hex'),
         });
@@ -68,14 +70,23 @@ export async function POST(request: NextRequest) {
         return Response.json({ registered: true });
       }
       case 'publish': {
-        if (body.id !== null) {
-          if (typeof body.id !== 'string' || !uuid.test(body.id)) return error('버전을 선택해 주세요.');
-          const { data, error: lookupError } = await db.from('medinsure_releases').select('sha256').eq('id', body.id).single();
+        let id = body.id;
+        let minimum = body.minimum ?? null;
+        if (Number.isSafeInteger(body.policyId)) {
+          const { data, error: historyError } = await db.from('medinsure_release_policies').select('release_id,minimum_version').eq('id', body.policyId).single();
+          if (historyError) throw historyError;
+          id = data.release_id; minimum = data.minimum_version;
+        }
+        if (id !== null) {
+          if (typeof id !== 'string' || !uuid.test(id)) return error('버전을 선택해 주세요.');
+          const { data, error: lookupError } = await db.from('medinsure_releases').select('sha256,version').eq('id', id).single();
           if (lookupError) throw lookupError;
+          if (minimum !== null && (!validVersion(minimum) || compareVersions(minimum, data.version) > 0)) return error('최소 허용 버전을 확인해 주세요.');
+          if (minimum !== null && process.env.MEDINSURE_FORCE_UPDATES_APPROVED !== 'true') return error('강제 업데이트 운영 승인이 필요합니다.', 403);
           const approved = (process.env.MEDINSURE_APPROVED_EXE_HASHES || '').split(',').map((value) => value.trim().toLowerCase());
           if (!approved.includes(data.sha256)) return error('서명·악성코드 검사 후 승인된 파일만 공개할 수 있습니다.', 409);
         }
-        const { error: publishError } = await db.from('medinsure_release_channel').upsert({ singleton: true, release_id: body.id });
+        const { error: publishError } = await db.from('medinsure_release_policies').insert({ release_id: id, minimum_version: id === null ? null : minimum });
         if (publishError) throw publishError;
         return Response.json({ updated: true });
       }

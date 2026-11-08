@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { activePricing } from '@/lib/medinsure/pricing-server';
 import { quoteMedinsure } from '@/lib/medinsure/plans';
 
 function reply(error: string, status: number) {
@@ -24,15 +25,17 @@ export async function POST(request: Request) {
     if (error || !user?.email_confirmed_at) return reply('이메일 인증을 완료한 뒤 로그인해 주세요.', 401);
 
     if (body?.action === 'prepare') {
-      const quote = quoteMedinsure(body.plan, body.seats);
+      const active = await activePricing();
+      if (body.pricingVersion !== active.version) return reply('요금 정책이 변경되었습니다. 주문을 다시 확인해 주세요.', 409);
+      const quote = quoteMedinsure(body.plan, body.seats, active.policy);
       const name = typeof body.organization === 'string' ? body.organization.trim() : '';
       if (!quote || quote.seats > 10000 || body.termsAccepted !== true || body.billingAccepted !== true ||
-        (quote.plan.id !== 'solo' && (!name || name.length > 100))) return reply('주문 내용과 필수 동의를 확인해 주세요.', 400);
+        (quote.plan.group === 'ga' && (!name || name.length > 100))) return reply('주문 내용과 필수 동의를 확인해 주세요.', 400);
       const orderId = randomUUID();
       const customerKey = randomUUID();
       const { error: insertError } = await db.from('medinsure_test_orders').insert({
         id: orderId, buyer_id: user.id, customer_key: customerKey, plan: quote.plan.id,
-        seats: quote.seats, amount: quote.amount, organization_name: quote.plan.id === 'solo' ? 'MedinSure 개인 이용권' : name,
+        months: quote.plan.months, pricing_version: active.version, seats: quote.seats, amount: quote.amount, organization_name: quote.plan.group === 'individual' ? 'MedinSure 개인 이용권' : name,
         consent_version: 'test-2026-11-08',
       });
       if (insertError) throw insertError;
