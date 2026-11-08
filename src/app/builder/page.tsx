@@ -7,6 +7,8 @@ import { B2BTemplateData } from '@/types/Template';
 import { supabase } from '@/lib/supabase';
 import EditorSidebar from '@/components/builder/EditorSidebar';
 import ViewerManager from '@/components/builder/ViewerManager';
+import MedinsureReleaseManager from '@/components/builder/MedinsureReleaseManager';
+import PaymentSection, { type PaymentSectionSettings } from '@/components/builder/PaymentSection';
 
 type TemplateKey =
   | 'onepage'
@@ -792,6 +794,8 @@ export default function BuilderPage() {
               {isLoading ? '저장...' : '저장·발행'}
             </button>
 
+            {siteId === 'medinsure' && <MedinsureReleaseManager />}
+
             <button
               type="button"
               onClick={deleteSite}
@@ -817,6 +821,8 @@ export default function BuilderPage() {
       </div>
 
       <main className="relative z-10 min-h-screen flex-1 bg-slate-200">
+        <PaymentSection settings={(data as (B2BTemplateData & { paymentSection?: PaymentSectionSettings }) | null)?.paymentSection}
+          checkoutPath={siteId === 'medinsure' ? '/medinsure#plans' : undefined} />
         <ViewerManager
           data={data}
           setData={setData}

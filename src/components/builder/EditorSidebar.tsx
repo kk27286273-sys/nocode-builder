@@ -254,6 +254,21 @@ const VisibilityToggle = ({ sectionKey, label }: { sectionKey: string; label: st
             </h3>
           </div>
           {active === 'main' && (
+            <section aria-label="결제 / 구독 설정" className="space-y-3 rounded-xl border border-slate-200 bg-white p-4">
+              <label className="flex items-center gap-2 text-sm font-bold">
+                <input type="checkbox" checked={getValue('paymentSection.enabled') === true}
+                  onChange={(event) => updateDeep('paymentSection.enabled', event.target.checked)} />
+                결제 / 구독 섹션 표시
+              </label>
+              {getValue('paymentSection.enabled') === true && <>
+                <InputField label="섹션 제목" value={getValue('paymentSection.title') ?? '결제 / 구독'} onChange={(value) => updateDeep('paymentSection.title', value)} />
+                <InputField label="섹션 설명" value={getValue('paymentSection.description') ?? '이용 가능한 상품과 요금제를 확인하세요.'} onChange={(value) => updateDeep('paymentSection.description', value)} />
+                <InputField label="결제 버튼 문구" value={getValue('paymentSection.buttonLabel') ?? '요금제 보기'} onChange={(value) => updateDeep('paymentSection.buttonLabel', value)} />
+                <p className="text-xs text-slate-600">청구 금액과 연결할 상품은 결제 서버에서 관리합니다.</p>
+              </>}
+            </section>
+          )}
+          {active === 'main' && (
             <section aria-label="메인 배경 설정" className="space-y-3 rounded-xl border border-slate-200 bg-white p-4">
               <ImageUploadField
                 label="메인 배경 이미지"
@@ -1156,7 +1171,7 @@ const VisibilityToggle = ({ sectionKey, label }: { sectionKey: string; label: st
                       siteId={siteId}
                       purpose="logo"
                     />
-                    <p className="text-xs text-slate-500">업로드하면 오른쪽 미리보기 상단의 회사명 옆에 표시됩니다. 공개 화면에는 저장·발행 후 반영됩니다.</p>
+                    <p className="text-xs text-slate-500">로고가 상단의 회사명 자리에 표시됩니다. 로고를 삭제하면 회사명이 다시 표시됩니다.</p>
                     <ImageUploadField
                       label="대표이사 사진 (소개 페이지)"
                       value={getValue('corporateInfo.ceoGreeting.image') || ''}

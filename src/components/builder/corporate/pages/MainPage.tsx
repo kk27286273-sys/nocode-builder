@@ -38,6 +38,10 @@ export default function MainPage({
   };
 
   const opacity = getGradientOpacity();
+  const badge = hero?.badge ?? 'BRAND NEW';
+  const title = hero?.title ?? '기업의 미래를 설계합니다';
+  const subtitle = hero?.subtitle ?? hero?.description ??
+    '최고의 기술력과 경험으로 최적의 솔루션을 제공합니다.';
 
   return (
     <div className="w-full">
@@ -64,35 +68,33 @@ export default function MainPage({
         />
 
         <div className="relative z-20 px-4 text-center">
-          <motion.span
+          {badge && <motion.span
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="mb-6 inline-block rounded-full bg-blue-600 px-4 py-1 text-xs font-bold"
           >
-            {hero?.badge || 'BRAND NEW'}
-          </motion.span>
+            {badge}
+          </motion.span>}
 
-          <motion.h1
+          {title && <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0, duration: 0.3, ease: 'easeOut' }}
             className="mb-6 text-5xl font-black leading-tight tracking-tighter md:text-7xl"
             style={{ color: hero?.textColor || '#ffffff' }}
           >
-            {hero?.title || '기업의 미래를 설계합니다'}
-          </motion.h1>
+            {title}
+          </motion.h1>}
 
-          <motion.p
+          {subtitle && <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
             className="mx-auto max-w-3xl text-lg font-light leading-relaxed text-slate-300 md:text-2xl"
             style={{ color: hero?.textColor || 'rgba(203, 213, 225, 0.8)' }}
           >
-            {hero?.subtitle ||
-              hero?.description ||
-              '최고의 기술력과 경험으로 최적의 솔루션을 제공합니다.'}
-          </motion.p>
+            {subtitle}
+          </motion.p>}
         </div>
 
         {/* 오버레이 조절 슬라이더 (빌더 모드에서만 표시) */}

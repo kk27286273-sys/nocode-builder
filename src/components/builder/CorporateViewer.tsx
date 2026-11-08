@@ -154,9 +154,9 @@ export const CorporateViewer = ({
             <MainPage
               key="main"
 hero={{
-  title: data.hero?.title || solutionMain.title,
-  subtitle: data.hero?.subtitle || solutionMain.description,
-  badge: data.hero?.badge || 'Since 1990',
+  title: data.hero?.title ?? solutionMain.title,
+  subtitle: data.hero?.subtitle ?? solutionMain.description,
+  badge: data.hero?.badge ?? 'Since 1990',
   mediaUrl: data.hero?.mediaUrl || '',
   mediaSrcSet: data.hero?.mediaSrcSet || '',
   backgroundScroll: data.hero?.backgroundScroll === true,

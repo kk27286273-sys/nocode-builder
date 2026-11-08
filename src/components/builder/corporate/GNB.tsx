@@ -30,6 +30,7 @@ export default function GNB({
   const logoSource = JSON.stringify([company?.logoUrl, company?.logoSrcSet]);
   const [failedLogo, setFailedLogo] = useState<string | null>(null);
   const hasLogo = Boolean(company?.logoUrl) && failedLogo !== logoSource;
+  const companyName = company?.name;
 
   // navigation.menus에서 읽고, 없으면 DEFAULT_MENUS 사용
   const rawMenus = Array.isArray(navigation?.menus) ? navigation.menus : [];
@@ -46,11 +47,11 @@ export default function GNB({
   return (
     <header className="sticky top-0 z-50 w-full border-b border-slate-100 bg-white shadow-sm">
       <div className="flex min-h-16 items-center justify-between gap-3 px-4 py-3 md:min-h-20 md:px-12">
-        <button
+        {hasLogo || companyName ? <button
           type="button"
           className="flex min-w-0 cursor-pointer items-center gap-3 text-left"
           onClick={() => navigateTo('main')}
-          aria-label="홈으로 이동"
+          aria-label={companyName ? `${companyName} 홈으로 이동` : '홈으로 이동'}
         >
           {hasLogo ? (
             <img
@@ -63,12 +64,12 @@ export default function GNB({
               onError={() => setFailedLogo(logoSource)}
               className="h-8 w-auto max-w-36 shrink-0 object-contain object-left md:h-10"
             />
-          ) : null}
-
-          <span className="truncate text-lg font-black tracking-tight text-slate-900 md:text-xl">
-            {company?.name || 'COMPANY'}
-          </span>
-        </button>
+          ) : (
+            <span className="truncate text-lg font-black tracking-tight text-slate-900 md:text-xl">
+              {companyName}
+            </span>
+          )}
+        </button> : <span aria-hidden="true" />}
 
         <button
           type="button"

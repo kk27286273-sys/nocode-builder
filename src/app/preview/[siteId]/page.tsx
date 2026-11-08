@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect, Suspense } from 'react';
 import { useParams } from 'next/navigation';
+import Link from 'next/link';
+import PaymentSection, { type PaymentSectionSettings } from '@/components/builder/PaymentSection';
 import { supabase } from '@/lib/supabase';
 import ViewerManager from '@/components/builder/ViewerManager';
 import { B2BTemplateData } from '@/types/Template';
@@ -49,6 +51,15 @@ const siteId = decodeURIComponent((params?.siteId as string) || '');
 
   return (
     <main className="min-h-screen w-full bg-white">
+      {siteId === 'medinsure' && (
+        <nav aria-label="MedinSure 서비스" className="flex flex-wrap justify-center gap-4 border-b bg-slate-50 px-4 py-3 text-sm font-semibold text-blue-900">
+          <Link href="/medinsure#plans">요금제</Link>
+          <Link href="/organization">로그인·조직 관리</Link>
+          <Link href="/medinsure/download">프로그램 다운로드</Link>
+        </nav>
+      )}
+      <PaymentSection settings={(data as B2BTemplateData & { paymentSection?: PaymentSectionSettings }).paymentSection}
+        checkoutPath={siteId === 'medinsure' ? '/medinsure#plans' : undefined} />
       <ViewerManager
         data={data}
         activeSection={activeSection}
