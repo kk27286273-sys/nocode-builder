@@ -3,19 +3,21 @@ import { NextRequest, NextResponse } from 'next/server';
 const COOKIE_NAME = 'nexia_admin_session';
 
 export function proxy(request: NextRequest) {
-  if (request.nextUrl.pathname === '/api/medinsure/organization') {
+  const path = new URL(request.url).pathname.replace(/\/+$/, '') || '/';
+  if (path === '/api/medinsure/organization') {
     return NextResponse.json({ error: 'organization_unavailable' }, { status: 403 });
   }
-  if (request.nextUrl.pathname === '/organization') {
+  if (path === '/organization') {
     return new NextResponse('MedinSure organization access is unavailable.', { status: 403 });
   }
-  if (request.nextUrl.pathname === '/login') {
-    if (!['medinsure.co.kr', 'www.medinsure.co.kr'].includes(request.nextUrl.hostname)) return NextResponse.next();
+  if (path === '/login') {
+    if (!['medinsure.co.kr', 'www.medinsure.co.kr'].includes(request.headers.get('host') ?? request.nextUrl.hostname)) return NextResponse.next();
     const url = request.nextUrl.clone();
     url.pathname = '/medinsure/login';
     return NextResponse.redirect(url);
   }
-  if (process.env.NEXT_PUBLIC_PRICING_REVIEW === 'true' && request.nextUrl.pathname === '/builder') {
+  if (path !== '/builder' && !path.startsWith('/builder/')) return NextResponse.next();
+  if (process.env.NEXT_PUBLIC_PRICING_REVIEW === 'true' && path === '/builder') {
     return NextResponse.next();
   }
   const accessToken = process.env.ADMIN_ACCESS_TOKEN;
