@@ -1,4 +1,5 @@
 import { createAdminClient } from '@/lib/supabase/admin';
+import { verifyMedinsureUser } from '@/lib/supabase/medinsure-server';
 
 export async function GET(request: Request) {
   const headers = { 'Cache-Control': 'private, no-store' };
@@ -7,7 +8,7 @@ export async function GET(request: Request) {
 
   try {
     const db = createAdminClient();
-    const { data: { user }, error: authError } = await db.auth.getUser(token);
+    const { data: { user }, error: authError } = await verifyMedinsureUser(token);
     if (authError && (!authError.status || authError.status >= 500)) throw authError;
     if (authError || !user) return Response.json({ error: 'invalid_session' }, { status: 401, headers });
     if (user.is_anonymous || !user.email_confirmed_at) return Response.json({ allowed: false }, { headers });
