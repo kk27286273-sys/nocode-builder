@@ -40,10 +40,10 @@ export async function createReleaseUpload(key: string, size: number) {
   return { url: signed.url, headers };
 }
 
-export async function readReleaseObject(key: string) {
+export async function readReleaseObject(key: string, signal: AbortSignal) {
   const { client, url } = connection(key);
-  const signed = await client.sign(url, { method: 'GET', cache: 'no-store' });
-  return fetch(signed, { redirect: 'error' });
+  const signed = await client.sign(url, { method: 'GET' });
+  return fetch(signed.url, { method: 'GET', headers: signed.headers, cache: 'no-store', redirect: 'error', signal });
 }
 
 export async function createReleaseDownload(key: string, filename: string) {

@@ -5,6 +5,8 @@ import { compareVersions, validVersion } from '@/lib/medinsure/releases';
 import { createReleaseUpload, r2ReleaseKey, readReleaseObject } from '@/lib/medinsure/r2';
 import { releaseUploadLimit as limit } from '@/lib/medinsure/release-upload';
 
+export const maxDuration = 60;
+
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 export async function POST(request: NextRequest) {
@@ -38,17 +40,25 @@ export async function POST(request: NextRequest) {
           !['exe', 'zip'].includes(body.extension) || !validVersion(body.version) ||
           typeof body.notes !== 'string' || body.notes.length > 3000) return error('버전과 설명을 확인해 주세요.');
         const path = r2ReleaseKey(body.id, body.extension);
-        const file = await readReleaseObject(path);
-        const size = Number(file.headers.get('content-length'));
-        if (!file.ok || !file.body || !Number.isSafeInteger(size) || size < 64 || size > limit) {
-          await file.body?.cancel();
-          return error('업로드 파일 크기를 확인할 수 없습니다.');
-        }
-        const reader = file.body.getReader();
+        const transfer = new AbortController();
+        let timeout = setTimeout(() => transfer.abort(), 10_000);
         const hash = createHash('sha256');
-        const prefix = Buffer.alloc(Math.min(size, 1024 * 1024));
+        let size: number;
         let received = 0;
         try {
+          const file = await readReleaseObject(path, transfer.signal);
+          if (file.status === 404) return error('업로드된 파일이 없습니다. 파일을 다시 업로드해 주세요.', 404);
+          if (file.status === 403 || file.status === 401) return error('저장소에서 파일 읽기 권한을 거부했습니다. 관리자에게 문의해 주세요.', 502);
+          if (!file.ok) return error('저장소에서 파일을 조회하지 못했습니다.', 502);
+
+          size = Number(file.headers.get('content-length'));
+          if (!file.body || !Number.isSafeInteger(size) || size < 64 || size > limit)
+            return error('업로드 파일 크기를 확인할 수 없습니다.');
+
+          clearTimeout(timeout);
+          timeout = setTimeout(() => transfer.abort(), 45_000);
+          const reader = file.body.getReader();
+          const prefix = Buffer.alloc(Math.min(size, 1024 * 1024));
           for (;;) {
             const { done, value } = await reader.read();
             if (done) break;
@@ -57,11 +67,19 @@ export async function POST(request: NextRequest) {
             received += value.length;
             hash.update(value);
           }
-        } finally { await reader.cancel(); }
-        const pe = prefix.readUInt32LE(60);
-        const peValid = prefix.toString('ascii', 0, 2) === 'MZ' && pe >= 64 && pe + 4 <= prefix.length && prefix.readUInt32LE(pe) === 0x4550;
-        const zipValid = prefix.readUInt32LE(0) === 0x04034b50;
-        if (received !== size || (body.extension === 'zip' ? !zipValid : !peValid)) return error('파일 형식이 올바르지 않습니다.');
+          if (received !== size) return error('파일 크기가 일치하지 않습니다.');
+          const pe = prefix.readUInt32LE(60);
+          const peValid = prefix.toString('ascii', 0, 2) === 'MZ' && pe >= 64 && pe + 4 <= prefix.length && prefix.readUInt32LE(pe) === 0x4550;
+          const zipValid = prefix.readUInt32LE(0) === 0x04034b50;
+          if (body.extension === 'zip' ? !zipValid : !peValid) return error('파일 형식이 올바르지 않습니다.');
+        } catch {
+          if (transfer.signal.aborted) return error('저장소 파일 조회 시간이 초과되었습니다. 다시 시도해 주세요.', 504);
+          return error('저장소 연결 또는 파일 전송에 실패했습니다. 다시 시도해 주세요.', 502);
+        } finally {
+          clearTimeout(timeout);
+          // Do not await cancellation of a response stream that Next may have cloned.
+          transfer.abort();
+        }
         const { error: insertError } = await db.from('medinsure_releases').insert({
           id: body.id, version: body.version, notes: body.notes, object_path: path, size_bytes: size, sha256: hash.digest('hex'),
         });

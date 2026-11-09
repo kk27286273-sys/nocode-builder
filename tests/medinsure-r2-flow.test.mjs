@@ -34,6 +34,7 @@ function json(res, status, value) {
 test('isolated R2 release lifecycle and existing route protections', { timeout: 120000 }, async (t) => {
   const objects = new Map();
   const lengths = new Map();
+  const readFailures = new Map();
   const files = [];
   const policies = [];
   const fixture = await listen(async (req, res) => {
@@ -50,6 +51,11 @@ test('isolated R2 release lifecycle and existing route protections', { timeout: 
         return res.writeHead(200).end();
       }
       if (!signed && !req.headers.authorization?.startsWith('AWS4-HMAC-SHA256 ')) return json(res, 403, {});
+      switch (readFailures.get(url.pathname)) {
+        case 'denied': return json(res, 403, {});
+        case 'network': return req.socket.destroy();
+        case 'timeout': return;
+      }
       const file = objects.get(url.pathname);
       if (!file) return json(res, 404, {});
       return res.writeHead(200, { 'content-length': lengths.get(url.pathname) ?? file.length,
@@ -105,7 +111,7 @@ test('isolated R2 release lifecycle and existing route protections', { timeout: 
   }
 
   const api = (action, body = {}, auth = headers) => fetch(base + '/api/medinsure/releases',
-    { method: 'POST', headers: auth, body: JSON.stringify({ action, ...body }) });
+    { method: 'POST', headers: auth, body: JSON.stringify({ action, ...body }), signal: AbortSignal.timeout(75_000) });
   const download = () => fetch(base + '/api/medinsure/download', { redirect: 'manual' });
   const update = () => fetch(base + '/api/medinsure/update');
   async function prepare(size) {
@@ -119,6 +125,22 @@ test('isolated R2 release lifecycle and existing route protections', { timeout: 
   assert.equal((await api('list', {}, { 'content-type': 'application/json' })).status, 401);
   assert.equal((await api('list', {}, { ...headers, 'sec-fetch-site': 'cross-site' })).status, 403);
   assert.equal((await api('prepare', { name: 'big.zip', size: 100 * MiB + 1 })).status, 400);
+  const missing = await prepare(64);
+  const missingResult = await register(missing, '1.9.9');
+  assert.equal(missingResult.status, 404);
+  assert.match((await missingResult.json()).error, /다시 업로드/);
+  for (const [failure, status, message] of [
+    ['denied', 502, /권한을 거부/],
+    ['network', 502, /연결 또는 파일 전송/],
+    ['timeout', 504, /시간이 초과/],
+  ]) {
+    const draft = await prepare(64);
+    readFailures.set(new URL(draft.upload.url).pathname, failure);
+    const response = await register(draft, '1.9.9');
+    assert.equal(response.status, status);
+    assert.match((await response.json()).error, message);
+    assert.equal(files.length, 0);
+  }
   const oversized = await prepare(100 * MiB);
   const oversizedPath = new URL(oversized.upload.url).pathname;
   objects.set(oversizedPath, Buffer.alloc(64));
