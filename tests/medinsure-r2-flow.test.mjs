@@ -114,6 +114,7 @@ test('isolated R2 release lifecycle and existing route protections', { timeout: 
     { method: 'POST', headers: auth, body: JSON.stringify({ action, ...body }), signal: AbortSignal.timeout(75_000) });
   const download = () => fetch(base + '/api/medinsure/download', { redirect: 'manual' });
   const update = () => fetch(base + '/api/medinsure/update');
+  const manifest = () => fetch(base + '/update.json');
   async function prepare(size) {
     const response = await api('prepare', { name: 'MedinSure.zip', size });
     assert.equal(response.status, 200, await response.clone().text());
@@ -149,8 +150,11 @@ test('isolated R2 release lifecycle and existing route protections', { timeout: 
   assert.equal(files.length, 0);
   assert.equal((await fetch(base + '/builder', { redirect: 'manual' })).status, 307);
   assert.equal((await fetch(base)).status, 200);
+  assert.equal((await fetch(base + '/builder-login')).status, 200);
+  assert.equal((await fetch(base + '/login')).status, 200);
   assert.equal((await fetch(base + '/pay')).status, 200);
   assert.equal((await download()).status, 404);
+  assert.equal((await manifest()).status, 404);
   const first = await prepare(previous.length);
   assert.equal((await upload(first, previous)).status, 200);
   assert.equal((await register(first, '2.0.0')).status, 200);
@@ -164,10 +168,15 @@ test('isolated R2 release lifecycle and existing route protections', { timeout: 
   assert.equal(files[0].sha256, sha(zip));
   assert.equal(files[0].size_bytes, zip.length);
   assert.equal((await (await update()).json()).latest_version, '2.0.0');
+  assert.equal((await (await manifest()).json()).latest_version, '2.0.0');
   assert.equal((await api('publish', { id: second.id, minimum: '2.0.1' })).status, 403);
   assert.equal((await api('publish', { id: second.id })).status, 200);
-  assert.deepEqual(await (await update()).json(), { latest_version: '2.0.1', minimum_version: '0.0.0',
-    download_url: 'https://medinsure.co.kr/api/medinsure/download' });
+  const published = { latest_version: '2.0.1', minimum_version: '0.0.0',
+    download_url: 'https://medinsure.co.kr/api/medinsure/download', sha256: sha(zip) };
+  assert.deepEqual(await (await update()).json(), published);
+  const alias = await manifest();
+  assert.equal(alias.headers.get('cache-control'), 'no-store');
+  assert.deepEqual(await alias.json(), published);
   const redirected = await download();
   assert.equal(redirected.status, 302);
   const location = new URL(redirected.headers.get('location'));
@@ -177,9 +186,11 @@ test('isolated R2 release lifecycle and existing route protections', { timeout: 
   assert.equal(sha(Buffer.from(await downloaded.arrayBuffer())), sha(zip));
   assert.equal((await api('publish', { policyId: 1 })).status, 200);
   assert.equal((await (await update()).json()).latest_version, '2.0.0');
+  assert.equal((await (await manifest()).json()).sha256, sha(previous));
   assert.equal((await api('publish', { id: null })).status, 200);
   assert.equal((await download()).status, 404);
   assert.equal((await update()).status, 404);
+  assert.equal((await manifest()).status, 404);
   files.unshift({ id: 'legacy', version: '1.0.0', object_path: 'staged/legacy.zip' });
   policies.unshift({ id: policies.length + 1, release_id: 'legacy' });
   const legacy = await download();

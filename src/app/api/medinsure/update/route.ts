@@ -9,6 +9,7 @@ export async function GET() {
       latest_version: release.version,
       minimum_version: release.minimum_version ?? '0.0.0',
       download_url: 'https://medinsure.co.kr/api/medinsure/download',
+      sha256: release.sha256,
     }, { headers });
   } catch { return Response.json({ error: 'policy_unavailable' }, { status: 503, headers }); }
 }
