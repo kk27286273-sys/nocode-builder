@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useState, type FormEvent } from 'react';
-import { supabase } from '@/lib/supabase/client';
+import { releaseUploadLimit } from '@/lib/medinsure/release-upload';
 
 type Release = { id: string; version: string; size_bytes: number; sha256: string; notes: string; created_at: string };
 type Policy = { id: number; release_id: string | null; minimum_version: string | null; created_at: string };
@@ -45,11 +45,11 @@ export default function MedinsureReleaseManager() {
     const file = form.get('file');
     if (!(file instanceof File)) return;
     void perform(async () => {
-      const { id, path, token } = await request('prepare', { name: file.name, size: file.size });
-      const { error } = await supabase.storage.from('medinsure-installers')
-        .uploadToSignedUrl(path, token, file, { contentType: 'application/octet-stream', upsert: false });
-      if (error) throw error;
-      await request('register', { id, extension: path.split('.').at(-1), version: form.get('version'), notes: form.get('notes') });
+      if (file.size > releaseUploadLimit) throw new Error('100MiB 이하의 EXE 또는 ZIP 파일을 선택해 주세요.');
+      const { id, extension, upload } = await request('prepare', { name: file.name, size: file.size });
+      const response = await fetch(upload.url, { method: 'PUT', headers: upload.headers, body: file, redirect: 'error' });
+      if (!response.ok) throw new Error('파일 업로드에 실패했습니다. 다시 시도해 주세요.');
+      await request('register', { id, extension, version: form.get('version'), notes: form.get('notes') });
       await refresh();
       setMessage('비공개 버전으로 등록했습니다.');
     });
@@ -68,7 +68,7 @@ export default function MedinsureReleaseManager() {
       <div className="flex justify-between gap-3"><h2 id="release-manager-title" className="text-xl font-bold">MedinSure EXE 관리</h2>
         <button type="button" onClick={() => dialog.current?.close()} className="rounded border px-3 py-1">닫기</button></div>
       <form onSubmit={upload} className="my-4 space-y-3">
-        <label className="block text-sm">EXE 또는 ZIP 파일 (50MB 이하)<input className="mt-1 block w-full" type="file" accept=".exe,.zip" name="file" required /></label>
+        <label className="block text-sm">EXE 또는 ZIP 파일 (100MiB 이하)<input className="mt-1 block w-full" type="file" accept=".exe,.zip" name="file" required /></label>
         <label className="block text-sm">버전<input className="mt-1 block rounded border p-2" name="version" placeholder="2.1.0" required pattern="[0-9]+\.[0-9]+\.[0-9]+" /></label>
         <label className="block text-sm">업데이트 설명<textarea className="mt-1 block w-full rounded border p-2" name="notes" maxLength={3000} /></label>
         <button disabled={busy} className="rounded bg-blue-700 px-4 py-2 text-sm font-bold text-white disabled:opacity-50">업로드 및 등록</button>

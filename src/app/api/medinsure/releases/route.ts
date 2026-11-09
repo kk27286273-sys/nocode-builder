@@ -1,9 +1,10 @@
 import { createHash, randomUUID } from 'node:crypto';
 import { NextRequest } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { compareVersions, releaseBucket, validVersion } from '@/lib/medinsure/releases';
+import { compareVersions, validVersion } from '@/lib/medinsure/releases';
+import { createReleaseUpload, r2ReleaseKey, readReleaseObject } from '@/lib/medinsure/r2';
+import { releaseUploadLimit as limit } from '@/lib/medinsure/release-upload';
 
-const limit = 50 * 1024 * 1024;
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 export async function POST(request: NextRequest) {
@@ -16,7 +17,6 @@ export async function POST(request: NextRequest) {
 
   try {
     const db = createAdminClient();
-    const storage = db.storage.from(releaseBucket);
     switch (body?.action) {
       case 'list': {
         const { data: releases, error: listError } = await db.from('medinsure_releases')
@@ -28,22 +28,22 @@ export async function POST(request: NextRequest) {
       case 'prepare': {
         const extension = typeof body.name === 'string' ? body.name.match(/\.(exe|zip)$/i)?.[1].toLowerCase() : null;
         if (!extension ||
-          !Number.isSafeInteger(body.size) || body.size < 64 || body.size > limit) return error('50MB 이하의 EXE 또는 ZIP 파일을 선택해 주세요.');
+          !Number.isSafeInteger(body.size) || body.size < 64 || body.size > limit) return error('100MiB 이하의 EXE 또는 ZIP 파일을 선택해 주세요.');
         const id = randomUUID();
-        const { data, error: uploadError } = await storage.createSignedUploadUrl(`staged/${id}.${extension}`, { upsert: false });
-        if (uploadError) throw uploadError;
-        return Response.json({ id, path: data.path, token: data.token });
+        const upload = await createReleaseUpload(r2ReleaseKey(id, extension), body.size);
+        return Response.json({ id, extension, upload }, { headers: { 'Cache-Control': 'no-store' } });
       }
       case 'register': {
         if (typeof body.id !== 'string' || !uuid.test(body.id) ||
           !['exe', 'zip'].includes(body.extension) || !validVersion(body.version) ||
           typeof body.notes !== 'string' || body.notes.length > 3000) return error('버전과 설명을 확인해 주세요.');
-        const path = `staged/${body.id}.${body.extension}`;
-        const { data, error: urlError } = await storage.createSignedUrl(path, 60);
-        if (urlError) throw urlError;
-        const file = await fetch(data.signedUrl, { cache: 'no-store' });
+        const path = r2ReleaseKey(body.id, body.extension);
+        const file = await readReleaseObject(path);
         const size = Number(file.headers.get('content-length'));
-        if (!file.ok || !file.body || !Number.isSafeInteger(size) || size < 64 || size > limit) return error('업로드 파일 크기를 확인할 수 없습니다.');
+        if (!file.ok || !file.body || !Number.isSafeInteger(size) || size < 64 || size > limit) {
+          await file.body?.cancel();
+          return error('업로드 파일 크기를 확인할 수 없습니다.');
+        }
         const reader = file.body.getReader();
         const hash = createHash('sha256');
         const prefix = Buffer.alloc(Math.min(size, 1024 * 1024));
