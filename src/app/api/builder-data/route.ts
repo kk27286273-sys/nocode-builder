@@ -17,7 +17,7 @@ export async function GET(request: Request) {
     // 3. DB에서 해당 siteId 데이터 조회
     const { data, error } = await supabaseAdmin
       .from('sites')
-      .select('*')
+      .select('id,name,data,content,template_type,updated_at')
       .eq('id', siteId)
       .single();
 

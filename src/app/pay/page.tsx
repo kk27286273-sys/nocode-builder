@@ -1,23 +1,31 @@
 'use client';
 
-import React, { useCallback, useState, Suspense } from 'react';
+import React, { useState, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { getPlan } from '@/lib/plans';
+import NexiaRefundPolicy from '@/components/home/NexiaRefundPolicy';
 
 const SDK_URL = 'https://js.tosspayments.com/v2/standard';
+type TossFactory = (clientKey: string) => {
+  payment(options: { customerKey: string }): {
+    requestBillingAuth(options: { method: 'CARD'; successUrl: string; failUrl: string; customerEmail: string; customerName: string }): Promise<void>;
+  };
+};
 
-function loadTossSdk(): Promise<any> {
+function loadTossSdk(): Promise<TossFactory> {
+  const browser = window as Window & { TossPayments?: TossFactory };
   return new Promise((resolve, reject) => {
-    if (window.TossPayments) {
-      resolve(window.TossPayments);
+    if (browser.TossPayments) {
+      resolve(browser.TossPayments);
       return;
     }
 
     const existing = document.querySelector(`script[src="${SDK_URL}"]`);
     if (existing) {
       existing.addEventListener('load', () => {
-        resolve(window.TossPayments);
+        if (browser.TossPayments) resolve(browser.TossPayments);
+        else reject(new Error('결제 SDK 초기화 실패'));
       });
       existing.addEventListener('error', () => reject(new Error('SDK 로드 실패')));
       return;
@@ -27,7 +35,8 @@ function loadTossSdk(): Promise<any> {
     script.src = SDK_URL;
     script.async = true;
     script.onload = () => {
-      resolve(window.TossPayments);
+      if (browser.TossPayments) resolve(browser.TossPayments);
+      else reject(new Error('결제 SDK 초기화 실패'));
     };
     script.onerror = () => reject(new Error('SDK 로드 실패'));
     document.body.appendChild(script);
@@ -48,7 +57,7 @@ const totalFirstPayment = monthlyFee;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handlePayment = useCallback(async () => {
+  const handlePayment = async () => {
     if (!formData.email || !formData.name || !formData.phone) {
       alert('모든 정보를 입력해주세요.');
       return;
@@ -89,14 +98,14 @@ const totalFirstPayment = monthlyFee;
         customerEmail: formData.email,
         customerName: formData.name,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('결제 요청 오류:', error);
-      if (error?.code !== 'USER_CANCEL') {
-        alert(error?.message || '결제 요청 중 오류가 발생했습니다.');
+      if (!(error && typeof error === 'object' && 'code' in error && error.code === 'USER_CANCEL')) {
+        alert(error instanceof Error ? error.message : '결제 요청 중 오류가 발생했습니다.');
       }
       setIsLoading(false);
     }
-  }, [formData, plan]);
+  };
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-slate-50 p-6">
@@ -107,7 +116,7 @@ const totalFirstPayment = monthlyFee;
 
         <h1 className="text-2xl font-bold">Nexia {name} 결제</h1>
         <p className="mt-2 text-sm text-slate-500">
-          첫 달 구독료를 결제합니다.
+          첫 달 월 관리비만 결제합니다. 제작비는 별도 계약이며 이번 결제에 포함되지 않습니다.
         </p>
 
         <div className="mt-8 space-y-4 rounded-2xl bg-slate-100 p-6">
@@ -168,14 +177,14 @@ const totalFirstPayment = monthlyFee;
 카드 등록 후 첫 달 구독료 {monthlyFee.toLocaleString()}원이 청구되며,
 <br />
 다음 달부터 매월 {monthlyFee.toLocaleString()}원이 자동 결제됩니다.
+<br />
+최초 결제일 기준으로 청구하며, 해당 날짜가 없는 달은 말일에 청구한 후 원래 기준일로 돌아갑니다.
         </p>
 
         <div className="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-4">
           <p className="text-xs font-semibold text-amber-900">환불정책 확인</p>
-          <p className="mt-2 text-xs text-amber-900">
-            구축비는 작업 착수 시 50% 차감, 완성본 발송 후 환불 불가입니다.
-            <Link href="/terms" className="ml-1 font-bold underline">자세히</Link>
-          </p>
+          <NexiaRefundPolicy compact />
+
         </div>
       </div>
     </div>

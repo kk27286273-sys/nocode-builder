@@ -14,7 +14,7 @@ export default function GlobalFooter() {
         onClose={() => setLegalType(null)}
       />
 
-      <footer className="bg-slate-50 border-t border-slate-200 py-6 px-4 text-center text-[11px] text-slate-400">
+      <footer data-thsoft-legacy-footer className="bg-slate-50 border-t border-slate-200 py-6 px-4 text-center text-[11px] text-slate-400">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
           <div>
             <div>© 2026 TH SOFT. All rights reserved.</div>

@@ -13,19 +13,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   try {
     const { data: site } = await supabaseAdmin
       .from('sites')
-      .select('title, content')
+      .select('name, data, content')
       .eq('id', id)
       .single();
 
-    if (!site || !site.content) {
+    if (!site || !(site.data || site.content)) {
       return {
         title: 'B2B 기업 웹사이트',
         description: '비즈니스 성장 솔루션을 확인해보세요.',
       };
     }
 
-    const content = site.content;
-    const title = content?.hero?.title || site.title || 'B2B 공식 홈페이지';
+    const content = site.data || site.content;
+    const title = content?.hero?.title || site.name || 'B2B 공식 홈페이지';
     const description = content?.hero?.subtitle || '비즈니스 상담 및 솔루션 안내';
     const companyName = content?.company?.name || '공식 웹사이트';
     const ogImage = content?.company?.logoUrl || '/og-default.png';

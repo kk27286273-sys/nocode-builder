@@ -4,7 +4,8 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import { B2BTemplateData } from '@/types/Template';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase/client';
+import { builderApi } from '@/lib/builder-api';
 import EditorSidebar from '@/components/builder/EditorSidebar';
 import ViewerManager from '@/components/builder/ViewerManager';
 import MedinsureReleaseManager from '@/components/builder/MedinsureReleaseManager';
@@ -460,10 +461,7 @@ export default function BuilderPage() {
       return;
     }
 
-    const { data: sites, error } = await supabase
-      .from('sites')
-      .select('id, name, data, template_type')
-      .order('name');
+    const { data: sites, error } = await builderApi('GET');
 
     if (error) {
       console.error('사이트 목록 로드 에러:', error);
@@ -527,11 +525,7 @@ export default function BuilderPage() {
     setSiteId(id);
     setSelectedTemplate(template);
 
-    const { data: siteData, error } = await supabase
-      .from('sites')
-      .select('id, name, data, template_type')
-      .eq('id', id)
-      .single();
+    const { data: siteData, error } = await builderApi('GET', id);
 
     if (error) {
       console.error('데이터 로드 에러:', error);
@@ -597,14 +591,7 @@ export default function BuilderPage() {
         return;
       }
 
-      const { error } = await supabase
-        .from('sites')
-        .update({
-          data: publishData,
-          template_type: selectedTemplate,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', siteId);
+      const { error } = await builderApi('PATCH', undefined, { id: siteId, data: publishData, template_type: selectedTemplate });
 
       if (error) {
         console.error('발행 실패:', error);
@@ -643,10 +630,7 @@ export default function BuilderPage() {
     setIsLoading(true);
     setLoadError(null);
 
-    const { error } = await supabase
-      .from('sites')
-      .delete()
-      .eq('id', siteId);
+    const { error } = await builderApi('DELETE', siteId);
 
     if (error) {
       console.error('사이트 삭제 에러:', error);
@@ -683,6 +667,7 @@ export default function BuilderPage() {
   if (!data) {
     return (
       <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-4 bg-slate-900 px-6 text-center text-white">
+        <button type="button" onClick={async () => { await supabase.auth.signOut(); window.location.assign('/login?next=/builder'); }}>로그아웃</button>
         {loadError ? (
           <>
             <p className="text-lg font-bold text-rose-400">
@@ -772,16 +757,7 @@ export default function BuilderPage() {
       const newSiteId = prompt('새 사이트 ID를 입력하세요 (예: medinsure):');
       if (!newSiteId) return;
 
-      const { error } = await supabase
-        .from('sites')
-        .insert([
-          {
-            id: newSiteId.toLowerCase(),
-            name: newSiteId,
-            template_type: selectedTemplate,
-            updated_at: new Date().toISOString(),
-          },
-        ]);
+      const { error } = await builderApi('POST', undefined, { id: newSiteId.toLowerCase(), name: newSiteId, template_type: selectedTemplate });
 
       if (error) {
         alert('사이트 추가 실패: ' + error.message);
@@ -798,6 +774,7 @@ export default function BuilderPage() {
   </button>
 </div>
           <div className="flex shrink-0 items-center gap-1.5">
+<button type="button" onClick={async () => { await supabase.auth.signOut(); window.location.assign('/login?next=/builder'); }} className="text-xs">로그아웃</button>
             <button
               type="button"
               onClick={() => setActiveSection('main')}

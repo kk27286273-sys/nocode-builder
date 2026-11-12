@@ -25,13 +25,14 @@ export async function POST(req: NextRequest) {
       plan: plan ?? 'pro',
       setup_fee: p.setupFee,
       monthly_fee: p.monthlyFee,
-      amount: p.setupFee + p.monthlyFee,
+      // This checkout collects monthly management fees only. Setup requires a separate contract.
+      amount: p.monthlyFee,
       status: 'pending',
     });
     if (oe) throw oe;
 
     return NextResponse.json({ orderId, customerKey });
-  } catch (e: any) {
+  } catch (e: unknown) {
     console.error('주문 생성 실패:', e);
     return NextResponse.json({ message: '주문 생성 실패' }, { status: 500 });
   }

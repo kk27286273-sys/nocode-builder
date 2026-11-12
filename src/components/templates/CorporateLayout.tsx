@@ -14,7 +14,7 @@ export default function CorporateLayout() {
       try {
         const { data: siteData, error: siteError } = await supabase
           .from('sites')
-          .select('*')
+          .select('id,name,data,content,template_type,updated_at')
           .eq('template_type', 'corporate')
           .single();
 

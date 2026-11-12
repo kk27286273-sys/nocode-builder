@@ -1,3 +1,4 @@
+import { supabase } from '@/lib/supabase/client';
 import { B2BTemplateData } from "@/data/templates";
 
 interface PublishResponse {
@@ -11,9 +12,11 @@ export async function publishSite(
   currentSiteId?: string | null
 ): Promise<PublishResponse> {
   try {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) return { success: false, error: '개인 계정 로그인이 필요합니다.' };
     const res = await fetch("/api/sites/publish", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${session.access_token}` },
       body: JSON.stringify({
         siteId: currentSiteId || null,
         templateData,

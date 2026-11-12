@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
 import { issueBillingKey, chargeBilling } from '@/lib/toss';
 import { getPlan } from '@/lib/plans';
+import { billingAnchor, koreanDate, nextBillingDate } from '@/lib/nexia-billing';
 
 export async function POST(req: NextRequest) {
   try {
@@ -79,34 +80,40 @@ export async function POST(req: NextRequest) {
         customerName: customer?.name,
       });
 
+      if (result.status !== 'DONE' || result.totalAmount !== billingAmount || result.orderId !== order.order_id) {
+        throw new Error('결제 승인 내역 확인 필요');
+      }
+
       // 3) 구독 등록
       // 다음 결제일은 한 달 뒤
-      const next = new Date();
-      next.setMonth(next.getMonth() + 1);
+      // Use the provider's approved timestamp, retained in payments.raw, as the anchor.
+      const next = nextBillingDate(koreanDate(result.approvedAt), billingAnchor(result.approvedAt));
 
-      await supabaseAdmin.from('subscriptions').upsert(
+      const { error: subscriptionError } = await supabaseAdmin.from('subscriptions').upsert(
         {
           customer_key: customerKey,
           billing_key: billingKey,
           plan: order.plan,
           monthly_fee: order.monthly_fee,
           status: 'active',
-          next_billing_at: next.toISOString().slice(0, 10),
+          next_billing_at: next,
         },
         {
           onConflict: 'customer_key',
         }
       );
+      if (subscriptionError) throw new Error('결제 후 구독 저장 확인 필요');
 
       // 4) 주문 상태 업데이트
-      await supabaseAdmin
+      const { error: orderUpdateError } = await supabaseAdmin
         .from('orders')
         .update({ status: 'paid' })
         .eq('order_id', orderId);
+      if (orderUpdateError) throw new Error('결제 후 주문 저장 확인 필요');
 
       // 5) 결제 이력 저장
       // 구축비 제외, 월 구독료만 저장
-      await supabaseAdmin.from('payments').insert({
+      const { error: paymentError } = await supabaseAdmin.from('payments').insert({
         order_id: orderId,
         customer_key: customerKey,
         payment_key: result.paymentKey,
@@ -115,22 +122,23 @@ export async function POST(req: NextRequest) {
         status: result.status,
         raw: result,
       });
+      if (paymentError) throw new Error('결제 후 이력 저장 확인 필요');
 
       // 결제 완료창에도 월 구독료만 전달
       return NextResponse.json({
         amount: billingAmount,
       });
-    } catch (tosError: any) {
-      console.error('토스 API 오류:', tosError);
+    } catch {
+      console.error('NEXIA billing confirmation requires review');
 
       return NextResponse.json(
         {
-          message: tosError.message || '결제 처리 실패',
+          message: '결제 처리 상태를 확인해야 합니다. 다시 결제하지 말고 고객센터로 문의해 주세요.',
         },
         { status: 500 }
       );
     }
-  } catch (e: any) {
+  } catch (e: unknown) {
     console.error('빌링 승인 중 오류:', e);
 
     return NextResponse.json(

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import NexiaRefundPolicy from '@/components/home/NexiaRefundPolicy';
 
 export default function TermsPage() {
   return (
@@ -13,7 +14,7 @@ export default function TermsPage() {
 
       <article className="mx-auto max-w-4xl px-6 py-16 text-slate-900">
         <h1 className="text-4xl font-bold mb-2">서비스 이용약관</h1>
-        <p className="text-sm text-slate-500 mb-8">최종 수정일: 2026년 10월 11일</p>
+        <p className="text-sm text-slate-500 mb-8">개정안: 2026년 11월 11일 · 운영 반영 시 시행</p>
 
         <div className="prose prose-sm max-w-none space-y-8 text-slate-700">
 
@@ -32,29 +33,15 @@ export default function TermsPage() {
             </p>
             <ul className="list-disc list-inside space-y-2 ml-4">
               <li><strong>Basic:</strong> 원페이지, 월 3영업일 이내 수정</li>
-              <li><strong>Pro:</strong> 멀티페이지 2장, 72시간 이내 수정 (연중무휴)</li>
-              <li><strong>Premium:</strong> 멀티페이지 4장, 24시간 이내 수정 (연중무휴), 최적화 유지, 월간 리포트</li>
+              <li><strong>Pro:</strong> 멀티페이지 5장, 72시간 이내 수정 (연중무휴)</li>
+              <li><strong>Premium:</strong> 멀티페이지 8장, 24시간 이내 수정 (연중무휴), 최적화 유지, 월간 리포트</li>
             </ul>
           </section>
 
           <section>
             <h2 className="text-2xl font-bold text-slate-900 mb-4">3. 환불 정책</h2>
             
-            <h3 className="text-lg font-semibold text-slate-900 mb-3 mt-4">[전액 환불]</h3>
-            <p>
-              결제 후 7일 이내에 서비스를 이용(사이트 발행 및 도메인 연결 등)하지 않은 경우 전액 환불이 가능합니다.
-            </p>
-
-            <h3 className="text-lg font-semibold text-slate-900 mb-3 mt-4">[부분 환불]</h3>
-            <p>
-              서비스 이용 중 중도 해지를 원하실 경우, 이용 기간을 제외한 잔여 금액에 대해 환불 절차를 진행합니다.
-              (단, 프로모션 할인 적용 상품은 제외될 수 있습니다.)
-            </p>
-
-            <h3 className="text-lg font-semibold text-slate-900 mb-3 mt-4">[환불 불가]</h3>
-            <p>
-              이미 발행된 사이트의 유지보수 비용이 포함된 경우나, 서비스 제공 기간이 경과한 경우에는 환불이 제한될 수 있습니다.
-            </p>
+            <NexiaRefundPolicy />
           </section>
 
           <section>
@@ -102,11 +89,11 @@ export default function TermsPage() {
           <section>
             <h2 className="text-2xl font-bold text-slate-900 mb-4">7. 구독 취소 및 해지</h2>
             <p className="mb-3">
-              고객은 언제든지 구독을 취소할 수 있습니다.
+              고객은 언제든지 고객센터로 자동갱신 중단 또는 즉시 해지·환불을 요청할 수 있습니다. 정기결제는 한국시간의 최초 결제일을 기준으로 매월 진행하며, 해당 날짜가 없는 달에는 말일을 적용하고 이후 원래 결제 기준일로 돌아갑니다.
             </p>
             <ul className="list-disc list-inside space-y-2 ml-4">
-              <li>구독 취소는 당월 말일까지 유효합니다.</li>
-              <li>취소 신청 후 해당 월까지 서비스가 제공됩니다.</li>
+              <li>자동갱신 중단 시 이미 결제한 이용 기간 종료일까지 이용할 수 있습니다.</li>
+              <li>즉시 해지·환불 요청은 위 환불 정책에 따라 미사용 기간을 정산합니다.</li>
               <li>구독료 환불은 환불 정책에 따라 처리됩니다.</li>
             </ul>
           </section>

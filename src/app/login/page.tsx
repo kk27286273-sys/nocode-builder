@@ -31,7 +31,8 @@ export default function LoginPage() {
           password,
         });
         if (error) throw error;
-        router.push('/');
+        const next = new URLSearchParams(window.location.search).get('next');
+        router.push(next === '/builder' ? '/builder' : '/');
         router.refresh();
       }
     } catch (err: any) {
