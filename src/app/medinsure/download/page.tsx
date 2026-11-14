@@ -1,3 +1,5 @@
+import { medinsureMetadata } from '@/lib/medinsure/seo';
+export const metadata = medinsureMetadata('프로그램 다운로드 | 메딘슈어 | MedinSure', '공개된 MedinSure Windows 설치 파일의 버전과 SHA-256을 확인하고 다운로드하세요. 분석에는 인터넷 연결과 로그인이 필요합니다.', '/medinsure/download');
 import Link from 'next/link';
 import { getPublicRelease } from '@/lib/medinsure/releases';
 

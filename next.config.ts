@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  async headers() {
+    return ['/api/:path*','/update.json','/admin/:path*','/builder/:path*','/builder-login','/login','/organization/:path*','/dashboard/:path*','/pay/:path*','/checkout/:path*','/medinsure/login','/medinsure/checkout-result'].map(source=>({source,has:[{type:'host' as const,value:'(www[.])?medinsure[.]co[.]kr'}],headers:[{key:'X-Robots-Tag',value:'noindex, nofollow, nosnippet'}]}));
+  },
   async redirects() {
     return ['medinsure.co.kr', 'www.medinsure.co.kr'].map((host) => ({
       source: '/login',
