@@ -1,2 +1,2 @@
-export const releaseUploadLimit = 100 * 1024 * 1024;
+export const releaseUploadLimit = 256 * 1024 * 1024;
 export const releaseContentType = 'application/octet-stream';

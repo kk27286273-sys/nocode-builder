@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
       case 'prepare': {
         const extension = typeof body.name === 'string' ? body.name.match(/\.(exe|zip)$/i)?.[1].toLowerCase() : null;
         if (!extension ||
-          !Number.isSafeInteger(body.size) || body.size < 64 || body.size > limit) return error('100MiB 이하의 EXE 또는 ZIP 파일을 선택해 주세요.');
+          !Number.isSafeInteger(body.size) || body.size < 64 || body.size > limit) return error('256MiB 이하의 EXE 또는 ZIP 파일을 선택해 주세요.');
         const id = randomUUID();
         const upload = await createReleaseUpload(r2ReleaseKey(id, extension), body.size);
         return Response.json({ id, extension, upload }, { headers: { 'Cache-Control': 'no-store' } });
