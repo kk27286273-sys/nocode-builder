@@ -2,7 +2,7 @@ import { createHash, randomUUID } from 'node:crypto';
 import { NextRequest } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { approvedArtifact, compareVersions, noReleaseCache, releaseIdPattern, validVersion } from '@/lib/medinsure/releases';
-import { createReleaseUpload, r2ReleaseKey, readReleaseObject } from '@/lib/medinsure/r2';
+import { createReleaseDownload, createReleaseUpload, r2ReleaseKey, readReleaseObject } from '@/lib/medinsure/r2';
 import { releaseUploadLimit as limit } from '@/lib/medinsure/release-upload';
 
 export const maxDuration = 60;
@@ -89,6 +89,18 @@ export async function POST(request: NextRequest) {
         if (insertError?.code === '23505') return error('이미 등록된 버전 또는 파일입니다.', 409);
         if (insertError) throw insertError;
         return Response.json({ registered: true });
+      }
+      case 'verify-download': {
+        // Administrator-only verification of staged artifacts before any public policy changes.
+        if (typeof body.id !== 'string' || !releaseIdPattern.test(body.id)) return error('등록된 파일을 선택해 주세요.');
+        const { data: file, error: lookupError } = await db.from('medinsure_releases')
+          .select('version,artifact_kind,object_path,sha256').eq('id', body.id).single();
+        if (lookupError) throw lookupError;
+        if (!file || !['setup', 'update'].includes(file.artifact_kind) ||
+            !approvedArtifact(file.version, file.artifact_kind, file.sha256)) return error('검증된 파일이 아닙니다.', 409);
+        const extension = file.artifact_kind === 'setup' ? 'exe' : 'zip';
+        const url = await createReleaseDownload(file.object_path, `MedinSure-${file.version}.${extension}`);
+        return Response.json({ url, sha256: file.sha256 }, { headers: noReleaseCache });
       }
       case 'publish': {
         let updateId = body.id;
